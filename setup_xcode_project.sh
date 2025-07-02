@@ -28,17 +28,17 @@ cp -r C11SHouse C11SHouseTests C11SHouseUITests .backup/ 2>/dev/null || true
 
 # Copy source files
 echo "Copying source files..."
-cp C11SHouse/C11SHouse/*.swift C11SHouse/ 2>/dev/null || echo "Source files already in place"
+cp xcode-templates/C11SHouse/*.swift C11SHouse/ 2>/dev/null || echo "Source files already in place"
 
 # Copy test files
 echo "Copying test files..."
-cp C11SHouse/C11SHouseTests/*.swift C11SHouseTests/ 2>/dev/null || echo "Test files already in place"
-cp C11SHouse/C11SHouseUITests/*.swift C11SHouseUITests/ 2>/dev/null || echo "UI test files already in place"
+cp xcode-templates/C11SHouseTests/*.swift C11SHouseTests/ 2>/dev/null || echo "Test files already in place"
+cp xcode-templates/C11SHouseUITests/*.swift C11SHouseUITests/ 2>/dev/null || echo "UI test files already in place"
 
 # Copy Xcode Cloud workflows
 echo "Setting up Xcode Cloud workflows..."
-if [ -d "C11SHouse/.xcode" ]; then
-    cp -r C11SHouse/.xcode .
+if [ -d "xcode-templates/.xcode" ]; then
+    cp -r xcode-templates/.xcode .
     echo "✓ Xcode Cloud workflows copied"
 else
     echo "✓ Xcode Cloud workflows already in place"
@@ -46,23 +46,19 @@ fi
 
 # Copy CI scripts
 echo "Setting up CI scripts..."
-if [ -d "C11SHouse/ci_scripts" ]; then
-    cp -r C11SHouse/ci_scripts .
+if [ -d "xcode-templates/ci_scripts" ]; then
+    cp -r xcode-templates/ci_scripts .
     echo "✓ CI scripts copied"
 else
     echo "✓ CI scripts already in place"
 fi
 
-# Clean up template directory
-echo "Cleaning up template files..."
-rm -rf C11SHouse/C11SHouse 2>/dev/null || true
-rm -rf C11SHouse/C11SHouseTests 2>/dev/null || true
-rm -rf C11SHouse/C11SHouseUITests 2>/dev/null || true
-rm -rf C11SHouse/.xcode 2>/dev/null || true
-rm -rf C11SHouse/ci_scripts 2>/dev/null || true
-rm -f C11SHouse/Package.swift 2>/dev/null || true
-rm -f C11SHouse/README.md 2>/dev/null || true
-rmdir C11SHouse 2>/dev/null || true
+# Copy Assets if needed
+if [ -d "xcode-templates/C11SHouse/Assets.xcassets" ] && [ -d "C11SHouse" ]; then
+    echo "Copying asset catalogs..."
+    cp -r xcode-templates/C11SHouse/Assets.xcassets C11SHouse/
+    echo "✓ Asset catalogs copied"
+fi
 
 echo ""
 echo "✅ Setup complete!"

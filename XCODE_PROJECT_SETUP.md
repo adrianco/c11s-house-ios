@@ -15,6 +15,7 @@ Since `.xcodeproj` files must be created by Xcode itself, follow these steps:
       - Interface: SwiftUI
       - Language: Swift
    5. Save in: /workspaces/c11s-house-ios/
+      (It's OK to let Xcode create the C11SHouse directory)
    6. Close Xcode
    ```
 
@@ -47,9 +48,9 @@ Since `.xcodeproj` files must be created by Xcode itself, follow these steps:
 If you prefer to set up manually:
 
 1. Create new Xcode project as above
-2. Replace the generated files with ones from `C11SHouse/` directory
-3. Copy `.xcode/workflows/` to your project root
-4. Copy `ci_scripts/` to your project root
+2. Replace the generated files with ones from `xcode-templates/` directory
+3. Copy `xcode-templates/.xcode/workflows/` to your project root  
+4. Copy `xcode-templates/ci_scripts/` to your project root
 
 ## Next Steps
 
