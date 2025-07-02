@@ -6,13 +6,60 @@
 - Admin access to your Apple Developer account
 - GitHub account connected to Xcode
 
-## Step 1: Open the Project in Xcode
+## Step 1: Create the Xcode Project
 
 1. Open Xcode
-2. Select "Open a project or file"
-3. Navigate to the `C11SHouse` folder and open `C11SHouse.xcodeproj`
+2. Select "Create New Project"
+3. Choose "iOS" → "App"
+4. Configure the project:
+   - Product Name: `C11SHouse`
+   - Team: Select your Apple Developer team
+   - Organization Identifier: Use your reverse domain (e.g., `com.yourcompany`)
+   - Bundle Identifier: Change to `com.c11s.house`
+   - Interface: SwiftUI
+   - Language: Swift
+   - Use Core Data: No
+   - Include Tests: Yes
+5. Save the project in the `/workspaces/c11s-house-ios/` directory
+6. Close Xcode temporarily
 
-## Step 2: Configure Project Settings
+## Step 2: Integrate the Pre-configured Files
+
+1. In Terminal, navigate to the project directory:
+   ```bash
+   cd /workspaces/c11s-house-ios/
+   ```
+
+2. Copy the pre-configured files into your new Xcode project:
+   ```bash
+   # Copy source files
+   cp C11SHouse/C11SHouse/*.swift C11SHouse/
+   
+   # Copy test files
+   cp C11SHouse/C11SHouseTests/*.swift C11SHouseTests/
+   cp C11SHouse/C11SHouseUITests/*.swift C11SHouseUITests/
+   
+   # Copy Xcode Cloud workflows
+   cp -r C11SHouse/.xcode .
+   
+   # Copy CI scripts
+   cp -r C11SHouse/ci_scripts .
+   ```
+
+3. Clean up the template directory:
+   ```bash
+   rm -rf C11SHouse/C11SHouse
+   rm -rf C11SHouse/C11SHouseTests
+   rm -rf C11SHouse/C11SHouseUITests
+   rm -rf C11SHouse/.xcode
+   rm -rf C11SHouse/ci_scripts
+   rm C11SHouse/Package.swift
+   rm C11SHouse/README.md
+   ```
+
+4. Reopen the project in Xcode
+
+## Step 3: Configure Project Settings
 
 1. Select the project in the navigator
 2. Under "Signing & Capabilities":
@@ -20,14 +67,14 @@
    - Select your Team from the dropdown
    - Bundle Identifier should be: `com.c11s.house`
 
-## Step 3: Enable Xcode Cloud
+## Step 4: Enable Xcode Cloud
 
 1. In Xcode, go to Product → Xcode Cloud → Create Workflow
 2. Select your source control provider (GitHub)
 3. Grant Xcode Cloud access to your repository
 4. Choose the repository containing this project
 
-## Step 4: Configure Environment Groups
+## Step 5: Configure Environment Groups
 
 Create the following environment groups in Xcode Cloud settings:
 
@@ -43,7 +90,7 @@ Create the following environment groups in Xcode Cloud settings:
 ### APP_STORE_CREDENTIALS
 - Same as TESTFLIGHT_CREDENTIALS
 
-## Step 5: Create App Store Connect API Key
+## Step 6: Create App Store Connect API Key
 
 1. Go to [App Store Connect](https://appstoreconnect.apple.com)
 2. Navigate to Users and Access → Keys
@@ -53,7 +100,7 @@ Create the following environment groups in Xcode Cloud settings:
 6. Download the key file (.p8)
 7. Note the Key ID and Issuer ID
 
-## Step 6: Configure Workflows
+## Step 7: Configure Workflows
 
 The project includes three pre-configured workflows:
 
@@ -69,14 +116,14 @@ The project includes three pre-configured workflows:
    - Triggers on version tags (e.g., v1.0.0)
    - Prepares for App Store submission
 
-## Step 7: Create Your First Build
+## Step 8: Create Your First Build
 
 1. In Xcode Cloud, click "Start Build"
 2. Select the "CI Build and Test" workflow
 3. Choose the main branch
 4. Click "Start Build"
 
-## Step 8: Monitor Build Progress
+## Step 9: Monitor Build Progress
 
 1. View build progress in Xcode's Report Navigator
 2. Check build logs for any issues
