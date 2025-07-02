@@ -686,4 +686,3 @@ class BatteryOptimizer {
 ### 3. HomeKit Integration
 - Seamless device control
 - Automation triggers
-- Multi-home support
