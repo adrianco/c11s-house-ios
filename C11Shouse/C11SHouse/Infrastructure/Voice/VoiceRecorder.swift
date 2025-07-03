@@ -346,7 +346,7 @@ extension View {
         inactiveColor: Color = .blue
     ) -> some View {
         self.overlay(alignment: .bottom) {
-            VoiceRecordingButton(
+            VoiceRecorderButton(
                 recorder: recorder,
                 size: size,
                 activeColor: activeColor,
@@ -357,8 +357,8 @@ extension View {
     }
 }
 
-/// Voice recording button view
-struct VoiceRecordingButton: View {
+/// Voice recording button view specific to VoiceRecorder
+struct VoiceRecorderButton: View {
     @ObservedObject var recorder: VoiceRecorder
     let size: CGFloat
     let activeColor: Color

@@ -77,12 +77,12 @@ struct VoiceRecordingButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 50) {
             // Not recording state
-            VoiceRecordingButton(isRecording: .constant(false)) {
+            VoiceRecordingButton(isRecording: Binding.constant(false)) {
                 print("Start recording")
             }
             
             // Recording state
-            VoiceRecordingButton(isRecording: .constant(true)) {
+            VoiceRecordingButton(isRecording: Binding.constant(true)) {
                 print("Stop recording")
             }
         }
