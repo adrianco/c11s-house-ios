@@ -303,7 +303,7 @@ struct AudioWaveformView: View {
                             .animation(
                                 .easeInOut(duration: 0.1)
                                     .delay(Double(index) * 0.01),
-                                value: audioLevel.normalizedLevel
+                                value: CGFloat(audioLevel.normalizedLevel)
                             )
                     }
                 }
@@ -324,7 +324,7 @@ struct AudioWaveformView: View {
         let offset = Double(index) / 20.0 * .pi
         let waveHeight = sin(phase + offset) * 0.3 + 0.5
         
-        return audioLevel.normalizedLevel * CGFloat(waveHeight) + 0.1
+        return CGFloat(audioLevel.normalizedLevel) * CGFloat(waveHeight) + 0.1
     }
     
     private func barColor(for index: Int) -> Color {
