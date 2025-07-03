@@ -21,8 +21,16 @@ class TranscriptionServiceImpl: TranscriptionService {
     // MARK: - Initialization
     
     init() {
-        // Initialize speech recognizer with default locale
-        self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+        // Initialize speech recognizer with device locale or fallback
+        let deviceLocale = Locale.current
+        if let recognizer = SFSpeechRecognizer(locale: deviceLocale) {
+            self.speechRecognizer = recognizer
+            print("TranscriptionServiceImpl: Using device locale \(deviceLocale.identifier)")
+        } else {
+            // Fallback to en-US if device locale not supported
+            self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+            print("TranscriptionServiceImpl: Falling back to en-US locale")
+        }
     }
     
     // MARK: - TranscriptionService Implementation
