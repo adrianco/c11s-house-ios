@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "C11SHouse",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v16)
     ],
     products: [],
     dependencies: [],

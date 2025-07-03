@@ -1,0 +1,1474 @@
+{
+  "timestamp": "2025-07-03T16:12:50.363Z",
+  "version": "1.0",
+  "entries": [
+    {
+      "id": "entry_mcf05bze_qh5kr75q1",
+      "key": "swarm-auto-centralized-1751039990095/ios-architect/plan",
+      "value": "{\"architecture_overview\":\"Clean Architecture + MVVM-C pattern for iOS house consciousness app with voice interface\",\"key_components\":[\"Voice Interface Layer with Speech Recognition/Synthesis\",\"Domain Layer with Use Cases\",\"Data Layer with Consciousness API integration\",\"Presentation Layer with SwiftUI views\"],\"tech_stack\":{\"ios_version\":\"iOS 16.0 minimum, iOS 17.0 recommended\",\"swift_version\":\"Swift 5.9\",\"ui_framework\":\"SwiftUI primary, UIKit for advanced audio\",\"voice_frameworks\":[\"Speech\",\"AVFoundation\",\"SoundAnalysis\"],\"networking\":[\"URLSession\",\"Starscream WebSocket\"],\"data\":[\"Combine\",\"CoreData\"],\"security\":[\"CryptoKit\",\"LocalAuthentication\",\"KeychainAccess\"]},\"tdd_approach\":{\"dependency_injection\":\"All dependencies injected via protocols\",\"testable_boundaries\":\"Clear separation between layers\",\"mock_support\":\"Protocol-oriented design for easy mocking\",\"test_frameworks\":[\"XCTest\",\"Quick/Nimble\",\"OHHTTPStubs\"]},\"integration_points\":{\"consciousness_api\":\"Async/await based API client with WebSocket for real-time updates\",\"apple_intelligence\":\"Integration adapter for enhanced context and personalization\",\"homekit\":\"Native device discovery and control\"},\"key_decisions\":[\"SwiftUI over UIKit for modern declarative UI\",\"Combine over RxSwift for reactive programming\",\"On-device speech processing for privacy\",\"Native WebSocket over SocketIO for efficiency\"],\"performance_targets\":{\"wake_word_detection\":\"<100ms\",\"speech_recognition\":\"<500ms\",\"response_generation\":\"<1s\",\"memory_usage\":\"<200MB peak\"},\"deliverables\":[\"/workspaces/c11s-house-ios/plans/architecture.md\",\"/workspaces/c11s-house-ios/plans/technical-stack.md\"]}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-27T16:03:59.594Z",
+      "updatedAt": "2025-06-27T16:03:59.594Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 1795,
+      "compressed": true,
+      "checksum": "106e764474884ffd7b5de503c543109559ade8eb745a88ad53f16ee36a4a06ba",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcf06a01_i9qv3ajss",
+      "key": "swarm-auto-centralized-1751039990095/doc-lead/summary",
+      "value": "Documentation framework created successfully. Created three comprehensive planning documents: 1) implementation-roadmap.md - 14-week phased development plan with milestones, risk assessment, and team structure. 2) README.md - Central hub for all planning documentation with quick start guide and key decisions. 3) development-guidelines.md - Detailed coding standards, Git workflow, code review process, and TDD practices. All documents are based on native Swift development with Apple Intelligence features for voice-driven house consciousness interaction. Note: No other agent plans were found in Memory at time of documentation creation.",
+      "type": "string",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-27T16:04:43.681Z",
+      "updatedAt": "2025-06-27T16:04:43.681Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 671,
+      "compressed": false,
+      "checksum": "7d2f2ca4087c2f404b20cc71dccb691110a382ff11d3d78b24a30445bb7f1a47",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcf06o34_ygbuel084",
+      "key": "swarm-auto-centralized-1751039990095/voice-expert/plan",
+      "value": "{\"voice_interface_plan\":{\"summary\":\"Comprehensive voice interface implementation plan with speech recognition, NLP, voice synthesis, conversation state management, and error handling strategies\",\"key_components\":[\"Speech Recognition with wake word detection and continuous listening\",\"Natural Language Processing with intent classification and context understanding\",\"Voice synthesis with adaptive personality and multiple response types\",\"Conversation state machine with context persistence\",\"Robust error handling with graceful degradation\"],\"test_scenarios\":[\"Wake word detection tests\",\"Noise filtering tests\",\"Accent variation tests\",\"Multi-turn conversation tests\",\"Error recovery tests\"],\"performance_targets\":{\"wake_word_detection\":\"< 200ms\",\"speech_to_text\":\"< 500ms\",\"intent_processing\":\"< 100ms\",\"total_interaction\":\"< 1.5s\"}},\"apple_intelligence_plan\":{\"summary\":\"Native iOS AI integration leveraging SiriKit, Core ML, Natural Language framework, and Speech framework for enhanced house consciousness interactions\",\"key_integrations\":[\"SiriKit with custom intents for house control\",\"Core ML models for behavior prediction and energy optimization\",\"Natural Language framework for advanced text analysis\",\"Speech framework with custom language models\",\"Privacy-first architecture with on-device processing\"],\"ml_models\":[\"Behavior prediction model\",\"Room occupancy detection\",\"Energy usage prediction\",\"Ambient sound classification\"],\"privacy_features\":[\"On-device speech recognition\",\"Encrypted data handling\",\"Granular permission controls\",\"Transparent data usage reporting\"]},\"tdd_approach\":{\"test_categories\":[\"Unit tests for individual components\",\"Integration tests for end-to-end flows\",\"Performance tests for latency requirements\",\"Privacy tests for data handling\"],\"mock_infrastructure\":[\"Mock audio generators for various scenarios\",\"Test fixtures for NLP processing\",\"Simulated network conditions\",\"Mock Core ML predictions\"]},\"implementation_priorities\":[\"1. Basic speech recognition with wake word\",\"2. Intent classification and NLP pipeline\",\"3. SiriKit integration for shortcuts\",\"4. Core ML behavior prediction\",\"5. Advanced conversation management\",\"6. Privacy and security features\"]}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-27T16:05:01.936Z",
+      "updatedAt": "2025-06-27T16:05:01.936Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 2365,
+      "compressed": true,
+      "checksum": "d91ce912ddc1b1c93cf27aecdd7d95800fa0b77baa8e9c84806ad8de45b23d5a",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcf08rvp_tvv6uewvj",
+      "key": "swarm-auto-centralized-1751039990095/api-specialist/plan",
+      "value": "{\"role\":\"API Integration Specialist\",\"timestamp\":\"2025-06-27T16:40:00Z\",\"analysis\":{\"api_overview\":{\"base_urls\":{\"production\":\"https://api.consciousness.local/v1\",\"development\":\"http://localhost:8000/api/v1\"},\"authentication\":\"JWT Bearer tokens\",\"real_time\":\"WebSocket at /api/v1/realtime\",\"key_endpoints\":[\"consciousness (status, emotions, query)\",\"devices (list, control, batch)\",\"memory (store, retrieve)\",\"interview (device discovery)\",\"digital twins (simulation, predictions)\"]},\"network_architecture\":{\"pattern\":\"Protocol-oriented with async/await\",\"layers\":[\"NetworkManager (request handling)\",\"WebSocketManager (real-time)\",\"Service Layer (domain logic)\",\"Repository Layer (data access)\"],\"security\":[\"JWT token management\",\"Certificate pinning\",\"Keychain storage\",\"Biometric authentication\"]},\"data_models\":{\"core_entities\":[\"ConsciousnessState\",\"EmotionalState\",\"Memory\",\"Device & DeviceEntity\",\"House, Room, Person\",\"Activity, Event\",\"ControlAction, Scene\"],\"persistence\":\"Core Data with SwiftData\",\"sync_strategy\":\"Bidirectional with conflict resolution\",\"offline_support\":\"Queue-based with smart sync\"},\"tdd_approach\":{\"mock_interfaces\":\"Protocol-based dependency injection\",\"test_fixtures\":\"JSON response fixtures\",\"test_scenarios\":[\"Authentication flow\",\"Network error recovery\",\"Offline queue processing\",\"Data sync conflicts\"]},\"key_decisions\":{\"networking\":\"URLSession with custom interceptors\",\"reactive\":\"Combine for data flow\",\"caching\":\"Memory + disk with TTL policies\",\"security\":\"AES encryption for sensitive data\"},\"deliverables\":[\"/plans/api-integration.md\",\"/plans/data-models.md\"]}}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-27T16:06:40.165Z",
+      "updatedAt": "2025-06-27T16:06:40.165Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 1782,
+      "compressed": true,
+      "checksum": "1032d4388c327e42a463e415d90f138705391819abc416292b5dbd6449cec151",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcf08wyq_wzl3ffjeg",
+      "key": "swarm-auto-centralized-1751039990095/tdd-strategist/plan",
+      "value": "{\"tdd_strategy\":{\"approach\":\"Red-Green-Refactor cycle with FIRST principles\",\"test_pyramid\":{\"unit\":\"70% - fast isolated tests\",\"integration\":\"20% - component interaction tests\",\"ui_e2e\":\"10% - critical user journeys\"},\"frameworks\":{\"primary\":\"XCTest - native Apple framework\",\"bdd\":\"Quick/Nimble for expressive tests\",\"snapshot\":\"swift-snapshot-testing\",\"performance\":\"XCTest Performance\"},\"mock_strategy\":\"Protocol-based mocking with dependency injection\",\"continuous_testing\":{\"pre_commit\":\"unit tests\",\"ci_pipeline\":\"full test suite on PR\",\"nightly\":\"complete regression testing\"}},\"test_scenarios\":{\"user_journeys\":[\"onboarding flow\",\"daily voice interactions\",\"emergency scenarios\"],\"voice_testing\":{\"nlp\":\"basic and complex command parsing\",\"edge_cases\":\"accents, noise, distance variations\",\"feedback\":\"response appropriateness and personality\"},\"api_integration\":[\"connection management\",\"query processing\",\"error handling\"],\"performance\":{\"app_launch\":\"<1.5s cold, <0.5s warm\",\"voice_processing\":\"<300ms\",\"memory\":\"<150MB active\",\"battery\":\"<10% per hour active\"},\"accessibility\":[\"VoiceOver compatibility\",\"Dynamic Type support\",\"WCAG AA compliance\",\"Alternative input methods\"]},\"test_infrastructure\":{\"data_management\":{\"voice_samples\":\"1000+ command variations\",\"mock_data\":\"API responses and house configs\",\"generation\":\"automated test data generators\",\"privacy\":\"anonymization and encryption\"},\"cicd_pipeline\":{\"github_actions\":\"comprehensive test matrix\",\"fastlane\":\"automated deployment\",\"stages\":[\"unit\",\"integration\",\"ui\",\"performance\",\"accessibility\",\"security\"]},\"device_matrix\":{\"critical\":[\"iPhone 15 Pro/Plus\",\"iPhone SE\"],\"extended\":[\"iPhone 14 series\",\"iPads\"],\"os_versions\":\"iOS 15.0+\"},\"coverage_goals\":{\"overall\":\"85% line coverage\",\"core_logic\":\"95% coverage\",\"enforcement\":\"automated checks in CI\"},\"tools\":{\"testing\":\"XCTest, Quick/Nimble, Snapshot\",\"mocking\":\"Mockingbird, custom framework\",\"performance\":\"Instruments integration\",\"accessibility\":\"Accessibility Inspector\",\"network\":\"URLProtocol mocking\",\"reporting\":\"HTML reports, Grafana dashboards\"}},\"key_outcomes\":{\"quality\":\"95% voice recognition accuracy, 99.9% API reliability\",\"performance\":\"All targets met, smooth 60fps UI\",\"user_experience\":\"4.5+ App Store rating, <2% crash rate\"},\"recommendations\":[\"Implement TDD from project start\",\"Automate all testing in CI/CD\",\"Focus on voice interaction edge cases\",\"Prioritize accessibility from day one\",\"Monitor test metrics continuously\"]}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-27T16:06:46.754Z",
+      "updatedAt": "2025-06-27T16:06:46.754Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 2755,
+      "compressed": true,
+      "checksum": "d8849279f4b5fb83ebb786c9ea90229958e247876e53e83731bb60436ebd56cf",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcnjy2xd_oragu5fwn",
+      "key": "swarm-ios-voice-plan/implementation/roadmap",
+      "value": "{\"title\":\"Voice Transcription Implementation Roadmap for iOS\",\"created\":\"2025-07-03\",\"overview\":\"Comprehensive 5-phase implementation plan for adding voice transcription capabilities to iOS application\",\"phases\":[{\"phase\":1,\"name\":\"Basic Recording and Transcription Setup\",\"duration\":\"1-2 weeks\",\"objectives\":[\"Establish core audio recording functionality\",\"Integrate Apple's Speech framework\",\"Create basic transcription pipeline\"],\"tasks\":[{\"id\":\"1.1\",\"task\":\"Setup Audio Session Configuration\",\"description\":\"Configure AVAudioSession for recording with proper categories and options\",\"subtasks\":[\"Set audio session category to .record\",\"Configure audio format (sample rate, channels, bit depth)\",\"Handle audio session interruptions\",\"Request microphone permissions\"],\"dependencies\":[],\"estimated_time\":\"4 hours\"},{\"id\":\"1.2\",\"task\":\"Implement Audio Recording Engine\",\"description\":\"Create audio recording infrastructure using AVAudioEngine\",\"subtasks\":[\"Setup AVAudioEngine and input node\",\"Configure audio tap for real-time processing\",\"Implement buffer management\",\"Create audio file writer for persistent storage\"],\"dependencies\":[\"1.1\"],\"estimated_time\":\"8 hours\"},{\"id\":\"1.3\",\"task\":\"Integrate Speech Framework\",\"description\":\"Setup Apple's Speech framework for transcription\",\"subtasks\":[\"Import Speech framework\",\"Request speech recognition permissions\",\"Create SFSpeechRecognizer instance\",\"Configure language and locale settings\"],\"dependencies\":[\"1.1\"],\"estimated_time\":\"4 hours\"},{\"id\":\"1.4\",\"task\":\"Create Basic Transcription Service\",\"description\":\"Implement core transcription functionality\",\"subtasks\":[\"Create TranscriptionService class\",\"Implement real-time transcription using SFSpeechAudioBufferRecognitionRequest\",\"Handle transcription results and partial results\",\"Create data models for transcription results\"],\"dependencies\":[\"1.2\",\"1.3\"],\"estimated_time\":\"12 hours\"},{\"id\":\"1.5\",\"task\":\"Build Recording State Management\",\"description\":\"Create state management for recording lifecycle\",\"subtasks\":[\"Define recording states (idle, recording, processing, completed)\",\"Implement state machine for recording flow\",\"Create observable properties for UI binding\",\"Handle state transitions and callbacks\"],\"dependencies\":[\"1.4\"],\"estimated_time\":\"6 hours\"}],\"deliverables\":[\"Functional audio recording system\",\"Basic transcription service\",\"Console-based testing interface\"],\"risks\":[\"Audio permission denial handling\",\"Device compatibility issues\",\"Speech framework limitations\"]},{\"phase\":2,\"name\":\"UI Integration and Display\",\"duration\":\"2-3 weeks\",\"objectives\":[\"Design and implement user interface for voice transcription\",\"Create intuitive recording controls\",\"Display real-time transcription results\"],\"tasks\":[{\"id\":\"2.1\",\"task\":\"Design Voice Recording UI\",\"description\":\"Create UI/UX design for voice recording interface\",\"subtasks\":[\"Design recording button with visual states\",\"Create waveform visualization component\",\"Design transcription display area\",\"Plan gesture interactions\"],\"dependencies\":[],\"estimated_time\":\"8 hours\"},{\"id\":\"2.2\",\"task\":\"Implement Recording Controls\",\"description\":\"Build interactive recording controls\",\"subtasks\":[\"Create custom recording button with animations\",\"Implement press-to-record and tap-to-toggle modes\",\"Add recording timer display\",\"Create pause/resume functionality\"],\"dependencies\":[\"2.1\",\"1.5\"],\"estimated_time\":\"12 hours\"},{\"id\":\"2.3\",\"task\":\"Build Audio Visualization\",\"description\":\"Create real-time audio waveform display\",\"subtasks\":[\"Implement audio level monitoring\",\"Create waveform rendering view\",\"Add smooth animations for level changes\",\"Optimize rendering performance\"],\"dependencies\":[\"2.1\",\"1.2\"],\"estimated_time\":\"16 hours\"},{\"id\":\"2.4\",\"task\":\"Create Transcription Display\",\"description\":\"Build UI for displaying transcription results\",\"subtasks\":[\"Design scrollable text view for transcriptions\",\"Implement real-time text updates\",\"Add confidence level indicators\",\"Create word highlighting for current speech\"],\"dependencies\":[\"2.1\",\"1.4\"],\"estimated_time\":\"10 hours\"},{\"id\":\"2.5\",\"task\":\"Implement SwiftUI Views\",\"description\":\"Create reusable SwiftUI components\",\"subtasks\":[\"Build VoiceRecordingView component\",\"Create TranscriptionResultView\",\"Implement view modifiers for customization\",\"Add accessibility support\"],\"dependencies\":[\"2.2\",\"2.3\",\"2.4\"],\"estimated_time\":\"14 hours\"},{\"id\":\"2.6\",\"task\":\"Integrate with Main App Navigation\",\"description\":\"Connect voice transcription to app flow\",\"subtasks\":[\"Add voice recording to appropriate screens\",\"Implement navigation transitions\",\"Create modal presentation options\",\"Handle orientation changes\"],\"dependencies\":[\"2.5\"],\"estimated_time\":\"8 hours\"}],\"deliverables\":[\"Complete voice recording UI\",\"Real-time transcription display\",\"Integrated app experience\"],\"risks\":[\"UI performance on older devices\",\"Complex state management\",\"Accessibility compliance\"]},{\"phase\":3,\"name\":\"Error Handling and Edge Cases\",\"duration\":\"1-2 weeks\",\"objectives\":[\"Implement comprehensive error handling\",\"Handle edge cases gracefully\",\"Ensure robust user experience\"],\"tasks\":[{\"id\":\"3.1\",\"task\":\"Implement Permission Error Handling\",\"description\":\"Handle microphone and speech recognition permissions\",\"subtasks\":[\"Create permission request flow\",\"Handle permission denial gracefully\",\"Implement settings deep linking\",\"Add informative error messages\"],\"dependencies\":[\"1.1\",\"1.3\"],\"estimated_time\":\"6 hours\"},{\"id\":\"3.2\",\"task\":\"Handle Network and Service Errors\",\"description\":\"Manage speech recognition service failures\",\"subtasks\":[\"Detect network connectivity issues\",\"Handle Speech framework availability\",\"Implement offline fallback options\",\"Create retry mechanisms\"],\"dependencies\":[\"1.4\"],\"estimated_time\":\"8 hours\"},{\"id\":\"3.3\",\"task\":\"Manage Audio Interruptions\",\"description\":\"Handle system audio interruptions gracefully\",\"subtasks\":[\"Handle phone calls during recording\",\"Manage other app audio conflicts\",\"Implement auto-pause/resume logic\",\"Save recording state for recovery\"],\"dependencies\":[\"1.2\",\"1.5\"],\"estimated_time\":\"10 hours\"},{\"id\":\"3.4\",\"task\":\"Implement Memory Management\",\"description\":\"Optimize memory usage for long recordings\",\"subtasks\":[\"Implement audio buffer rotation\",\"Add memory pressure handling\",\"Create recording size limits\",\"Implement cleanup routines\"],\"dependencies\":[\"1.2\",\"1.4\"],\"estimated_time\":\"8 hours\"},{\"id\":\"3.5\",\"task\":\"Add User Feedback Systems\",\"description\":\"Create comprehensive user feedback\",\"subtasks\":[\"Implement haptic feedback for actions\",\"Add audio feedback cues\",\"Create informative alerts and toasts\",\"Design loading and progress indicators\"],\"dependencies\":[\"2.5\"],\"estimated_time\":\"6 hours\"}],\"deliverables\":[\"Robust error handling system\",\"Graceful degradation features\",\"Enhanced user feedback\"],\"risks\":[\"Complex error scenarios\",\"Platform-specific issues\",\"User experience consistency\"]},{\"phase\":4,\"name\":\"Performance Optimization\",\"duration\":\"1-2 weeks\",\"objectives\":[\"Optimize transcription accuracy\",\"Improve app performance\",\"Reduce battery consumption\"],\"tasks\":[{\"id\":\"4.1\",\"task\":\"Optimize Audio Processing\",\"description\":\"Enhance audio processing efficiency\",\"subtasks\":[\"Implement audio preprocessing (noise reduction)\",\"Optimize buffer sizes for performance\",\"Add voice activity detection\",\"Implement adaptive sample rates\"],\"dependencies\":[\"1.2\"],\"estimated_time\":\"12 hours\"},{\"id\":\"4.2\",\"task\":\"Enhance Transcription Accuracy\",\"description\":\"Improve speech recognition results\",\"subtasks\":[\"Implement custom vocabulary support\",\"Add contextual hints for better accuracy\",\"Create language model customization\",\"Implement confidence threshold filtering\"],\"dependencies\":[\"1.4\"],\"estimated_time\":\"10 hours\"},{\"id\":\"4.3\",\"task\":\"Optimize UI Performance\",\"description\":\"Enhance UI responsiveness and efficiency\",\"subtasks\":[\"Implement lazy loading for transcriptions\",\"Optimize waveform rendering algorithms\",\"Add view recycling for long transcripts\",\"Minimize UI updates during recording\"],\"dependencies\":[\"2.3\",\"2.4\"],\"estimated_time\":\"8 hours\"},{\"id\":\"4.4\",\"task\":\"Implement Battery Optimization\",\"description\":\"Reduce power consumption during recording\",\"subtasks\":[\"Add low-power recording modes\",\"Implement intelligent processing delays\",\"Optimize background task handling\",\"Create battery level monitoring\"],\"dependencies\":[\"1.2\",\"1.4\"],\"estimated_time\":\"8 hours\"},{\"id\":\"4.5\",\"task\":\"Add Caching and Storage Optimization\",\"description\":\"Optimize data storage and retrieval\",\"subtasks\":[\"Implement transcription caching\",\"Add compressed audio storage\",\"Create efficient data models\",\"Implement background cleanup\"],\"dependencies\":[\"1.4\"],\"estimated_time\":\"6 hours\"}],\"deliverables\":[\"Optimized audio processing pipeline\",\"Improved transcription accuracy\",\"Enhanced battery life\"],\"risks\":[\"Performance regression\",\"Device-specific optimizations\",\"Accuracy vs performance tradeoffs\"]},{\"phase\":5,\"name\":\"Testing and Refinement\",\"duration\":\"2-3 weeks\",\"objectives\":[\"Comprehensive testing coverage\",\"User experience refinement\",\"Production readiness\"],\"tasks\":[{\"id\":\"5.1\",\"task\":\"Create Unit Tests\",\"description\":\"Implement comprehensive unit test coverage\",\"subtasks\":[\"Test audio recording functionality\",\"Test transcription service methods\",\"Test state management logic\",\"Test error handling scenarios\"],\"dependencies\":[\"1.4\",\"1.5\",\"3.1\"],\"estimated_time\":\"12 hours\"},{\"id\":\"5.2\",\"task\":\"Implement Integration Tests\",\"description\":\"Test component interactions\",\"subtasks\":[\"Test recording to transcription flow\",\"Test UI state synchronization\",\"Test permission flows\",\"Test error recovery scenarios\"],\"dependencies\":[\"5.1\"],\"estimated_time\":\"10 hours\"},{\"id\":\"5.3\",\"task\":\"Conduct UI/UX Testing\",\"description\":\"Test and refine user interface\",\"subtasks\":[\"Perform usability testing sessions\",\"Test accessibility features\",\"Validate gesture interactions\",\"Test on various screen sizes\"],\"dependencies\":[\"2.5\",\"2.6\"],\"estimated_time\":\"8 hours\"},{\"id\":\"5.4\",\"task\":\"Performance Testing\",\"description\":\"Validate performance metrics\",\"subtasks\":[\"Test with long recordings\",\"Measure memory usage patterns\",\"Profile CPU usage\",\"Test battery consumption\"],\"dependencies\":[\"4.1\",\"4.3\",\"4.4\"],\"estimated_time\":\"8 hours\"},{\"id\":\"5.5\",\"task\":\"Device Compatibility Testing\",\"description\":\"Test across iOS devices and versions\",\"subtasks\":[\"Test on various iPhone models\",\"Test on iPad variants\",\"Verify iOS version compatibility\",\"Test with different languages/locales\"],\"dependencies\":[\"5.2\"],\"estimated_time\":\"10 hours\"},{\"id\":\"5.6\",\"task\":\"Beta Testing and Feedback\",\"description\":\"Conduct beta testing program\",\"subtasks\":[\"Prepare beta build distribution\",\"Recruit beta testers\",\"Collect and analyze feedback\",\"Implement priority fixes\"],\"dependencies\":[\"5.3\",\"5.4\",\"5.5\"],\"estimated_time\":\"20 hours\"},{\"id\":\"5.7\",\"task\":\"Documentation and Release Prep\",\"description\":\"Prepare for production release\",\"subtasks\":[\"Write API documentation\",\"Create user guide\",\"Prepare release notes\",\"Update app store materials\"],\"dependencies\":[\"5.6\"],\"estimated_time\":\"8 hours\"}],\"deliverables\":[\"Comprehensive test suite\",\"Beta-tested features\",\"Production-ready release\"],\"risks\":[\"Unforeseen device issues\",\"User acceptance concerns\",\"App store review delays\"]}],\"total_estimated_duration\":\"7-12 weeks\",\"critical_path\":[\"1.1 → 1.2 → 1.4 → 2.4 → 2.5 → 2.6 → 5.3 → 5.6\"],\"key_milestones\":[{\"milestone\":\"Core Recording Functional\",\"phase\":1,\"week\":2},{\"milestone\":\"UI Integration Complete\",\"phase\":2,\"week\":5},{\"milestone\":\"Production-Ready\",\"phase\":5,\"week\":10}],\"resource_requirements\":[\"iOS Developer (1-2 FTE)\",\"UI/UX Designer (0.5 FTE for Phase 2)\",\"QA Tester (0.5 FTE for Phase 5)\",\"Test devices (various iOS devices)\",\"Beta testing group (10-20 users)\"],\"success_metrics\":[\"95%+ transcription accuracy for clear speech\",\"< 2 second latency for real-time transcription\",\"< 5% battery drain per hour of recording\",\"99%+ crash-free sessions\",\"4.5+ star user satisfaction rating\"]}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-07-03T15:40:22.993Z",
+      "updatedAt": "2025-07-03T15:40:22.993Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 13142,
+      "compressed": true,
+      "checksum": "47b9197f2c4d1d02a23dd06ba56d4ca10b7dd4101784e995796d116662f52e92",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcnjyw7n_if98t67qm",
+      "key": "swarm-ios-voice-plan/ui-ux/design",
+      "value": {
+        "title": "Voice Transcription UI/UX Design Plan",
+        "version": "1.0",
+        "created": "2025-07-03",
+        "overview": "Comprehensive UI/UX design for C11S House iOS voice transcription features",
+        "ui_components": {
+          "primary_components": {
+            "voice_button": {
+              "type": "CircularButton",
+              "states": [
+                "idle",
+                "listening",
+                "processing",
+                "error"
+              ],
+              "size": "80x80 points",
+              "position": "bottom center, 40pt from safe area",
+              "visual_design": {
+                "idle": {
+                  "background": "system blue gradient",
+                  "icon": "mic.fill system symbol",
+                  "icon_color": "white",
+                  "shadow": "0 4 12 rgba(0,122,255,0.3)"
+                },
+                "listening": {
+                  "background": "animated radial pulse",
+                  "icon": "mic.fill with sound waves animation",
+                  "border": "3pt white animated ring",
+                  "haptic": "continuous subtle feedback"
+                },
+                "processing": {
+                  "background": "system gray",
+                  "icon": "custom spinning dots",
+                  "animation": "gentle rotation"
+                },
+                "error": {
+                  "background": "system red",
+                  "icon": "exclamationmark.circle",
+                  "animation": "subtle shake"
+                }
+              }
+            },
+            "transcription_display": {
+              "type": "ScrollableTextView",
+              "layout": "flexible height, max 60% screen",
+              "position": "above voice button, 20pt spacing",
+              "features": {
+                "real_time_display": true,
+                "word_highlighting": "current word in blue",
+                "confidence_indicators": "underline style",
+                "auto_scroll": "smooth to bottom",
+                "text_selection": "enabled after completion"
+              },
+              "styling": {
+                "background": "system background with blur",
+                "corner_radius": "16pt",
+                "padding": "16pt all sides",
+                "font": "SF Pro Text, dynamic type",
+                "text_color": "label color (adaptive)"
+              }
+            },
+            "status_indicator": {
+              "type": "StatusBar",
+              "position": "top of transcription area",
+              "height": "32pt",
+              "states": {
+                "ready": {
+                  "text": "Tap to speak",
+                  "icon": "mic.circle",
+                  "color": "secondary label"
+                },
+                "listening": {
+                  "text": "Listening...",
+                  "icon": "waveform animation",
+                  "color": "system blue"
+                },
+                "processing": {
+                  "text": "Processing...",
+                  "icon": "brain.head.profile",
+                  "color": "system orange"
+                },
+                "responding": {
+                  "text": "House is speaking...",
+                  "icon": "speaker.wave.3",
+                  "color": "system green"
+                }
+              }
+            },
+            "waveform_visualizer": {
+              "type": "AudioWaveform",
+              "position": "around voice button",
+              "radius": "120pt",
+              "style": {
+                "bars": 60,
+                "color": "adaptive blue gradient",
+                "animation": "real-time frequency response",
+                "opacity": "0.8 active, 0 idle"
+              }
+            }
+          },
+          "secondary_components": {
+            "conversation_history": {
+              "type": "CollectionView",
+              "cell_design": {
+                "user_bubble": {
+                  "alignment": "trailing",
+                  "background": "system blue",
+                  "text_color": "white"
+                },
+                "house_bubble": {
+                  "alignment": "leading",
+                  "background": "system gray 5",
+                  "text_color": "label"
+                },
+                "timestamp": "relative time, secondary label"
+              }
+            },
+            "quick_actions": {
+              "type": "HorizontalScrollView",
+              "position": "below status indicator",
+              "items": [
+                "Common phrases",
+                "Recent commands",
+                "Rooms",
+                "Modes"
+              ]
+            },
+            "settings_button": {
+              "type": "CircularButton",
+              "size": "44x44",
+              "position": "top right",
+              "icon": "gearshape.fill"
+            }
+          }
+        },
+        "user_flow": {
+          "main_flow": [
+            {
+              "step": 1,
+              "action": "User taps voice button",
+              "system_response": "Haptic feedback, button state change, request microphone permission if needed",
+              "ui_changes": "Button animates to listening state, waveform appears, status updates"
+            },
+            {
+              "step": 2,
+              "action": "User speaks command",
+              "system_response": "Real-time transcription, audio level visualization",
+              "ui_changes": "Text appears word by word, waveform responds to voice, confidence indicators show"
+            },
+            {
+              "step": 3,
+              "action": "User pauses or taps button again",
+              "system_response": "End recording, begin processing",
+              "ui_changes": "Button to processing state, transcription finalizes, status updates"
+            },
+            {
+              "step": 4,
+              "action": "System processes intent",
+              "system_response": "Analyze command, prepare response",
+              "ui_changes": "Processing animation, keep transcription visible"
+            },
+            {
+              "step": 5,
+              "action": "House responds",
+              "system_response": "Play synthesized speech, execute action",
+              "ui_changes": "Show response text, status indicates speaking, visual feedback for actions"
+            }
+          ],
+          "alternative_flows": {
+            "wake_word_flow": {
+              "trigger": "User says Hey House",
+              "response": "Auto-activate listening without button tap",
+              "ui": "Subtle screen wake, listening indicator"
+            },
+            "continuous_conversation": {
+              "trigger": "Follow-up question detected",
+              "response": "Keep listening for 5 seconds after response",
+              "ui": "Pulsing ready indicator"
+            },
+            "text_input_fallback": {
+              "trigger": "Voice recognition fails 3 times",
+              "response": "Offer keyboard input",
+              "ui": "Slide up text field with suggestions"
+            }
+          }
+        },
+        "visual_feedback": {
+          "recording_feedback": {
+            "microphone_animation": {
+              "type": "Radial pulse",
+              "frequency": "Matches voice amplitude",
+              "colors": [
+                "#007AFF",
+                "#5AC8FA",
+                "#FFFFFF"
+              ],
+              "opacity": "Dynamic 0.3-1.0"
+            },
+            "screen_feedback": {
+              "subtle_glow": "Edge lighting during active listening",
+              "brightness_boost": "10% increase when processing"
+            },
+            "haptic_patterns": {
+              "start_recording": "Light impact",
+              "stop_recording": "Medium impact",
+              "error": "Notification error pattern",
+              "success": "Success pattern"
+            }
+          },
+          "processing_feedback": {
+            "loading_states": {
+              "transcribing": "Dots appearing at text cursor",
+              "thinking": "Subtle brain icon pulse",
+              "executing": "Progress ring around action icons"
+            },
+            "completion_feedback": {
+              "success": "Green checkmark fade-in",
+              "partial_success": "Yellow info icon",
+              "failure": "Red X with shake"
+            }
+          }
+        },
+        "text_display": {
+          "formatting": {
+            "font_hierarchy": {
+              "user_speech": "SF Pro Text, 17pt, regular",
+              "house_response": "SF Pro Display, 19pt, medium",
+              "system_messages": "SF Pro Text, 15pt, regular",
+              "timestamps": "SF Pro Text, 13pt, regular"
+            },
+            "dynamic_type_support": {
+              "scales_with": "System text size",
+              "minimum": "14pt",
+              "maximum": "32pt"
+            },
+            "text_styling": {
+              "entities": "Bold for recognized entities (rooms, devices)",
+              "confidence": "Opacity 0.6 for low confidence words",
+              "corrections": "Strikethrough for corrected words",
+              "emphasis": "Italic for emphasized speech"
+            }
+          },
+          "scrolling_behavior": {
+            "auto_scroll": {
+              "trigger": "New content added",
+              "animation": "Smooth spring, 0.4s",
+              "positioning": "Keep last 3 lines visible"
+            },
+            "user_interaction": {
+              "during_scroll": "Pause auto-scroll",
+              "resume_after": "3 seconds of inactivity",
+              "scroll_to_bottom": "Floating button when scrolled up"
+            }
+          },
+          "content_organization": {
+            "grouping": "By conversation turn",
+            "separation": "16pt between turns",
+            "metadata": "Timestamp on first message of group",
+            "actions": "Inline buttons for executed commands"
+          }
+        },
+        "accessibility": {
+          "voiceover_support": {
+            "labels": {
+              "voice_button": "Voice command button. Double tap to start listening.",
+              "status": "Current status: [dynamic state]",
+              "transcription": "Your command: [spoken text]",
+              "response": "House says: [response text]"
+            },
+            "hints": {
+              "voice_button_idle": "Double tap to speak a command",
+              "voice_button_listening": "Speak your command or double tap to stop",
+              "transcription_area": "Swipe up or down to review conversation"
+            },
+            "announcements": {
+              "state_changes": "Post accessibility notifications",
+              "new_content": "Announce new transcriptions and responses",
+              "errors": "Clearly announce error states"
+            }
+          },
+          "visual_accommodations": {
+            "high_contrast": {
+              "borders": "2pt borders in high contrast mode",
+              "colors": "System high contrast colors",
+              "shadows": "Disabled in high contrast"
+            },
+            "reduce_motion": {
+              "animations": "Fade instead of scale/rotate",
+              "waveform": "Static level indicator",
+              "transitions": "Instant state changes"
+            },
+            "larger_text": {
+              "minimum_sizes": "Respect dynamic type",
+              "button_scaling": "Increase touch targets",
+              "layout_reflow": "Stack elements vertically"
+            }
+          },
+          "alternative_inputs": {
+            "keyboard_support": {
+              "tab_navigation": "Full keyboard navigation",
+              "shortcuts": "Space to start/stop recording",
+              "escape": "Cancel current operation"
+            },
+            "switch_control": {
+              "scanning": "Logical scan order",
+              "grouping": "Related elements grouped",
+              "actions": "Custom actions menu"
+            }
+          }
+        },
+        "error_states": {
+          "permission_errors": {
+            "microphone_denied": {
+              "icon": "mic.slash",
+              "title": "Microphone Access Needed",
+              "message": "C11S House needs microphone access to hear your commands.",
+              "action": "Settings button to open app settings",
+              "fallback": "Show text input option"
+            },
+            "speech_recognition_denied": {
+              "icon": "waveform.slash",
+              "title": "Speech Recognition Required",
+              "message": "Enable speech recognition for voice commands.",
+              "action": "Guide through system settings"
+            }
+          },
+          "recognition_errors": {
+            "no_speech_detected": {
+              "visual": "Subtle red pulse on button",
+              "message": "I didnt hear anything. Try speaking louder.",
+              "recovery": "Auto-retry listening for 3 seconds"
+            },
+            "unclear_speech": {
+              "visual": "Yellow warning indicator",
+              "message": "I couldnt quite understand. Could you repeat that?",
+              "suggestions": "Show similar commands"
+            },
+            "network_error": {
+              "visual": "Offline indicator",
+              "message": "Connection issue. Some features may be limited.",
+              "mode": "Switch to offline command set"
+            }
+          },
+          "system_errors": {
+            "processing_timeout": {
+              "after": "10 seconds",
+              "message": "This is taking longer than usual...",
+              "option": "Cancel or continue waiting"
+            },
+            "house_unavailable": {
+              "icon": "house.slash",
+              "message": "House system is temporarily unavailable",
+              "fallback": "Queue commands for later"
+            }
+          },
+          "error_ui_patterns": {
+            "inline_errors": {
+              "position": "Replace transcription area",
+              "animation": "Fade in with subtle shake",
+              "duration": "Show for 5 seconds or until action"
+            },
+            "toast_notifications": {
+              "position": "Top of screen",
+              "style": "System notification style",
+              "auto_dismiss": "After 3 seconds"
+            },
+            "full_screen_errors": {
+              "when": "Critical errors only",
+              "design": "Centered message with illustration",
+              "actions": "Clear recovery options"
+            }
+          }
+        },
+        "responsive_design": {
+          "device_adaptations": {
+            "iphone_se": {
+              "voice_button": "64x64",
+              "compact_layout": true,
+              "transcription_height": "40% max"
+            },
+            "iphone_standard": {
+              "voice_button": "80x80",
+              "standard_layout": true,
+              "transcription_height": "60% max"
+            },
+            "iphone_pro_max": {
+              "voice_button": "88x88",
+              "expanded_layout": true,
+              "side_panels": true
+            },
+            "ipad": {
+              "split_view": true,
+              "floating_panels": true,
+              "keyboard_shortcuts": true
+            }
+          },
+          "orientation_handling": {
+            "portrait": {
+              "primary": "Optimized default layout",
+              "voice_button": "Bottom center"
+            },
+            "landscape": {
+              "layout": "Side-by-side conversation view",
+              "voice_button": "Right side center",
+              "transcription": "Left 60% of screen"
+            }
+          }
+        },
+        "interaction_patterns": {
+          "gestures": {
+            "tap": "Start/stop recording",
+            "long_press": "Continuous listening mode",
+            "swipe_up": "Show conversation history",
+            "swipe_down": "Dismiss keyboard",
+            "pinch": "Zoom text size"
+          },
+          "voice_interactions": {
+            "interruption": "Tap button to stop house speaking",
+            "continuation": "Say continue to hear more",
+            "cancellation": "Say cancel or stop",
+            "clarification": "Say what? to repeat"
+          }
+        },
+        "performance_optimizations": {
+          "rendering": {
+            "text_virtualization": "Render only visible messages",
+            "animation_throttling": "Reduce when scrolling",
+            "image_caching": "Cache status icons"
+          },
+          "battery": {
+            "waveform_sampling": "Reduce when on battery",
+            "background_audio": "Pause when not visible",
+            "network_requests": "Batch when possible"
+          }
+        }
+      },
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-07-03T15:41:00.947Z",
+      "updatedAt": "2025-07-03T15:41:00.947Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 11404,
+      "compressed": true,
+      "checksum": "60681a7a467b84109c54b3798df63b0c4d3ea0b1451d12740e6ee2195f45782e",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcnjzja9_koad26oab",
+      "key": "swarm-ios-voice-plan/requirements/analysis",
+      "value": {
+        "timestamp": "2025-07-03T00:00:00Z",
+        "project": "c11s-house-ios",
+        "analysis_type": "voice_transcription_requirements",
+        "sections": {
+          "ios_framework_requirements": {
+            "primary_frameworks": {
+              "Speech": {
+                "purpose": "Core speech recognition functionality",
+                "capabilities": [
+                  "Real-time continuous speech recognition",
+                  "On-device and server-based processing",
+                  "Multi-language support",
+                  "Custom vocabulary support",
+                  "Confidence scoring"
+                ],
+                "key_classes": [
+                  "SFSpeechRecognizer",
+                  "SFSpeechAudioBufferRecognitionRequest",
+                  "SFSpeechRecognitionTask",
+                  "SFSpeechRecognitionResult"
+                ],
+                "requirements": "Import Speech framework, handle authorization"
+              },
+              "AVFoundation": {
+                "purpose": "Audio capture and session management",
+                "capabilities": [
+                  "Audio input configuration",
+                  "Audio session management",
+                  "Audio level monitoring",
+                  "Background audio support",
+                  "Audio routing management"
+                ],
+                "key_classes": [
+                  "AVAudioEngine",
+                  "AVAudioSession",
+                  "AVAudioInputNode",
+                  "AVAudioFormat",
+                  "AVAudioPCMBuffer"
+                ],
+                "requirements": "Configure audio session categories and modes"
+              },
+              "SoundAnalysis": {
+                "purpose": "Wake word detection and acoustic analysis",
+                "capabilities": [
+                  "Custom sound classification",
+                  "Wake word detection",
+                  "Environmental sound recognition",
+                  "Audio event detection"
+                ],
+                "key_classes": [
+                  "SNAudioStreamAnalyzer",
+                  "SNClassifySoundRequest",
+                  "SNClassificationResult"
+                ],
+                "requirements": "Optional but recommended for wake word detection"
+              }
+            },
+            "supporting_frameworks": {
+              "NaturalLanguage": "For intent classification and entity extraction",
+              "CoreML": "For on-device machine learning models",
+              "Combine": "For reactive data flow and event handling"
+            }
+          },
+          "permission_requirements": {
+            "required_permissions": {
+              "microphone": {
+                "info_plist_key": "NSMicrophoneUsageDescription",
+                "description": "Required for capturing voice input",
+                "request_timing": "On first voice interaction attempt",
+                "fallback": "Show tutorial explaining why permission is needed"
+              },
+              "speech_recognition": {
+                "info_plist_key": "NSSpeechRecognitionUsageDescription",
+                "description": "Required for converting speech to text",
+                "request_timing": "After microphone permission granted",
+                "fallback": "Offer alternative text input method"
+              }
+            },
+            "optional_permissions": {
+              "siri_intents": {
+                "info_plist_key": "NSSiriUsageDescription",
+                "description": "For Siri shortcuts integration",
+                "benefit": "Allows voice control through Siri"
+              }
+            },
+            "permission_flow": [
+              "Check authorization status before each use",
+              "Request permissions sequentially, not simultaneously",
+              "Provide clear explanation before requesting",
+              "Handle denial gracefully with alternatives",
+              "Guide users to Settings if previously denied"
+            ]
+          },
+          "device_compatibility": {
+            "minimum_requirements": {
+              "ios_version": "iOS 16.0",
+              "recommended_version": "iOS 17.0+",
+              "device_models": {
+                "iphone": "iPhone 12 and newer (A14 Bionic+)",
+                "ipad": "iPad Air 4th gen and newer"
+              },
+              "processor_requirements": "A12 Bionic minimum, A14+ recommended"
+            },
+            "feature_availability": {
+              "ios_16": [
+                "Basic speech recognition",
+                "On-device processing for common languages",
+                "Server-based processing fallback"
+              ],
+              "ios_17": [
+                "Enhanced on-device models",
+                "Improved accuracy",
+                "Lower latency",
+                "Better noise handling",
+                "Apple Intelligence integration"
+              ]
+            },
+            "language_support": {
+              "on_device_languages": [
+                "English (US, UK, AU, IN)",
+                "Spanish",
+                "French",
+                "German",
+                "Italian",
+                "Japanese",
+                "Korean",
+                "Mandarin",
+                "Cantonese"
+              ],
+              "server_required_languages": "Less common languages and dialects"
+            }
+          },
+          "offline_vs_online": {
+            "offline_capabilities": {
+              "advantages": [
+                "Zero latency for supported languages",
+                "Privacy preservation",
+                "No network dependency",
+                "No API costs",
+                "Works in airplane mode"
+              ],
+              "limitations": [
+                "Limited to downloaded language models",
+                "Reduced accuracy for accents",
+                "Basic vocabulary only",
+                "No continuous learning",
+                "Larger app size (50-200MB per language)"
+              ],
+              "implementation": "Set requiresOnDeviceRecognition = true"
+            },
+            "online_capabilities": {
+              "advantages": [
+                "Higher accuracy",
+                "All languages supported",
+                "Latest model updates",
+                "Complex vocabulary",
+                "Better accent handling"
+              ],
+              "limitations": [
+                "Network latency (200-500ms)",
+                "Privacy concerns",
+                "API costs",
+                "Internet requirement",
+                "Potential service outages"
+              ],
+              "implementation": "Default behavior when network available"
+            },
+            "hybrid_approach": {
+              "strategy": "Prefer offline, fallback to online",
+              "decision_factors": [
+                "Language availability",
+                "Network conditions",
+                "Accuracy requirements",
+                "User privacy settings"
+              ]
+            }
+          },
+          "privacy_considerations": {
+            "data_handling": {
+              "audio_data": {
+                "storage": "Never store raw audio without explicit consent",
+                "processing": "Process in memory, discard immediately after",
+                "transmission": "Encrypt if sending to server"
+              },
+              "transcription_data": {
+                "storage": "Store only with user consent",
+                "retention": "Implement data retention policies",
+                "deletion": "Provide user control for data deletion"
+              }
+            },
+            "privacy_features": {
+              "on_device_preference": "Default to on-device processing",
+              "opt_in_cloud": "Require explicit opt-in for cloud processing",
+              "data_minimization": "Only collect necessary data",
+              "transparency": "Clear privacy policy and data usage"
+            },
+            "compliance": {
+              "gdpr": "Right to erasure, data portability",
+              "ccpa": "California privacy requirements",
+              "coppa": "Child privacy if applicable",
+              "app_store": "Apple privacy nutrition labels"
+            }
+          },
+          "memory_performance": {
+            "memory_usage": {
+              "speech_recognition": {
+                "active": "50-100MB during recognition",
+                "idle": "10-20MB when listening for wake word",
+                "models": "50-200MB per language model"
+              },
+              "audio_buffers": {
+                "size": "10 second rolling buffer recommended",
+                "format": "16kHz, 16-bit PCM",
+                "memory": "~320KB for 10 seconds"
+              }
+            },
+            "performance_targets": {
+              "wake_word_detection": "<100ms latency",
+              "transcription_start": "<200ms to first result",
+              "final_transcription": "<500ms after speech ends",
+              "ui_responsiveness": "60fps during recognition"
+            },
+            "optimization_strategies": {
+              "memory": [
+                "Release audio buffers immediately after processing",
+                "Lazy load language models",
+                "Use memory warnings to free caches",
+                "Implement audio session interruption handling"
+              ],
+              "cpu": [
+                "Use background queues for processing",
+                "Throttle recognition updates to UI",
+                "Pause non-critical tasks during recognition",
+                "Optimize audio format for processing"
+              ],
+              "battery": [
+                "Stop recognition when not needed",
+                "Use voice activity detection",
+                "Reduce sample rate when possible",
+                "Implement aggressive timeouts"
+              ]
+            }
+          },
+          "implementation_recommendations": {
+            "architecture": [
+              "Separate speech recognition into dedicated service class",
+              "Use protocol-oriented design for testability",
+              "Implement proper state machine for recognition states",
+              "Create abstraction layer for future provider changes"
+            ],
+            "error_handling": [
+              "Handle permission denials gracefully",
+              "Implement retry logic for transient failures",
+              "Provide user feedback for all error states",
+              "Fall back to text input when voice fails"
+            ],
+            "testing": [
+              "Mock audio inputs for unit tests",
+              "Test with various accents and noise levels",
+              "Verify memory usage stays within limits",
+              "Test permission flows and edge cases"
+            ],
+            "accessibility": [
+              "Provide visual feedback for audio levels",
+              "Show transcription in real-time",
+              "Support VoiceOver for UI elements",
+              "Offer alternative input methods"
+            ]
+          },
+          "code_implementation_outline": {
+            "core_structure": "VoiceTranscriptionService with SpeechRecognizer and AudioEngine integration",
+            "state_management": "Finite state machine for idle, listening, processing, error states",
+            "configuration": "VoiceConfiguration struct with language, quality, and privacy settings",
+            "protocols": "VoiceTranscriptionDelegate for UI updates and error handling"
+          }
+        },
+        "summary": "Comprehensive voice transcription implementation requires careful integration of Speech and AVFoundation frameworks, proper permission handling, consideration of offline/online tradeoffs, strict privacy compliance, and performance optimization. The existing app architecture supports this integration well with iOS 16.0 minimum requirement and clean separation of concerns."
+      },
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-07-03T15:41:30.849Z",
+      "updatedAt": "2025-07-03T15:41:30.849Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 8216,
+      "compressed": true,
+      "checksum": "660dfe10130ed17e8931e68d522f284c053a98ec559ba03e98b374af68deda7c",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcnk0aq7_cvocj81e5",
+      "key": "swarm-ios-voice-plan/architecture/design",
+      "value": "# Voice Transcription Architecture Design for c11s-house-ios\n\n## 1. Component Architecture (MVVM-C Pattern)\n\n### View Layer\n```swift\n// VoiceTranscriptionView.swift\nstruct VoiceTranscriptionView: View {\n    @StateObject private var viewModel: VoiceTranscriptionViewModel\n    \n    var body: some View {\n        VStack {\n            // Visual feedback components\n            AudioWaveformView(audioLevel: viewModel.audioLevel)\n            TranscriptionTextView(\n                transcribedText: viewModel.transcribedText,\n                isTranscribing: viewModel.isTranscribing\n            )\n            VoiceControlsView(\n                recordingState: viewModel.recordingState,\n                onStartRecording: viewModel.startRecording,\n                onStopRecording: viewModel.stopRecording\n            )\n            ErrorBannerView(error: viewModel.currentError)\n        }\n    }\n}\n\n// Supporting View Components\nstruct AudioWaveformView: View {\n    let audioLevel: Double\n    @State private var waveformData: [Double] = []\n}\n\nstruct TranscriptionTextView: View {\n    let transcribedText: String\n    let isTranscribing: Bool\n    @State private var partialTranscription: String = \"\"\n}\n\nstruct VoiceControlsView: View {\n    let recordingState: RecordingState\n    let onStartRecording: () -> Void\n    let onStopRecording: () -> Void\n}\n```\n\n### ViewModel Layer\n```swift\n// VoiceTranscriptionViewModel.swift\n@MainActor\nclass VoiceTranscriptionViewModel: ObservableObject {\n    // Published state properties\n    @Published var transcribedText: String = \"\"\n    @Published var isTranscribing: Bool = false\n    @Published var recordingState: RecordingState = .idle\n    @Published var audioLevel: Double = 0.0\n    @Published var currentError: TranscriptionError?\n    \n    // Dependencies\n    private let speechRecognitionService: SpeechRecognitionServiceProtocol\n    private let audioSessionManager: AudioSessionManagerProtocol\n    private let transcriptionUseCase: TranscriptionUseCaseProtocol\n    private let stateManager: TranscriptionStateManagerProtocol\n    \n    // Combine subscriptions\n    private var cancellables = Set<AnyCancellable>()\n    \n    init(dependencies: VoiceTranscriptionDependencies) {\n        self.speechRecognitionService = dependencies.speechRecognitionService\n        self.audioSessionManager = dependencies.audioSessionManager\n        self.transcriptionUseCase = dependencies.transcriptionUseCase\n        self.stateManager = dependencies.stateManager\n        \n        setupBindings()\n    }\n    \n    private func setupBindings() {\n        // Bind service state to view model\n        speechRecognitionService.transcriptionPublisher\n            .receive(on: DispatchQueue.main)\n            .sink { [weak self] transcription in\n                self?.handleTranscription(transcription)\n            }\n            .store(in: &cancellables)\n        \n        audioSessionManager.audioLevelPublisher\n            .receive(on: DispatchQueue.main)\n            .assign(to: &$audioLevel)\n    }\n}\n\n// Recording State Enum\nenum RecordingState {\n    case idle\n    case preparing\n    case recording\n    case processing\n    case paused\n    case error(TranscriptionError)\n}\n```\n\n### Model Layer\n```swift\n// TranscriptionModels.swift\nstruct TranscriptionResult {\n    let text: String\n    let confidence: Float\n    let timestamp: Date\n    let language: String\n    let alternatives: [Alternative]\n    let metadata: TranscriptionMetadata\n    \n    struct Alternative {\n        let text: String\n        let confidence: Float\n    }\n}\n\nstruct TranscriptionMetadata {\n    let duration: TimeInterval\n    let audioQuality: AudioQuality\n    let speakerIdentification: SpeakerInfo?\n    let sentimentAnalysis: SentimentInfo?\n}\n\nstruct TranscriptionSegment {\n    let id: UUID\n    let text: String\n    let startTime: TimeInterval\n    let endTime: TimeInterval\n    let confidence: Float\n    let isFinal: Bool\n}\n\nstruct TranscriptionSession {\n    let id: UUID\n    let startTime: Date\n    var segments: [TranscriptionSegment]\n    var state: SessionState\n    var metadata: SessionMetadata\n}\n```\n\n## 2. Speech Recognition Service Design Pattern\n\n### Service Protocol Definition\n```swift\n// SpeechRecognitionServiceProtocol.swift\nprotocol SpeechRecognitionServiceProtocol {\n    // Core functionality\n    func startRecognition() async throws\n    func stopRecognition() async\n    func pauseRecognition() async\n    func resumeRecognition() async throws\n    \n    // Configuration\n    func configure(with settings: RecognitionSettings) async throws\n    \n    // Publishers for reactive updates\n    var transcriptionPublisher: AnyPublisher<TranscriptionResult, Never> { get }\n    var statePublisher: AnyPublisher<RecognitionState, Never> { get }\n    var errorPublisher: AnyPublisher<TranscriptionError, Never> { get }\n}\n\n// Recognition Settings\nstruct RecognitionSettings {\n    let language: String\n    let requiresOnDeviceRecognition: Bool\n    let contextualStrings: [String]\n    let taskHint: SFSpeechRecognitionTaskHint\n    let shouldReportPartialResults: Bool\n}\n```\n\n### Service Implementation\n```swift\n// SpeechRecognitionService.swift\nimport Speech\nimport Combine\n\nfinal class SpeechRecognitionService: NSObject, SpeechRecognitionServiceProtocol {\n    // Speech framework components\n    private var speechRecognizer: SFSpeechRecognizer?\n    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?\n    private var recognitionTask: SFSpeechRecognitionTask?\n    private let audioEngine = AVAudioEngine()\n    \n    // Publishers\n    private let transcriptionSubject = PassthroughSubject<TranscriptionResult, Never>()\n    private let stateSubject = CurrentValueSubject<RecognitionState, Never>(.idle)\n    private let errorSubject = PassthroughSubject<TranscriptionError, Never>()\n    \n    // Configuration\n    private var currentSettings: RecognitionSettings\n    \n    // Audio processing\n    private let audioBufferProcessor: AudioBufferProcessorProtocol\n    private let noiseReduction: NoiseReductionProtocol\n    \n    override init() {\n        self.currentSettings = RecognitionSettings.default\n        self.audioBufferProcessor = AudioBufferProcessor()\n        self.noiseReduction = NoiseReductionService()\n        super.init()\n        \n        setupSpeechRecognizer()\n    }\n    \n    private func setupSpeechRecognizer() {\n        speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: currentSettings.language))\n        speechRecognizer?.defaultTaskHint = currentSettings.taskHint\n    }\n}\n```\n\n### Audio Buffer Management\n```swift\n// AudioBufferProcessor.swift\nprotocol AudioBufferProcessorProtocol {\n    func processBuffer(_ buffer: AVAudioPCMBuffer) -> ProcessedAudioData\n    func reset()\n}\n\nclass AudioBufferProcessor: AudioBufferProcessorProtocol {\n    private var bufferQueue = DispatchQueue(label: \"audio.buffer.queue\", qos: .userInitiated)\n    private var accumulatedBuffers: [AVAudioPCMBuffer] = []\n    \n    func processBuffer(_ buffer: AVAudioPCMBuffer) -> ProcessedAudioData {\n        // Perform audio processing: noise reduction, normalization, etc.\n        let processed = bufferQueue.sync {\n            noiseReduction.process(buffer)\n            audioNormalizer.normalize(buffer)\n            return ProcessedAudioData(buffer: buffer, metadata: extractMetadata(buffer))\n        }\n        return processed\n    }\n}\n```\n\n## 3. Data Flow Architecture\n\n### Microphone to UI Display Pipeline\n```\n┌─────────────────┐\n│   Microphone    │\n│  (AVAudioInput) │\n└────────┬────────┘\n         │\n         ▼\n┌─────────────────┐\n│ Audio Session   │\n│    Manager      │\n└────────┬────────┘\n         │\n         ▼\n┌─────────────────┐\n│ Audio Buffer    │\n│   Processor     │\n└────────┬────────┘\n         │\n         ▼\n┌─────────────────┐\n│Speech Recognition│\n│    Service      │\n└────────┬────────┘\n         │\n         ▼\n┌─────────────────┐\n│  Transcription  │\n│    Use Case     │\n└────────┬────────┘\n         │\n         ▼\n┌─────────────────┐\n│   View Model    │\n│  (State Update) │\n└────────┬────────┘\n         │\n         ▼\n┌─────────────────┐\n│   SwiftUI View  │\n│  (UI Display)   │\n└─────────────────┘\n```\n\n### Detailed Data Flow Implementation\n```swift\n// AudioSessionManager.swift\nclass AudioSessionManager: AudioSessionManagerProtocol {\n    private let audioSession = AVAudioSession.sharedInstance()\n    private let audioEngine = AVAudioEngine()\n    private var inputNode: AVAudioInputNode?\n    \n    func startAudioCapture(completion: @escaping (Result<Void, AudioError>) -> Void) {\n        do {\n            // Configure audio session\n            try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)\n            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)\n            \n            // Setup audio engine\n            inputNode = audioEngine.inputNode\n            let recordingFormat = inputNode\\!.outputFormat(forBus: 0)\n            \n            // Install tap on audio input\n            inputNode\\!.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in\n                self?.processAudioBuffer(buffer)\n            }\n            \n            audioEngine.prepare()\n            try audioEngine.start()\n            \n            completion(.success(()))\n        } catch {\n            completion(.failure(.sessionSetupFailed(error)))\n        }\n    }\n    \n    private func processAudioBuffer(_ buffer: AVAudioPCMBuffer) {\n        // Send buffer through processing pipeline\n        audioBufferSubject.send(buffer)\n    }\n}\n\n// TranscriptionUseCase.swift\nclass TranscriptionUseCase: TranscriptionUseCaseProtocol {\n    private let repository: TranscriptionRepositoryProtocol\n    private let contextManager: ContextManagerProtocol\n    \n    func processTranscription(_ raw: RawTranscription) async -> TranscriptionResult {\n        // Apply business logic\n        let enhanced = await contextManager.enhanceWithContext(raw)\n        let validated = validateTranscription(enhanced)\n        \n        // Store if needed\n        if validated.shouldPersist {\n            await repository.save(validated)\n        }\n        \n        return validated\n    }\n}\n```\n\n## 4. State Management Architecture\n\n### Transcription State Machine\n```swift\n// TranscriptionStateManager.swift\nactor TranscriptionStateManager: TranscriptionStateManagerProtocol {\n    enum State {\n        case idle\n        case requestingPermission\n        case initializing\n        case ready\n        case recording\n        case processing\n        case paused\n        case completed(TranscriptionResult)\n        case failed(TranscriptionError)\n    }\n    \n    private(set) var currentState: State = .idle\n    private var stateHistory: [StateTransition] = []\n    \n    // State transition rules\n    private let transitionRules: [State: Set<State>] = [\n        .idle: [.requestingPermission, .initializing],\n        .requestingPermission: [.initializing, .failed],\n        .initializing: [.ready, .failed],\n        .ready: [.recording, .failed],\n        .recording: [.paused, .processing, .failed],\n        .paused: [.recording, .processing, .failed],\n        .processing: [.completed, .failed],\n        .completed: [.idle, .ready],\n        .failed: [.idle]\n    ]\n    \n    func transition(to newState: State) async throws {\n        guard isValidTransition(from: currentState, to: newState) else {\n            throw StateError.invalidTransition(from: currentState, to: newState)\n        }\n        \n        // Perform exit actions\n        await performExitActions(for: currentState)\n        \n        // Update state\n        let transition = StateTransition(from: currentState, to: newState, timestamp: Date())\n        stateHistory.append(transition)\n        currentState = newState\n        \n        // Perform entry actions\n        await performEntryActions(for: newState)\n        \n        // Notify observers\n        await notifyStateChange(newState)\n    }\n}\n```\n\n### State Persistence and Recovery\n```swift\n// StatePersistenceManager.swift\nclass StatePersistenceManager {\n    private let userDefaults = UserDefaults.standard\n    private let keychain = KeychainManager()\n    \n    func saveState(_ state: TranscriptionState) {\n        let encoder = JSONEncoder()\n        if let data = try? encoder.encode(state) {\n            userDefaults.set(data, forKey: \"transcription.state\")\n        }\n    }\n    \n    func restoreState() -> TranscriptionState? {\n        guard let data = userDefaults.data(forKey: \"transcription.state\"),\n              let state = try? JSONDecoder().decode(TranscriptionState.self, from: data) else {\n            return nil\n        }\n        return state\n    }\n    \n    func saveSession(_ session: TranscriptionSession) async throws {\n        // Save to CoreData or FileManager\n        let data = try JSONEncoder().encode(session)\n        let url = getSessionURL(for: session.id)\n        try data.write(to: url)\n    }\n}\n```\n\n## 5. Error Handling Architecture\n\n### Error Type Hierarchy\n```swift\n// TranscriptionErrors.swift\nenum TranscriptionError: LocalizedError {\n    // Permission errors\n    case microphonePermissionDenied\n    case speechRecognitionPermissionDenied\n    \n    // Audio errors\n    case audioSessionSetupFailed(Error)\n    case audioEngineStartFailed(Error)\n    case audioInterrupted(reason: InterruptionReason)\n    \n    // Recognition errors\n    case recognitionNotAvailable(language: String)\n    case recognitionFailed(Error)\n    case recognitionTimeout\n    case recognitionCancelled\n    \n    // Network errors\n    case networkUnavailable\n    case serverError(statusCode: Int)\n    case rateLimitExceeded\n    \n    // Processing errors\n    case invalidAudioFormat\n    case processingFailed(reason: String)\n    case contextMissing\n    \n    var errorDescription: String? {\n        switch self {\n        case .microphonePermissionDenied:\n            return \"Microphone access is required for voice transcription\"\n        case .speechRecognitionPermissionDenied:\n            return \"Speech recognition permission is required\"\n        case .audioSessionSetupFailed(let error):\n            return \"Failed to setup audio session: \\(error.localizedDescription)\"\n        // ... other cases\n        }\n    }\n    \n    var recoverySuggestion: String? {\n        switch self {\n        case .microphonePermissionDenied, .speechRecognitionPermissionDenied:\n            return \"Please enable permissions in Settings\"\n        case .networkUnavailable:\n            return \"Check your internet connection or enable offline mode\"\n        // ... other cases\n        }\n    }\n}\n```\n\n### Error Recovery Strategy\n```swift\n// ErrorRecoveryCoordinator.swift\nprotocol ErrorRecoveryStrategy {\n    func canRecover(from error: TranscriptionError) -> Bool\n    func recover(from error: TranscriptionError) async throws\n}\n\nclass ErrorRecoveryCoordinator {\n    private let strategies: [ErrorRecoveryStrategy]\n    \n    init() {\n        self.strategies = [\n            PermissionRecoveryStrategy(),\n            NetworkRecoveryStrategy(),\n            AudioRecoveryStrategy(),\n            FallbackRecoveryStrategy()\n        ]\n    }\n    \n    func handleError(_ error: TranscriptionError) async {\n        // Find appropriate recovery strategy\n        for strategy in strategies {\n            if strategy.canRecover(from: error) {\n                do {\n                    try await strategy.recover(from: error)\n                    return\n                } catch {\n                    continue // Try next strategy\n                }\n            }\n        }\n        \n        // No recovery possible, notify user\n        await notifyUserOfUnrecoverableError(error)\n    }\n}\n\n// Specific Recovery Strategies\nclass PermissionRecoveryStrategy: ErrorRecoveryStrategy {\n    func canRecover(from error: TranscriptionError) -> Bool {\n        switch error {\n        case .microphonePermissionDenied, .speechRecognitionPermissionDenied:\n            return true\n        default:\n            return false\n        }\n    }\n    \n    func recover(from error: TranscriptionError) async throws {\n        // Guide user to settings\n        await MainActor.run {\n            if let url = URL(string: UIApplication.openSettingsURLString) {\n                UIApplication.shared.open(url)\n            }\n        }\n    }\n}\n\nclass NetworkRecoveryStrategy: ErrorRecoveryStrategy {\n    func canRecover(from error: TranscriptionError) -> Bool {\n        switch error {\n        case .networkUnavailable, .serverError:\n            return true\n        default:\n            return false\n        }\n    }\n    \n    func recover(from error: TranscriptionError) async throws {\n        // Switch to offline mode or retry with backoff\n        switch error {\n        case .networkUnavailable:\n            try await switchToOfflineMode()\n        case .serverError:\n            try await retryWithExponentialBackoff()\n        default:\n            break\n        }\n    }\n}\n```\n\n## 6. Integration Points with Existing App\n\n### Dependency Injection Setup\n```swift\n// DependencyContainer.swift\nclass VoiceTranscriptionDependencyContainer {\n    lazy var speechRecognitionService: SpeechRecognitionServiceProtocol = {\n        SpeechRecognitionService(\n            audioProcessor: audioBufferProcessor,\n            noiseReduction: noiseReductionService\n        )\n    }()\n    \n    lazy var audioSessionManager: AudioSessionManagerProtocol = {\n        AudioSessionManager()\n    }()\n    \n    lazy var transcriptionUseCase: TranscriptionUseCaseProtocol = {\n        TranscriptionUseCase(\n            repository: transcriptionRepository,\n            contextManager: contextManager\n        )\n    }()\n    \n    lazy var viewModel: VoiceTranscriptionViewModel = {\n        VoiceTranscriptionViewModel(\n            dependencies: VoiceTranscriptionDependencies(\n                speechRecognitionService: speechRecognitionService,\n                audioSessionManager: audioSessionManager,\n                transcriptionUseCase: transcriptionUseCase,\n                stateManager: stateManager\n            )\n        )\n    }()\n}\n```\n\n### Integration with House Consciousness API\n```swift\n// VoiceToConsciousnessAdapter.swift\nclass VoiceToConsciousnessAdapter {\n    private let transcriptionService: SpeechRecognitionServiceProtocol\n    private let consciousnessAPI: ConsciousnessAPIProtocol\n    private let contextManager: ConversationContextManager\n    \n    func processVoiceCommand() async throws -> HouseResponse {\n        // 1. Get transcription\n        let transcription = try await transcriptionService.getTranscription()\n        \n        // 2. Add context\n        let contextualizedCommand = contextManager.addContext(to: transcription)\n        \n        // 3. Send to consciousness API\n        let response = try await consciousnessAPI.sendConversation(contextualizedCommand)\n        \n        // 4. Update context with response\n        contextManager.updateContext(with: response)\n        \n        return response\n    }\n}\n```\n\n### Navigation Integration\n```swift\n// VoiceCoordinator.swift\nclass VoiceCoordinator: Coordinator {\n    weak var parentCoordinator: MainCoordinator?\n    var navigationController: UINavigationController\n    \n    init(navigationController: UINavigationController) {\n        self.navigationController = navigationController\n    }\n    \n    func start() {\n        let container = VoiceTranscriptionDependencyContainer()\n        let voiceView = VoiceTranscriptionView(viewModel: container.viewModel)\n        let hostingController = UIHostingController(rootView: voiceView)\n        \n        navigationController.pushViewController(hostingController, animated: true)\n    }\n    \n    func showTranscriptionHistory() {\n        let historyCoordinator = TranscriptionHistoryCoordinator(\n            navigationController: navigationController\n        )\n        historyCoordinator.parentCoordinator = self\n        historyCoordinator.start()\n    }\n}\n```\n\n### Event Bus Integration\n```swift\n// VoiceEventBus.swift\nprotocol VoiceEventBus {\n    func publish(_ event: VoiceEvent)\n    func subscribe<T: VoiceEvent>(to eventType: T.Type, handler: @escaping (T) -> Void)\n}\n\nenum VoiceEvent {\n    case transcriptionStarted\n    case transcriptionCompleted(text: String)\n    case transcriptionFailed(error: TranscriptionError)\n    case voiceCommandProcessed(command: VoiceCommand)\n    case audioLevelChanged(level: Double)\n}\n\nclass VoiceEventBusImpl: VoiceEventBus {\n    private let eventSubject = PassthroughSubject<VoiceEvent, Never>()\n    \n    func publish(_ event: VoiceEvent) {\n        eventSubject.send(event)\n    }\n    \n    func subscribe<T: VoiceEvent>(to eventType: T.Type, handler: @escaping (T) -> Void) {\n        eventSubject\n            .compactMap { $0 as? T }\n            .sink { event in\n                handler(event)\n            }\n            .store(in: &cancellables)\n    }\n}\n```\n\n## Advanced Features\n\n### 1. Real-time Transcription with WebSocket\n```swift\n// RealtimeTranscriptionService.swift\nclass RealtimeTranscriptionService {\n    private var webSocket: URLSessionWebSocketTask?\n    private let transcriptionSubject = PassthroughSubject<TranscriptionSegment, Never>()\n    \n    func connectToTranscriptionService() async throws {\n        let url = URL(string: \"wss://api.house-consciousness.com/transcription\")\\!\n        webSocket = URLSession.shared.webSocketTask(with: url)\n        \n        webSocket?.resume()\n        await receiveTranscriptions()\n    }\n    \n    private func receiveTranscriptions() async {\n        guard let webSocket = webSocket else { return }\n        \n        do {\n            let message = try await webSocket.receive()\n            switch message {\n            case .string(let text):\n                if let segment = parseTranscriptionSegment(text) {\n                    transcriptionSubject.send(segment)\n                }\n            case .data(let data):\n                // Handle binary data if needed\n                break\n            }\n            \n            // Continue receiving\n            await receiveTranscriptions()\n        } catch {\n            // Handle disconnection\n        }\n    }\n}\n```\n\n### 2. Offline Transcription Support\n```swift\n// OfflineTranscriptionManager.swift\nclass OfflineTranscriptionManager {\n    private let onDeviceRecognizer: SFSpeechRecognizer?\n    private let queueManager: OfflineQueueManager\n    \n    init() {\n        // Force on-device recognition\n        self.onDeviceRecognizer = SFSpeechRecognizer(locale: .current)\n        self.onDeviceRecognizer?.supportsOnDeviceRecognition = true\n        self.queueManager = OfflineQueueManager()\n    }\n    \n    func transcribeOffline(_ audioURL: URL) async throws -> TranscriptionResult {\n        guard let recognizer = onDeviceRecognizer,\n              recognizer.isAvailable,\n              recognizer.supportsOnDeviceRecognition else {\n            throw TranscriptionError.offlineTranscriptionNotAvailable\n        }\n        \n        let request = SFSpeechURLRecognitionRequest(url: audioURL)\n        request.requiresOnDeviceRecognition = true\n        \n        return try await withCheckedThrowingContinuation { continuation in\n            recognizer.recognitionTask(with: request) { result, error in\n                if let error = error {\n                    continuation.resume(throwing: error)\n                } else if let result = result, result.isFinal {\n                    let transcription = self.convertToTranscriptionResult(result)\n                    continuation.resume(returning: transcription)\n                }\n            }\n        }\n    }\n}\n```\n\n### 3. Voice Activity Detection (VAD)\n```swift\n// VoiceActivityDetector.swift\nclass VoiceActivityDetector {\n    private let energyThreshold: Float = -50.0\n    private let silenceDuration: TimeInterval = 1.5\n    private var lastVoiceTime: Date?\n    \n    func detectVoiceActivity(in buffer: AVAudioPCMBuffer) -> VoiceActivityState {\n        let energy = calculateEnergy(buffer)\n        \n        if energy > energyThreshold {\n            lastVoiceTime = Date()\n            return .speaking\n        } else if let lastVoice = lastVoiceTime,\n                  Date().timeIntervalSince(lastVoice) < silenceDuration {\n            return .pausedSpeaking\n        } else {\n            return .silence\n        }\n    }\n    \n    private func calculateEnergy(_ buffer: AVAudioPCMBuffer) -> Float {\n        guard let channelData = buffer.floatChannelData else { return -100.0 }\n        \n        let channelDataValue = channelData.pointee\n        let channelDataArray = stride(from: 0, to: Int(buffer.frameLength), by: buffer.stride)\n            .map { channelDataValue[$0] }\n        \n        let rms = sqrt(channelDataArray.map { $0 * $0 }.reduce(0, +) / Float(buffer.frameLength))\n        return 20 * log10(rms)\n    }\n}\n```\n\n## Testing Architecture\n\n### Unit Test Structure\n```swift\n// VoiceTranscriptionViewModelTests.swift\nclass VoiceTranscriptionViewModelTests: XCTestCase {\n    var viewModel: VoiceTranscriptionViewModel\\!\n    var mockSpeechService: MockSpeechRecognitionService\\!\n    var mockAudioManager: MockAudioSessionManager\\!\n    \n    override func setUp() {\n        super.setUp()\n        mockSpeechService = MockSpeechRecognitionService()\n        mockAudioManager = MockAudioSessionManager()\n        \n        viewModel = VoiceTranscriptionViewModel(\n            dependencies: VoiceTranscriptionDependencies(\n                speechRecognitionService: mockSpeechService,\n                audioSessionManager: mockAudioManager,\n                transcriptionUseCase: MockTranscriptionUseCase(),\n                stateManager: MockStateManager()\n            )\n        )\n    }\n    \n    func testStartRecordingUpdatesState() async {\n        // Given\n        XCTAssertEqual(viewModel.recordingState, .idle)\n        \n        // When\n        await viewModel.startRecording()\n        \n        // Then\n        XCTAssertEqual(viewModel.recordingState, .recording)\n        XCTAssertTrue(viewModel.isTranscribing)\n    }\n    \n    func testTranscriptionErrorHandling() async {\n        // Given\n        mockSpeechService.shouldFailWithError = .microphonePermissionDenied\n        \n        // When\n        await viewModel.startRecording()\n        \n        // Then\n        XCTAssertEqual(viewModel.recordingState, .error(.microphonePermissionDenied))\n        XCTAssertNotNil(viewModel.currentError)\n    }\n}\n```\n\n## Performance Considerations\n\n### 1. Memory Management\n```swift\n// AudioBufferPool.swift\nclass AudioBufferPool {\n    private var availableBuffers: [AVAudioPCMBuffer] = []\n    private let maxBuffers = 10\n    private let bufferSize: AVAudioFrameCount = 8192\n    \n    func getBuffer() -> AVAudioPCMBuffer {\n        if let buffer = availableBuffers.popLast() {\n            return buffer\n        } else {\n            return createNewBuffer()\n        }\n    }\n    \n    func returnBuffer(_ buffer: AVAudioPCMBuffer) {\n        buffer.frameLength = 0\n        if availableBuffers.count < maxBuffers {\n            availableBuffers.append(buffer)\n        }\n    }\n}\n```\n\n### 2. Background Processing\n```swift\n// BackgroundTranscriptionManager.swift\nclass BackgroundTranscriptionManager {\n    private var backgroundTask: UIBackgroundTaskIdentifier = .invalid\n    \n    func startBackgroundTranscription() {\n        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in\n            self?.endBackgroundTranscription()\n        }\n        \n        Task {\n            await performTranscription()\n            endBackgroundTranscription()\n        }\n    }\n    \n    private func endBackgroundTranscription() {\n        UIApplication.shared.endBackgroundTask(backgroundTask)\n        backgroundTask = .invalid\n    }\n}\n```\n\n## Summary\n\nThis architecture provides:\n1. **Clean separation of concerns** with MVVM-C pattern\n2. **Reactive data flow** using Combine\n3. **Robust error handling** with recovery strategies\n4. **Flexible state management** with state machine pattern\n5. **Testable components** through dependency injection\n6. **Performance optimizations** for real-time processing\n7. **Offline support** for reliability\n8. **Integration ready** with existing House Consciousness API\n\nThe architecture is designed to be modular, testable, and scalable while providing a smooth user experience for voice transcription in the iOS app.",
+      "type": "string",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-07-03T15:42:06.415Z",
+      "updatedAt": "2025-07-03T15:42:06.415Z",
+      "lastAccessedAt": "2025-07-03T16:11:26.152Z",
+      "version": 1,
+      "size": 30136,
+      "compressed": true,
+      "checksum": "641946af80c719dd7ee781c44a9a287440c1b4fe713a3d111ad587f2444611c3",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcnk39k7_a1k3n82dv",
+      "key": "swarm-ios-voice-plan/testing/strategy",
+      "value": {
+        "title": "iOS Voice Transcription Testing Strategy",
+        "version": "1.0",
+        "lastUpdated": "2025-07-03",
+        "overview": "Comprehensive testing approach for iOS voice transcription features covering unit, UI, integration, performance, edge cases, and accessibility testing",
+        "1_unit_testing": {
+          "description": "Component-level testing for speech recognition modules",
+          "frameworks": [
+            "XCTest",
+            "Quick/Nimble"
+          ],
+          "components": {
+            "audio_capture": {
+              "tests": [
+                "Test AVAudioEngine initialization and configuration",
+                "Test audio format validation (sample rate, channels, bit depth)",
+                "Test audio buffer management and circular buffer implementation",
+                "Test microphone permission handling states",
+                "Test audio session category configuration"
+              ],
+              "mocks": [
+                "Mock AVAudioSession",
+                "Mock AVAudioEngine",
+                "Mock AVAudioInputNode"
+              ]
+            },
+            "speech_recognizer": {
+              "tests": [
+                "Test SFSpeechRecognizer initialization with locale",
+                "Test recognition request creation and configuration",
+                "Test recognition task lifecycle management",
+                "Test language detection and switching",
+                "Test confidence score calculations"
+              ],
+              "mocks": [
+                "Mock SFSpeechRecognizer",
+                "Mock SFSpeechRecognitionRequest"
+              ]
+            },
+            "transcription_processor": {
+              "tests": [
+                "Test text normalization and formatting",
+                "Test punctuation insertion logic",
+                "Test word boundary detection",
+                "Test transcript merging for continuous recognition",
+                "Test metadata extraction (timestamps, confidence)"
+              ]
+            },
+            "state_management": {
+              "tests": [
+                "Test state transitions (idle, recording, processing, completed, error)",
+                "Test concurrent operation prevention",
+                "Test cancellation handling",
+                "Test timeout management"
+              ]
+            }
+          },
+          "coverage_targets": {
+            "minimum": "80%",
+            "recommended": "90%",
+            "critical_paths": "95%"
+          }
+        },
+        "2_ui_testing": {
+          "description": "User interface testing for voice recording interactions",
+          "frameworks": [
+            "XCUITest",
+            "EarlGrey"
+          ],
+          "test_scenarios": {
+            "recording_flow": [
+              "Test microphone button tap initiates recording",
+              "Test visual feedback during recording (waveform, timer, indicators)",
+              "Test stop recording interaction",
+              "Test cancel recording functionality",
+              "Test recording duration display updates"
+            ],
+            "permission_handling": [
+              "Test first-time permission request flow",
+              "Test denied permission UI state and messaging",
+              "Test settings deep-link for permission management",
+              "Test graceful degradation without permissions"
+            ],
+            "transcription_display": [
+              "Test real-time transcription text updates",
+              "Test scrolling behavior for long transcriptions",
+              "Test text selection and copying",
+              "Test transcription editing capabilities",
+              "Test confidence indicator display"
+            ],
+            "gesture_interactions": [
+              "Test tap-to-record gesture",
+              "Test press-and-hold recording",
+              "Test swipe-to-cancel gesture",
+              "Test pinch-to-zoom on transcription"
+            ],
+            "accessibility_ui": [
+              "Test VoiceOver navigation flow",
+              "Test Dynamic Type support",
+              "Test high contrast mode",
+              "Test reduced motion settings"
+            ]
+          },
+          "device_matrix": [
+            "iPhone SE",
+            "iPhone 14",
+            "iPhone 15 Pro",
+            "iPad Air",
+            "iPad Pro"
+          ]
+        },
+        "3_integration_testing": {
+          "description": "Testing integration with iOS frameworks and services",
+          "test_areas": {
+            "speech_framework": {
+              "tests": [
+                "Test SFSpeechRecognizer availability by language",
+                "Test on-device vs server recognition switching",
+                "Test recognition request queuing",
+                "Test simultaneous recognition limit handling",
+                "Test recognition result streaming"
+              ],
+              "ios_versions": [
+                "iOS 15",
+                "iOS 16",
+                "iOS 17",
+                "iOS 18"
+              ]
+            },
+            "avfoundation": {
+              "tests": [
+                "Test audio session interruption handling",
+                "Test route change notifications (headphones, bluetooth)",
+                "Test background audio configuration",
+                "Test audio mixing with other apps",
+                "Test audio level metering"
+              ]
+            },
+            "core_ml": {
+              "tests": [
+                "Test custom speech model integration",
+                "Test model download and caching",
+                "Test fallback to system models",
+                "Test model performance metrics"
+              ]
+            },
+            "combine_integration": {
+              "tests": [
+                "Test publisher/subscriber chains",
+                "Test backpressure handling",
+                "Test cancellation propagation",
+                "Test error handling in pipelines"
+              ]
+            },
+            "cloud_services": {
+              "tests": [
+                "Test CloudKit transcript syncing",
+                "Test offline mode queue management",
+                "Test conflict resolution",
+                "Test data encryption in transit"
+              ]
+            }
+          }
+        },
+        "4_performance_testing": {
+          "description": "Performance testing across different devices and conditions",
+          "metrics": {
+            "latency": {
+              "targets": {
+                "start_recording": "<100ms",
+                "first_transcription_result": "<500ms",
+                "final_result_processing": "<1s"
+              },
+              "measurement_tools": [
+                "Instruments",
+                "XCTest Metrics",
+                "Custom timers"
+              ]
+            },
+            "resource_usage": {
+              "cpu": {
+                "idle": "<1%",
+                "recording": "<15%",
+                "processing": "<30%"
+              },
+              "memory": {
+                "baseline": "<50MB",
+                "recording_per_minute": "<10MB",
+                "peak": "<200MB"
+              },
+              "battery": {
+                "drain_per_hour": "<5%",
+                "thermal_state": "nominal"
+              }
+            },
+            "accuracy": {
+              "quiet_environment": ">95%",
+              "moderate_noise": ">85%",
+              "high_noise": ">70%",
+              "accented_speech": ">80%"
+            }
+          },
+          "stress_testing": {
+            "scenarios": [
+              "Extended recording sessions (>30 minutes)",
+              "Rapid start/stop cycles",
+              "Multiple language switches",
+              "Background/foreground transitions",
+              "Low memory conditions"
+            ]
+          },
+          "device_specific": {
+            "older_devices": [
+              "iPhone X",
+              "iPhone 11",
+              "iPad 7th gen"
+            ],
+            "current_devices": [
+              "iPhone 14",
+              "iPhone 15",
+              "iPad Pro M2"
+            ],
+            "considerations": [
+              "A-series chip differences",
+              "Neural Engine availability",
+              "RAM limitations"
+            ]
+          }
+        },
+        "5_edge_cases_error_testing": {
+          "description": "Testing edge cases and error scenarios",
+          "edge_cases": {
+            "audio_input": [
+              "Silent input detection and handling",
+              "Extremely loud input (clipping)",
+              "Rapid speech (>300 wpm)",
+              "Multiple speakers simultaneously",
+              "Non-speech sounds (music, noise)",
+              "Whispered speech",
+              "Distant microphone placement"
+            ],
+            "language_handling": [
+              "Code-switching mid-sentence",
+              "Unsupported language fallback",
+              "Regional dialect variations",
+              "Technical jargon and acronyms",
+              "Numbers and special characters",
+              "Mixed language documents"
+            ],
+            "system_conditions": [
+              "Airplane mode activation during recording",
+              "Network loss during cloud recognition",
+              "Storage full scenarios",
+              "Memory pressure responses",
+              "Thermal throttling behavior",
+              "Battery saver mode impact"
+            ]
+          },
+          "error_scenarios": {
+            "permission_errors": [
+              "Microphone access revoked mid-recording",
+              "Speech recognition disabled in settings",
+              "Parental controls restrictions"
+            ],
+            "framework_errors": [
+              "SFSpeechRecognizer unavailable",
+              "Recognition request failures",
+              "Audio engine crashes",
+              "Recognition time limits exceeded"
+            ],
+            "recovery_testing": [
+              "Graceful degradation strategies",
+              "Error message clarity and helpfulness",
+              "Retry mechanism effectiveness",
+              "Data loss prevention",
+              "State restoration after crash"
+            ]
+          }
+        },
+        "6_accessibility_testing": {
+          "description": "Comprehensive accessibility testing requirements",
+          "voiceover_testing": {
+            "navigation": [
+              "Test all UI elements are accessible",
+              "Test logical navigation order",
+              "Test custom actions availability",
+              "Test gesture hints accuracy",
+              "Test rotor support"
+            ],
+            "announcements": [
+              "Recording state changes",
+              "Transcription progress updates",
+              "Error notifications",
+              "Completion confirmations"
+            ],
+            "labels_and_hints": [
+              "Descriptive button labels",
+              "Context-aware hints",
+              "State-dependent descriptions",
+              "Meaningful trait assignments"
+            ]
+          },
+          "visual_accessibility": {
+            "dynamic_type": [
+              "Test all text scales properly",
+              "Test layout adjustments",
+              "Test minimum touch targets (44x44pt)",
+              "Test text truncation handling"
+            ],
+            "color_and_contrast": [
+              "WCAG AA compliance (4.5:1 text, 3:1 UI)",
+              "Color blind safe palettes",
+              "High contrast mode support",
+              "Dark mode implementation"
+            ],
+            "reduce_motion": [
+              "Alternative to animations",
+              "Instant state transitions",
+              "Static progress indicators"
+            ]
+          },
+          "hearing_accessibility": {
+            "visual_indicators": [
+              "Recording status LED/icon",
+              "Visual waveform display",
+              "Processing animations",
+              "Error state visuals"
+            ],
+            "haptic_feedback": [
+              "Recording start/stop",
+              "Error notifications",
+              "Completion feedback"
+            ]
+          },
+          "motor_accessibility": {
+            "switch_control": [
+              "Full functionality via switches",
+              "Scanning order optimization",
+              "Custom actions support"
+            ],
+            "voice_control": [
+              "Command phrases for all actions",
+              "Number/grid navigation",
+              "Custom vocabulary support"
+            ],
+            "assistive_touch": [
+              "Custom gesture creation",
+              "Simplified interactions",
+              "Dwell control support"
+            ]
+          },
+          "cognitive_accessibility": {
+            "simplified_ui": [
+              "Clear action buttons",
+              "Consistent patterns",
+              "Minimal cognitive load",
+              "Progressive disclosure"
+            ],
+            "guided_mode": [
+              "Step-by-step instructions",
+              "Clear error recovery",
+              "Confirmation dialogs",
+              "Undo capabilities"
+            ]
+          }
+        },
+        "testing_tools": {
+          "frameworks": {
+            "unit": [
+              "XCTest",
+              "Quick",
+              "Nimble"
+            ],
+            "ui": [
+              "XCUITest",
+              "EarlGrey",
+              "KIF"
+            ],
+            "performance": [
+              "XCTest Metrics",
+              "Instruments",
+              "MetricKit"
+            ],
+            "accessibility": [
+              "Accessibility Inspector",
+              "VoiceOver",
+              "Switch Control"
+            ]
+          },
+          "ci_cd": {
+            "platforms": [
+              "Xcode Cloud",
+              "Bitrise",
+              "CircleCI",
+              "GitHub Actions"
+            ],
+            "device_farms": [
+              "AWS Device Farm",
+              "BrowserStack",
+              "Sauce Labs"
+            ],
+            "reporting": [
+              "XCResult Bundle",
+              "Allure",
+              "TestRail"
+            ]
+          }
+        },
+        "test_data": {
+          "audio_samples": {
+            "categories": [
+              "Clean speech various accents",
+              "Noisy environments",
+              "Multiple speakers",
+              "Different languages",
+              "Edge cases (whisper, shout, fast)"
+            ],
+            "sources": [
+              "Common Voice",
+              "LibriSpeech",
+              "Custom recordings"
+            ],
+            "formats": [
+              "WAV",
+              "M4A",
+              "MP3"
+            ]
+          },
+          "expected_results": {
+            "ground_truth": "Human-verified transcriptions",
+            "accuracy_thresholds": "Per-category baselines",
+            "performance_benchmarks": "Device-specific targets"
+          }
+        },
+        "automation_strategy": {
+          "continuous_testing": {
+            "pr_checks": [
+              "Unit tests",
+              "Linting",
+              "Basic UI tests"
+            ],
+            "nightly": [
+              "Full UI suite",
+              "Performance tests",
+              "Device matrix"
+            ],
+            "weekly": [
+              "Accessibility audit",
+              "Stress tests",
+              "Edge cases"
+            ],
+            "release": [
+              "Complete regression",
+              "Performance baseline",
+              "Accessibility certification"
+            ]
+          },
+          "test_parallelization": {
+            "unit_tests": "Full parallelization",
+            "ui_tests": "Device-based sharding",
+            "integration_tests": "Feature-based splitting"
+          }
+        }
+      },
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-07-03T15:44:24.871Z",
+      "updatedAt": "2025-07-03T15:44:24.871Z",
+      "lastAccessedAt": "2025-07-03T16:11:03.319Z",
+      "version": 1,
+      "size": 10199,
+      "compressed": true,
+      "checksum": "2e40cb058e264ac5104ccfac05669a9236083e77d336edf37e57c72cdf5a61d0",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mcnl3tis_bz49sqzed",
+      "key": "voice-implementation/speech-recognition",
+      "value": "\"Phase 3 Speech Recognition Implementation:\\n\\n1. SpeechRecognizer.swift (/workspaces/c11s-house-ios/xcode-templates/C11SHouse/Infrastructure/Voice/SpeechRecognizer.swift):\\n- Core speech recognition infrastructure using SFSpeechRecognizer\\n- Real-time recognition with confidence scores\\n- On-device processing preference (iOS 13+)\\n- Proper error handling and authorization flow\\n- Support for continuous and one-shot recognition\\n- Audio session configuration for optimal recording\\n\\n2. VoiceTranscriptionService.swift (/workspaces/c11s-house-ios/xcode-templates/C11SHouse/Services/VoiceTranscriptionService.swift):\\n- High-level transcription pipeline service\\n- State management with TranscriptionState enum\\n- Confidence level tracking and visualization\\n- Processing mode selection (on-device/cloud/hybrid)\\n- Transcription history management\\n- Post-processing with capitalization and punctuation\\n- Metrics and analytics support\\n\\nKey Features:\\n- Real-time speech recognition with partial results\\n- Confidence scoring for each transcription\\n- On-device processing preference for privacy\\n- Proper iOS permissions handling\\n- SwiftUI/Combine integration with @Published properties\\n- Error handling and recovery\\n- Maximum duration limits for sessions\\n- Transcription history with persistence\\n\\nDependencies:\\n- import Foundation\\n- import Speech (iOS Speech framework)\\n- import AVFoundation (Audio handling)\\n- import Combine (Reactive programming)\\n\\nThe implementation follows iOS best practices and is ready for Xcode build integration.\"",
+      "type": "string",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-07-03T16:12:50.356Z",
+      "updatedAt": "2025-07-03T16:12:50.356Z",
+      "lastAccessedAt": "2025-07-03T16:12:50.356Z",
+      "version": 1,
+      "size": 1624,
+      "compressed": true,
+      "checksum": "40a18c257abf3a2c041bb9c2aab745566b5e41a086849eb542ae2e873318d8e7",
+      "references": [],
+      "dependencies": []
+    }
+  ],
+  "statistics": {
+    "overview": {
+      "totalEntries": 11,
+      "totalSize": 84089,
+      "compressedEntries": 10,
+      "compressionRatio": -123.31892697466468,
+      "indexSize": 550,
+      "memoryUsage": 10293616,
+      "diskUsage": 0
+    },
+    "distribution": {
+      "byNamespace": {
+        "default": {
+          "count": 11,
+          "size": 84089
+        }
+      },
+      "byType": {
+        "object": {
+          "count": 8,
+          "size": 51658
+        },
+        "string": {
+          "count": 3,
+          "size": 32431
+        }
+      },
+      "byOwner": {
+        "system": {
+          "count": 11,
+          "size": 84089
+        }
+      },
+      "byAccessLevel": {
+        "shared": {
+          "count": 11,
+          "size": 84089
+        }
+      }
+    },
+    "temporal": {
+      "entriesCreatedLast24h": 6,
+      "entriesUpdatedLast24h": 6,
+      "entriesAccessedLast24h": 11,
+      "oldestEntry": "2025-06-27T16:03:59.594Z",
+      "newestEntry": "2025-07-03T16:12:50.356Z"
+    },
+    "performance": {
+      "averageQueryTime": 0,
+      "averageWriteTime": 1,
+      "cacheHitRatio": 0,
+      "indexEfficiency": 0.95
+    },
+    "health": {
+      "expiredEntries": 0,
+      "orphanedReferences": 0,
+      "duplicateKeys": 0,
+      "corruptedEntries": 0,
+      "recommendedCleanup": false
+    },
+    "optimization": {
+      "suggestions": [],
+      "potentialSavings": {
+        "compression": 0,
+        "cleanup": 0,
+        "deduplication": 0
+      },
+      "indexOptimization": [
+        "Consider periodic index rebuilding for optimal performance"
+      ]
+    }
+  }
+}
