@@ -41,7 +41,7 @@ struct ContentView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
                     
-                    NavigationLink(destination: VoiceTranscriptionView()) {
+                    NavigationLink(destination: HybridVoiceTranscriptionView()) {
                         HStack {
                             Image(systemName: "mic.fill")
                             Text("Start Voice Transcription")
@@ -63,21 +63,39 @@ struct ContentView: View {
                     }
                     .padding(.top, 20)
                     
-                    // Debug button for testing
-                    NavigationLink(destination: SimpleSpeechTestView()) {
-                        HStack {
-                            Image(systemName: "waveform")
-                            Text("Test Speech Recognition")
-                            Image(systemName: "chevron.right")
+                    // Debug buttons for testing
+                    VStack(spacing: 10) {
+                        NavigationLink(destination: SimpleSpeechTestView()) {
+                            HStack {
+                                Image(systemName: "waveform")
+                                Text("Test Speech Recognition")
+                                Image(systemName: "chevron.right")
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.orange)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.orange, lineWidth: 1)
+                            )
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.orange)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.orange, lineWidth: 1)
-                        )
+                        
+                        NavigationLink(destination: VoiceTranscriptionView()) {
+                            HStack {
+                                Image(systemName: "waveform.badge.exclamationmark")
+                                Text("Original Voice View (Debug)")
+                                Image(systemName: "chevron.right")
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.red, lineWidth: 1)
+                            )
+                        }
                     }
                     .padding(.top, 10)
                 }
