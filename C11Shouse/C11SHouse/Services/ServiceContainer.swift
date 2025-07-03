@@ -35,6 +35,7 @@ class ServiceContainer: ObservableObject {
     // MARK: - Factory Methods
     
     /// Create a new VoiceTranscriptionViewModel with injected dependencies
+    @MainActor
     func makeVoiceTranscriptionViewModel() -> VoiceTranscriptionViewModel {
         return VoiceTranscriptionViewModel(
             configuration: configuration,
