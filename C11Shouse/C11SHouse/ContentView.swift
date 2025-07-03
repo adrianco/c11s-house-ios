@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.serviceContainer) private var serviceContainer
+    @EnvironmentObject private var serviceContainer: ServiceContainer
     @State private var showDetailView = false
     
     var body: some View {
@@ -85,113 +85,8 @@ struct ContentView: View {
     }
 }
 
-// Simple UI components that might be referenced elsewhere
-struct TranscriptionView: View {
-    let transcription: String
-    let isListening: Bool
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: isListening ? "mic.fill" : "mic.slash.fill")
-                    .foregroundColor(isListening ? .red : .gray)
-                    .symbolEffect(.pulse, value: isListening)
-                
-                Text(isListening ? "Listening..." : "Transcription")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-            }
-            
-            Text(transcription)
-                .font(.body)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(.systemGray6))
-                )
-        }
-    }
-}
-
-struct VoiceRecordingButton: View {
-    @Binding var isRecording: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            ZStack {
-                Circle()
-                    .fill(isRecording ? Color.red : Color.blue)
-                    .frame(width: 80, height: 80)
-                    .scaleEffect(isRecording ? 1.2 : 1.0)
-                    .animation(
-                        isRecording ?
-                            Animation.easeInOut(duration: 1.5).repeatForever() :
-                            Animation.default,
-                        value: isRecording
-                    )
-                
-                Image(systemName: isRecording ? "stop.fill" : "mic.fill")
-                    .font(.system(size: 35))
-                    .foregroundColor(.white)
-            }
-        }
-    }
-}
-
-// Permission Request View
-struct PermissionRequestView: View {
-    @Environment(\.serviceContainer) private var serviceContainer
-    @State private var isCheckingPermissions = false
-    
-    var body: some View {
-        VStack(spacing: 30) {
-            Image(systemName: "mic.slash.circle.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.red)
-            
-            Text("Permissions Required")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
-            Text("This app needs access to your microphone and speech recognition to transcribe your voice.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 40)
-            
-            Button(action: requestPermissions) {
-                if isCheckingPermissions {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                } else {
-                    Text("Grant Permissions")
-                        .fontWeight(.semibold)
-                }
-            }
-            .foregroundColor(.white)
-            .frame(width: 200, height: 50)
-            .background(Color.blue)
-            .cornerRadius(25)
-            .disabled(isCheckingPermissions)
-        }
-    }
-    
-    private func requestPermissions() {
-        isCheckingPermissions = true
-        
-        Task {
-            _ = await serviceContainer.permissionManager.requestAllPermissions()
-            
-            await MainActor.run {
-                isCheckingPermissions = false
-            }
-        }
-    }
-}
 
 #Preview {
     ContentView()
-        .withServiceContainer()
+        .environmentObject(ServiceContainer.shared)
 }
