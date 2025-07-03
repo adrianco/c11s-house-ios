@@ -10,6 +10,7 @@ import Foundation
 import AVFoundation
 import Speech
 import Combine
+import UIKit
 
 /// Manages permissions for microphone and speech recognition
 @MainActor
