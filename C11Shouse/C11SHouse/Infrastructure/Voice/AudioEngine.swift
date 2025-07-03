@@ -59,7 +59,9 @@ final class AudioEngine: ObservableObject {
     }
     
     deinit {
-        stopRecording()
+        // Clean up audio engine without accessing @MainActor properties
+        engine.inputNode.removeTap(onBus: 0)
+        engine.stop()
     }
     
     // MARK: - Public Methods
