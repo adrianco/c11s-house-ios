@@ -25,7 +25,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
     @Published private(set) var hasRecordingPermission = false
     
     /// Published state for current audio route
-    @Published private(set) var currentRoute: AVAudioSession.RouteDescription?
+    @Published private(set) var currentRoute: AVAudioSessionRouteDescription?
     
     /// The audio session instance
     private let audioSession = AVAudioSession.sharedInstance()
@@ -151,7 +151,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
     /// Handles audio interruptions
     /// - Parameter userInfo: Notification user info dictionary
     private func handleInterruption(userInfo: [AnyHashable: Any]) {
-        guard let typeValue = userInfo[AVAudioSession.interruptionTypeKey] as? UInt,
+        guard let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
               let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
             return
         }
@@ -169,9 +169,9 @@ final class AudioSessionManager: NSObject, ObservableObject {
             
         case .ended:
             // Interruption ended, check if we should resume
-            if let optionsValue = userInfo[AVAudioSession.interruptionOptionKey] as? UInt {
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
-                if options.contains(.shouldResume) {
+                if options.contains(AVAudioSession.InterruptionOptions.shouldResume) {
                     Task { @MainActor in
                         do {
                             try await activateSession()
@@ -195,7 +195,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
     /// Handles audio route changes
     /// - Parameter userInfo: Notification user info dictionary
     private func handleRouteChange(userInfo: [AnyHashable: Any]) {
-        guard let reasonValue = userInfo[AVAudioSession.routeChangeReasonKey] as? UInt,
+        guard let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
               let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
             return
         }
