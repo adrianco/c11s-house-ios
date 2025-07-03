@@ -33,7 +33,9 @@ final class SpeechRecognizer: NSObject, ObservableObject {
     
     // Configuration
     private let requiresOnDeviceRecognition: Bool
-    private var currentLocale: Locale {
+    
+    // Helper method to get appropriate locale
+    private static func getAppropriateLocale() -> Locale {
         // Try to use the current device locale, fallback to en-US if needed
         let deviceLocale = Locale.current
         if SFSpeechRecognizer.supportedLocales().contains(deviceLocale) {
@@ -71,7 +73,7 @@ final class SpeechRecognizer: NSObject, ObservableObject {
     // MARK: - Initialization
     override init() {
         // Initialize with proper locale
-        let locale = currentLocale
+        let locale = Self.getAppropriateLocale()
         print("Initializing SpeechRecognizer with locale: \(locale.identifier)")
         
         // Try to initialize speech recognizer
