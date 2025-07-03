@@ -230,11 +230,11 @@ final class VoiceRecorder: ObservableObject {
     /// - Parameter url: The audio file URL
     /// - Returns: Duration in seconds
     private func getAudioDuration(url: URL) -> TimeInterval {
-        do {
-            let audioAsset = AVURLAsset(url: url)
-            let duration = try await audioAsset.load(.duration)
+        let audioAsset = AVURLAsset(url: url)
+        let duration = audioAsset.duration
+        if duration.isValid && !duration.isIndefinite {
             return CMTimeGetSeconds(duration)
-        } catch {
+        } else {
             return 0
         }
     }
