@@ -70,7 +70,7 @@ final class AudioEngine: ObservableObject {
     /// - Throws: AudioEngineError if preparation fails
     func prepareForRecording() async throws {
         // Ensure we have recording permission
-        guard sessionManager.hasRecordingPermission else {
+        if !sessionManager.hasRecordingPermission {
             let granted = await sessionManager.requestRecordingPermission()
             if !granted {
                 throw AudioEngineError.permissionDenied
