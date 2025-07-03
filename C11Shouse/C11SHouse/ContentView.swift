@@ -64,33 +64,49 @@ struct ContentView: View {
                     .padding(.top, 20)
                     
                     // Debug buttons for testing
-                    VStack(spacing: 10) {
+                    VStack(spacing: 8) {
                         NavigationLink(destination: SimpleSpeechTestView()) {
                             HStack {
                                 Image(systemName: "waveform")
-                                Text("Test Speech Recognition")
+                                Text("File-Based Test (Works)")
                                 Image(systemName: "chevron.right")
                             }
                             .font(.subheadline)
-                            .foregroundColor(.orange)
+                            .foregroundColor(.green)
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
+                            .padding(.vertical, 8)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.orange, lineWidth: 1)
+                                    .stroke(Color.green, lineWidth: 1)
+                            )
+                        }
+                        
+                        NavigationLink(destination: FixedSpeechTestView()) {
+                            HStack {
+                                Image(systemName: "waveform.path.ecg")
+                                Text("Fixed Real-Time Test")
+                                Image(systemName: "chevron.right")
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 8)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 1)
                             )
                         }
                         
                         NavigationLink(destination: VoiceTranscriptionView()) {
                             HStack {
                                 Image(systemName: "waveform.badge.exclamationmark")
-                                Text("Original Voice View (Debug)")
+                                Text("Original (Error 1101)")
                                 Image(systemName: "chevron.right")
                             }
                             .font(.subheadline)
                             .foregroundColor(.red)
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
+                            .padding(.vertical, 8)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.red, lineWidth: 1)
