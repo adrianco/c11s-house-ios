@@ -36,14 +36,9 @@ final class SpeechRecognizer: NSObject, ObservableObject {
     
     // Helper method to get appropriate locale
     private static func getAppropriateLocale() -> Locale {
-        // Try to use the current device locale, fallback to en-US if needed
-        let deviceLocale = Locale.current
-        if SFSpeechRecognizer.supportedLocales().contains(deviceLocale) {
-            return deviceLocale
-        } else {
-            // Fallback to en-US if device locale is not supported
-            return Locale(identifier: "en-US")
-        }
+        // For now, force en-US to avoid locale-related issues
+        // TODO: Re-enable device locale detection once speech recognition is working
+        return Locale(identifier: "en-US")
     }
     
     // MARK: - Error Types
@@ -81,19 +76,15 @@ final class SpeechRecognizer: NSObject, ObservableObject {
             self.speechRecognizer = recognizer
             print("SpeechRecognizer initialized successfully")
             print("Supports on-device recognition: \(recognizer.supportsOnDeviceRecognition)")
-            
-            // Try on-device recognition if available
-            if #available(iOS 13.0, *), recognizer.supportsOnDeviceRecognition {
-                self.requiresOnDeviceRecognition = true
-            } else {
-                self.requiresOnDeviceRecognition = false
-            }
         } else {
             print("Failed to initialize SpeechRecognizer for locale: \(locale.identifier)")
             // Try with default locale as last resort
             self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
-            self.requiresOnDeviceRecognition = false
         }
+        
+        // Always disable on-device recognition to avoid error 1101
+        self.requiresOnDeviceRecognition = false
+        print("On-device recognition disabled to avoid compatibility issues")
         
         super.init()
         
@@ -189,7 +180,12 @@ final class SpeechRecognizer: NSObject, ObservableObject {
         
         // Configure audio input
         let recordingFormat = inputNode.outputFormat(forBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
+        print("Audio format: \(recordingFormat)")
+        print("Sample rate: \(recordingFormat.sampleRate)")
+        print("Channels: \(recordingFormat.channelCount)")
+        
+        // Install tap with larger buffer size
+        inputNode.installTap(onBus: 0, bufferSize: 4096, format: recordingFormat) { [weak self] buffer, _ in
             self?.recognitionRequest?.append(buffer)
         }
         
@@ -197,41 +193,46 @@ final class SpeechRecognizer: NSObject, ObservableObject {
         audioEngine.prepare()
         try audioEngine.start()
         
-        // Start recognition task
-        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
-            guard let self = self else { return }
+        // Add a small delay to ensure audio engine is ready
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self, let speechRecognizer = self.speechRecognizer else { return }
             
-            if let result = result {
-                DispatchQueue.main.async {
-                    self.transcript = result.bestTranscription.formattedString
+            // Start recognition task
+            self.recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { [weak self] result, error in
+                guard let self = self else { return }
+            
+                if let result = result {
+                    DispatchQueue.main.async {
+                        self.transcript = result.bestTranscription.formattedString
+                        
+                        // Calculate average confidence
+                        let segments = result.bestTranscription.segments
+                        if !segments.isEmpty {
+                            let totalConfidence = segments.reduce(0) { $0 + $1.confidence }
+                            self.confidence = totalConfidence / Float(segments.count)
+                        }
+                    }
                     
-                    // Calculate average confidence
-                    let segments = result.bestTranscription.segments
-                    if !segments.isEmpty {
-                        let totalConfidence = segments.reduce(0) { $0 + $1.confidence }
-                        self.confidence = totalConfidence / Float(segments.count)
+                    if result.isFinal {
+                        self.stopRecording()
                     }
                 }
                 
-                if result.isFinal {
+                if let error = error {
+                    print("Speech recognition error: \(error)")
+                    print("Error domain: \((error as NSError).domain)")
+                    print("Error code: \((error as NSError).code)")
+                    
+                    DispatchQueue.main.async {
+                        self.error = .recognitionError(error.localizedDescription)
+                    }
                     self.stopRecording()
                 }
             }
             
-            if let error = error {
-                print("Speech recognition error: \(error)")
-                print("Error domain: \((error as NSError).domain)")
-                print("Error code: \((error as NSError).code)")
-                
-                DispatchQueue.main.async {
-                    self.error = .recognitionError(error.localizedDescription)
-                }
-                self.stopRecording()
-            }
+            self.isRecording = true
+            self.error = nil
         }
-        
-        isRecording = true
-        error = nil
     }
     
     func stopRecording() {

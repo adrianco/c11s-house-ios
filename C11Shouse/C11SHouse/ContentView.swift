@@ -62,6 +62,24 @@ struct ContentView: View {
                         .shadow(radius: 5)
                     }
                     .padding(.top, 20)
+                    
+                    // Debug button for testing
+                    NavigationLink(destination: SimpleSpeechTestView()) {
+                        HStack {
+                            Image(systemName: "waveform")
+                            Text("Test Speech Recognition")
+                            Image(systemName: "chevron.right")
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.orange)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.orange, lineWidth: 1)
+                        )
+                    }
+                    .padding(.top, 10)
                 }
                 .frame(maxHeight: .infinity)
                 
