@@ -32,8 +32,17 @@ final class SpeechRecognizer: NSObject, ObservableObject {
     }
     
     // Configuration
-    private let defaultLanguage = "en-US"
     private let requiresOnDeviceRecognition: Bool
+    private var currentLocale: Locale {
+        // Try to use the current device locale, fallback to en-US if needed
+        let deviceLocale = Locale.current
+        if SFSpeechRecognizer.supportedLocales().contains(deviceLocale) {
+            return deviceLocale
+        } else {
+            // Fallback to en-US if device locale is not supported
+            return Locale(identifier: "en-US")
+        }
+    }
     
     // MARK: - Error Types
     enum SpeechRecognitionError: LocalizedError {
@@ -61,15 +70,26 @@ final class SpeechRecognizer: NSObject, ObservableObject {
     
     // MARK: - Initialization
     override init() {
-        // Try to initialize with on-device recognition if available
-        if #available(iOS 13.0, *) {
-            self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: defaultLanguage))
-            self.requiresOnDeviceRecognition = true
+        // Initialize with proper locale
+        let locale = currentLocale
+        print("Initializing SpeechRecognizer with locale: \(locale.identifier)")
+        
+        // Try to initialize speech recognizer
+        if let recognizer = SFSpeechRecognizer(locale: locale) {
+            self.speechRecognizer = recognizer
+            print("SpeechRecognizer initialized successfully")
+            print("Supports on-device recognition: \(recognizer.supportsOnDeviceRecognition)")
             
-            // Configure for on-device recognition
-            self.speechRecognizer?.supportsOnDeviceRecognition = true
+            // Try on-device recognition if available
+            if #available(iOS 13.0, *), recognizer.supportsOnDeviceRecognition {
+                self.requiresOnDeviceRecognition = true
+            } else {
+                self.requiresOnDeviceRecognition = false
+            }
         } else {
-            self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: defaultLanguage))
+            print("Failed to initialize SpeechRecognizer for locale: \(locale.identifier)")
+            // Try with default locale as last resort
+            self.speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
             self.requiresOnDeviceRecognition = false
         }
         
@@ -85,6 +105,11 @@ final class SpeechRecognizer: NSObject, ObservableObject {
         
         // Check initial availability
         isAvailable = speechRecognizer?.isAvailable ?? false
+        
+        // Print debug information
+        print("Speech recognizer available: \(isAvailable)")
+        print("Available locales: \(SFSpeechRecognizer.supportedLocales().map { $0.identifier })")
+        print("Current device locale: \(Locale.current.identifier)")
         
         // Set up audio session
         configureAudioSession()
@@ -152,7 +177,13 @@ final class SpeechRecognizer: NSObject, ObservableObject {
         
         // Configure request for real-time results
         recognitionRequest.shouldReportPartialResults = true
-        recognitionRequest.requiresOnDeviceRecognition = requiresOnDeviceRecognition && speechRecognizer?.supportsOnDeviceRecognition ?? false
+        // Don't require on-device recognition to avoid compatibility issues
+        recognitionRequest.requiresOnDeviceRecognition = false
+        
+        // Add punctuation if available
+        if #available(iOS 16.0, *) {
+            recognitionRequest.addsPunctuation = true
+        }
         
         // Configure audio input
         let recordingFormat = inputNode.outputFormat(forBus: 0)
@@ -186,6 +217,10 @@ final class SpeechRecognizer: NSObject, ObservableObject {
             }
             
             if let error = error {
+                print("Speech recognition error: \(error)")
+                print("Error domain: \((error as NSError).domain)")
+                print("Error code: \((error as NSError).code)")
+                
                 DispatchQueue.main.async {
                     self.error = .recognitionError(error.localizedDescription)
                 }
