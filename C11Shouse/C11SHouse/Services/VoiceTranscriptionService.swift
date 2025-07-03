@@ -106,8 +106,7 @@ final class VoiceTranscriptionService: ObservableObject {
     }
     
     // MARK: - Initialization
-    override init() {
-        super.init()
+    init() {
         setupBindings()
         configureProcessingMode()
     }
