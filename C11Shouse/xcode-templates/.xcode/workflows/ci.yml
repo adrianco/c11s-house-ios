@@ -1,0 +1,64 @@
+name: CI Build and Test
+description: Build, test, and archive the C11S House app
+
+environment:
+  groups:
+    - C11S_HOUSE_ENV
+
+triggers:
+  - name: PR Build
+    description: Build and test on pull requests
+    events:
+      - PULL_REQUEST
+    autoCancel: true
+    isScheduledEnabled: false
+
+  - name: Main Branch Build
+    description: Build, test, and archive on main branch
+    events:
+      - PUSH
+    branchChanges:
+      - main
+    autoCancel: false
+    isScheduledEnabled: false
+
+  - name: Tag Build
+    description: Build and archive for release tags
+    events:
+      - TAG
+    tagChanges:
+      - v*
+    autoCancel: false
+    isScheduledEnabled: false
+
+actions:
+  - name: build
+    actionType: BUILD
+    destination: ANY_IOS_DEVICE
+    scheme: C11SHouse
+    platform: IOS
+    isRequiredToPass: true
+
+  - name: test
+    actionType: TEST
+    destination: ANY_IOS_SIMULATOR_DEVICE
+    scheme: C11SHouse
+    platform: IOS
+    isRequiredToPass: true
+    testPlanName: C11SHouse
+
+  - name: analyze
+    actionType: ANALYZE
+    scheme: C11SHouse
+    platform: IOS
+    isRequiredToPass: true
+
+  - name: archive
+    actionType: ARCHIVE
+    scheme: C11SHouse
+    platform: IOS
+    artifactName: C11SHouse-${CI_BUILD_NUMBER}
+    isRequiredToPass: true
+    # Only archive on main branch or tags
+    condition: |
+      return $CI_BRANCH == "main" || $CI_TAG != null

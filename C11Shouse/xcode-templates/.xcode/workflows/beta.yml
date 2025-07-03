@@ -1,0 +1,60 @@
+name: Beta Release
+description: Build and distribute beta builds to TestFlight
+
+environment:
+  groups:
+    - C11S_HOUSE_ENV
+    - TESTFLIGHT_CREDENTIALS
+
+triggers:
+  - name: Beta Release
+    description: Create beta build for TestFlight
+    events:
+      - PUSH
+    branchChanges:
+      - beta
+      - release/*
+    autoCancel: false
+    isScheduledEnabled: false
+
+actions:
+  - name: increment_build
+    actionType: SCRIPT
+    scriptPath: ci_scripts/increment_build_number.sh
+    isRequiredToPass: true
+
+  - name: build
+    actionType: BUILD
+    destination: ANY_IOS_DEVICE
+    scheme: C11SHouse
+    platform: IOS
+    configuration: Release
+    isRequiredToPass: true
+
+  - name: test
+    actionType: TEST
+    destination: ANY_IOS_SIMULATOR_DEVICE
+    scheme: C11SHouse
+    platform: IOS
+    isRequiredToPass: true
+
+  - name: archive
+    actionType: ARCHIVE
+    scheme: C11SHouse
+    platform: IOS
+    configuration: Release
+    artifactName: C11SHouse-Beta-${CI_BUILD_NUMBER}
+    isRequiredToPass: true
+    exportOptions:
+      method: app-store
+      teamID: ${TEAM_ID}
+      uploadBitcode: true
+      uploadSymbols: true
+
+  - name: testflight_upload
+    actionType: TESTFLIGHT_UPLOAD
+    appStoreConnectApiKeyId: ${APP_STORE_CONNECT_API_KEY_ID}
+    betaGroups:
+      - Internal Testers
+      - Beta Testers
+    isRequiredToPass: true
