@@ -398,7 +398,6 @@
 				DEVELOPMENT_TEAM = U2692L5558;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = C11SHouse/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Conscious House";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "C11S House needs access to your microphone to transcribe voice commands";
@@ -431,7 +430,6 @@
 				DEVELOPMENT_TEAM = U2692L5558;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = C11SHouse/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Conscious House";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "C11S House needs access to your microphone to transcribe voice commands";
