@@ -7,7 +7,7 @@ struct C11SHouseApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .withServiceContainer(serviceContainer)
+                .environmentObject(serviceContainer)
                 .task {
                     // Request permissions on app launch
                     await requestPermissionsIfNeeded()
@@ -17,11 +17,10 @@ struct C11SHouseApp: App {
     
     private func requestPermissionsIfNeeded() async {
         let permissionManager = serviceContainer.permissionManager
-        let status = await permissionManager.checkAllPermissions()
         
-        // Request permissions if not granted
-        if !status.microphone || !status.speechRecognition {
-            _ = await permissionManager.requestAllPermissions()
+        // Request permissions if not all granted
+        if !permissionManager.allPermissionsGranted {
+            await permissionManager.requestAllPermissions()
         }
     }
 }
