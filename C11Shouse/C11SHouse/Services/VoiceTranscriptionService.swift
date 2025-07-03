@@ -244,9 +244,12 @@ final class VoiceTranscriptionService: ObservableObject {
         return TranscriptionResult(
             text: processedText,
             confidence: confidence,
+            duration: 0, // Will be calculated from audio duration
+            timestamp: Date(),
+            detectedLanguage: Locale.current.language.languageCode?.identifier,
+            alternatives: [],
             segments: segments,
-            isFinal: !isTranscribing,
-            timestamp: Date()
+            isFinal: !isTranscribing
         )
     }
     

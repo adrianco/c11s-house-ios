@@ -26,9 +26,7 @@ class ServiceContainer: ObservableObject {
         TranscriptionServiceImpl()
     }()
     
-    private(set) lazy var permissionManager: PermissionManager = {
-        PermissionManagerImpl()
-    }()
+    private(set) lazy var permissionManager = PermissionManager.shared
     
     // MARK: - Configuration
     

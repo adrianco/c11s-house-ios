@@ -153,7 +153,7 @@ class VoiceTranscriptionViewModel: ObservableObject {
     
     private func checkMicrophonePermission() {
         Task {
-            let isAuthorized = await permissionManager.checkMicrophonePermission()
+            let isAuthorized = permissionManager.isMicrophoneGranted
             await MainActor.run {
                 self.isMicrophoneAuthorized = isAuthorized
                 if isAuthorized {
@@ -171,7 +171,8 @@ class VoiceTranscriptionViewModel: ObservableObject {
         do {
             // Request permission if needed
             if !isMicrophoneAuthorized {
-                let granted = await permissionManager.requestMicrophonePermission()
+                await permissionManager.requestMicrophonePermission()
+                let granted = permissionManager.isMicrophoneGranted
                 if !granted {
                     updateState(.error(.microphonePermissionDenied))
                     return
@@ -332,8 +333,4 @@ protocol TranscriptionService {
     func transcribe(audioData: Data, configuration: TranscriptionConfiguration) async throws -> TranscriptionResult
 }
 
-/// Protocol for permission management
-protocol PermissionManager {
-    func checkMicrophonePermission() async -> Bool
-    func requestMicrophonePermission() async -> Bool
-}
+// Using the actual PermissionManager class from Infrastructure/Voice/PermissionManager.swift

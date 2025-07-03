@@ -180,4 +180,18 @@ struct TranscriptionResult {
     
     /// Alternative transcriptions with lower confidence
     let alternatives: [String]
+    
+    /// Transcription segments with timing information
+    let segments: [TranscriptionSegment]?
+    
+    /// Whether this is the final transcription result
+    let isFinal: Bool
+}
+
+/// A segment of transcribed text with timing information
+struct TranscriptionSegment {
+    let text: String
+    let confidence: Float
+    let timestamp: TimeInterval
+    let duration: TimeInterval
 }

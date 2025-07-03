@@ -84,6 +84,16 @@ class TranscriptionServiceImpl: TranscriptionService {
                         // Get alternatives
                         let alternatives = result.transcriptions.dropFirst().prefix(3).map { $0.formattedString }
                         
+                        // Extract segments
+                        let segments = result.bestTranscription.segments.map { segment in
+                            TranscriptionSegment(
+                                text: segment.substring,
+                                confidence: segment.confidence,
+                                timestamp: segment.timestamp,
+                                duration: segment.duration
+                            )
+                        }
+                        
                         // Create transcription result
                         let transcriptionResult = TranscriptionResult(
                             text: result.bestTranscription.formattedString,
@@ -91,7 +101,9 @@ class TranscriptionServiceImpl: TranscriptionService {
                             duration: duration,
                             timestamp: Date(),
                             detectedLanguage: configuration.languageCode,
-                            alternatives: Array(alternatives)
+                            alternatives: Array(alternatives),
+                            segments: segments,
+                            isFinal: true
                         )
                         
                         continuation.resume(returning: transcriptionResult)
@@ -179,13 +191,24 @@ class OnDeviceTranscriptionService: TranscriptionService {
                 if let result = result, result.isFinal {
                     hasResumed = true
                     
+                    let segments = result.bestTranscription.segments.map { segment in
+                        TranscriptionSegment(
+                            text: segment.substring,
+                            confidence: segment.confidence,
+                            timestamp: segment.timestamp,
+                            duration: segment.duration
+                        )
+                    }
+                    
                     let transcriptionResult = TranscriptionResult(
                         text: result.bestTranscription.formattedString,
                         confidence: 0.95, // On-device doesn't provide confidence scores
                         duration: 0, // Calculate if needed
                         timestamp: Date(),
                         detectedLanguage: configuration.languageCode,
-                        alternatives: []
+                        alternatives: [],
+                        segments: segments,
+                        isFinal: true
                     )
                     
                     continuation.resume(returning: transcriptionResult)

@@ -243,18 +243,4 @@ extension SpeechRecognizer: SFSpeechRecognizerDelegate {
     }
 }
 
-// MARK: - Transcription Result
-struct TranscriptionResult {
-    let text: String
-    let confidence: Float
-    let segments: [TranscriptionSegment]
-    let isFinal: Bool
-    let timestamp: Date
-}
-
-struct TranscriptionSegment {
-    let text: String
-    let confidence: Float
-    let timestamp: TimeInterval
-    let duration: TimeInterval
-}
+// MARK: - TranscriptionResult is defined in Models/TranscriptionState.swift
