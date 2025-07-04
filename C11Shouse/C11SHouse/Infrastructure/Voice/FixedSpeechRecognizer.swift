@@ -184,8 +184,12 @@ final class FixedSpeechRecognizer: ObservableObject {
             
             if let result = result {
                 DispatchQueue.main.async {
-                    self.transcript = result.bestTranscription.formattedString
-                    print("Fixed Transcript update: '\(self.transcript)'")
+                    let newTranscript = result.bestTranscription.formattedString
+                    // Don't clear transcript if we're terminating and new transcript is empty
+                    if !newTranscript.isEmpty || (!self.isTerminating && self.isRecording) {
+                        self.transcript = newTranscript
+                        print("Fixed Transcript update: '\(self.transcript)'")
+                    }
                     
                     // Calculate confidence
                     let segments = result.bestTranscription.segments
@@ -206,7 +210,10 @@ final class FixedSpeechRecognizer: ObservableObject {
                 print("Fixed Error userInfo: \(nsError.userInfo)")
                 
                 // Filter out cancellation errors and "no speech detected" during normal operation
-                if nsError.code != 203 && nsError.code != 216 && nsError.code != 1110 { // 1110 is "No speech detected"
+                let cancellationCodes = [203, 216, 301] // Cancellation codes
+                let ignorableCodes = [1110] // "No speech detected"
+                
+                if !cancellationCodes.contains(nsError.code) && !ignorableCodes.contains(nsError.code) {
                     DispatchQueue.main.async {
                         self.error = .recognitionError(error.localizedDescription)
                         if self.isRecording && !self.isTerminating {
