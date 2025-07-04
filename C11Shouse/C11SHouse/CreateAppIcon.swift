@@ -30,6 +30,10 @@
  *   - Blue circle background matching icon's blue gradient color
  *   - Provides contrast for white brain symbol
  *   - Creates visual cohesion with overall design
+ * - 2025-07-04: Gradient circle and positioning update
+ *   - Changed circle to use matching blue-to-purple gradient
+ *   - Moved brain and circle up for better visual balance
+ *   - Gradient flows diagonally like main background
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -79,23 +83,48 @@ struct AppIconCreator {
                 houseImage.withTintColor(.white.withAlphaComponent(0.9)).draw(in: houseRect)
             }
             
-            // Draw brain with blue background circle
-            // First draw blue circle background
+            // Draw brain with gradient background circle
+            // First draw gradient circle background
             let brainBackgroundRect = CGRect(
                 x: rect.width * 0.275,
-                y: rect.height * 0.425,
+                y: rect.height * 0.375,
                 width: rect.width * 0.45,
                 height: rect.width * 0.45
             )
-            context.cgContext.setFillColor(UIColor.systemBlue.cgColor)
-            context.cgContext.fillEllipse(in: brainBackgroundRect)
+            
+            // Save current context state
+            context.cgContext.saveGState()
+            
+            // Create circular clipping path
+            let circlePath = UIBezierPath(ovalIn: brainBackgroundRect)
+            circlePath.addClip()
+            
+            // Draw gradient within the circle
+            let circleGradient = CGGradient(
+                colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                colors: [
+                    UIColor.systemBlue.cgColor,
+                    UIColor.systemPurple.cgColor
+                ] as CFArray,
+                locations: [0, 1]
+            )!
+            
+            context.cgContext.drawLinearGradient(
+                circleGradient,
+                start: CGPoint(x: brainBackgroundRect.minX, y: brainBackgroundRect.minY),
+                end: CGPoint(x: brainBackgroundRect.maxX, y: brainBackgroundRect.maxY),
+                options: []
+            )
+            
+            // Restore context state
+            context.cgContext.restoreGState()
             
             // Draw brain symbol on top
             let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.4, weight: .bold)
             if let brainImage = UIImage(systemName: "brain", withConfiguration: brainConfig) {
                 let brainRect = CGRect(
                     x: rect.width * 0.3,
-                    y: rect.height * 0.45,
+                    y: rect.height * 0.4,
                     width: rect.width * 0.4,
                     height: rect.width * 0.4
                 )
