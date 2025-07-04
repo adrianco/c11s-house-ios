@@ -19,6 +19,10 @@
  *   - AppIconCreator generates gradient background with house + brain symbols
  *   - Removed waveform.circle.fill icon to simplify UI and focus on core branding
  *   - Added corner radius and shadow to the dynamic app icon
+ * - 2025-07-04: Added personality placeholders
+ *   - Added emotion state placeholder (default: "Curious")
+ *   - Added house name placeholder (default: "Your House")
+ *   - These will be updated based on user preferences and interactions
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -29,6 +33,8 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @State private var showDetailView = false
+    @State private var houseEmotion = "Curious"
+    @State private var houseName = "Your House"
     
     var body: some View {
         NavigationView {
@@ -41,9 +47,14 @@ struct ContentView: View {
                         .cornerRadius(20)
                         .shadow(radius: 5)
                     
-                    Text("Conscious House")
+                    Text(houseName)
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                    
+                    Text("Feeling \(houseEmotion.lowercased())")
+                        .font(.headline)
+                        .foregroundStyle(.tint)
+                        .padding(.bottom, 4)
                     
                     Text("Conversations to help manage your house")
                         .font(.subheadline)
