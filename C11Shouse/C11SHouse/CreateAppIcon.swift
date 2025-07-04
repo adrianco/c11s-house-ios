@@ -26,6 +26,10 @@
  *   - Removed grey circle background from brain
  *   - Moved brain lower and made it larger (25% -> 40%)
  *   - Better visual balance with larger elements
+ * - 2025-07-04: Added blue background circle for brain
+ *   - Blue circle background matching icon's blue gradient color
+ *   - Provides contrast for white brain symbol
+ *   - Creates visual cohesion with overall design
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -75,7 +79,18 @@ struct AppIconCreator {
                 houseImage.withTintColor(.white.withAlphaComponent(0.9)).draw(in: houseRect)
             }
             
-            // Draw brain symbol (larger and moved down)
+            // Draw brain with blue background circle
+            // First draw blue circle background
+            let brainBackgroundRect = CGRect(
+                x: rect.width * 0.275,
+                y: rect.height * 0.425,
+                width: rect.width * 0.45,
+                height: rect.width * 0.45
+            )
+            context.cgContext.setFillColor(UIColor.systemBlue.cgColor)
+            context.cgContext.fillEllipse(in: brainBackgroundRect)
+            
+            // Draw brain symbol on top
             let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.4, weight: .bold)
             if let brainImage = UIImage(systemName: "brain", withConfiguration: brainConfig) {
                 let brainRect = CGRect(
