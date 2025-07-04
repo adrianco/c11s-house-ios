@@ -110,7 +110,7 @@ struct ContentView: View {
                 )
                 .ignoresSafeArea()
             )
-            .navigationTitle("C11S House")
+            .navigationTitle("Conscious House")
             .navigationBarHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
