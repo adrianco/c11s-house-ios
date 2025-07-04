@@ -203,15 +203,11 @@ final class FixedSpeechRecognizer: ObservableObject {
             }
             
             if let error = error {
-                print("Fixed Speech recognition error: \(error)")
                 let nsError = error as NSError
-                print("Fixed Error domain: \(nsError.domain)")
-                print("Fixed Error code: \(nsError.code)")
-                print("Fixed Error userInfo: \(nsError.userInfo)")
                 
                 // Filter out cancellation errors and "no speech detected" during normal operation
                 let cancellationCodes = [203, 216, 301] // Cancellation codes
-                let ignorableCodes = [1110] // "No speech detected"
+                let ignorableCodes = [1110, 1101] // "No speech detected", "Speech recording error"
                 
                 if !cancellationCodes.contains(nsError.code) && !ignorableCodes.contains(nsError.code) {
                     DispatchQueue.main.async {
@@ -222,6 +218,8 @@ final class FixedSpeechRecognizer: ObservableObject {
                     }
                 } else if nsError.code == 1110 {
                     print("Fixed No speech detected yet, continuing...")
+                } else if nsError.code == 1101 {
+                    // Silently ignore error 1101 - it's a known issue that doesn't affect operation
                 } else {
                     print("Fixed Speech recognition cancelled (code: \(nsError.code))")
                 }
