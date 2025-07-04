@@ -21,6 +21,11 @@
  *   - Added contrasting background circle for brain
  *   - Removed transparency for better visibility
  *   - Adjusted positioning for better visual balance
+ * - 2025-07-04: Icon refinements
+ *   - Increased house size to fill more of the icon (60% -> 85%)
+ *   - Removed grey circle background from brain
+ *   - Moved brain lower and made it larger (25% -> 40%)
+ *   - Better visual balance with larger elements
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -57,38 +62,27 @@ struct AppIconCreator {
             )
             
             // Configure for drawing
-            let configuration = UIImage.SymbolConfiguration(pointSize: size.width * 0.6, weight: .medium)
+            let configuration = UIImage.SymbolConfiguration(pointSize: size.width * 0.85, weight: .medium)
             
-            // Draw house
+            // Draw house (larger to fill icon)
             if let houseImage = UIImage(systemName: "house.fill", withConfiguration: configuration) {
                 let houseRect = CGRect(
-                    x: rect.width * 0.2,
-                    y: rect.height * 0.2,
-                    width: rect.width * 0.6,
-                    height: rect.height * 0.6
+                    x: rect.width * 0.075,
+                    y: rect.height * 0.075,
+                    width: rect.width * 0.85,
+                    height: rect.height * 0.85
                 )
                 houseImage.withTintColor(.white.withAlphaComponent(0.9)).draw(in: houseRect)
             }
             
-            // Draw brain with contrasting background
-            // First draw a dark circle background for contrast
-            let brainBackgroundRect = CGRect(
-                x: rect.width * 0.325,
-                y: rect.height * 0.375,
-                width: rect.width * 0.35,
-                height: rect.height * 0.35
-            )
-            context.cgContext.setFillColor(UIColor.black.withAlphaComponent(0.4).cgColor)
-            context.cgContext.fillEllipse(in: brainBackgroundRect)
-            
-            // Draw brain symbol (standalone, not in head)
-            let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.25, weight: .bold)
+            // Draw brain symbol (larger and moved down)
+            let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.4, weight: .bold)
             if let brainImage = UIImage(systemName: "brain", withConfiguration: brainConfig) {
                 let brainRect = CGRect(
-                    x: rect.width * 0.375,
-                    y: rect.height * 0.425,
-                    width: rect.width * 0.25,
-                    height: rect.width * 0.25
+                    x: rect.width * 0.3,
+                    y: rect.height * 0.45,
+                    width: rect.width * 0.4,
+                    height: rect.width * 0.4
                 )
                 brainImage.withTintColor(.white).draw(in: brainRect)
             }
