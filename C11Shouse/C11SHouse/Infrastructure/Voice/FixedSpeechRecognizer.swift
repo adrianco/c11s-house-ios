@@ -147,29 +147,9 @@ final class FixedSpeechRecognizer: ObservableObject {
         print("Fixed Original audio format: \(recordingFormat)")
         print("Fixed Sample rate: \(recordingFormat.sampleRate), Channels: \(recordingFormat.channelCount)")
         
-        // Try to create a format similar to working approach (lower sample rate)
-        var workingFormat: AVAudioFormat?
-        
-        // Try 16kHz first (common for speech), then 12kHz (what SimpleSpeechRecognizer uses), then fall back
-        for sampleRate in [16000.0, 12000.0, recordingFormat.sampleRate] {
-            if let format = AVAudioFormat(
-                commonFormat: .pcmFormatFloat32,
-                sampleRate: sampleRate,
-                channels: 1,
-                interleaved: false
-            ) {
-                workingFormat = format
-                print("Fixed Using sample rate: \(sampleRate)")
-                break
-            }
-        }
-        
-        guard let format = workingFormat else {
-            throw SpeechRecognitionError.audioEngineError
-        }
-        
-        // Install audio tap with the format that should work
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+        // Use the device's native format to avoid format mismatch errors
+        // The hardware expects its native format (48000 Hz in this case)
+        inputNode.installTap(onBus: 0, bufferSize: 4096, format: recordingFormat) { [weak self] buffer, _ in
             self?.recognitionRequest?.append(buffer)
         }
         
