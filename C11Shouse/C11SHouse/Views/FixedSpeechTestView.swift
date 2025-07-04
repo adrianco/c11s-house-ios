@@ -104,6 +104,12 @@ struct FixedSpeechTestView: View {
         }
         .padding()
         .navigationTitle("Fixed Speech Test")
+        .onDisappear {
+            // Ensure recording stops when view is dismissed
+            if recognizer.isRecording {
+                recognizer.stopRecording()
+            }
+        }
     }
     
     private func authStatusText(_ status: SFSpeechRecognizerAuthorizationStatus) -> String {

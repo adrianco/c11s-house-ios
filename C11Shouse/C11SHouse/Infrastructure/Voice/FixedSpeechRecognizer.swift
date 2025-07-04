@@ -30,6 +30,11 @@ final class FixedSpeechRecognizer: ObservableObject {
     private var audioEngine = AVAudioEngine()
     private var inputNode: AVAudioInputNode { audioEngine.inputNode }
     
+    // Thread safety
+    private var isTerminating = false
+    private var audioTapInstalled = false
+    private let audioEngineQueue = DispatchQueue(label: "com.c11s.audioEngine")
+    
     // MARK: - Error Types
     enum SpeechRecognitionError: LocalizedError {
         case notAuthorized
@@ -152,6 +157,7 @@ final class FixedSpeechRecognizer: ObservableObject {
         inputNode.installTap(onBus: 0, bufferSize: 4096, format: recordingFormat) { [weak self] buffer, _ in
             self?.recognitionRequest?.append(buffer)
         }
+        audioTapInstalled = true
         
         // Prepare and start audio engine
         audioEngine.prepare()
@@ -186,9 +192,14 @@ final class FixedSpeechRecognizer: ObservableObject {
                 print("Fixed Error code: \(nsError.code)")
                 print("Fixed Error userInfo: \(nsError.userInfo)")
                 
-                DispatchQueue.main.async {
-                    self.error = .recognitionError(error.localizedDescription)
-                    self.stopRecording()
+                // Filter out cancellation errors
+                if nsError.code != 203 && nsError.code != 216 { // 203 and 216 are cancellation codes
+                    DispatchQueue.main.async {
+                        self.error = .recognitionError(error.localizedDescription)
+                        self.stopRecording()
+                    }
+                } else {
+                    print("Fixed Speech recognition cancelled (code: \(nsError.code))")
                 }
             }
         }
@@ -198,23 +209,60 @@ final class FixedSpeechRecognizer: ObservableObject {
     }
     
     func stopRecording() {
-        print("=== Stopping Fixed Recording ===")
-        
-        recognitionTask?.cancel()
-        recognitionTask = nil
-        
-        recognitionRequest?.endAudio()
-        recognitionRequest = nil
-        
-        if audioEngine.isRunning {
-            audioEngine.stop()
-            inputNode.removeTap(onBus: 0)
+        // Prevent multiple simultaneous stop calls
+        guard !isTerminating else {
+            print("[FixedSpeechRecognizer] Already terminating, skipping...")
+            return
         }
         
+        isTerminating = true
+        defer { isTerminating = false }
+        
+        print("=== Stopping Fixed Recording ===")
+        
+        // Step 1: Cancel recognition task first
+        if let task = recognitionTask {
+            print("[FixedSpeechRecognizer] Cancelling recognition task...")
+            task.cancel()
+            recognitionTask = nil
+        }
+        
+        // Step 2: End audio gracefully
+        if let request = recognitionRequest {
+            print("[FixedSpeechRecognizer] Ending audio request...")
+            request.endAudio()
+            recognitionRequest = nil
+        }
+        
+        // Step 3: Stop audio engine on audio queue
+        audioEngineQueue.sync {
+            if audioEngine.isRunning {
+                print("[FixedSpeechRecognizer] Stopping audio engine...")
+                audioEngine.stop()
+            }
+            
+            // Step 4: Remove tap only if installed
+            if audioTapInstalled {
+                print("[FixedSpeechRecognizer] Removing audio tap...")
+                inputNode.removeTap(onBus: 0)
+                audioTapInstalled = false
+            }
+        }
+        
+        // Step 5: Update recording state
         isRecording = false
         
-        // Deactivate audio session
-        try? AVAudioSession.sharedInstance().setActive(false)
+        // Step 6: Deactivate audio session with proper error handling
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            do {
+                print("[FixedSpeechRecognizer] Deactivating audio session...")
+                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                print("[FixedSpeechRecognizer] Audio session deactivated")
+            } catch {
+                print("[FixedSpeechRecognizer] Error deactivating audio session: \(error)")
+                // Non-fatal error, continue
+            }
+        }
     }
     
     func toggleRecording() {
@@ -230,9 +278,27 @@ final class FixedSpeechRecognizer: ObservableObject {
     }
     
     func reset() {
-        stopRecording()
-        transcript = ""
-        confidence = 0.0
-        error = nil
+        print("[FixedSpeechRecognizer] Resetting...")
+        
+        // Stop recording if active
+        if isRecording {
+            stopRecording()
+        }
+        
+        // Clear state after a small delay to ensure cleanup
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.transcript = ""
+            self?.confidence = 0.0
+            self?.error = nil
+            print("[FixedSpeechRecognizer] Reset complete")
+        }
+    }
+    
+    deinit {
+        print("[FixedSpeechRecognizer] Deinitializing...")
+        // Ensure cleanup on deinitialization
+        if isRecording {
+            stopRecording()
+        }
     }
 }
