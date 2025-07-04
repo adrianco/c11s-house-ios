@@ -113,15 +113,25 @@ final class FixedSpeechRecognizer: ObservableObject {
             throw SpeechRecognitionError.notAvailable
         }
         
-        // Stop any ongoing recording
-        stopRecording()
+        // Clean up any previous state without going through full stopRecording
+        if audioEngine.isRunning {
+            audioEngine.stop()
+            if audioTapInstalled {
+                inputNode.removeTap(onBus: 0)
+                audioTapInstalled = false
+            }
+        }
+        recognitionTask?.cancel()
+        recognitionTask = nil
+        recognitionRequest = nil
+        isRecording = false
         
         // Configure audio session to match working implementation
         do {
             let audioSession = AVAudioSession.sharedInstance()
             // Use SAME configuration as working SimpleSpeechRecognizer
-            try audioSession.setCategory(.playAndRecord, mode: .default)
-            try audioSession.setActive(true)
+            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
+            try audioSession.setActive(true, options: [])
             print("Fixed Audio session configured successfully")
         } catch {
             print("Fixed Audio session error: \(error)")
@@ -165,6 +175,9 @@ final class FixedSpeechRecognizer: ObservableObject {
         
         print("Fixed Audio engine started successfully")
         
+        // Set recording flag early to prevent race conditions
+        isRecording = true
+        
         // Start recognition task with detailed error handling
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
             guard let self = self else { return }
@@ -192,19 +205,22 @@ final class FixedSpeechRecognizer: ObservableObject {
                 print("Fixed Error code: \(nsError.code)")
                 print("Fixed Error userInfo: \(nsError.userInfo)")
                 
-                // Filter out cancellation errors
-                if nsError.code != 203 && nsError.code != 216 { // 203 and 216 are cancellation codes
+                // Filter out cancellation errors and "no speech detected" during normal operation
+                if nsError.code != 203 && nsError.code != 216 && nsError.code != 1110 { // 1110 is "No speech detected"
                     DispatchQueue.main.async {
                         self.error = .recognitionError(error.localizedDescription)
-                        self.stopRecording()
+                        if self.isRecording && !self.isTerminating {
+                            self.stopRecording()
+                        }
                     }
+                } else if nsError.code == 1110 {
+                    print("Fixed No speech detected yet, continuing...")
                 } else {
                     print("Fixed Speech recognition cancelled (code: \(nsError.code))")
                 }
             }
         }
         
-        isRecording = true
         print("Fixed Recording started successfully")
     }
     
@@ -214,6 +230,7 @@ final class FixedSpeechRecognizer: ObservableObject {
             print("[FixedSpeechRecognizer] Already terminating, skipping...")
             return
         }
+        
         
         isTerminating = true
         defer { isTerminating = false }
@@ -254,13 +271,16 @@ final class FixedSpeechRecognizer: ObservableObject {
         
         // Step 6: Deactivate audio session with proper error handling
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            do {
-                print("[FixedSpeechRecognizer] Deactivating audio session...")
-                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-                print("[FixedSpeechRecognizer] Audio session deactivated")
-            } catch {
-                print("[FixedSpeechRecognizer] Error deactivating audio session: \(error)")
-                // Non-fatal error, continue
+            // Only deactivate if not immediately starting a new recording
+            if !self.isRecording {
+                do {
+                    print("[FixedSpeechRecognizer] Deactivating audio session...")
+                    try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+                    print("[FixedSpeechRecognizer] Audio session deactivated")
+                } catch {
+                    print("[FixedSpeechRecognizer] Error deactivating audio session: \(error)")
+                    // Non-fatal error, continue
+                }
             }
         }
     }
