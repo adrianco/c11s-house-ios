@@ -21,6 +21,12 @@
  *   - Updated to reflect production use as conversation interface
  *   - Changed recognizer from FixedSpeechRecognizer to ConversationRecognizer
  *   - Maintained all existing functionality while clarifying purpose
+ * - 2025-07-04: Added persistent transcript and editing capabilities
+ *   - Transcript persists in memory while app is running
+ *   - Added Edit button to toggle between view and edit modes
+ *   - TextEditor for transcript editing when in edit mode
+ *   - New recordings append to existing transcript instead of replacing
+ *   - Manual transcript management separate from recognizer
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -38,6 +44,9 @@ import Speech
 
 struct ConversationView: View {
     @StateObject private var recognizer = ConversationRecognizer()
+    @State private var persistentTranscript = ""
+    @State private var isEditing = false
+    @State private var lastRecognizedText = ""
     
     var body: some View {
         VStack(spacing: 20) {
@@ -78,34 +87,73 @@ struct ConversationView: View {
                     }
                 }
                 
-                Text(recognizer.transcript.isEmpty ? "Say something..." : recognizer.transcript)
-                    .padding()
-                    .frame(minHeight: 100)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                if isEditing {
+                    TextEditor(text: $persistentTranscript)
+                        .padding(8)
+                        .frame(minHeight: 150)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.blue, lineWidth: 2)
+                        )
+                } else {
+                    ScrollView {
+                        Text(persistentTranscript.isEmpty ? "Say something..." : persistentTranscript)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(minHeight: 150)
+                    .frame(maxWidth: .infinity)
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
+                }
             }
             
-            HStack(spacing: 20) {
+            HStack(spacing: 15) {
                 Button(action: {
-                    recognizer.toggleRecording()
+                    if recognizer.isRecording {
+                        recognizer.toggleRecording()
+                    } else {
+                        // Clear recognizer transcript before starting new recording
+                        recognizer.transcript = ""
+                        recognizer.toggleRecording()
+                    }
                 }) {
                     HStack {
                         Image(systemName: recognizer.isRecording ? "stop.fill" : "mic.fill")
                         Text(recognizer.isRecording ? "Stop" : "Start")
                     }
                     .foregroundColor(.white)
-                    .padding()
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
                     .background(recognizer.isRecording ? Color.red : Color.blue)
                     .cornerRadius(10)
                 }
-                .disabled(recognizer.authorizationStatus != .authorized)
+                .disabled(recognizer.authorizationStatus != .authorized || isEditing)
+                
+                Button(action: {
+                    isEditing.toggle()
+                }) {
+                    HStack {
+                        Image(systemName: isEditing ? "checkmark.circle.fill" : "pencil.circle.fill")
+                        Text(isEditing ? "Done" : "Edit")
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(isEditing ? Color.green : Color.orange)
+                    .cornerRadius(10)
+                }
                 
                 Button("Reset") {
                     recognizer.reset()
+                    persistentTranscript = ""
+                    lastRecognizedText = ""
                 }
                 .foregroundColor(.white)
-                .padding()
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
                 .background(Color.gray)
                 .cornerRadius(10)
             }
@@ -114,6 +162,16 @@ struct ConversationView: View {
         }
         .padding()
         .navigationTitle("Conversations")
+        .onChange(of: recognizer.transcript) { newValue in
+            // Append new recognized text to persistent transcript
+            if !newValue.isEmpty && newValue != lastRecognizedText {
+                if !persistentTranscript.isEmpty {
+                    persistentTranscript += " "
+                }
+                persistentTranscript += newValue
+                lastRecognizedText = newValue
+            }
+        }
         .onDisappear {
             // Ensure recording stops when view is dismissed
             if recognizer.isRecording {
