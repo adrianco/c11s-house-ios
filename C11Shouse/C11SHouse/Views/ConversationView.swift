@@ -28,6 +28,10 @@
  *   - New recordings append to existing transcript instead of replacing
  *   - Manual transcript management separate from recognizer
  *   - Updated onChange to iOS 17 syntax with oldValue, newValue parameters
+ * - 2025-07-04: Fixed incremental speech recognition updates
+ *   - Track session start position to handle incremental updates properly
+ *   - Speech recognizer sends progressive updates (e.g., "One", "One two", "One two three")
+ *   - Now correctly shows final result without duplication
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -47,7 +51,8 @@ struct ConversationView: View {
     @StateObject private var recognizer = ConversationRecognizer()
     @State private var persistentTranscript = ""
     @State private var isEditing = false
-    @State private var lastRecognizedText = ""
+    @State private var currentSessionStart = ""
+    @State private var isNewSession = true
     
     var body: some View {
         VStack(spacing: 20) {
@@ -114,9 +119,13 @@ struct ConversationView: View {
             HStack(spacing: 15) {
                 Button(action: {
                     if recognizer.isRecording {
+                        // Stop recording and finalize the current session
                         recognizer.toggleRecording()
+                        isNewSession = true
                     } else {
-                        // Clear recognizer transcript before starting new recording
+                        // Mark the start of a new recording session
+                        currentSessionStart = persistentTranscript
+                        isNewSession = true
                         recognizer.transcript = ""
                         recognizer.toggleRecording()
                     }
@@ -150,7 +159,8 @@ struct ConversationView: View {
                 Button("Reset") {
                     recognizer.reset()
                     persistentTranscript = ""
-                    lastRecognizedText = ""
+                    currentSessionStart = ""
+                    isNewSession = true
                 }
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
@@ -164,13 +174,20 @@ struct ConversationView: View {
         .padding()
         .navigationTitle("Conversations")
         .onChange(of: recognizer.transcript) { oldValue, newValue in
-            // Append new recognized text to persistent transcript
-            if !newValue.isEmpty && newValue != lastRecognizedText {
-                if !persistentTranscript.isEmpty {
-                    persistentTranscript += " "
+            // Handle incremental speech recognition updates
+            if !newValue.isEmpty {
+                if isNewSession {
+                    // First update in a new session - add space if needed
+                    if !currentSessionStart.isEmpty {
+                        persistentTranscript = currentSessionStart + " " + newValue
+                    } else {
+                        persistentTranscript = newValue
+                    }
+                    isNewSession = false
+                } else {
+                    // Subsequent update - replace from session start
+                    persistentTranscript = currentSessionStart + (currentSessionStart.isEmpty ? "" : " ") + newValue
                 }
-                persistentTranscript += newValue
-                lastRecognizedText = newValue
             }
         }
         .onDisappear {
