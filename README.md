@@ -19,6 +19,21 @@ Log of the output as it did this work is saved in the repo.
 
 ## Status
 
+
+## Screenshots
+
+<div align="center">
+  <img src="misc/home.PNG" alt="Home Screen" width="250" />
+  <img src="misc/conversations.PNG" alt="Conversations View" width="250" />
+  <img src="misc/edit.PNG" alt="Edit Mode" width="250" />
+</div>
+
+<div align="center">
+  <b>Home Screen</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b>Conversations View</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b>Edit Mode</b>
+</div>
+
 ### 2025-07-04 Update
 Initial app implementation is now functional with core features:
 - **App Icon**: Dynamic gradient icon with house and brain symbols using AppIconCreator
@@ -33,4 +48,5 @@ Initial app implementation is now functional with core features:
 Previous status:
 - Reviewed with help from someone that knows current Apple development and looks good.
 - Working on refining the server and its user flows before we will attempt to build this app.
+
 
