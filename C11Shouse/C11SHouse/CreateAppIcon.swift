@@ -16,6 +16,11 @@
  *   - Preview component for development visualization
  *   - SF Symbols for crisp, scalable icons
  *   - Linear gradient from top-left to bottom-right
+ * - 2025-07-04: Improved brain symbol visibility
+ *   - Changed from brain.head.profile to standalone brain symbol
+ *   - Added contrasting background circle for brain
+ *   - Removed transparency for better visibility
+ *   - Adjusted positioning for better visual balance
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -65,14 +70,25 @@ struct AppIconCreator {
                 houseImage.withTintColor(.white.withAlphaComponent(0.9)).draw(in: houseRect)
             }
             
-            // Draw brain (centered in house)
-            let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.3, weight: .semibold)
-            if let brainImage = UIImage(systemName: "brain.head.profile", withConfiguration: brainConfig) {
+            // Draw brain with contrasting background
+            // First draw a dark circle background for contrast
+            let brainBackgroundRect = CGRect(
+                x: rect.width * 0.325,
+                y: rect.height * 0.375,
+                width: rect.width * 0.35,
+                height: rect.height * 0.35
+            )
+            context.cgContext.setFillColor(UIColor.black.withAlphaComponent(0.4).cgColor)
+            context.cgContext.fillEllipse(in: brainBackgroundRect)
+            
+            // Draw brain symbol (standalone, not in head)
+            let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.25, weight: .bold)
+            if let brainImage = UIImage(systemName: "brain", withConfiguration: brainConfig) {
                 let brainRect = CGRect(
-                    x: rect.width * 0.35,
-                    y: rect.height * 0.4,
-                    width: rect.width * 0.3,
-                    height: rect.height * 0.3
+                    x: rect.width * 0.375,
+                    y: rect.height * 0.425,
+                    width: rect.width * 0.25,
+                    height: rect.width * 0.25
                 )
                 brainImage.withTintColor(.white).draw(in: brainRect)
             }
