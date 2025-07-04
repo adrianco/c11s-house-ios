@@ -18,28 +18,19 @@ Update after plans were built in 5 minutes and pushed back to the repo.
 Log of the output as it did this work is saved in the repo.
 
 ## Status
-Reviewed with help from someone that knows current Apple development and looks good.
-Working on refining the server and its user flows before we will attempt to build this app.
 
-## Xcode Project Setup
+### 2025-07-04 Update
+Initial app implementation is now functional with core features:
+- **App Icon**: Dynamic gradient icon with house and brain symbols using AppIconCreator
+- **Main Interface**: Landing screen with house personality (name and emotion placeholders)
+- **Voice Conversations**: Real-time speech recognition renamed from FixedSpeech to ConversationView
+  - Persistent transcript that survives between recordings
+  - Editable transcript with dedicated edit mode
+  - Proper handling of incremental speech updates (no more duplication)
+  - Append mode for continuous conversation logging
+- **Testing**: Physical device testing required for speech recognition functionality (Xcode Cloud not needed at this stage)
 
-The project is now configured for Xcode Cloud CI/CD. To set up:
+Previous status:
+- Reviewed with help from someone that knows current Apple development and looks good.
+- Working on refining the server and its user flows before we will attempt to build this app.
 
-1. **Create Xcode Project**
-   - Open Xcode and create new iOS App named "C11SHouse"
-   - Save it in this directory (let Xcode create the C11SHouse folder)
-   
-2. **Run Setup Script**
-   ```bash
-   ./setup_xcode_project.sh
-   ```
-
-3. **Configure Xcode Cloud**
-   - See [XCODE_CLOUD_SETUP.md](XCODE_CLOUD_SETUP.md) for detailed instructions
-
-## Project Structure
-
-- `xcode-templates/` - Pre-configured files for SwiftUI app and Xcode Cloud workflows
-- `plans/` - Architecture and implementation documentation
-- `.xcode/workflows/` - CI/CD pipelines (created after setup)
-- `ci_scripts/` - Build automation scripts (created after setup)
