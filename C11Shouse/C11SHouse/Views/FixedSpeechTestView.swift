@@ -37,9 +37,6 @@ struct FixedSpeechTestView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("Fixed Real-Time Speech Test")
-                .font(.largeTitle)
-                .padding()
             
             VStack(spacing: 10) {
                 HStack {
@@ -50,21 +47,6 @@ struct FixedSpeechTestView: View {
                         .fontWeight(.semibold)
                 }
                 
-                HStack {
-                    Text("Available:")
-                        .font(.headline)
-                    Text(recognizer.isAvailable ? "Yes" : "No")
-                        .foregroundColor(recognizer.isAvailable ? .green : .red)
-                        .fontWeight(.semibold)
-                }
-                
-                HStack {
-                    Text("Authorization:")
-                        .font(.headline)
-                    Text(authStatusText(recognizer.authorizationStatus))
-                        .foregroundColor(recognizer.authorizationStatus == .authorized ? .green : .red)
-                        .fontWeight(.semibold)
-                }
             }
             .padding()
             .background(Color.gray.opacity(0.1))
@@ -106,7 +88,7 @@ struct FixedSpeechTestView: View {
                 }) {
                     HStack {
                         Image(systemName: recognizer.isRecording ? "stop.fill" : "mic.fill")
-                        Text(recognizer.isRecording ? "Stop Recording" : "Start Recording")
+                        Text(recognizer.isRecording ? "Stop" : "Start")
                     }
                     .foregroundColor(.white)
                     .padding()
@@ -127,7 +109,7 @@ struct FixedSpeechTestView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle("Fixed Speech Test")
+        .navigationTitle("Conversations")
         .onDisappear {
             // Ensure recording stops when view is dismissed
             if recognizer.isRecording {
