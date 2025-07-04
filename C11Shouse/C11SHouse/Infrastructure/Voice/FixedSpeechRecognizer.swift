@@ -293,12 +293,4 @@ final class FixedSpeechRecognizer: ObservableObject {
             print("[FixedSpeechRecognizer] Reset complete")
         }
     }
-    
-    deinit {
-        print("[FixedSpeechRecognizer] Deinitializing...")
-        // Ensure cleanup on deinitialization
-        if isRecording {
-            stopRecording()
-        }
-    }
 }
