@@ -1,7 +1,7 @@
 /*
  * CONTEXT & PURPOSE:
- * FixedSpeechRecognizer provides improved real-time speech recognition functionality that addresses
- * error 1101 and other common speech recognition issues. It uses Apple's Speech framework with
+ * ConversationRecognizer provides real-time speech recognition functionality for natural
+ * conversations with the house consciousness. It uses Apple's Speech framework with
  * careful configuration to ensure stable operation, thread safety, and proper resource cleanup.
  *
  * DECISION HISTORY:
@@ -19,25 +19,29 @@
  *   - Delayed audio session deactivation to prevent conflicts
  *   - Confidence calculation from speech segments
  *   - Thread safety with isTerminating flag to prevent concurrent stops
+ * - 2025-07-04: Renamed from FixedSpeechRecognizer to ConversationRecognizer
+ *   - Updated class name to reflect purpose as conversation handler
+ *   - Maintained all error handling and stability improvements
+ *   - Updated logging prefixes for clarity
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
 
 //
-//  FixedSpeechRecognizer.swift
+//  ConversationRecognizer.swift
 //  C11SHouse
 //
-//  Attempt to fix the original real-time speech recognition
+//  Speech recognition engine for house consciousness conversations
 //
 
 import Foundation
 import Speech
 import AVFoundation
 
-/// Fixed speech recognizer that attempts to solve error 1101
+/// Speech recognizer optimized for conversational interactions
 @MainActor
-final class FixedSpeechRecognizer: ObservableObject {
+final class ConversationRecognizer: ObservableObject {
     
     // MARK: - Published Properties
     @Published var isRecording = false
@@ -94,8 +98,8 @@ final class FixedSpeechRecognizer: ObservableObject {
     // MARK: - Setup
     private func setupSpeechRecognizer() {
         isAvailable = speechRecognizer?.isAvailable ?? false
-        print("Fixed Speech recognizer available: \(isAvailable)")
-        print("Fixed Speech recognizer locale: \(speechRecognizer?.locale.identifier ?? "none")")
+        print("Conversation recognizer available: \(isAvailable)")
+        print("Conversation recognizer locale: \(speechRecognizer?.locale.identifier ?? "none")")
     }
     
     // MARK: - Authorization
@@ -103,7 +107,7 @@ final class FixedSpeechRecognizer: ObservableObject {
         SFSpeechRecognizer.requestAuthorization { [weak self] status in
             DispatchQueue.main.async {
                 self?.authorizationStatus = status
-                print("Fixed Speech authorization status: \(status)")
+                print("Conversation authorization status: \(status)")
                 
                 if status != .authorized {
                     self?.error = .notAuthorized
@@ -113,7 +117,7 @@ final class FixedSpeechRecognizer: ObservableObject {
         
         AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
             DispatchQueue.main.async {
-                print("Fixed Microphone permission granted: \(granted)")
+                print("Conversation microphone permission granted: \(granted)")
                 if !granted {
                     self?.error = .microphoneAccessDenied
                 }
@@ -123,7 +127,7 @@ final class FixedSpeechRecognizer: ObservableObject {
     
     // MARK: - Recording Control
     func startRecording() throws {
-        print("=== Starting Fixed Recording ===")
+        print("=== Starting Conversation Recording ===")
         
         // Reset state
         error = nil
@@ -158,9 +162,9 @@ final class FixedSpeechRecognizer: ObservableObject {
             // Use SAME configuration as working SimpleSpeechRecognizer
             try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
             try audioSession.setActive(true, options: [])
-            print("Fixed Audio session configured successfully")
+            print("Conversation audio session configured successfully")
         } catch {
-            print("Fixed Audio session error: \(error)")
+            print("Conversation audio session error: \(error)")
             throw SpeechRecognitionError.audioEngineError
         }
         
@@ -181,12 +185,12 @@ final class FixedSpeechRecognizer: ObservableObject {
             }
         }
         
-        print("Fixed Recognition request configured")
+        print("Conversation recognition request configured")
         
         // Configure audio engine
         let recordingFormat = inputNode.outputFormat(forBus: 0)
-        print("Fixed Original audio format: \(recordingFormat)")
-        print("Fixed Sample rate: \(recordingFormat.sampleRate), Channels: \(recordingFormat.channelCount)")
+        print("Conversation audio format: \(recordingFormat)")
+        print("Sample rate: \(recordingFormat.sampleRate), Channels: \(recordingFormat.channelCount)")
         
         // Use the device's native format to avoid format mismatch errors
         // The hardware expects its native format (48000 Hz in this case)
@@ -199,7 +203,7 @@ final class FixedSpeechRecognizer: ObservableObject {
         audioEngine.prepare()
         try audioEngine.start()
         
-        print("Fixed Audio engine started successfully")
+        print("Conversation audio engine started successfully")
         
         // Set recording flag early to prevent race conditions
         isRecording = true
@@ -214,7 +218,7 @@ final class FixedSpeechRecognizer: ObservableObject {
                     // Don't clear transcript if we're terminating and new transcript is empty
                     if !newTranscript.isEmpty || (!self.isTerminating && self.isRecording) {
                         self.transcript = newTranscript
-                        print("Fixed Transcript update: '\(self.transcript)'")
+                        print("Conversation transcript update: '\(self.transcript)'")
                     }
                     
                     // Calculate confidence
@@ -243,22 +247,22 @@ final class FixedSpeechRecognizer: ObservableObject {
                         }
                     }
                 } else if nsError.code == 1110 {
-                    print("Fixed No speech detected yet, continuing...")
+                    print("Conversation: No speech detected yet, continuing...")
                 } else if nsError.code == 1101 {
                     // Silently ignore error 1101 - it's a known issue that doesn't affect operation
                 } else {
-                    print("Fixed Speech recognition cancelled (code: \(nsError.code))")
+                    print("Conversation recognition cancelled (code: \(nsError.code))")
                 }
             }
         }
         
-        print("Fixed Recording started successfully")
+        print("Conversation recording started successfully")
     }
     
     func stopRecording() {
         // Prevent multiple simultaneous stop calls
         guard !isTerminating else {
-            print("[FixedSpeechRecognizer] Already terminating, skipping...")
+            print("[ConversationRecognizer] Already terminating, skipping...")
             return
         }
         
@@ -266,18 +270,18 @@ final class FixedSpeechRecognizer: ObservableObject {
         isTerminating = true
         defer { isTerminating = false }
         
-        print("=== Stopping Fixed Recording ===")
+        print("=== Stopping Conversation Recording ===")
         
         // Step 1: Cancel recognition task first
         if let task = recognitionTask {
-            print("[FixedSpeechRecognizer] Cancelling recognition task...")
+            print("[ConversationRecognizer] Cancelling recognition task...")
             task.cancel()
             recognitionTask = nil
         }
         
         // Step 2: End audio gracefully
         if let request = recognitionRequest {
-            print("[FixedSpeechRecognizer] Ending audio request...")
+            print("[ConversationRecognizer] Ending audio request...")
             request.endAudio()
             recognitionRequest = nil
         }
@@ -285,13 +289,13 @@ final class FixedSpeechRecognizer: ObservableObject {
         // Step 3: Stop audio engine on audio queue
         audioEngineQueue.sync {
             if audioEngine.isRunning {
-                print("[FixedSpeechRecognizer] Stopping audio engine...")
+                print("[ConversationRecognizer] Stopping audio engine...")
                 audioEngine.stop()
             }
             
             // Step 4: Remove tap only if installed
             if audioTapInstalled {
-                print("[FixedSpeechRecognizer] Removing audio tap...")
+                print("[ConversationRecognizer] Removing audio tap...")
                 inputNode.removeTap(onBus: 0)
                 audioTapInstalled = false
             }
@@ -305,11 +309,11 @@ final class FixedSpeechRecognizer: ObservableObject {
             // Only deactivate if not immediately starting a new recording
             if !self.isRecording {
                 do {
-                    print("[FixedSpeechRecognizer] Deactivating audio session...")
+                    print("[ConversationRecognizer] Deactivating audio session...")
                     try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-                    print("[FixedSpeechRecognizer] Audio session deactivated")
+                    print("[ConversationRecognizer] Audio session deactivated")
                 } catch {
-                    print("[FixedSpeechRecognizer] Error deactivating audio session: \(error)")
+                    print("[ConversationRecognizer] Error deactivating audio session: \(error)")
                     // Non-fatal error, continue
                 }
             }
@@ -329,7 +333,7 @@ final class FixedSpeechRecognizer: ObservableObject {
     }
     
     func reset() {
-        print("[FixedSpeechRecognizer] Resetting...")
+        print("[ConversationRecognizer] Resetting...")
         
         // Stop recording if active
         if isRecording {
@@ -341,7 +345,7 @@ final class FixedSpeechRecognizer: ObservableObject {
             self?.transcript = ""
             self?.confidence = 0.0
             self?.error = nil
-            print("[FixedSpeechRecognizer] Reset complete")
+            print("[ConversationRecognizer] Reset complete")
         }
     }
 }

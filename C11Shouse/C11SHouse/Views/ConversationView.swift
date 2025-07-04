@@ -1,12 +1,12 @@
 /*
  * CONTEXT & PURPOSE:
- * FixedSpeechTestView is a debugging and testing interface for the FixedSpeechRecognizer.
- * It provides comprehensive status monitoring, real-time transcription display, and error
- * feedback to help diagnose and test speech recognition functionality during development.
+ * ConversationView is the main interface for voice conversations with the house consciousness.
+ * It provides real-time speech recognition, transcription display, and conversation state
+ * management to enable natural voice interactions with the intelligent home system.
  *
  * DECISION HISTORY:
  * - 2025-07-03: Initial implementation for testing fixed speech recognition
- *   - StateObject for FixedSpeechRecognizer lifecycle management
+ *   - StateObject for ConversationRecognizer lifecycle management
  *   - Status display for recording state, availability, and authorization
  *   - Real-time transcript display with confidence percentage
  *   - Error display with red background for visibility
@@ -17,23 +17,27 @@
  *   - Disabled state for button when not authorized
  *   - Gray backgrounds for content sections
  *   - Minimum height for transcript area to prevent layout shifts
+ * - 2025-07-04: Renamed from FixedSpeechTestView to ConversationView
+ *   - Updated to reflect production use as conversation interface
+ *   - Changed recognizer from FixedSpeechRecognizer to ConversationRecognizer
+ *   - Maintained all existing functionality while clarifying purpose
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
 
 //
-//  FixedSpeechTestView.swift
+//  ConversationView.swift
 //  C11SHouse
 //
-//  Test view for debugging the fixed real-time speech recognition
+//  Main view for voice conversations with the house consciousness
 //
 
 import SwiftUI
 import Speech
 
-struct FixedSpeechTestView: View {
-    @StateObject private var recognizer = FixedSpeechRecognizer()
+struct ConversationView: View {
+    @StateObject private var recognizer = ConversationRecognizer()
     
     var body: some View {
         VStack(spacing: 20) {

@@ -11,7 +11,7 @@
  *   - NavigationView with StackNavigationViewStyle for iPad compatibility
  *   - Hidden navigation bar for immersive full-screen experience
  *   - ServiceContainer injected via @EnvironmentObject for dependency access
- *   - Navigation to FixedSpeechTestView for voice transcription functionality
+ *   - Navigation to ConversationView for voice conversation functionality
  *   - Linear gradient on button and background for visual hierarchy
  *   - System colors used for automatic dark mode support
  * - 2025-07-04: Icon updates
@@ -23,6 +23,10 @@
  *   - Added emotion state placeholder (default: "Curious")
  *   - Added house name placeholder (default: "Your House")
  *   - These will be updated based on user preferences and interactions
+ * - 2025-07-04: Renamed FixedSpeech components to Conversation
+ *   - Changed FixedSpeechTestView to ConversationView
+ *   - Changed FixedSpeechRecognizer to ConversationRecognizer
+ *   - Better reflects production use as conversation interface
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -69,7 +73,7 @@ struct ContentView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
                     
-                    NavigationLink(destination: FixedSpeechTestView()) {
+                    NavigationLink(destination: ConversationView()) {
                         HStack {
                             Image(systemName: "mic.fill")
                             Text("Start Conversation")
