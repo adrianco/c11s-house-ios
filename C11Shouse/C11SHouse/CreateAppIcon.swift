@@ -1,3 +1,26 @@
+/*
+ * CONTEXT & PURPOSE:
+ * CreateAppIcon.swift provides a programmatic way to generate the C11S House app icon using
+ * Core Graphics and SF Symbols. It creates a gradient background with a house symbol containing
+ * a brain symbol, representing the concept of "house consciousness" or intelligent home.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Programmatic icon generation for consistency and easy updates
+ *   - Blue to purple gradient representing technology and innovation
+ *   - House symbol as primary element (60% of icon size)
+ *   - Brain symbol nested inside house (30% size) for consciousness concept
+ *   - White symbols with transparency for visual hierarchy
+ *   - UIGraphicsImageRenderer for high-quality rendering
+ *   - 1024x1024 base size for App Store requirements
+ *   - Preview component for development visualization
+ *   - SF Symbols for crisp, scalable icons
+ *   - Linear gradient from top-left to bottom-right
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 import SwiftUI
 import UIKit
 

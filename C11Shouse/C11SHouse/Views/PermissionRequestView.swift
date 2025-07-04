@@ -1,3 +1,28 @@
+/*
+ * CONTEXT & PURPOSE:
+ * PermissionRequestView provides a user-friendly interface for requesting and managing microphone
+ * and speech recognition permissions. It displays the current permission status and guides users
+ * through the permission granting process with clear visual feedback and actionable buttons.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Clean, centered layout with clear messaging about why permissions are needed
+ *   - Visual permission status cards with icons and color coding
+ *   - Green checkmarks for granted, red X for denied permissions
+ *   - Conditional action buttons based on permission state
+ *   - "Grant Permissions" button when permissions needed
+ *   - "Open Settings" button when permissions denied (manual grant required)
+ *   - Success state with green checkmark when all permissions granted
+ *   - PermissionStatusCard as reusable component for each permission
+ *   - Shadow effects for depth and visual hierarchy
+ *   - System background colors for automatic dark mode support
+ *   - EnvironmentObject injection of PermissionManager
+ *   - Task-based async permission requests
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  PermissionRequestView.swift
 //  C11SHouse

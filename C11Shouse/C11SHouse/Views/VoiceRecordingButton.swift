@@ -1,3 +1,28 @@
+/*
+ * CONTEXT & PURPOSE:
+ * VoiceRecordingButton is a reusable, animated recording button component with visual feedback.
+ * It provides an intuitive interface for starting/stopping voice recordings with smooth animations,
+ * ripple effects, and recording indicators that enhance the user experience.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Binding-based state management for external control
+ *   - 80pt button size for comfortable touch target
+ *   - Blue (idle) to red (recording) color transition
+ *   - Ripple effect animation (1.5s loop) for recording feedback
+ *   - Spring animation (0.3s) for button scale changes
+ *   - Recording indicator dot with pulse animation (0.8s)
+ *   - Shadow effects that intensify when recording
+ *   - Mic icon for idle state, stop icon for recording
+ *   - 1.1x scale when recording for emphasis
+ *   - Self-contained animations with proper cleanup
+ *   - Preview provider with both states for development
+ *   - Frame size accounts for ripple effect (120pt)
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 import SwiftUI
 
 struct VoiceRecordingButton: View {

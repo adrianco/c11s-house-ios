@@ -1,3 +1,31 @@
+/*
+ * CONTEXT & PURPOSE:
+ * VoiceRecorderExampleView demonstrates the usage of VoiceRecorder with a complete UI implementation.
+ * It serves as both an example for developers and a functional voice recording interface with
+ * recording controls, audio level visualization, recordings management, and permission handling.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Full-featured demo view showcasing VoiceRecorder capabilities
+ *   - Visual recording state indicators with SF Symbols
+ *   - Real-time audio level meter with color coding
+ *   - Recording duration display with monospaced font
+ *   - Dual control interface: standard buttons and floating action button
+ *   - Recording list with playback UI (playback TODO)
+ *   - SwiftUI alerts for permission requests and errors
+ *   - Automatic recordings refresh on save
+ *   - Delete functionality for saved recordings
+ *   - Responsive button states based on recording state
+ *   - Animated visual feedback for recording state changes
+ *   - RecordingRow component for list items
+ *   - Formatted display of duration, file size, and creation date
+ *   - Color-coded audio levels (green/yellow/red)
+ *   - Spring animations for floating button
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  VoiceRecorderExampleView.swift
 //  C11SHouse

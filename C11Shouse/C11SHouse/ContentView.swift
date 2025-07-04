@@ -1,3 +1,24 @@
+/*
+ * CONTEXT & PURPOSE:
+ * ContentView serves as the main landing screen for the C11S House app. It provides a welcoming
+ * interface with app branding and navigation to the voice transcription feature. The view
+ * emphasizes voice interaction through visual metaphors (waveform icon) and clear call-to-action.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Designed with house and waveform symbolism to represent "house consciousness"
+ *   - Used gradient backgrounds and shadows for modern, depth-rich UI
+ *   - NavigationView with StackNavigationViewStyle for iPad compatibility
+ *   - Hidden navigation bar for immersive full-screen experience
+ *   - ServiceContainer injected via @EnvironmentObject for dependency access
+ *   - Navigation to FixedSpeechTestView for voice transcription functionality
+ *   - Linear gradient on button and background for visual hierarchy
+ *   - System colors used for automatic dark mode support
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 import SwiftUI
 
 struct ContentView: View {

@@ -1,3 +1,21 @@
+/*
+ * CONTEXT & PURPOSE:
+ * C11SHouseUITestsLaunchTests focuses on testing the app launch experience and capturing
+ * screenshots for documentation and App Store submission. It runs for each UI configuration
+ * to ensure the app launches correctly across different device sizes and orientations.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-02: Initial implementation (Created by Adrian Cockcroft)
+ *   - runsForEachTargetApplicationUIConfiguration = true for comprehensive testing
+ *   - Screenshot capture on launch for visual verification
+ *   - XCTAttachment with keepAlways lifetime for persistent screenshots
+ *   - @MainActor for UI-related test execution
+ *   - Placeholder for future launch customization (login, navigation)
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  C11SHouseUITestsLaunchTests.swift
 //  C11SHouseUITests

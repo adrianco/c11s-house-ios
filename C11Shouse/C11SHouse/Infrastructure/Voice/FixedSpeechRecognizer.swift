@@ -1,3 +1,29 @@
+/*
+ * CONTEXT & PURPOSE:
+ * FixedSpeechRecognizer provides improved real-time speech recognition functionality that addresses
+ * error 1101 and other common speech recognition issues. It uses Apple's Speech framework with
+ * careful configuration to ensure stable operation, thread safety, and proper resource cleanup.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation to fix speech recognition errors
+ *   - Addressed error 1101 (speech recording error) by proper audio session configuration
+ *   - Used playAndRecord category with measurement mode for accurate speech recognition
+ *   - Disabled requiresOnDeviceRecognition to avoid device limitations
+ *   - Thread-safe audio engine operations using dedicated dispatch queue
+ *   - Proper state management to prevent race conditions during stop/start
+ *   - Comprehensive error handling with specific error codes filtering
+ *   - Ignored benign errors (1110: no speech, 1101: recording error) during normal operation
+ *   - Used device's native audio format (48kHz) to avoid format mismatch
+ *   - Buffer size: 4096 frames for balance between latency and stability
+ *   - Graceful shutdown sequence: cancel task → end audio → stop engine → remove tap
+ *   - Delayed audio session deactivation to prevent conflicts
+ *   - Confidence calculation from speech segments
+ *   - Thread safety with isTerminating flag to prevent concurrent stops
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  FixedSpeechRecognizer.swift
 //  C11SHouse

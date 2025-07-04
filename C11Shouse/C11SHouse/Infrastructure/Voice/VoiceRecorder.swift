@@ -1,3 +1,32 @@
+/*
+ * CONTEXT & PURPOSE:
+ * VoiceRecorder provides a high-level, SwiftUI-friendly interface for voice recording functionality.
+ * It abstracts the complexity of AudioEngine and AudioSessionManager, providing a simple API with
+ * reactive state management for UI integration. Handles recording lifecycle, file management,
+ * and permission coordination.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - ObservableObject pattern for SwiftUI integration
+ *   - @MainActor for thread-safe UI state updates
+ *   - Published properties for reactive UI binding
+ *   - State machine pattern with RecordingState enum
+ *   - Delegation to AudioEngine for actual recording
+ *   - Automatic file management in Documents/Recordings directory
+ *   - M4A format for recorded files (iOS standard)
+ *   - Date-based file naming convention
+ *   - Error handling with user-friendly messages
+ *   - Combine bindings for real-time audio level and duration updates
+ *   - Recording file metadata (duration, size, creation date)
+ *   - Convenience view modifiers for easy UI integration
+ *   - VoiceRecorderButton component with visual state feedback
+ *   - AudioEngineDelegate implementation for event handling
+ *   - Async/await API for recording operations
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  VoiceRecorder.swift
 //  C11SHouse

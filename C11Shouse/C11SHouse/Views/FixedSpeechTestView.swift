@@ -1,3 +1,27 @@
+/*
+ * CONTEXT & PURPOSE:
+ * FixedSpeechTestView is a debugging and testing interface for the FixedSpeechRecognizer.
+ * It provides comprehensive status monitoring, real-time transcription display, and error
+ * feedback to help diagnose and test speech recognition functionality during development.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation for testing fixed speech recognition
+ *   - StateObject for FixedSpeechRecognizer lifecycle management
+ *   - Status display for recording state, availability, and authorization
+ *   - Real-time transcript display with confidence percentage
+ *   - Error display with red background for visibility
+ *   - Toggle button changes between start/stop with color feedback
+ *   - Reset button to clear transcript and state
+ *   - Authorization status helper for readable text
+ *   - Automatic cleanup on view dismissal to prevent orphaned recordings
+ *   - Disabled state for button when not authorized
+ *   - Gray backgrounds for content sections
+ *   - Minimum height for transcript area to prevent layout shifts
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  FixedSpeechTestView.swift
 //  C11SHouse

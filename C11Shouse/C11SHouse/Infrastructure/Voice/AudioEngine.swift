@@ -1,3 +1,30 @@
+/*
+ * CONTEXT & PURPOSE:
+ * AudioEngine provides low-level audio recording functionality using AVAudioEngine with real-time
+ * buffer processing capabilities. It manages audio capture, processing, level monitoring, and 
+ * buffer storage while delegating events through a protocol-based pattern. Designed for voice
+ * recording with optimized settings for speech capture.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Chose AVAudioEngine over AVAudioRecorder for real-time buffer access and processing
+ *   - @MainActor ensures thread-safe UI updates for published properties
+ *   - Delegate pattern for event handling allows flexible integration
+ *   - Audio format: PCM Float32, 44.1kHz, mono for optimal speech recording
+ *   - Buffer size: 4096 frames for balance between latency and performance
+ *   - Real-time audio level calculation using vDSP for efficient signal processing
+ *   - RMS calculation normalized to 0.0-1.0 range from -60dB to 0dB
+ *   - Concurrent queue for thread-safe audio buffer management
+ *   - Timer-based duration tracking with 0.1s update interval
+ *   - Comprehensive error handling with typed errors
+ *   - Integration with AudioSessionManager for session lifecycle
+ *   - Notification handling for interruptions and media services reset
+ *   - Export functionality for saving recordings to files
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  AudioEngine.swift
 //  C11SHouse

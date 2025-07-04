@@ -1,3 +1,28 @@
+/*
+ * CONTEXT & PURPOSE:
+ * TranscriptionView displays transcribed text from voice recordings with visual enhancements.
+ * It provides a polished interface with typewriter animation effects, listening indicators,
+ * empty states, and word/character count statistics to enhance the transcription experience.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Typewriter effect for new text (0.02s per character) for engaging display
+ *   - Animated listening indicator with 3 pulsing dots
+ *   - Empty state graphics for both listening and idle states
+ *   - Word and character count footer for quick statistics
+ *   - Rounded card design with shadow for depth
+ *   - ScrollView for long transcriptions
+ *   - Gray background for transcribed text to improve readability
+ *   - onChange and onAppear triggers for typewriter effect
+ *   - Timer-based character-by-character text reveal
+ *   - Pulse animation on microphone icon when listening
+ *   - Staggered dot animation with 0.2s delay between dots
+ *   - Preview provider with multiple states for development
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 import SwiftUI
 
 struct TranscriptionView: View {

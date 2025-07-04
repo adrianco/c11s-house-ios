@@ -1,3 +1,31 @@
+/*
+ * CONTEXT & PURPOSE:
+ * TranscriptionServiceImpl provides speech-to-text functionality using Apple's Speech framework.
+ * It offers both server-based transcription (TranscriptionServiceImpl) for accuracy and on-device
+ * transcription (OnDeviceTranscriptionService) for privacy. Handles audio file transcription with
+ * confidence scores, alternatives, and segment-level details.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Protocol-based design following TranscriptionService interface
+ *   - Device locale detection with en-US fallback
+ *   - Server-based recognition by default for better accuracy
+ *   - Temporary file approach for audio data processing
+ *   - Async/await API using withCheckedThrowingContinuation
+ *   - 30-second timeout protection to prevent hanging
+ *   - Segment extraction with confidence and timing information
+ *   - Up to 3 alternative transcriptions provided
+ *   - Error code 203 specifically handled (no speech detected)
+ *   - Audio duration calculation from file metadata
+ *   - Separate OnDeviceTranscriptionService for privacy-focused use cases
+ *   - On-device service checks device capability before attempting
+ *   - 20-second timeout for on-device (shorter due to local processing)
+ *   - Automatic cleanup of temporary files in defer blocks
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  TranscriptionServiceImpl.swift
 //  C11SHouse

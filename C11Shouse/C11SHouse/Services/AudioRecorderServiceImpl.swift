@@ -1,3 +1,29 @@
+/*
+ * CONTEXT & PURPOSE:
+ * AudioRecorderServiceImpl is the concrete implementation of the AudioRecorderService protocol,
+ * providing audio recording functionality using AVAudioEngine. It handles audio capture, level
+ * monitoring, file management, and publishes reactive state updates via Combine publishers.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Protocol-based design for testability and flexibility
+ *   - AVAudioEngine chosen for low-level control and buffer access
+ *   - Combine publishers for reactive audio level and recording state updates
+ *   - Temporary WAV file storage in Documents directory
+ *   - PCM Float32 format for high-quality audio capture
+ *   - Buffer size: 1024 frames for real-time processing
+ *   - RMS calculation for power level in dB
+ *   - Peak level detection for visual feedback
+ *   - Moving average buffer (size 10) for smooth level visualization
+ *   - Audio session configuration: playAndRecord with defaultToSpeaker
+ *   - Automatic cleanup of temporary files
+ *   - Thread-safe audio level updates via main queue dispatch
+ *   - Error handling with descriptive TranscriptionError types
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  AudioRecorderServiceImpl.swift
 //  C11SHouse

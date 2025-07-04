@@ -1,3 +1,31 @@
+/*
+ * CONTEXT & PURPOSE:
+ * VoiceTranscriptionViewModel is the central coordinator for voice transcription functionality,
+ * implementing MVVM pattern with Combine. It manages recording state, coordinates between services,
+ * handles timers, detects silence, and provides reactive UI updates through published properties.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - MVVM architecture with ObservableObject for SwiftUI binding
+ *   - @MainActor for thread-safe UI updates
+ *   - Dependency injection of services for testability
+ *   - Protocol-based service interfaces for flexibility
+ *   - Combine publishers for reactive state management
+ *   - State machine pattern using TranscriptionState enum
+ *   - Recording timer with 0.1s precision for duration tracking
+ *   - Audio level monitoring at 50ms intervals (20Hz)
+ *   - Silence detection with configurable threshold
+ *   - Auto-stop after silence period if speech detected
+ *   - Speech detection threshold at -35dB
+ *   - Transcription history tracking for session
+ *   - Error recovery with retry capability
+ *   - Permission handling integrated with state flow
+ *   - Task-based async/await for service calls
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  VoiceTranscriptionViewModel.swift
 //  C11SHouse

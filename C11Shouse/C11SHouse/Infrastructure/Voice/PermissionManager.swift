@@ -1,3 +1,29 @@
+/*
+ * CONTEXT & PURPOSE:
+ * PermissionManager centralizes the management of microphone and speech recognition permissions
+ * required for voice-based interactions in the C11S House app. It provides a reactive interface
+ * using Combine publishers to track permission states and handles permission requests with 
+ * proper async/await patterns.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Singleton pattern for app-wide permission state management
+ *   - @MainActor for thread-safe UI state updates
+ *   - Separate tracking of microphone and speech recognition permissions
+ *   - Combined allPermissionsGranted flag for convenience
+ *   - Published properties for reactive UI updates via Combine
+ *   - Async/await API using withCheckedContinuation for permission requests
+ *   - Auto-recheck permissions when app becomes active
+ *   - Error messages stored for user feedback
+ *   - Helper method to open Settings app for manual permission grants
+ *   - Typed permission enum for type-safe permission queries
+ *   - Human-readable status descriptions for UI display
+ *   - Extension methods for convenience boolean checks
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  PermissionManager.swift
 //  C11SHouse

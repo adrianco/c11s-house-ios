@@ -1,3 +1,30 @@
+/*
+ * CONTEXT & PURPOSE:
+ * TranscriptionState.swift defines the data models and state management for the voice transcription
+ * feature. It includes state enum for tracking transcription workflow, error types with recovery
+ * information, configuration options, audio level metrics, and transcription results with metadata.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - State enum pattern for clear workflow states
+ *   - Associated values for recording duration and transcribed text
+ *   - Computed properties for state queries (isRecording, canStartRecording)
+ *   - Comprehensive error enum with user-friendly descriptions
+ *   - isRecoverable property to guide error handling UI
+ *   - TranscriptionConfiguration with sensible defaults
+ *   - 60-second max recording duration for practical limits
+ *   - 16kHz sample rate optimized for speech
+ *   - Mono audio (1 channel) sufficient for voice
+ *   - AudioLevel struct with dB values and normalization
+ *   - -60dB to 0dB range for audio visualization
+ *   - TranscriptionResult with confidence scores and alternatives
+ *   - Segment support for word-level timing information
+ *   - Equatable conformance for SwiftUI state updates
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  TranscriptionState.swift
 //  C11SHouse

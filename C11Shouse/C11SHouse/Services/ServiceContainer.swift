@@ -1,3 +1,28 @@
+/*
+ * CONTEXT & PURPOSE:
+ * ServiceContainer implements a dependency injection pattern to manage service instances and their
+ * dependencies throughout the app. It provides centralized service creation, configuration, and
+ * lifecycle management while enabling easy testing through dependency injection.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Singleton pattern for app-wide service access
+ *   - ObservableObject for SwiftUI integration
+ *   - Lazy initialization for services to optimize startup
+ *   - Protocol-based services for flexibility and testability
+ *   - Factory method pattern for ViewModel creation with proper DI
+ *   - Configuration management centralized in container
+ *   - Runtime service switching (standard vs on-device transcription)
+ *   - PermissionManager shared instance reused
+ *   - Environment injection support via EnvironmentKey
+ *   - View extension for convenient container injection
+ *   - Private initializer enforces singleton usage
+ *   - Service references are read-only externally for encapsulation
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  ServiceContainer.swift
 //  C11SHouse

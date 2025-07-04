@@ -1,3 +1,27 @@
+/*
+ * CONTEXT & PURPOSE:
+ * AudioSessionManager provides a centralized, singleton-based management system for AVAudioSession
+ * configuration and lifecycle in a voice recording application. It handles audio session 
+ * configuration, activation/deactivation, permission management, and responds to system audio
+ * events like interruptions and route changes.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-03: Initial implementation
+ *   - Chose singleton pattern for app-wide audio session management
+ *   - Used @MainActor to ensure UI updates happen on main thread
+ *   - Implemented Combine publishers for reactive state management
+ *   - Added comprehensive error handling with typed errors
+ *   - Configured audio session with .playAndRecord category for voice recording
+ *   - Set options: .defaultToSpeaker, .allowBluetooth, .mixWithOthers for flexibility
+ *   - Preferred sample rate: 44100.0 Hz for high quality audio
+ *   - Preferred buffer duration: 5ms for low latency recording
+ *   - Implemented notification observers for interruptions, route changes, and media resets
+ *   - Added custom notification names for app-wide audio event communication
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
+
 //
 //  AudioSessionManager.swift
 //  C11SHouse
