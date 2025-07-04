@@ -2,7 +2,7 @@
  * CONTEXT & PURPOSE:
  * ContentView serves as the main landing screen for the C11S House app. It provides a welcoming
  * interface with app branding and navigation to the voice transcription feature. The view
- * emphasizes voice interaction through visual metaphors (waveform icon) and clear call-to-action.
+ * features a custom programmatically generated app icon and clear call-to-action.
  *
  * DECISION HISTORY:
  * - 2025-07-03: Initial implementation
@@ -14,6 +14,11 @@
  *   - Navigation to FixedSpeechTestView for voice transcription functionality
  *   - Linear gradient on button and background for visual hierarchy
  *   - System colors used for automatic dark mode support
+ * - 2025-07-04: Icon updates
+ *   - Replaced static house.fill SF Symbol with dynamic AppIconCreator implementation
+ *   - AppIconCreator generates gradient background with house + brain symbols
+ *   - Removed waveform.circle.fill icon to simplify UI and focus on core branding
+ *   - Added corner radius and shadow to the dynamic app icon
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -30,9 +35,11 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 // Header
                 VStack(spacing: 8) {
-                    Image(systemName: "house.fill")
-                        .font(.system(size: 48))
-                        .foregroundStyle(.tint)
+                    Image(uiImage: AppIconCreator.createIcon(size: CGSize(width: 200, height: 200)))
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .cornerRadius(20)
+                        .shadow(radius: 5)
                     
                     Text("Conscious House")
                         .font(.largeTitle)
@@ -50,19 +57,6 @@ struct ContentView: View {
                     Text("Record information about rooms and things\n\n Ask questions about how to get stuff done\n\n      Use your voice to control your home")
                         .font(.headline)
                         .foregroundColor(.secondary)
-                    
-                    
-                    Image(systemName: "waveform.circle.fill")
-                        .font(.system(size: 120))
-                        .foregroundStyle(
-                            LinearGradient(
-                                gradient: Gradient(colors: [.blue, .purple]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(radius: 10)
-                    
                     
                     NavigationLink(destination: FixedSpeechTestView()) {
                         HStack {
