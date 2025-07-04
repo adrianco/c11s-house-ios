@@ -27,6 +27,7 @@
  *   - TextEditor for transcript editing when in edit mode
  *   - New recordings append to existing transcript instead of replacing
  *   - Manual transcript management separate from recognizer
+ *   - Updated onChange to iOS 17 syntax with oldValue, newValue parameters
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -162,7 +163,7 @@ struct ConversationView: View {
         }
         .padding()
         .navigationTitle("Conversations")
-        .onChange(of: recognizer.transcript) { newValue in
+        .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Append new recognized text to persistent transcript
             if !newValue.isEmpty && newValue != lastRecognizedText {
                 if !persistentTranscript.isEmpty {
