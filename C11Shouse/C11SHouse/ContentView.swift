@@ -34,19 +34,24 @@ struct ContentView: View {
                         .font(.system(size: 48))
                         .foregroundStyle(.tint)
                     
-                    Text("C11S House")
+                    Text("Conscious House")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                     
-                    Text("Voice-based House Consciousness")
+                    Text("Conversations to help manage your house")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.top, 40)
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
                 
                 // Main content area with navigation to voice transcription
                 VStack(spacing: 20) {
+                    Text("Record information about rooms and things\n\n Ask questions about how to get stuff done\n\n      Use your voice to control your home")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    
+                    
                     Image(systemName: "waveform.circle.fill")
                         .font(.system(size: 120))
                         .foregroundStyle(
@@ -58,14 +63,11 @@ struct ContentView: View {
                         )
                         .shadow(radius: 10)
                     
-                    Text("Tap to access voice controls")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
                     
                     NavigationLink(destination: FixedSpeechTestView()) {
                         HStack {
                             Image(systemName: "mic.fill")
-                            Text("Start Voice Transcription")
+                            Text("Start Conversation")
                             Image(systemName: "chevron.right")
                         }
                         .font(.headline)
