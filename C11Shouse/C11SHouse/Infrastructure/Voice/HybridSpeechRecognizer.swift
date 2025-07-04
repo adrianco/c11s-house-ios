@@ -59,8 +59,7 @@ final class HybridSpeechRecognizer: ObservableObject {
     }
     
     // MARK: - Initialization
-    override init() {
-        super.init()
+    init() {
         checkAuthorization()
         setupSpeechRecognizer()
     }

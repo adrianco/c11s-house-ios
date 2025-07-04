@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Speech
 
 struct FixedSpeechTestView: View {
     @StateObject private var recognizer = FixedSpeechRecognizer()

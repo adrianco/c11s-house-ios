@@ -55,8 +55,7 @@ final class FixedSpeechRecognizer: ObservableObject {
     }
     
     // MARK: - Initialization
-    override init() {
-        super.init()
+    init() {
         setupSpeechRecognizer()
         checkAuthorization()
     }
