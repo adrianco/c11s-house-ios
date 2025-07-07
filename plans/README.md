@@ -23,17 +23,16 @@ Build an intuitive, voice-first iOS application that allows users to interact na
    - Code review process
    - TDD practices and requirements
 
-3. **Architecture Documentation** (Coming Soon)
-   - System architecture overview
-   - Component relationships
-   - Data flow diagrams
-   - Integration points
+3. **[Current Architecture Documentation](./current-state/architecture.md)**
+   - Actual implemented architecture (ServiceContainer + MVVM)
+   - System architecture overview with real component relationships
+   - Data flow diagrams based on implementation
+   - Service layer design and integration points
 
-4. **API Integration Guide** (Coming Soon)
-   - Consciousness backend API reference
-   - Authentication flows
-   - Error handling patterns
-   - Rate limiting and optimization
+4. **[Architecture Analysis](./current-state/)**
+   - **[System Diagrams](./current-state/system-diagrams.md)**: Visual representation of actual architecture
+   - **[Architecture Comparison](./current-state/architecture-comparison.md)**: Planned vs actual implementation
+   - **[Developer Reference](./current-state/developer-reference.md)**: Comprehensive guide for developers
 
 ## Quick Start Guide for Developers
 
@@ -98,14 +97,15 @@ Build an intuitive, voice-first iOS application that allows users to interact na
 
 ## Key Decisions Summary
 
-### Technology Stack
+### Technology Stack (Actual Implementation)
 - **Language**: Swift 5.9+ (no Objective-C)
 - **UI Framework**: SwiftUI (primary), UIKit (where necessary)
-- **Architecture**: MVVM-C (Model-View-ViewModel-Coordinator)
-- **Dependency Injection**: Factory pattern with protocols
-- **Networking**: URLSession with async/await
-- **Local Storage**: Core Data + UserDefaults
-- **Testing**: XCTest + Quick/Nimble
+- **Architecture**: ServiceContainer + MVVM (simplified from planned MVVM-C)
+- **Dependency Injection**: ServiceContainer singleton with protocol-based services
+- **Audio Processing**: AVFoundation (AVAudioEngine, AVSpeechSynthesizer)
+- **Speech Services**: Apple Speech framework for transcription
+- **Local Storage**: UserDefaults (for Q&A notes), temporary files (for audio)
+- **Testing**: XCTest with protocol-based mocking
 
 ### Design Principles
 1. **Voice-First**: Every feature must be accessible via voice
@@ -114,11 +114,12 @@ Build an intuitive, voice-first iOS application that allows users to interact na
 4. **Accessible**: Full VoiceOver and accessibility support
 5. **Testable**: Minimum 90% code coverage
 
-### Integration Points
-- **Backend API**: RESTful + WebSocket for real-time updates
-- **Apple Services**: Siri, Shortcuts, HomeKit, HealthKit
-- **Analytics**: Privacy-preserving, on-device metrics
-- **Crash Reporting**: Minimal, anonymized data only
+### Integration Points (Current Implementation)
+- **Apple Speech Framework**: Server-based and on-device speech recognition
+- **AVFoundation**: Audio recording, playback, and session management
+- **SwiftUI + Combine**: Reactive UI updates and state management
+- **UserDefaults**: Local persistence for notes and settings
+- **iOS Permissions**: Microphone and speech recognition permissions
 
 ### Security Requirements
 - All API communications over HTTPS
@@ -183,4 +184,16 @@ Please read our [Development Guidelines](./development-guidelines.md) before con
 
 ---
 
-Last Updated: 2025-06-27
+## Project Status
+
+**Current Phase**: Implementation Complete (MVP)
+- Core voice transcription functionality implemented
+- Q&A notes system operational
+- ServiceContainer architecture in place
+- Basic testing infrastructure established
+
+**Next Steps**: Feature expansion and UI/UX improvements based on user feedback.
+
+---
+
+Last Updated: 2025-07-07 (Architecture documentation updated to reflect actual implementation)
