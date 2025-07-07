@@ -61,6 +61,7 @@ struct ConversationView: View {
     @State private var userName: String = ""
     @State private var isMuted = false
     @State private var hasPlayedInitialThought = false
+    @State private var isLoadingQuestion = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
@@ -288,13 +289,16 @@ struct ConversationView: View {
             return 
         }
         
+        // Check if already speaking to avoid duplicate attempts
+        guard !serviceContainer.ttsService.isSpeaking else {
+            print("TTS is already speaking, skipping")
+            return
+        }
+        
         print("Speaking house thought: \(thought.thought)")
         
         Task {
             do {
-                // Stop any current speech
-                serviceContainer.ttsService.stopSpeaking()
-                
                 // Speak the thought
                 try await serviceContainer.ttsService.speak(thought.thought, language: nil)
                 
@@ -303,12 +307,22 @@ struct ConversationView: View {
                     try await serviceContainer.ttsService.speak(suggestion, language: nil)
                 }
             } catch {
-                print("Error speaking house thought: \(error)")
+                // Only log non-interruption errors
+                if case TTSError.speechInterrupted = error {
+                    print("Speech was interrupted (expected behavior)")
+                } else {
+                    print("Error speaking house thought: \(error)")
+                }
             }
         }
     }
     
     private func loadCurrentQuestion() {
+        // Prevent duplicate loading
+        guard !isLoadingQuestion else { return }
+        
+        isLoadingQuestion = true
+        
         Task {
             do {
                 // Get the first unanswered question
@@ -324,6 +338,11 @@ struct ConversationView: View {
                 }
             } catch {
                 print("Error loading questions: \(error)")
+            }
+            
+            // Reset loading flag after a delay to prevent rapid calls
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                isLoadingQuestion = false
             }
         }
     }
@@ -368,13 +387,15 @@ struct ConversationView: View {
                     userName = trimmedAnswer
                 }
                 
-                // Clear the current question and load the next one
+                // Clear the current question
                 currentQuestion = nil
                 persistentTranscript = ""
-                recognizer.clearHouseThought()
                 
-                // Load the next unanswered question
-                loadCurrentQuestion()
+                // Small delay to allow UI to update
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    // Load the next unanswered question
+                    loadCurrentQuestion()
+                }
                 
             } catch {
                 print("Error saving answer: \(error)")

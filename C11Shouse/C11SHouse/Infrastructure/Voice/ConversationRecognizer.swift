@@ -306,7 +306,7 @@ final class ConversationRecognizer: ObservableObject {
         isRecording = false
         
         // Step 6: Deactivate audio session with proper error handling
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             // Only deactivate if not immediately starting a new recording
             if !self.isRecording {
                 do {

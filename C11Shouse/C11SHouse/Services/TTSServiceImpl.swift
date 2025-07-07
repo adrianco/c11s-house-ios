@@ -134,6 +134,11 @@ class TTSServiceImpl: NSObject, TTSService {
         // If no voice found, use default
         if utterance.voice == nil {
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            
+            // If still no voice (simulator issue), try to get any available voice
+            if utterance.voice == nil {
+                utterance.voice = AVSpeechSynthesisVoice.speechVoices().first
+            }
         }
         
         currentUtterance = utterance
