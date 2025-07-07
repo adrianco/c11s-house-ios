@@ -122,7 +122,7 @@ struct HouseThoughtsView: View {
                 if let context = thought.context {
                     Text(context)
                         .font(.caption2)
-                        .foregroundColor(.tertiary)
+                        .foregroundColor(Color(UIColor.tertiaryLabel))
                         .padding(.top, 4)
                 }
             }
