@@ -37,6 +37,7 @@ struct NotesView: View {
     @State private var editingText: String = ""
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var showClearAllAlert = false
     
     var body: some View {
         VStack {
@@ -64,6 +65,16 @@ struct NotesView: View {
                         .fontWeight(.medium)
                 }
             }
+            
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    showClearAllAlert = true
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+                .disabled(notesStore.notes.isEmpty)
+            }
         }
         .onAppear {
             loadNotes()
@@ -75,6 +86,14 @@ struct NotesView: View {
             Button("OK") { }
         } message: {
             Text(alertMessage)
+        }
+        .alert("Clear All Notes", isPresented: $showClearAllAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Clear All", role: .destructive) {
+                clearAllNotes()
+            }
+        } message: {
+            Text("This will delete all notes and reset to default questions. Are you sure?")
         }
     }
     
@@ -169,6 +188,23 @@ struct NotesView: View {
     private func cancelEditing() {
         editingNoteId = nil
         editingText = ""
+    }
+    
+    private func clearAllNotes() {
+        Task {
+            do {
+                // Clear all notes data
+                try await serviceContainer.notesService.clearAllData()
+                
+                // Reload to show empty state
+                loadNotes()
+                
+                print("Successfully cleared all notes data")
+            } catch {
+                alertMessage = "Failed to clear notes: \(error.localizedDescription)"
+                showingAlert = true
+            }
+        }
     }
 }
 

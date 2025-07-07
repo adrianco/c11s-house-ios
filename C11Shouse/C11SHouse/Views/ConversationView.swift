@@ -60,7 +60,6 @@ struct ConversationView: View {
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
     @State private var isMuted = false
-    @State private var showClearAllAlert = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
@@ -206,22 +205,6 @@ struct ConversationView: View {
                 .background(Color.gray)
                 .cornerRadius(10)
                     
-                // Clear All button (for testing)
-                Button(action: {
-                    showClearAllAlert = true
-                }) {
-                    HStack {
-                        Image(systemName: "trash.fill")
-                        Text("Clear All")
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.red)
-                    .cornerRadius(10)
-                }
-                .disabled(recognizer.isRecording)
-                
                 // Save button removed - saving happens automatically
             } // End of button HStack
             } // End of main VStack
@@ -268,14 +251,6 @@ struct ConversationView: View {
             }
             // Stop any ongoing TTS
             serviceContainer.ttsService.stopSpeaking()
-        }
-        .alert("Clear All Notes", isPresented: $showClearAllAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Clear All", role: .destructive) {
-                clearAllNotes()
-            }
-        } message: {
-            Text("This will delete all notes and reset to default questions. Are you sure?")
         }
     }
     
@@ -402,30 +377,4 @@ struct ConversationView: View {
         }
     }
     
-    private func clearAllNotes() {
-        Task {
-            do {
-                // Clear all notes data
-                try await serviceContainer.notesService.clearAllData()
-                
-                // Reset UI state
-                persistentTranscript = ""
-                currentSessionStart = ""
-                isNewSession = true
-                currentQuestion = nil
-                userName = ""
-                
-                // Reset recognizer state
-                recognizer.reset()
-                recognizer.currentHouseThought = defaultHouseThought
-                
-                // Reload questions
-                loadCurrentQuestion()
-                
-                print("Successfully cleared all notes data")
-            } catch {
-                print("Error clearing notes data: \(error)")
-            }
-        }
-    }
 }
