@@ -83,40 +83,53 @@ struct NotesView: View {
     private var notesListView: some View {
         List {
             ForEach(QuestionCategory.allCases, id: \.self) { category in
-                let categoryQuestions = notesStore.questions(in: category)
-                if !categoryQuestions.isEmpty {
-                    Section(header: HStack {
-                        Image(systemName: category.iconName)
-                        Text(category.rawValue)
-                    }) {
-                        ForEach(categoryQuestions, id: \.id) { question in
-                            let note = notesStore.notes.first(where: { $0.questionId == question.id })
-                            let isEditing = editingNoteId == question.id
-                            
-                            NoteRowView(
-                                question: question,
-                                note: note,
-                                isEditMode: isEditMode,
-                                isEditing: isEditing,
-                                editingText: $editingText,
-                                onTap: {
-                                    if isEditMode {
-                                        startEditing(question: question)
-                                    }
-                                },
-                                onSave: {
-                                    saveNote(for: question)
-                                },
-                                onCancel: {
-                                    cancelEditing()
-                                }
-                            )
-                        }
-                    }
-                }
+                categorySection(for: category)
             }
         }
         .listStyle(InsetGroupedListStyle())
+    }
+    
+    @ViewBuilder
+    private func categorySection(for category: QuestionCategory) -> some View {
+        let categoryQuestions = notesStore.questions(in: category)
+        if !categoryQuestions.isEmpty {
+            Section(header: categoryHeader(for: category)) {
+                ForEach(categoryQuestions, id: \.id) { question in
+                    noteRow(for: question)
+                }
+            }
+        }
+    }
+    
+    private func categoryHeader(for category: QuestionCategory) -> some View {
+        HStack {
+            Image(systemName: category.iconName)
+            Text(category.rawValue)
+        }
+    }
+    
+    private func noteRow(for question: Question) -> some View {
+        let note = notesStore.notes.first(where: { $0.questionId == question.id })
+        let isEditing = editingNoteId == question.id
+        
+        return NoteRowView(
+            question: question,
+            note: note,
+            isEditMode: isEditMode,
+            isEditing: isEditing,
+            editingText: $editingText,
+            onTap: {
+                if isEditMode {
+                    startEditing(question: question)
+                }
+            },
+            onSave: {
+                saveNote(for: question)
+            },
+            onCancel: {
+                cancelEditing()
+            }
+        )
     }
     
     // MARK: - Helper Methods
