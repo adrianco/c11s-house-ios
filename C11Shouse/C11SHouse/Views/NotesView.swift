@@ -68,7 +68,7 @@ struct NotesView: View {
         .onAppear {
             loadNotes()
         }
-        .onChange(of: serviceContainer.notesService.notesStorePublisher) { _, _ in
+        .onReceive(serviceContainer.notesService.notesStorePublisher) { _ in
             loadNotes()
         }
         .alert("Error", isPresented: $showingAlert) {
@@ -283,7 +283,7 @@ struct NoteRowView: View {
             if let note = note, note.isAnswered && !isEditing {
                 Text("Last updated: \(note.lastModified, style: .relative) ago")
                     .font(.caption2)
-                    .foregroundColor(.tertiary)
+                    .foregroundColor(Color(UIColor.tertiaryLabel))
             }
         }
         .padding(.vertical, 4)
