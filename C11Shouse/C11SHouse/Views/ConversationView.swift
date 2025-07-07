@@ -59,7 +59,6 @@ struct ConversationView: View {
     @State private var isNewSession = true
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
-    @State private var showSaveButton = false
     @State private var isMuted = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
@@ -133,10 +132,6 @@ struct ConversationView: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color.blue, lineWidth: 2)
                         )
-                        .onChange(of: persistentTranscript) { _, newValue in
-                            // Debug log when editing
-                            print("Edit mode - transcript: '\(newValue)', currentQuestion: \(currentQuestion?.text ?? "nil")")
-                        }
                 } else {
                     ScrollView {
                         Text(persistentTranscript.isEmpty ? "Say something..." : persistentTranscript)
@@ -210,26 +205,7 @@ struct ConversationView: View {
                 .background(Color.gray)
                 .cornerRadius(10)
                     
-                // Save button for Q&A responses
-                if currentQuestion != nil && !persistentTranscript.isEmpty {
-                    Button(action: saveAnswer) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.down.fill")
-                            Text("Save")
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [.blue, .purple]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(10)
-                    }
-                }
+                // Save button removed - saving happens automatically
             } // End of button HStack
             } // End of main VStack
         } // End of ScrollView
@@ -266,7 +242,6 @@ struct ConversationView: View {
                     // Subsequent update - replace from session start
                     persistentTranscript = currentSessionStart + (currentSessionStart.isEmpty ? "" : " ") + newValue
                 }
-                print("Transcript updated: '\(persistentTranscript)', currentQuestion: \(currentQuestion?.text ?? "nil")")
             }
         }
         .onDisappear {
