@@ -266,11 +266,11 @@ struct ConversationView: View {
                 serviceContainer.ttsService.stopSpeaking()
                 
                 // Speak the thought
-                try await serviceContainer.ttsService.speak(thought.thought)
+                try await serviceContainer.ttsService.speak(thought.thought, language: nil)
                 
                 // Optionally speak the suggestion too
                 if let suggestion = thought.suggestion {
-                    try await serviceContainer.ttsService.speak(suggestion)
+                    try await serviceContainer.ttsService.speak(suggestion, language: nil)
                 }
             } catch {
                 print("Error speaking house thought: \(error)")
