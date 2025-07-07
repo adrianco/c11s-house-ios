@@ -24,8 +24,9 @@
 import SwiftUI
 
 struct HouseThoughtsView: View {
-    let thought: HouseThought?
-    let onSpeak: () -> Void
+    let thought: HouseThought
+    @Binding var isMuted: Bool
+    let onToggleMute: () -> Void
     
     @State private var isAnimating = false
     @State private var typewriterText = ""
@@ -33,7 +34,6 @@ struct HouseThoughtsView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     var body: some View {
-        if let thought = thought {
             VStack(alignment: .leading, spacing: 12) {
                 // Header with emotion and category
                 HStack {
@@ -63,9 +63,9 @@ struct HouseThoughtsView: View {
                     
                     Spacer()
                     
-                    // Speak button
-                    Button(action: onSpeak) {
-                        Image(systemName: "speaker.wave.2.fill")
+                    // Mute/Unmute button
+                    Button(action: onToggleMute) {
+                        Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
                             .font(.title2)
                             .foregroundColor(.white)
                             .padding(10)
@@ -153,7 +153,6 @@ struct HouseThoughtsView: View {
                 typewriterText = ""
                 typewriterIndex = 0
             }
-        }
     }
     
     private func startTypewriterEffect(text: String) {
@@ -184,21 +183,26 @@ struct ScaleButtonStyle: ButtonStyle {
 // MARK: - Preview
 
 struct HouseThoughtsView_Previews: PreviewProvider {
+    @State static var isMuted = false
+    
     static var previews: some View {
         VStack(spacing: 20) {
             HouseThoughtsView(
                 thought: HouseThought.samples[0],
-                onSpeak: { print("Speaking thought") }
+                isMuted: $isMuted,
+                onToggleMute: { isMuted.toggle() }
             )
             
             HouseThoughtsView(
-                thought: HouseThought.samples[1],
-                onSpeak: { print("Speaking thought") }
+                thought: HouseThought.samples[1], 
+                isMuted: $isMuted,
+                onToggleMute: { isMuted.toggle() }
             )
             
             HouseThoughtsView(
                 thought: HouseThought.samples[2],
-                onSpeak: { print("Speaking thought") }
+                isMuted: $isMuted,
+                onToggleMute: { isMuted.toggle() }
             )
         }
         .padding()

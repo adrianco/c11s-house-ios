@@ -60,15 +60,29 @@ struct ConversationView: View {
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
     @State private var showSaveButton = false
+    @State private var isMuted = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
+    
+    // Default house thought when no question is active
+    private var defaultHouseThought: HouseThought {
+        HouseThought(
+            thought: "Hi!",
+            emotion: .happy,
+            category: .greeting,
+            confidence: 1.0,
+            context: nil,
+            suggestion: nil
+        )
+    }
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // House Thoughts component
+                // House Thoughts component - always visible
                 HouseThoughtsView(
-                    thought: recognizer.currentHouseThought,
-                    onSpeak: speakHouseThought
+                    thought: recognizer.currentHouseThought ?? defaultHouseThought,
+                    isMuted: $isMuted,
+                    onToggleMute: toggleMute
                 )
                 .padding(.horizontal)
                 .padding(.top)
@@ -132,10 +146,9 @@ struct ConversationView: View {
                 }
             }
             
-            VStack(spacing: 12) {
-                // First row of buttons
-                HStack(spacing: 12) {
-                    Button(action: {
+            // Button row - single row layout
+            HStack(spacing: 12) {
+                Button(action: {
                     if recognizer.isRecording {
                         // Stop recording and finalize the current session
                         recognizer.toggleRecording()
@@ -160,8 +173,8 @@ struct ConversationView: View {
                         Text(recognizer.isRecording ? "Stop" : "Start")
                     }
                     .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
                     .background(recognizer.isRecording ? Color.red : Color.blue)
                     .cornerRadius(10)
                 }
@@ -175,16 +188,13 @@ struct ConversationView: View {
                         Text(isEditing ? "Done" : "Edit")
                     }
                     .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
                     .background(isEditing ? Color.green : Color.orange)
                     .cornerRadius(10)
                 }
-                } // End of first HStack
                 
-                // Second row of buttons
-                HStack(spacing: 12) {
-                    Button("Reset") {
+                Button("Reset") {
                     recognizer.reset()
                     persistentTranscript = ""
                     currentSessionStart = ""
@@ -196,8 +206,8 @@ struct ConversationView: View {
                 .background(Color.gray)
                 .cornerRadius(10)
                     
-                    // Save button for Q&A responses
-                    if currentQuestion != nil && !persistentTranscript.isEmpty {
+                // Save button for Q&A responses
+                if currentQuestion != nil && !persistentTranscript.isEmpty {
                     Button(action: saveAnswer) {
                         HStack {
                             Image(systemName: "square.and.arrow.down.fill")
@@ -216,14 +226,26 @@ struct ConversationView: View {
                         .cornerRadius(10)
                     }
                 }
-            } // End of second HStack
-            } // End of button VStack
+            } // End of button HStack
             } // End of main VStack
         } // End of ScrollView
         .navigationTitle("Conversations")
         .onAppear {
+            // Set default thought initially
+            if recognizer.currentHouseThought == nil {
+                recognizer.currentHouseThought = defaultHouseThought
+            }
             loadCurrentQuestion()
             loadUserName()
+        }
+        .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
+            // Auto-play TTS when house thought changes (unless muted)
+            if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
+                // Add small delay to ensure audio session is ready
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    speakHouseThought()
+                }
+            }
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Handle incremental speech recognition updates
@@ -240,6 +262,7 @@ struct ConversationView: View {
                     // Subsequent update - replace from session start
                     persistentTranscript = currentSessionStart + (currentSessionStart.isEmpty ? "" : " ") + newValue
                 }
+                print("Transcript updated: '\(persistentTranscript)', currentQuestion: \(currentQuestion?.text ?? "nil")")
             }
         }
         .onDisappear {
@@ -263,7 +286,17 @@ struct ConversationView: View {
     }
     
     private func speakHouseThought() {
-        guard let thought = recognizer.currentHouseThought else { return }
+        guard !isMuted else { 
+            print("TTS is muted")
+            return 
+        }
+        
+        guard let thought = recognizer.currentHouseThought else { 
+            print("No current house thought to speak")
+            return 
+        }
+        
+        print("Speaking house thought: \(thought.thought)")
         
         Task {
             do {
@@ -292,6 +325,10 @@ struct ConversationView: View {
                     currentQuestion = firstQuestion
                     // Set the house thought to display the question
                     recognizer.setQuestionThought(firstQuestion.text)
+                } else {
+                    // No more questions - clear the current question
+                    currentQuestion = nil
+                    recognizer.clearHouseThought()
                 }
             } catch {
                 print("Error loading questions: \(error)")
@@ -341,6 +378,14 @@ struct ConversationView: View {
             } catch {
                 print("Error saving answer: \(error)")
             }
+        }
+    }
+    
+    private func toggleMute() {
+        isMuted.toggle()
+        if isMuted {
+            // Stop any current speech when muting
+            serviceContainer.ttsService.stopSpeaking()
         }
     }
 }
