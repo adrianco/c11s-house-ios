@@ -60,6 +60,7 @@ struct ConversationView: View {
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
     @State private var isMuted = false
+    @State private var showClearAllAlert = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
@@ -205,6 +206,22 @@ struct ConversationView: View {
                 .background(Color.gray)
                 .cornerRadius(10)
                     
+                // Clear All button (for testing)
+                Button(action: {
+                    showClearAllAlert = true
+                }) {
+                    HStack {
+                        Image(systemName: "trash.fill")
+                        Text("Clear All")
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.red)
+                    .cornerRadius(10)
+                }
+                .disabled(recognizer.isRecording)
+                
                 // Save button removed - saving happens automatically
             } // End of button HStack
             } // End of main VStack
@@ -251,6 +268,14 @@ struct ConversationView: View {
             }
             // Stop any ongoing TTS
             serviceContainer.ttsService.stopSpeaking()
+        }
+        .alert("Clear All Notes", isPresented: $showClearAllAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Clear All", role: .destructive) {
+                clearAllNotes()
+            }
+        } message: {
+            Text("This will delete all notes and reset to default questions. Are you sure?")
         }
     }
     
@@ -321,8 +346,9 @@ struct ConversationView: View {
                 // Try to load the user's name if already saved
                 let questions = try await serviceContainer.notesService.loadNotesStore().questions
                 if let nameQuestion = questions.first(where: { $0.text == "What's your name?" }),
-                   let note = try await serviceContainer.notesService.getNote(for: nameQuestion.id) {
-                    userName = note.answer
+                   let note = try await serviceContainer.notesService.getNote(for: nameQuestion.id),
+                   !note.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    userName = note.answer.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
             } catch {
                 print("Error loading user name: \(error)")
@@ -335,15 +361,23 @@ struct ConversationView: View {
         
         Task {
             do {
+                let trimmedAnswer = persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                // Only save if there's actual content
+                guard !trimmedAnswer.isEmpty else {
+                    print("Skipping save - answer is empty")
+                    return
+                }
+                
                 // Save the answer
                 try await serviceContainer.notesService.saveOrUpdateNote(
                     for: question.id,
-                    answer: persistentTranscript
+                    answer: trimmedAnswer
                 )
                 
                 // If this was the name question, update the userName
                 if question.text == "What's your name?" {
-                    userName = persistentTranscript
+                    userName = trimmedAnswer
                 }
                 
                 // Clear the current question and load the next one
@@ -365,6 +399,33 @@ struct ConversationView: View {
         if isMuted {
             // Stop any current speech when muting
             serviceContainer.ttsService.stopSpeaking()
+        }
+    }
+    
+    private func clearAllNotes() {
+        Task {
+            do {
+                // Clear all notes data
+                try await serviceContainer.notesService.clearAllData()
+                
+                // Reset UI state
+                persistentTranscript = ""
+                currentSessionStart = ""
+                isNewSession = true
+                currentQuestion = nil
+                userName = ""
+                
+                // Reset recognizer state
+                recognizer.reset()
+                recognizer.currentHouseThought = defaultHouseThought
+                
+                // Reload questions
+                loadCurrentQuestion()
+                
+                print("Successfully cleared all notes data")
+            } catch {
+                print("Error clearing notes data: \(error)")
+            }
         }
     }
 }

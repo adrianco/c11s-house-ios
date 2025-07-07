@@ -27,6 +27,11 @@
  *   - Changed FixedSpeechTestView to ConversationView
  *   - Changed FixedSpeechRecognizer to ConversationRecognizer
  *   - Better reflects production use as conversation interface
+ * - 2025-07-07: Added Notes & Questions navigation
+ *   - Added NavigationLink to NotesView below Start Conversation button
+ *   - Used note.text SF Symbol for visual consistency
+ *   - Applied teal-to-blue gradient to differentiate from conversation button
+ *   - Maintained consistent styling with existing button design
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -94,6 +99,27 @@ struct ContentView: View {
                         .shadow(radius: 5)
                     }
                     .padding(.top, 20)
+                    
+                    NavigationLink(destination: NotesView()) {
+                        HStack {
+                            Image(systemName: "note.text")
+                            Text("Manage Notes")
+                            Image(systemName: "chevron.right")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 15)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [.orange, .pink]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(25)
+                        .shadow(radius: 5)
+                    }
                 }
                 .frame(maxHeight: .infinity)
                 
