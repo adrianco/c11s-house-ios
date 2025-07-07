@@ -168,19 +168,14 @@ struct HouseThoughtsView: View {
         typewriterIndex = 0
         
         // Start new timer
-        typewriterTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] timer in
-            guard let self = self else {
-                timer.invalidate()
-                return
-            }
-            
-            if self.typewriterIndex < text.count {
-                let index = text.index(text.startIndex, offsetBy: self.typewriterIndex)
-                self.typewriterText.append(text[index])
-                self.typewriterIndex += 1
+        typewriterTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { timer in
+            if typewriterIndex < text.count {
+                let index = text.index(text.startIndex, offsetBy: typewriterIndex)
+                typewriterText.append(text[index])
+                typewriterIndex += 1
             } else {
                 timer.invalidate()
-                self.typewriterTimer = nil
+                typewriterTimer = nil
             }
         }
     }
