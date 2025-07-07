@@ -134,7 +134,9 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
         
         do {
             try audioEngine.start()
-            isRecordingSubject.send(true)
+            DispatchQueue.main.async { [weak self] in
+                self?.isRecordingSubject.send(true)
+            }
         } catch {
             inputNode.removeTap(onBus: 0)
             throw TranscriptionError.recordingFailed("Failed to start audio engine: \(error.localizedDescription)")
@@ -149,8 +151,10 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
         // Stop recording
         audioEngine.stop()
         inputNode?.removeTap(onBus: 0)
-        isRecordingSubject.send(false)
-        audioLevelSubject.send(.silent)
+        DispatchQueue.main.async { [weak self] in
+            self?.isRecordingSubject.send(false)
+            self?.audioLevelSubject.send(.silent)
+        }
         
         // Close audio file
         audioFile = nil
@@ -179,8 +183,10 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
         }
         
         inputNode?.removeTap(onBus: 0)
-        isRecordingSubject.send(false)
-        audioLevelSubject.send(.silent)
+        DispatchQueue.main.async { [weak self] in
+            self?.isRecordingSubject.send(false)
+            self?.audioLevelSubject.send(.silent)
+        }
         audioFile = nil
         
         // Clean up temporary file

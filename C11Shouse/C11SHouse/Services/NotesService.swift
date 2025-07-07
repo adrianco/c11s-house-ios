@@ -101,7 +101,9 @@ class NotesServiceImpl: NotesService {
     
     func loadNotesStore() async throws -> NotesStoreData {
         let store = try await loadFromUserDefaults()
-        notesStoreSubject.send(store)
+        await MainActor.run {
+            notesStoreSubject.send(store)
+        }
         return store
     }
     
@@ -200,7 +202,9 @@ class NotesServiceImpl: NotesService {
     private func loadAndInitialize() async throws {
         do {
             let store = try await loadFromUserDefaults()
-            notesStoreSubject.send(store)
+            await MainActor.run {
+                notesStoreSubject.send(store)
+            }
         } catch {
             // Initialize with default questions on first launch
             let initialStore = NotesStoreData(
@@ -212,7 +216,6 @@ class NotesServiceImpl: NotesService {
         }
     }
     
-    @MainActor
     private func loadFromUserDefaults() async throws -> NotesStoreData {
         guard let data = userDefaults.data(forKey: userDefaultsKey) else {
             // Return default store if no data exists
@@ -237,12 +240,13 @@ class NotesServiceImpl: NotesService {
         }
     }
     
-    @MainActor
     private func save(_ store: NotesStoreData) async throws {
         do {
             let data = try encoder.encode(store)
             userDefaults.set(data, forKey: userDefaultsKey)
-            notesStoreSubject.send(store)
+            await MainActor.run {
+                notesStoreSubject.send(store)
+            }
         } catch {
             throw NotesError.encodingFailed(error)
         }

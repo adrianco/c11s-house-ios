@@ -302,7 +302,7 @@ final class ConversationRecognizer: ObservableObject {
             }
         }
         
-        // Step 5: Update recording state
+        // Step 5: Update recording state (already on main thread due to @MainActor)
         isRecording = false
         
         // Step 6: Deactivate audio session with proper error handling

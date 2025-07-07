@@ -98,10 +98,19 @@ class TranscriptionServiceImpl: TranscriptionService {
             var hasResumed = false
             
             recognitionTask = recognizer.recognitionTask(with: request) { result, error in
-                guard !hasResumed else { return } // Prevent multiple resumptions
+                var shouldProcess = false
+                objc_sync_enter(continuation)
+                if !hasResumed {
+                    shouldProcess = true
+                }
+                objc_sync_exit(continuation)
+                
+                guard shouldProcess else { return } // Prevent multiple resumptions
                 
                 if let error = error {
+                    objc_sync_enter(continuation)
                     hasResumed = true
+                    objc_sync_exit(continuation)
                     if (error as NSError).code == 203 { // No speech detected
                         continuation.resume(throwing: TranscriptionError.transcriptionFailed("No speech detected"))
                     } else {
@@ -112,7 +121,9 @@ class TranscriptionServiceImpl: TranscriptionService {
                 
                 if let result = result {
                     if result.isFinal {
+                        objc_sync_enter(continuation)
                         hasResumed = true
+                        objc_sync_exit(continuation)
                         
                         // Calculate duration from audio file
                         let duration = self.getAudioDuration(from: tempURL) ?? 0
@@ -148,10 +159,17 @@ class TranscriptionServiceImpl: TranscriptionService {
             }
             
             // Set a timeout to prevent hanging
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak self] in
+                var shouldResume = false
+                objc_sync_enter(continuation)
                 if !hasResumed {
                     hasResumed = true
-                    self.recognitionTask?.cancel()
+                    shouldResume = true
+                }
+                objc_sync_exit(continuation)
+                
+                if shouldResume {
+                    self?.recognitionTask?.cancel()
                     continuation.resume(throwing: TranscriptionError.transcriptionFailed("Transcription timeout"))
                 }
             }
@@ -216,16 +234,27 @@ class OnDeviceTranscriptionService: TranscriptionService {
             var hasResumed = false
             
             let task = recognizer.recognitionTask(with: request) { result, error in
-                guard !hasResumed else { return }
+                var shouldProcess = false
+                objc_sync_enter(continuation)
+                if !hasResumed {
+                    shouldProcess = true
+                }
+                objc_sync_exit(continuation)
+                
+                guard shouldProcess else { return }
                 
                 if let error = error {
+                    objc_sync_enter(continuation)
                     hasResumed = true
+                    objc_sync_exit(continuation)
                     continuation.resume(throwing: TranscriptionError.transcriptionFailed(error.localizedDescription))
                     return
                 }
                 
                 if let result = result, result.isFinal {
+                    objc_sync_enter(continuation)
                     hasResumed = true
+                    objc_sync_exit(continuation)
                     
                     let segments = result.bestTranscription.segments.map { segment in
                         TranscriptionSegment(
@@ -252,10 +281,17 @@ class OnDeviceTranscriptionService: TranscriptionService {
             }
             
             // Timeout protection
-            DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 20) { [weak task] in
+                var shouldResume = false
+                objc_sync_enter(continuation)
                 if !hasResumed {
                     hasResumed = true
-                    task.cancel()
+                    shouldResume = true
+                }
+                objc_sync_exit(continuation)
+                
+                if shouldResume {
+                    task?.cancel()
                     continuation.resume(throwing: TranscriptionError.transcriptionFailed("On-device transcription timeout"))
                 }
             }
