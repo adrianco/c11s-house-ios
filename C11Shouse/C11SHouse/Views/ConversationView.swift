@@ -133,6 +133,10 @@ struct ConversationView: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color.blue, lineWidth: 2)
                         )
+                        .onChange(of: persistentTranscript) { _, newValue in
+                            // Debug log when editing
+                            print("Edit mode - transcript: '\(newValue)', currentQuestion: \(currentQuestion?.text ?? "nil")")
+                        }
                 } else {
                     ScrollView {
                         Text(persistentTranscript.isEmpty ? "Say something..." : persistentTranscript)
