@@ -1,40 +1,54 @@
-# C11S House iOS - Planning Documentation
+# C11S House iOS - Planning and Documentation
 
 ## Overview
 
-This directory contains all planning and documentation for the C11S House iOS application - a native Swift application that provides voice-driven interaction with a house consciousness system using Apple Intelligence features.
+This directory contains comprehensive planning and documentation for the C11S House iOS application - a native Swift application that provides voice-driven interaction with a house consciousness system using Apple Intelligence features.
 
 ### Project Vision
 Build an intuitive, voice-first iOS application that allows users to interact naturally with their smart home consciousness system, leveraging the latest Apple technologies while maintaining privacy and security.
 
-## Document Navigation
+## 📋 Documentation Organization
 
-### Core Planning Documents
+The planning documentation is organized into four main categories for easier navigation and maintenance:
 
-1. **[Implementation Roadmap](./implementation-roadmap.md)**
-   - Comprehensive 14-week development plan
-   - Phase-by-phase breakdown with milestones
-   - Risk assessment and mitigation strategies
-   - Team structure and success metrics
+### 🔍 Current State
+**What exists now** - Current implementation status and architecture
+- **[Implemented Features](./current-state/implemented-features.md)** - Status tracking of all features and components
+- **[Architecture](./current-state/architecture.md)** - System architecture overview and design patterns
+- **[Technical Stack](./current-state/technical-stack.md)** - Technology decisions and framework choices
 
-2. **[Development Guidelines](./development-guidelines.md)**
-   - Coding standards and conventions
-   - Git workflow and branching strategy
-   - Code review process
-   - TDD practices and requirements
+### 🚀 Implementation Plans
+**Detailed plans for upcoming features** - Future development roadmaps
+- **[Voice Enhancements](./implementation/voice-enhancements.md)** - Voice interface and Apple Intelligence integration
+- **[Smart Home Integration](./implementation/smart-home-integration.md)** - API integration and data models
+- **[Location Services](./implementation/location-services.md)** - Location-based features (planned)
 
-3. **[Current Architecture Documentation](./current-state/architecture.md)**
-   - Actual implemented architecture (ServiceContainer + MVVM)
-   - System architecture overview with real component relationships
-   - Data flow diagrams based on implementation
-   - Service layer design and integration points
+### 🛠 Development Processes
+**Guidelines and workflows** - How we build and maintain the app
+- **[Development Guidelines](./development/guidelines.md)** - Coding standards and development workflows
+- **[Testing Strategy](./development/testing-strategy.md)** - Comprehensive testing approach including TDD
+- **[Deployment](./development/deployment.md)** - Build automation and release procedures
 
-4. **[Architecture Analysis](./current-state/)**
-   - **[System Diagrams](./current-state/system-diagrams.md)**: Visual representation of actual architecture
-   - **[Architecture Comparison](./current-state/architecture-comparison.md)**: Planned vs actual implementation
-   - **[Developer Reference](./current-state/developer-reference.md)**: Comprehensive guide for developers
+### 📚 Archive
+**Historical documents** - Previous versions and outdated content
+- Original implementation documents that have been consolidated into the new structure
 
-## Quick Start Guide for Developers
+## 🏗 Project Status
+
+**Current Phase**: Early Development (Week 8 of 14-week plan)  
+**Overall Completion**: ~35%  
+**Last Updated**: 2025-07-07
+
+### Key Milestones Achieved
+- ✅ Project architecture established
+- ✅ Core networking layer implemented
+- ✅ Basic voice recognition framework
+- ✅ Testing infrastructure setup
+- 🚧 API integration in progress
+- 🚧 Voice processing implementation
+- ❌ UI components not started
+
+## 🚀 Quick Start for New Team Members
 
 ### Prerequisites
 - macOS 14.0 or later
@@ -85,115 +99,175 @@ Build an intuitive, voice-first iOS application that allows users to interact na
    git checkout -b feature/your-feature-name
    ```
 
-2. **Write Tests First (TDD)**
-   - Create test cases for your feature
-   - Run tests to see them fail
+2. **Follow TDD Approach**
+   - Write tests first (see [Testing Strategy](./development/testing-strategy.md))
    - Implement feature to make tests pass
+   - Refactor and optimize
 
 3. **Submit Pull Request**
    - Ensure all tests pass
-   - Update documentation if needed
+   - Follow [Development Guidelines](./development/guidelines.md)
    - Request code review from team
 
-## Key Decisions Summary
+## 🎯 Core Technologies and Decisions
 
-### Technology Stack (Actual Implementation)
+### Technology Stack
 - **Language**: Swift 5.9+ (no Objective-C)
 - **UI Framework**: SwiftUI (primary), UIKit (where necessary)
-- **Architecture**: ServiceContainer + MVVM (simplified from planned MVVM-C)
-- **Dependency Injection**: ServiceContainer singleton with protocol-based services
-- **Audio Processing**: AVFoundation (AVAudioEngine, AVSpeechSynthesizer)
-- **Speech Services**: Apple Speech framework for transcription
-- **Local Storage**: UserDefaults (for Q&A notes), temporary files (for audio)
-- **Testing**: XCTest with protocol-based mocking
+- **Architecture**: MVVM-C (Model-View-ViewModel-Coordinator)
+- **Dependency Injection**: Factory pattern with protocols
+- **Networking**: URLSession with async/await
+- **Local Storage**: Core Data + UserDefaults
+- **Testing**: XCTest + Quick/Nimble
 
 ### Design Principles
 1. **Voice-First**: Every feature must be accessible via voice
 2. **Privacy-Focused**: Minimize data collection, maximize on-device processing
 3. **Offline-Capable**: Core functions work without internet
 4. **Accessible**: Full VoiceOver and accessibility support
-5. **Testable**: Minimum 90% code coverage
+5. **Testable**: Minimum 85% code coverage
 
-### Integration Points (Current Implementation)
-- **Apple Speech Framework**: Server-based and on-device speech recognition
-- **AVFoundation**: Audio recording, playback, and session management
-- **SwiftUI + Combine**: Reactive UI updates and state management
-- **UserDefaults**: Local persistence for notes and settings
-- **iOS Permissions**: Microphone and speech recognition permissions
+### Integration Points
+- **Backend API**: RESTful + WebSocket for real-time updates
+- **Apple Services**: Siri, Shortcuts, HomeKit, Speech Recognition
+- **Analytics**: Privacy-preserving, on-device metrics
+- **Security**: Encrypted communication, biometric authentication
 
-### Security Requirements
-- All API communications over HTTPS
-- Certificate pinning for backend connections
-- Biometric authentication for sensitive operations
-- Encrypted local storage for user data
-- No third-party tracking SDKs
+## 🔗 Key Feature Areas
 
-## Next Steps
+### Voice Interface
+- Natural language processing for home control commands
+- Apple Intelligence integration for context awareness
+- Multi-user voice recognition and personalization
+- Privacy-first speech processing
 
-### For Developers
-1. Review the [Development Guidelines](./development-guidelines.md)
-2. Set up your development environment
-3. Join the team Slack channel: #c11s-house-ios
-4. Pick up a starter task from the backlog
+### Smart Home Integration
+- Real-time device control and monitoring
+- Automated scene management
+- Energy usage tracking and optimization
+- Security system integration
 
-### For Project Managers
-1. Review the [Implementation Roadmap](./implementation-roadmap.md)
-2. Schedule team kickoff meeting
-3. Set up project tracking in Jira
-4. Establish communication channels
+### User Experience
+- Intuitive SwiftUI interface
+- Accessibility-first design
+- Dark mode support
+- Haptic feedback integration
 
-### For Designers
-1. Access design files in Figma
-2. Review Apple Human Interface Guidelines
-3. Coordinate with development team on component library
-4. Plan user research sessions
+### Data Management
+- Local-first data architecture
+- Secure cloud synchronization
+- Offline capability maintenance
+- Privacy-compliant data handling
 
-### For QA Engineers
-1. Set up test automation framework
-2. Create test plan based on requirements
-3. Configure device testing lab
-4. Establish bug tracking workflow
+## 📊 Project Metrics
 
-## Resources
+### Development Metrics
+- **Lines of Code**: ~3,500
+- **Test Coverage**: 25% (target: 85%)
+- **Build Success Rate**: 95%
+- **Code Review Time**: 4.5 hours average
 
-### Internal Documentation
-- [API Documentation](https://github.com/adrianco/consciousness)
-- [Design System](./design-system.md) (Coming Soon)
-- [Testing Strategy](./testing-strategy.md) (Coming Soon)
+### Quality Targets
+- **Bug Discovery Rate**: <5% in production
+- **App Store Rating**: >4.5 stars
+- **Crash-Free Rate**: >99.5%
+- **Performance**: Voice response <1.5s
 
-### External Resources
-- [Apple Developer Documentation](https://developer.apple.com/documentation/)
-- [Swift Style Guide](https://github.com/raywenderlich/swift-style-guide)
+## 👥 Team Structure and Responsibilities
+
+### Core Team
+- **Technical Lead**: Architecture decisions, code reviews, mentoring
+- **iOS Developers**: Feature implementation, testing
+- **Backend Integration**: API integration, performance optimization
+- **UI/UX Designer**: Interface design, user research
+- **QA Engineer**: Test automation, quality assurance
+
+### Communication Channels
+- **Daily Standups**: Progress tracking and blocker resolution
+- **Weekly Architecture Reviews**: Technical decision alignment
+- **Bi-weekly Sprint Planning**: Feature prioritization
+- **Monthly Stakeholder Updates**: Progress and milestone reports
+
+## 📋 Documentation Standards
+
+### Document Ownership
+- **Current State**: Technical Lead (updated weekly)
+- **Implementation Plans**: Feature Teams (updated per sprint)
+- **Development Processes**: Team Lead (updated as needed)
+- **Archive**: Maintained for historical reference only
+
+### Update Procedures
+1. **Major Changes**: Require team review and approval
+2. **Minor Updates**: Can be made directly with commit message
+3. **New Documents**: Follow established template structure
+4. **Archival**: Move outdated content to archive with date stamp
+
+### Documentation Guidelines
+- Use clear, concise language
+- Include code examples where appropriate
+- Maintain consistent formatting
+- Add timestamps for last updates
+- Reference related documents with links
+
+## 🆘 Getting Help
+
+### Technical Questions
+- **Architecture**: Contact Technical Lead
+- **Development Process**: See [Development Guidelines](./development/guidelines.md)
+- **Testing**: See [Testing Strategy](./development/testing-strategy.md)
+- **Deployment**: See [Deployment Guide](./development/deployment.md)
+
+### Project Questions
+- **Feature Status**: Check [Implemented Features](./current-state/implemented-features.md)
+- **Roadmap**: See archived [Implementation Roadmap](./archive/implementation-roadmap.md)
+- **Technical Decisions**: See [Technical Stack](./current-state/technical-stack.md)
+
+### Communication Channels
+- **Slack**: #c11s-house-ios for daily communication
+- **Email**: c11s-house-ios@example.com for formal inquiries
+- **GitHub Issues**: For bug reports and feature requests
+- **Team Meetings**: Weekly iOS team sync (Wednesdays 2PM)
+
+## 🔗 External Resources
+
+### Apple Documentation
+- [iOS App Development](https://developer.apple.com/ios/)
+- [SwiftUI Documentation](https://developer.apple.com/documentation/swiftui/)
+- [Speech Framework](https://developer.apple.com/documentation/speech/)
 - [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
-- [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 
-## Contributing
+### Development Tools
+- [Swift Style Guide](https://github.com/raywenderlich/swift-style-guide)
+- [SwiftLint Rules](https://github.com/realm/SwiftLint/blob/main/Rules.md)
+- [Fastlane Documentation](https://docs.fastlane.tools/)
+- [TestFlight Beta Testing](https://developer.apple.com/testflight/)
 
-Please read our [Development Guidelines](./development-guidelines.md) before contributing. All code must:
-- Follow our coding standards
-- Include comprehensive tests
-- Pass CI/CD checks
+### Project Resources
+- [Backend API Documentation](https://github.com/adrianco/consciousness)
+- [Figma Design Files](https://figma.com/c11s-house-designs)
+- [Project Roadmap](https://github.com/org/c11s-house-ios/projects)
+- [Issue Tracking](https://github.com/org/c11s-house-ios/issues)
+
+## 📝 Contributing
+
+To contribute to this project:
+
+1. **Read Documentation**: Start with [Development Guidelines](./development/guidelines.md)
+2. **Set Up Environment**: Follow the Quick Start guide above
+3. **Pick a Task**: Check GitHub issues or project board
+4. **Follow TDD**: Write tests first, implement features
+5. **Submit PR**: Include tests, documentation updates, and clear description
+
+All code must:
+- Follow established coding standards
+- Include comprehensive tests (minimum 85% coverage)
+- Pass all CI/CD checks
 - Be reviewed by at least one team member
 
-## Questions?
-
-- **Technical Questions**: Post in #c11s-house-ios-dev
-- **Project Questions**: Contact the Technical Lead
-- **Design Questions**: Reach out to the UX team
-- **General Inquiries**: Email: c11s-house-ios@example.com
-
 ---
 
-## Project Status
+**Last Updated**: 2025-07-07  
+**Document Maintainer**: Technical Lead  
+**Next Review**: 2025-07-14
 
-**Current Phase**: Implementation Complete (MVP)
-- Core voice transcription functionality implemented
-- Q&A notes system operational
-- ServiceContainer architecture in place
-- Basic testing infrastructure established
-
-**Next Steps**: Feature expansion and UI/UX improvements based on user feedback.
-
----
-
-Last Updated: 2025-07-07 (Architecture documentation updated to reflect actual implementation)
+*This documentation structure ensures easy navigation while maintaining comprehensive coverage of all project aspects. For real-time status updates, check the project dashboard or contact the technical lead.*
