@@ -59,7 +59,7 @@ struct ConversationView: View {
     @State private var isNewSession = true
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
-    @State private var isMuted = UserDefaults.standard.bool(forKey: "conversationViewMuted")
+    @AppStorage("conversationViewMuted") private var isMuted = false
     @State private var hasPlayedInitialThought = false
     @State private var isLoadingQuestion = false
     @State private var isSavingAnswer = false
@@ -252,7 +252,7 @@ struct ConversationView: View {
                 
                 print("Will speak house thought after delay")
                 // Add small delay to ensure audio session is ready
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     speakHouseThought()
                 }
             } else {
@@ -432,7 +432,7 @@ struct ConversationView: View {
                 persistentTranscript = ""
                 
                 // Small delay to allow UI to update
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     // Load the next unanswered question
                     loadCurrentQuestion()
                     isSavingAnswer = false
@@ -447,9 +447,7 @@ struct ConversationView: View {
     
     private func toggleMute() {
         isMuted.toggle()
-        // Persist mute state
-        UserDefaults.standard.set(isMuted, forKey: "conversationViewMuted")
-        print("Mute state changed to: \(isMuted)")
+        print("Mute state changed to: \(isMuted) (automatically persisted)")
         
         if isMuted {
             // Stop any current speech when muting
