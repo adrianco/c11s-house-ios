@@ -109,7 +109,7 @@ struct NotesView: View {
     }
     
     private func noteRow(for question: Question) -> some View {
-        let note = notesStore.notes.first(where: { $0.questionId == question.id })
+        let note = notesStore.notes[question.id]
         let isEditing = editingNoteId == question.id
         
         return NoteRowView(
