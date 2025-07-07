@@ -32,12 +32,13 @@ import SwiftUI
 struct NotesView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @State private var notesStore = NotesStoreData()
-    @State private var isEditMode = false
     @State private var editingNoteId: UUID? = nil
     @State private var editingText: String = ""
+    @State private var originalText: String = ""
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var showClearAllAlert = false
+    @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
         VStack {
@@ -53,20 +54,6 @@ struct NotesView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    withAnimation {
-                        isEditMode.toggle()
-                        if !isEditMode {
-                            cancelEditing()
-                        }
-                    }
-                }) {
-                    Text(isEditMode ? "Done" : "Edit")
-                        .fontWeight(.medium)
-                }
-            }
-            
-            ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     showClearAllAlert = true
                 }) {
@@ -134,19 +121,20 @@ struct NotesView: View {
         return NoteRowView(
             question: question,
             note: note,
-            isEditMode: isEditMode,
             isEditing: isEditing,
             editingText: $editingText,
-            onTap: {
-                if isEditMode {
-                    startEditing(question: question)
-                }
+            isTextFieldFocused: $isTextFieldFocused,
+            onEdit: {
+                startEditing(question: question)
             },
             onSave: {
                 saveNote(for: question)
             },
             onCancel: {
                 cancelEditing()
+            },
+            onClear: {
+                editingText = ""
             }
         )
     }
@@ -166,15 +154,29 @@ struct NotesView: View {
     
     private func startEditing(question: Question) {
         editingNoteId = question.id
-        editingText = notesStore.note(for: question)?.answer ?? ""
+        let currentAnswer = notesStore.note(for: question)?.answer ?? ""
+        editingText = currentAnswer
+        originalText = currentAnswer
+        // Focus the text field and position cursor at end
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            isTextFieldFocused = true
+            // Trigger cursor to end by appending and removing empty string
+            let temp = editingText
+            editingText = temp + " "
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                editingText = temp
+            }
+        }
     }
     
     private func saveNote(for question: Question) {
         Task {
             do {
+                // Save the answer - empty text is allowed and makes it unanswered
+                let trimmedText = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
                 try await serviceContainer.notesService.saveOrUpdateNote(
                     for: question.id,
-                    answer: editingText
+                    answer: trimmedText
                 )
                 cancelEditing()
                 loadNotes()
@@ -186,8 +188,14 @@ struct NotesView: View {
     }
     
     private func cancelEditing() {
+        // Restore original text if we were editing
+        if editingNoteId != nil {
+            editingText = originalText
+        }
         editingNoteId = nil
         editingText = ""
+        originalText = ""
+        isTextFieldFocused = false
     }
     
     private func clearAllNotes() {
@@ -242,12 +250,13 @@ struct ProgressHeaderView: View {
 struct NoteRowView: View {
     let question: Question
     let note: Note?
-    let isEditMode: Bool
     let isEditing: Bool
     @Binding var editingText: String
-    let onTap: () -> Void
+    var isTextFieldFocused: FocusState<Bool>.Binding
+    let onEdit: () -> Void
     let onSave: () -> Void
     let onCancel: () -> Void
+    let onClear: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -269,10 +278,13 @@ struct NoteRowView: View {
                 
                 Spacer()
                 
-                if isEditMode && !isEditing {
-                    Image(systemName: "pencil.circle.fill")
-                        .foregroundColor(.blue)
-                        .imageScale(.large)
+                if !isEditing {
+                    Button(action: onEdit) {
+                        Image(systemName: "pencil.circle.fill")
+                            .foregroundColor(.blue)
+                            .imageScale(.large)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
             }
             
@@ -294,11 +306,19 @@ struct NoteRowView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(Color.blue, lineWidth: 2)
                         )
+                        .focused(isTextFieldFocused)
                     
                     HStack {
                         Button(action: onCancel) {
                             Text("Cancel")
                                 .foregroundColor(.red)
+                        }
+                        
+                        Spacer()
+                        
+                        Button(action: onClear) {
+                            Text("Clear")
+                                .foregroundColor(.orange)
                         }
                         
                         Spacer()
@@ -320,11 +340,14 @@ struct NoteRowView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.vertical, 4)
                 } else {
-                    Text("Tap to add answer...")
-                        .font(.body)
-                        .foregroundColor(Color(UIColor.tertiaryLabel))
-                        .italic()
-                        .padding(.vertical, 4)
+                    HStack {
+                        Text("Tap edit to add answer...")
+                            .font(.body)
+                            .foregroundColor(Color(UIColor.tertiaryLabel))
+                            .italic()
+                        Spacer()
+                    }
+                    .padding(.vertical, 4)
                 }
             }
             
@@ -337,15 +360,6 @@ struct NoteRowView: View {
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
-        .onTapGesture {
-            if isEditMode && !isEditing {
-                onTap()
-            }
-        }
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isEditMode && !isEditing ? Color.blue.opacity(0.3) : Color.clear, lineWidth: 2)
-        )
     }
 }
 
