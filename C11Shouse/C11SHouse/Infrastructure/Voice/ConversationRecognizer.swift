@@ -50,6 +50,7 @@ final class ConversationRecognizer: ObservableObject {
     @Published var isAvailable = false
     @Published var authorizationStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
     @Published var error: SpeechRecognitionError?
+    @Published var currentHouseThought: HouseThought?
     
     // MARK: - Private Properties
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
@@ -345,7 +346,77 @@ final class ConversationRecognizer: ObservableObject {
             self?.transcript = ""
             self?.confidence = 0.0
             self?.error = nil
+            self?.currentHouseThought = nil
             print("[ConversationRecognizer] Reset complete")
         }
+    }
+    
+    // MARK: - House Thoughts Generation
+    
+    /// Generate a house thought based on the current transcript
+    func generateHouseThought(from transcript: String) {
+        // Simple rule-based generation for now
+        // In a real implementation, this could call an AI service
+        
+        let lowercasedTranscript = transcript.lowercased()
+        
+        // Determine emotion and category based on content
+        var emotion: HouseEmotion = .neutral
+        var category: ThoughtCategory = .observation
+        var thought = ""
+        var suggestion: String? = nil
+        
+        // Greetings
+        if lowercasedTranscript.contains("hello") || lowercasedTranscript.contains("hi") || 
+           lowercasedTranscript.contains("good morning") || lowercasedTranscript.contains("good evening") {
+            emotion = .happy
+            category = .greeting
+            thought = "Hello! I'm glad you're here. How can I help you manage your home today?"
+        }
+        // Temperature related
+        else if lowercasedTranscript.contains("temperature") || lowercasedTranscript.contains("cold") || 
+                lowercasedTranscript.contains("hot") || lowercasedTranscript.contains("warm") {
+            emotion = .thoughtful
+            category = .suggestion
+            thought = "I can help you adjust the temperature for optimal comfort."
+            suggestion = "Would you like me to check the current temperature settings?"
+        }
+        // Lights
+        else if lowercasedTranscript.contains("light") || lowercasedTranscript.contains("dark") ||
+                lowercasedTranscript.contains("bright") {
+            emotion = .curious
+            category = .question
+            thought = "I notice you mentioned lighting. Are you looking to adjust the ambiance?"
+        }
+        // Questions
+        else if lowercasedTranscript.contains("?") || lowercasedTranscript.contains("what") ||
+                lowercasedTranscript.contains("how") || lowercasedTranscript.contains("when") {
+            emotion = .curious
+            category = .observation
+            thought = "That's an interesting question. Let me think about how I can help with that."
+        }
+        // Learning
+        else if lowercasedTranscript.contains("remember") || lowercasedTranscript.contains("note") ||
+                lowercasedTranscript.contains("remind") {
+            emotion = .thoughtful
+            category = .memory
+            thought = "I'll make note of that for future reference."
+        }
+        // Default
+        else {
+            emotion = .neutral
+            category = .observation
+            thought = "I'm listening and learning from our conversation."
+        }
+        
+        // Create and publish the house thought
+        currentHouseThought = HouseThought(
+            thought: thought,
+            emotion: emotion,
+            category: category,
+            confidence: Double(confidence),
+            context: "User said: \"\(transcript)\"",
+            suggestion: suggestion
+        )
     }
 }

@@ -53,6 +53,14 @@ class ServiceContainer: ObservableObject {
     
     private(set) lazy var permissionManager = PermissionManager.shared
     
+    private(set) lazy var notesService: NotesService = {
+        NotesServiceImpl()
+    }()
+    
+    private(set) lazy var ttsService: TTSService = {
+        TTSServiceImpl()
+    }()
+    
     // MARK: - Configuration
     
     private(set) var configuration = TranscriptionConfiguration.default

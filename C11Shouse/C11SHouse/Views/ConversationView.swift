@@ -32,6 +32,10 @@
  *   - Track session start position to handle incremental updates properly
  *   - Speech recognizer sends progressive updates (e.g., "One", "One two", "One two three")
  *   - Now correctly shows final result without duplication
+ * - 2025-07-07: Added HouseThoughts component
+ *   - Integrated HouseThoughtsView above transcript display
+ *   - Provides interactive Q&A interface for house consciousness
+ *   - First question: "What's your name?" for personalization
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -53,11 +57,20 @@ struct ConversationView: View {
     @State private var isEditing = false
     @State private var currentSessionStart = ""
     @State private var isNewSession = true
+    @EnvironmentObject private var serviceContainer: ServiceContainer
     
     var body: some View {
-        VStack(spacing: 20) {
-            
-            VStack(spacing: 10) {
+        ScrollView {
+            VStack(spacing: 20) {
+                // House Thoughts component
+                HouseThoughtsView(
+                    thought: recognizer.currentHouseThought,
+                    onSpeak: speakHouseThought
+                )
+                .padding(.horizontal)
+                .padding(.top)
+                
+                VStack(spacing: 10) {
                 HStack {
                     Text("Status:")
                         .font(.headline)
@@ -122,7 +135,14 @@ struct ConversationView: View {
                         // Stop recording and finalize the current session
                         recognizer.toggleRecording()
                         isNewSession = true
+                        // Generate house thought based on the transcript
+                        if !recognizer.transcript.isEmpty {
+                            recognizer.generateHouseThought(from: recognizer.transcript)
+                        }
                     } else {
+                        // Stop any ongoing TTS before starting new recording
+                        serviceContainer.ttsService.stopSpeaking()
+                        
                         // Mark the start of a new recording session
                         currentSessionStart = persistentTranscript
                         isNewSession = true
@@ -169,9 +189,8 @@ struct ConversationView: View {
                 .cornerRadius(10)
             }
             
-            Spacer()
+            }
         }
-        .padding()
         .navigationTitle("Conversations")
         .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Handle incremental speech recognition updates
@@ -195,6 +214,8 @@ struct ConversationView: View {
             if recognizer.isRecording {
                 recognizer.stopRecording()
             }
+            // Stop any ongoing TTS
+            serviceContainer.ttsService.stopSpeaking()
         }
     }
     
@@ -205,6 +226,27 @@ struct ConversationView: View {
         case .restricted: return "Restricted"
         case .notDetermined: return "Not Determined"
         @unknown default: return "Unknown"
+        }
+    }
+    
+    private func speakHouseThought() {
+        guard let thought = recognizer.currentHouseThought else { return }
+        
+        Task {
+            do {
+                // Stop any current speech
+                serviceContainer.ttsService.stopSpeaking()
+                
+                // Speak the thought
+                try await serviceContainer.ttsService.speak(thought.thought)
+                
+                // Optionally speak the suggestion too
+                if let suggestion = thought.suggestion {
+                    try await serviceContainer.ttsService.speak(suggestion)
+                }
+            } catch {
+                print("Error speaking house thought: \(error)")
+            }
         }
     }
 }
