@@ -62,6 +62,7 @@ struct ConversationView: View {
     @State private var isMuted = false
     @State private var hasPlayedInitialThought = false
     @State private var isLoadingQuestion = false
+    @State private var isSavingAnswer = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
@@ -158,10 +159,9 @@ struct ConversationView: View {
                         // If we have a transcript and a current question, save the answer
                         if !recognizer.transcript.isEmpty && currentQuestion != nil {
                             saveAnswer()
-                        }
-                        
-                        // Generate house thought based on the transcript
-                        if !recognizer.transcript.isEmpty {
+                            // Don't generate a generic thought when we're answering questions
+                        } else if !recognizer.transcript.isEmpty {
+                            // Only generate house thought if not in question mode
                             recognizer.generateHouseThought(from: recognizer.transcript)
                         }
                     } else {
@@ -232,6 +232,12 @@ struct ConversationView: View {
                 // Skip the initial default thought to avoid duplicate speech
                 if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought.thought {
                     hasPlayedInitialThought = true
+                    return
+                }
+                
+                // Skip speaking during answer saving to prevent conflicts
+                if isSavingAnswer {
+                    print("Skipping TTS during answer save")
                     return
                 }
                 
@@ -366,6 +372,11 @@ struct ConversationView: View {
     private func saveAnswer() {
         guard let question = currentQuestion else { return }
         
+        // Prevent multiple saves
+        guard !isSavingAnswer else { return }
+        
+        isSavingAnswer = true
+        
         Task {
             do {
                 let trimmedAnswer = persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -373,8 +384,12 @@ struct ConversationView: View {
                 // Only save if there's actual content
                 guard !trimmedAnswer.isEmpty else {
                     print("Skipping save - answer is empty")
+                    isSavingAnswer = false
                     return
                 }
+                
+                // Clear any existing house thought to prevent duplicate speech
+                recognizer.clearHouseThought()
                 
                 // Save the answer
                 try await serviceContainer.notesService.saveOrUpdateNote(
@@ -395,10 +410,12 @@ struct ConversationView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     // Load the next unanswered question
                     loadCurrentQuestion()
+                    isSavingAnswer = false
                 }
                 
             } catch {
                 print("Error saving answer: \(error)")
+                isSavingAnswer = false
             }
         }
     }
