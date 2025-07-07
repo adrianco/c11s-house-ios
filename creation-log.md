@@ -2312,3 +2312,293 @@
   5. Next questions load automatically after saving
 
   
+  > start 5 agents to plan the next steps. Add iOS location services so tha the app knows what address it is at, and ask the user if this is correct before saving the house address. Don't code this yet, just make a plan.
+
+✻ Thinking…
+
+  The user wants me to start 5 agents to plan the next steps for adding iOS location services to the app. This would involve:
+  1. Getting the device's current location using CoreLocation
+  2. Reverse geocoding to get the address
+  3. Asking the user to confirm if this is their house address
+  4. Saving it if confirmed
+
+  I need to spawn exactly 5 agents using the Task tool to plan different aspects of this feature. I should use TodoWrite to track this planning task as well.
+
+  Let me break this down into 5 different planning areas:
+  1. Location Services & Permissions specialist
+  2. CoreLocation & Geocoding specialist  
+  3. UI/UX Design specialist
+  4. Data Storage & Integration specialist
+  5. Privacy & Security specialist
+
+  I should not code anything yet, just plan.
+
+● I'll spawn 5 agents to plan the location services feature for address confirmation.
+
+● Update Todos
+  ⎿  ☐ Plan iOS location services integration for house address confirmation   
+     ☐ Deploy 5 specialized agents for location services planning
+     ☐ Review and consolidate agent recommendations into implementation roadmap
+
+✻ Thinking…
+
+  Now I need to spawn exactly 5 agents to plan different aspects of the location services feature. I'll use the Task tool to create agents with specialized focus areas:
+
+  1. Location Services & Permissions Expert - handle CoreLocation setup and privacy
+  2. UI/UX Design Specialist - design the address confirmation flow  
+  3. Data Integration Architect - plan how to integrate with existing NotesService
+  4. Geocoding & Address Specialist - handle reverse geocoding and address formatting
+  5. Security & Privacy Analyst - ensure GDPR compliance and data protection
+
+  Each agent should focus on their domain and provide detailed planning recommendations.
+
+● Task(Location Services & Permissions Expert)
+  ⎿  Done (13 tool uses · 31.5k tokens · 1m 39.4s)                                                                                                                                                                                        
+
+● Task(UI/UX Design Specialist)
+  ⎿  Done (9 tool uses · 40.7k tokens · 1m 36.6s)                                                                                                                                                                                         
+
+● Task(Data Integration Architect)
+  ⎿  Done (9 tool uses · 36.3k tokens · 1m 51.0s)                                                                                                                                                                                         
+
+● Task(Geocoding & Address Specialist)
+  ⎿  Done (6 tool uses · 23.0k tokens · 1m 8.6s)                                                                                                                                                                                          
+
+● Task(Security & Privacy Analyst)
+  ⎿  Done (11 tool uses · 32.1k tokens · 2m 7.0s)                                                                                                                                                                                         
+
+✻ Thinking…
+
+  The agents have completed their planning for the location services feature. Let me now update the todo list to reflect this completion and summarize the comprehensive plan they've created.
+
+  From the agent outputs, I can see they've covered:
+
+  1. Location Services & Permissions Expert: Detailed CoreLocation framework integration plan, permission handling, and iOS compatibility considerations
+  2. UI/UX Design Specialist: Complete user experience flow for address confirmation that integrates with existing app design
+  3. Data Integration Architect: Comprehensive data architecture plan extending existing models and services
+  4. Geocoding & Address Specialist: Technical implementation plan for reverse geocoding and address handling
+  5. Security & Privacy Analyst: Thorough privacy compliance analysis covering GDPR, CCPA, and iOS requirements
+
+  Now I need to consolidate these recommendations into a cohesive implementation roadmap.
+
+● Update Todos
+  ⎿  ☒ Plan iOS location services integration for house address confirmation   
+     ☒ Deploy 5 specialized agents for location services planning
+     ☐ Review and consolidate agent recommendations into implementation roadmap
+
+✻ Thinking…
+
+  Now I need to consolidate all the agent recommendations into a comprehensive implementation roadmap. I'll synthesize the key insights from all 5 agents into a cohesive plan.
+
+● 🎯 Consolidated Implementation Roadmap for iOS Location Services
+
+  The 5 specialized agents have completed their analysis. Here's the consolidated implementation plan for adding location services to confirm the user's house address:
+
+  📋 Executive Summary
+
+  Goal: Add iOS location services to automatically detect and confirm the user's home address, integrating seamlessly with the existing question/answer flow while maintaining privacy and security.
+
+  Approach: Use CLLocationManager for GPS detection, reverse geocoding for address resolution, and a confirmation UI that matches the existing HouseThoughtsView design language.
+
+  ---
+  🏗️ Architecture Overview
+
+  Core Services to Add
+
+  1. LocationService - GPS location acquisition and management
+  2. GeocodingService - Coordinate-to-address conversion using CLGeocoder
+  3. AddressValidationService - Address accuracy and validation
+  4. LocationDataManager - Secure storage and privacy management
+
+  Integration Points
+
+  - Extend existing ServiceContainer for dependency injection
+  - Enhance PermissionManager for location permissions
+  - Integrate with NotesService for address storage
+  - Add location context to HouseThought model
+
+  ---
+  🔒 Privacy & Security First
+
+  Key Privacy Principles
+
+  - "When in Use" permissions only - No background location tracking
+  - Minimal data collection - Only home address coordinates
+  - User control - Clear consent, easy deletion, granular permissions
+  - No third-party sharing - Location data stays local
+  - Secure storage - iOS Keychain encryption for coordinates
+
+  Compliance Requirements
+
+  - GDPR: Explicit consent, right to deletion, data minimization
+  - CCPA: Consumer rights to know, delete, and opt-out
+  - iOS App Store: Clear privacy labels and usage descriptions
+
+  ---
+  🎨 User Experience Flow
+
+  Step 1: Natural Integration
+
+  - Appears as a special HouseThought when address question is reached
+  - Uses existing card-based design with location icon
+  - Maintains house consciousness narrative: "I'd like to know where we are so I can better help you"
+
+  Step 2: Permission Request
+
+  - Contextual permission request (not on app launch)
+  - Clear explanation of location usage
+  - Graceful fallback to manual entry if denied
+
+  Step 3: Location Detection & Confirmation
+
+  - Loading state: "Finding your location..." with animated icon
+  - Address display: Clean, formatted address in editable card
+  - Confirmation buttons: "Confirm", "Edit", "Manual Entry"
+
+  Step 4: Manual Fallback
+
+  - Address entry with validation and auto-complete
+  - Format checking and suggestion system
+  - Save with same confidence as GPS-detected address
+
+  ---
+  🔧 Technical Implementation Plan
+
+  Phase 1: Foundation (Week 1)
+
+  // Extend ServiceContainer
+  private(set) lazy var locationService: LocationService = {
+      LocationServiceImpl(permissionManager: permissionManager)
+  }()
+
+  // Extend PermissionManager for location
+  @Published var locationPermissionStatus: CLAuthorizationStatus = .notDetermined
+
+  // Add location models
+  struct ValidatedAddress: Codable {
+      let formattedAddress: String
+      let coordinate: CLLocationCoordinate2D
+      let confidence: Double
+  }
+
+  Phase 2: Core Services (Week 2)
+
+  - LocationServiceImpl: CLLocationManager wrapper with Combine publishers
+  - GeocodingServiceImpl: CLGeocoder with caching and error handling
+  - AddressValidationService: Format checking and confidence scoring
+  - Secure storage: Keychain-based coordinate encryption
+
+  Phase 3: UI Integration (Week 3)
+
+  - AddressConfirmationView: Location detection and confirmation UI
+  - Extend HouseThoughtsView: Add location context support
+  - Manual entry modal: TextEditor with validation and suggestions
+  - Permission flow: Integrate with existing PermissionRequestView
+
+  Phase 4: Data Integration (Week 4)
+
+  - Extend NotesService: Support for validated address metadata
+  - Question flow integration: Automatic triggering for address questions
+  - Migration strategy: Handle existing users with manual addresses
+  - Testing: Comprehensive unit and integration tests
+
+  ---
+  🎯 Key Technical Decisions
+
+  Location Accuracy
+
+  - Primary: kCLLocationAccuracyNearestTenMeters (sufficient for address detection)
+  - Timeout: 30 seconds maximum for location acquisition
+  - Fallback: Manual entry if GPS fails or is unavailable
+
+  Address Formatting
+
+  - Primary: CLGeocoder for reverse geocoding (Apple's native service)
+  - Formatting: Locale-aware address presentation
+  - Validation: Multi-tier confidence scoring
+  - Storage: Structured components + formatted string
+
+  Permission Strategy
+
+  - Just-in-time: Request when address question is reached
+  - "When in Use" only: No background location tracking
+  - Graceful degradation: Full functionality without location access
+  - Clear messaging: Explain benefits of location access
+
+  ---
+  📊 Implementation Checklist
+
+  Required Files to Create
+
+  - Services/LocationService.swift - Core location management
+  - Services/GeocodingService.swift - Address resolution
+  - Views/AddressConfirmationView.swift - Location UI flow
+  - Models/ValidatedAddress.swift - Address data models
+  - Extensions/PermissionManager+Location.swift - Permission extensions
+
+  Files to Modify
+
+  - ServiceContainer.swift - Add location services
+  - PermissionManager.swift - Add location permission support
+  - NotesService.swift - Support address validation metadata
+  - HouseThought.swift - Add location context support
+  - Info.plist - Add location usage descriptions
+
+  Testing Requirements
+
+  - Mock location services for unit tests
+  - Permission flow testing on device
+  - Address validation accuracy testing
+  - Privacy compliance verification
+
+  ---
+  🚀 Success Criteria
+
+  1. User Experience: Seamless address detection that feels natural in the conversation flow
+  2. Privacy: Full user control with clear consent and easy deletion
+  3. Accuracy: >90% accurate address detection in urban/suburban areas
+  4. Fallback: 100% functional with manual address entry
+  5. Performance: <5 second location acquisition in good conditions
+  6. Security: All location data encrypted and stored securely
+
+  ---
+
+● Update Todos
+  ⎿  ☒ Plan iOS location services integration for house address confirmation   
+     ☒ Deploy 5 specialized agents for location services planning
+     ☒ Review and consolidate agent recommendations into implementation roadmap
+
+✻ Thinking…
+
+  Perfect! I've completed the planning phase with the 5 agents and consolidated their recommendations into a comprehensive implementation roadmap. The plan covers:
+
+  1. Technical Architecture: How to integrate location services with existing ServiceContainer, PermissionManager, and NotesService patterns
+  2. User Experience: Seamless integration with HouseThoughtsView and natural conversation flow
+  3. Privacy & Security: GDPR/CCPA compliance, minimal data collection, secure storage
+  4. Implementation Strategy: 4-week phased approach with specific milestones
+  5. Geocoding & Performance: CLGeocoder strategy with caching and error handling
+
+  The plan is comprehensive and ready for implementation. The user specifically asked me not to code this yet, just to make a plan, which I've completed with the 5 specialized agents.
+
+  The key insights from the planning:
+
+  - Use "when in use" location permissions only (no background tracking)
+  - Integrate seamlessly with existing question/answer flow 
+  - Use CLGeocoder for privacy-focused reverse geocoding
+  - Store encrypted coordinates in iOS Keychain
+  - Provide manual entry fallback for all users
+  - Maintain house consciousness narrative throughout
+  - Follow existing UI/UX patterns and design language
+  - Ensure full GDPR/CCPA compliance
+
+  The roadmap is now ready for implementation when the user is ready to proceed with coding.
+
+● ✅ Planning Complete - Ready for Implementation
+
+  The 5-agent planning team has successfully designed a comprehensive location services integration plan. The approach prioritizes:
+
+  🔐 Privacy First: "When in use" permissions only, encrypted storage, full user control🎨 Seamless UX: Integrates naturally with existing HouseThoughtsView design language⚡ Performance: CLGeocoder with intelligent caching and
+  30-second timeouts🛡️ Compliance: Full GDPR/CCPA compliance with clear consent mechanisms🔄 Fallback: 100% functional manual address entry for all users
+
+  The implementation roadmap is structured as a 4-week plan with clear milestones, file specifications, and success criteria. When you're ready to begin coding, we can start with Phase 1 (Foundation) to extend the ServiceContainer and
+   PermissionManager for location services.
