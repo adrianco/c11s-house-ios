@@ -180,6 +180,7 @@ struct ConversationView: View {
                     .background(isEditing ? Color.green : Color.orange)
                     .cornerRadius(10)
                 }
+                } // End of first HStack
                 
                 // Second row of buttons
                 HStack(spacing: 12) {
@@ -215,8 +216,10 @@ struct ConversationView: View {
                         .cornerRadius(10)
                     }
                 }
-            }
-        }
+            } // End of second HStack
+            } // End of button VStack
+            } // End of main VStack
+        } // End of ScrollView
         .navigationTitle("Conversations")
         .onAppear {
             loadCurrentQuestion()
