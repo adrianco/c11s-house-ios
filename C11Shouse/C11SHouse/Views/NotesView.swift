@@ -46,39 +46,7 @@ struct NotesView: View {
                 .padding(.top)
             
             // Notes list
-            List {
-                ForEach(QuestionCategory.allCases, id: \.self) { category in
-                    let categoryQuestions = notesStore.questions(in: category)
-                    if !categoryQuestions.isEmpty {
-                        Section(header: HStack {
-                            Image(systemName: category.iconName)
-                            Text(category.displayName)
-                        }) {
-                            ForEach(categoryQuestions) { question in
-                                NoteRowView(
-                                    question: question,
-                                    note: notesStore.note(for: question),
-                                    isEditMode: isEditMode,
-                                    isEditing: editingNoteId == question.id,
-                                    editingText: $editingText,
-                                    onTap: {
-                                        if isEditMode {
-                                            startEditing(question: question)
-                                        }
-                                    },
-                                    onSave: {
-                                        saveNote(for: question)
-                                    },
-                                    onCancel: {
-                                        cancelEditing()
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            .listStyle(InsetGroupedListStyle())
+            notesListView
         }
         .navigationTitle("Notes & Questions")
         .navigationBarTitleDisplayMode(.large)
@@ -108,6 +76,47 @@ struct NotesView: View {
         } message: {
             Text(alertMessage)
         }
+    }
+    
+    // MARK: - View Components
+    
+    private var notesListView: some View {
+        List {
+            ForEach(QuestionCategory.allCases, id: \.self) { category in
+                let categoryQuestions = notesStore.questions(in: category)
+                if !categoryQuestions.isEmpty {
+                    Section(header: HStack {
+                        Image(systemName: category.iconName)
+                        Text(category.rawValue)
+                    }) {
+                        ForEach(categoryQuestions, id: \.id) { question in
+                            let note = notesStore.notes.first(where: { $0.questionId == question.id })
+                            let isEditing = editingNoteId == question.id
+                            
+                            NoteRowView(
+                                question: question,
+                                note: note,
+                                isEditMode: isEditMode,
+                                isEditing: isEditing,
+                                editingText: $editingText,
+                                onTap: {
+                                    if isEditMode {
+                                        startEditing(question: question)
+                                    }
+                                },
+                                onSave: {
+                                    saveNote(for: question)
+                                },
+                                onCancel: {
+                                    cancelEditing()
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        .listStyle(InsetGroupedListStyle())
     }
     
     // MARK: - Helper Methods
@@ -264,7 +273,7 @@ struct NoteRowView: View {
                 } else {
                     Text("Tap to add answer...")
                         .font(.body)
-                        .foregroundColor(.tertiary)
+                        .foregroundColor(Color(UIColor.tertiaryLabel))
                         .italic()
                         .padding(.vertical, 4)
                 }
