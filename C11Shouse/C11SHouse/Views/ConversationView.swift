@@ -132,8 +132,10 @@ struct ConversationView: View {
                 }
             }
             
-            HStack(spacing: 15) {
-                Button(action: {
+            VStack(spacing: 12) {
+                // First row of buttons
+                HStack(spacing: 12) {
+                    Button(action: {
                     if recognizer.isRecording {
                         // Stop recording and finalize the current session
                         recognizer.toggleRecording()
@@ -158,14 +160,14 @@ struct ConversationView: View {
                         Text(recognizer.isRecording ? "Stop" : "Start")
                     }
                     .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
                     .background(recognizer.isRecording ? Color.red : Color.blue)
                     .cornerRadius(10)
                 }
                 .disabled(recognizer.authorizationStatus != .authorized || isEditing)
-                
-                Button(action: {
+                    
+                    Button(action: {
                     isEditing.toggle()
                 }) {
                     HStack {
@@ -173,34 +175,36 @@ struct ConversationView: View {
                         Text(isEditing ? "Done" : "Edit")
                     }
                     .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
                     .background(isEditing ? Color.green : Color.orange)
                     .cornerRadius(10)
                 }
                 
-                Button("Reset") {
+                // Second row of buttons
+                HStack(spacing: 12) {
+                    Button("Reset") {
                     recognizer.reset()
                     persistentTranscript = ""
                     currentSessionStart = ""
                     isNewSession = true
                 }
                 .foregroundColor(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
                 .background(Color.gray)
                 .cornerRadius(10)
-                
-                // Save button for Q&A responses
-                if currentQuestion != nil && !persistentTranscript.isEmpty {
+                    
+                    // Save button for Q&A responses
+                    if currentQuestion != nil && !persistentTranscript.isEmpty {
                     Button(action: saveAnswer) {
                         HStack {
                             Image(systemName: "square.and.arrow.down.fill")
                             Text("Save")
                         }
                         .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
                         .background(
                             LinearGradient(
                                 gradient: Gradient(colors: [.blue, .purple]),
@@ -211,6 +215,7 @@ struct ConversationView: View {
                         .cornerRadius(10)
                     }
                 }
+            }
             }
             
             }

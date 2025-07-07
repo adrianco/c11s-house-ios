@@ -96,6 +96,15 @@ class TTSServiceImpl: NSObject, TTSService {
             stopSpeaking()
         }
         
+        // Ensure audio session is properly configured for playback
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to activate audio session for TTS: \(error)")
+            throw error
+        }
+        
         // Create utterance
         let utterance = AVSpeechUtterance(string: cleanedText)
         
