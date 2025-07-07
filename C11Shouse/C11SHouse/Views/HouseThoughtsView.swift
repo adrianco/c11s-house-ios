@@ -31,6 +31,7 @@ struct HouseThoughtsView: View {
     @State private var isAnimating = false
     @State private var typewriterText = ""
     @State private var typewriterIndex = 0
+    @State private var typewriterTimer: Timer?
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     var body: some View {
@@ -152,20 +153,34 @@ struct HouseThoughtsView: View {
                 isAnimating = false
                 typewriterText = ""
                 typewriterIndex = 0
+                typewriterTimer?.invalidate()
+                typewriterTimer = nil
             }
     }
     
     private func startTypewriterEffect(text: String) {
+        // Clean up any existing timer
+        typewriterTimer?.invalidate()
+        typewriterTimer = nil
+        
+        // Reset state
         typewriterText = ""
         typewriterIndex = 0
         
-        Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { timer in
-            if typewriterIndex < text.count {
-                let index = text.index(text.startIndex, offsetBy: typewriterIndex)
-                typewriterText.append(text[index])
-                typewriterIndex += 1
+        // Start new timer
+        typewriterTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] timer in
+            guard let self = self else {
+                timer.invalidate()
+                return
+            }
+            
+            if self.typewriterIndex < text.count {
+                let index = text.index(text.startIndex, offsetBy: self.typewriterIndex)
+                self.typewriterText.append(text[index])
+                self.typewriterIndex += 1
             } else {
                 timer.invalidate()
+                self.typewriterTimer = nil
             }
         }
     }

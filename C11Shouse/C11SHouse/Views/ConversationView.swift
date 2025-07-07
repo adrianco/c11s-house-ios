@@ -60,6 +60,7 @@ struct ConversationView: View {
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
     @State private var isMuted = false
+    @State private var hasPlayedInitialThought = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
@@ -152,6 +153,12 @@ struct ConversationView: View {
                         // Stop recording and finalize the current session
                         recognizer.toggleRecording()
                         isNewSession = true
+                        
+                        // If we have a transcript and a current question, save the answer
+                        if !recognizer.transcript.isEmpty && currentQuestion != nil {
+                            saveAnswer()
+                        }
+                        
                         // Generate house thought based on the transcript
                         if !recognizer.transcript.isEmpty {
                             recognizer.generateHouseThought(from: recognizer.transcript)
@@ -221,6 +228,12 @@ struct ConversationView: View {
         .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
             // Auto-play TTS when house thought changes (unless muted)
             if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
+                // Skip the initial default thought to avoid duplicate speech
+                if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought.thought {
+                    hasPlayedInitialThought = true
+                    return
+                }
+                
                 // Add small delay to ensure audio session is ready
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     speakHouseThought()

@@ -91,9 +91,17 @@ class TTSServiceImpl: NSObject, TTSService {
         let cleanedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanedText.isEmpty else { return }
         
-        // Stop any current speech
+        // Stop any current speech and wait for cleanup
         if isSpeaking {
             stopSpeaking()
+            // Give delegate callbacks time to complete
+            try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        }
+        
+        // Cancel any existing continuation to prevent leaks
+        if let existingContinuation = speechContinuation {
+            existingContinuation.resume(throwing: TTSError.speechInterrupted)
+            speechContinuation = nil
         }
         
         // Ensure audio session is properly configured for playback
@@ -150,9 +158,11 @@ class TTSServiceImpl: NSObject, TTSService {
         currentUtterance = nil
         speechQueue.removeAll()
         
-        // Complete any waiting continuation
-        speechContinuation?.resume()
-        speechContinuation = nil
+        // Complete any waiting continuation with error to indicate interruption
+        if let continuation = speechContinuation {
+            continuation.resume(throwing: TTSError.speechInterrupted)
+            speechContinuation = nil
+        }
     }
     
     func pauseSpeaking() {
