@@ -125,6 +125,7 @@ struct NotesView: View {
             editingText: $editingText,
             isTextFieldFocused: $isTextFieldFocused,
             onEdit: {
+                print("Edit button tapped for question: \(question.text)")
                 startEditing(question: question)
             },
             onSave: {
@@ -134,6 +135,7 @@ struct NotesView: View {
                 cancelEditing()
             },
             onClear: {
+                print("Clearing text, keeping edit session open")
                 editingText = ""
             }
         )
@@ -153,10 +155,14 @@ struct NotesView: View {
     }
     
     private func startEditing(question: Question) {
+        print("Starting edit for question: \(question.text)")
         editingNoteId = question.id
         let currentAnswer = notesStore.note(for: question)?.answer ?? ""
+        print("Current answer: '\(currentAnswer)'")
         editingText = currentAnswer
         originalText = currentAnswer
+        print("Stored original text: '\(originalText)'")
+        
         // Focus the text field and position cursor at end
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             isTextFieldFocused = true
@@ -172,22 +178,40 @@ struct NotesView: View {
     private func saveNote(for question: Question) {
         Task {
             do {
+                print("Saving note for question: \(question.text)")
+                print("Answer text: '\(editingText)'")
+                
                 // Save the answer - empty text is allowed and makes it unanswered
                 let trimmedText = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
                 try await serviceContainer.notesService.saveOrUpdateNote(
                     for: question.id,
                     answer: trimmedText
                 )
-                cancelEditing()
-                loadNotes()
+                
+                print("Successfully saved note")
+                
+                // Update UI on main thread
+                await MainActor.run {
+                    cancelEditing()
+                }
+                
+                // Reload notes after a short delay to ensure save is complete
+                try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                await MainActor.run {
+                    loadNotes()
+                }
             } catch {
-                alertMessage = error.localizedDescription
-                showingAlert = true
+                print("Error saving note: \(error)")
+                await MainActor.run {
+                    alertMessage = error.localizedDescription
+                    showingAlert = true
+                }
             }
         }
     }
     
     private func cancelEditing() {
+        print("Canceling edit, restoring original text: '\(originalText)'")
         // Restore original text if we were editing
         if editingNoteId != nil {
             editingText = originalText
@@ -299,6 +323,47 @@ struct NoteRowView: View {
             if isEditing {
                 // Edit mode with TextEditor
                 VStack(spacing: 8) {
+                    // Buttons above text box to avoid keyboard covering them
+                    HStack {
+                        Button(action: {
+                            print("Cancel button tapped")
+                            onCancel()
+                        }) {
+                            Text("Cancel")
+                                .foregroundColor(.red)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            print("Clear button tapped")
+                            onClear()
+                        }) {
+                            Text("Clear")
+                                .foregroundColor(.orange)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            print("Save button tapped")
+                            onSave()
+                        }) {
+                            Text("Save")
+                                .fontWeight(.medium)
+                                .foregroundColor(.blue)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                    }
+                    
                     TextEditor(text: $editingText)
                         .frame(minHeight: 80)
                         .padding(4)
@@ -307,28 +372,6 @@ struct NoteRowView: View {
                                 .stroke(Color.blue, lineWidth: 2)
                         )
                         .focused(isTextFieldFocused)
-                    
-                    HStack {
-                        Button(action: onCancel) {
-                            Text("Cancel")
-                                .foregroundColor(.red)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: onClear) {
-                            Text("Clear")
-                                .foregroundColor(.orange)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: onSave) {
-                            Text("Save")
-                                .fontWeight(.medium)
-                                .foregroundColor(.blue)
-                        }
-                    }
                 }
                 .padding(.top, 4)
             } else {
