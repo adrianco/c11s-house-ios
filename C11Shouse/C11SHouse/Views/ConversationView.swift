@@ -216,9 +216,6 @@ struct ConversationView: View {
                     }
                 }
             }
-            }
-            
-            }
         }
         .navigationTitle("Conversations")
         .onAppear {
