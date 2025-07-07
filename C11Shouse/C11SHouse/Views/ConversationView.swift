@@ -59,10 +59,11 @@ struct ConversationView: View {
     @State private var isNewSession = true
     @State private var currentQuestion: Question?
     @State private var userName: String = ""
-    @State private var isMuted = false
+    @State private var isMuted = UserDefaults.standard.bool(forKey: "conversationViewMuted")
     @State private var hasPlayedInitialThought = false
     @State private var isLoadingQuestion = false
     @State private var isSavingAnswer = false
+    @State private var hasLoadedInitialQuestion = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
@@ -219,18 +220,26 @@ struct ConversationView: View {
         } // End of ScrollView
         .navigationTitle("Conversations")
         .onAppear {
+            print("ConversationView onAppear - muted: \(isMuted), hasLoadedInitialQuestion: \(hasLoadedInitialQuestion)")
             // Set default thought initially
             if recognizer.currentHouseThought == nil {
                 recognizer.currentHouseThought = defaultHouseThought
             }
-            loadCurrentQuestion()
-            loadUserName()
+            // Only load the initial question once
+            if !hasLoadedInitialQuestion {
+                hasLoadedInitialQuestion = true
+                loadCurrentQuestion()
+                loadUserName()
+            }
         }
         .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
+            print("House thought changed - Old: '\(oldValue?.thought ?? "nil")' New: '\(newValue?.thought ?? "nil")' Muted: \(isMuted)")
+            
             // Auto-play TTS when house thought changes (unless muted)
             if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
                 // Skip the initial default thought to avoid duplicate speech
                 if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought.thought {
+                    print("Skipping initial default thought")
                     hasPlayedInitialThought = true
                     return
                 }
@@ -241,10 +250,13 @@ struct ConversationView: View {
                     return
                 }
                 
+                print("Will speak house thought after delay")
                 // Add small delay to ensure audio session is ready
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     speakHouseThought()
                 }
+            } else {
+                print("Not speaking - muted: \(isMuted), newValue: \(newValue != nil), different: \(newValue?.thought != oldValue?.thought)")
             }
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
@@ -325,8 +337,12 @@ struct ConversationView: View {
     
     private func loadCurrentQuestion() {
         // Prevent duplicate loading
-        guard !isLoadingQuestion else { return }
+        guard !isLoadingQuestion else { 
+            print("Already loading question, skipping")
+            return 
+        }
         
+        print("Loading current question...")
         isLoadingQuestion = true
         
         Task {
@@ -334,21 +350,30 @@ struct ConversationView: View {
                 // Get the first unanswered question
                 let unansweredQuestions = try await serviceContainer.notesService.getUnansweredQuestions()
                 if let firstQuestion = unansweredQuestions.first {
-                    currentQuestion = firstQuestion
-                    // Set the house thought to display the question
-                    recognizer.setQuestionThought(firstQuestion.text)
+                    print("Found unanswered question: \(firstQuestion.text)")
+                    await MainActor.run {
+                        currentQuestion = firstQuestion
+                        // Set the house thought to display the question
+                        recognizer.setQuestionThought(firstQuestion.text)
+                    }
                 } else {
-                    // No more questions - clear the current question
-                    currentQuestion = nil
-                    recognizer.clearHouseThought()
+                    print("No unanswered questions found")
+                    await MainActor.run {
+                        // No more questions - clear the current question
+                        currentQuestion = nil
+                        recognizer.clearHouseThought()
+                    }
                 }
             } catch {
                 print("Error loading questions: \(error)")
             }
             
             // Reset loading flag after a delay to prevent rapid calls
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                isLoadingQuestion = false
+            await MainActor.run {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    print("Resetting isLoadingQuestion flag")
+                    isLoadingQuestion = false
+                }
             }
         }
     }
@@ -422,6 +447,10 @@ struct ConversationView: View {
     
     private func toggleMute() {
         isMuted.toggle()
+        // Persist mute state
+        UserDefaults.standard.set(isMuted, forKey: "conversationViewMuted")
+        print("Mute state changed to: \(isMuted)")
+        
         if isMuted {
             // Stop any current speech when muting
             serviceContainer.ttsService.stopSpeaking()
