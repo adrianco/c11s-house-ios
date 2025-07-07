@@ -114,28 +114,6 @@ struct ContentView: View {
             .navigationBarHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
-        .onReceive(NotificationCenter.default.publisher(for: .houseNameUpdated)) { notification in
-            if let name = notification.userInfo?["name"] as? String {
-                houseName = name
-            }
-        }
-        .onAppear {
-            loadHouseName()
-        }
-    }
-    
-    private func loadHouseName() {
-        Task {
-            do {
-                // Load the first question's answer (What's your name?)
-                if let firstQuestion = Question.predefinedQuestions.first,
-                   let note = try await serviceContainer.notesService.getNote(for: firstQuestion.id) {
-                    houseName = note.answer
-                }
-            } catch {
-                print("Failed to load house name: \(error)")
-            }
-        }
     }
 }
 

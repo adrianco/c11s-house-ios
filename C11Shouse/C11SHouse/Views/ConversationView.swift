@@ -57,6 +57,9 @@ struct ConversationView: View {
     @State private var isEditing = false
     @State private var currentSessionStart = ""
     @State private var isNewSession = true
+    @State private var currentQuestion: Question?
+    @State private var userName: String = ""
+    @State private var showSaveButton = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     var body: some View {
@@ -95,7 +98,7 @@ struct ConversationView: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    Text("Real-time Transcript:")
+                    Text(userName.isEmpty ? "Real-time Transcript:" : "\(userName)'s Response:")
                         .font(.headline)
                     
                     if recognizer.confidence > 0 {
@@ -187,11 +190,36 @@ struct ConversationView: View {
                 .padding(.vertical, 12)
                 .background(Color.gray)
                 .cornerRadius(10)
+                
+                // Save button for Q&A responses
+                if currentQuestion != nil && !persistentTranscript.isEmpty {
+                    Button(action: saveAnswer) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down.fill")
+                            Text("Save")
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [.blue, .purple]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(10)
+                    }
+                }
             }
             
             }
         }
         .navigationTitle("Conversations")
+        .onAppear {
+            loadCurrentQuestion()
+            loadUserName()
+        }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Handle incremental speech recognition updates
             if !newValue.isEmpty {
@@ -246,6 +274,67 @@ struct ConversationView: View {
                 }
             } catch {
                 print("Error speaking house thought: \(error)")
+            }
+        }
+    }
+    
+    private func loadCurrentQuestion() {
+        Task {
+            do {
+                // Get the first unanswered question
+                let unansweredQuestions = try await serviceContainer.notesService.getUnansweredQuestions()
+                if let firstQuestion = unansweredQuestions.first {
+                    currentQuestion = firstQuestion
+                    // Set the house thought to display the question
+                    recognizer.setQuestionThought(firstQuestion.text)
+                }
+            } catch {
+                print("Error loading questions: \(error)")
+            }
+        }
+    }
+    
+    private func loadUserName() {
+        Task {
+            do {
+                // Try to load the user's name if already saved
+                let questions = try await serviceContainer.notesService.loadNotesStore().questions
+                if let nameQuestion = questions.first(where: { $0.text == "What's your name?" }),
+                   let note = try await serviceContainer.notesService.getNote(for: nameQuestion.id) {
+                    userName = note.answer
+                }
+            } catch {
+                print("Error loading user name: \(error)")
+            }
+        }
+    }
+    
+    private func saveAnswer() {
+        guard let question = currentQuestion else { return }
+        
+        Task {
+            do {
+                // Save the answer
+                try await serviceContainer.notesService.saveOrUpdateNote(
+                    for: question.id,
+                    answer: persistentTranscript
+                )
+                
+                // If this was the name question, update the userName
+                if question.text == "What's your name?" {
+                    userName = persistentTranscript
+                }
+                
+                // Clear the current question and load the next one
+                currentQuestion = nil
+                persistentTranscript = ""
+                recognizer.clearHouseThought()
+                
+                // Load the next unanswered question
+                loadCurrentQuestion()
+                
+            } catch {
+                print("Error saving answer: \(error)")
             }
         }
     }

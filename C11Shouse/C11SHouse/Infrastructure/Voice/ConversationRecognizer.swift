@@ -419,4 +419,21 @@ final class ConversationRecognizer: ObservableObject {
             suggestion: suggestion
         )
     }
+    
+    /// Set a house thought for displaying a question
+    func setQuestionThought(_ question: String) {
+        currentHouseThought = HouseThought(
+            thought: question,
+            emotion: .curious,
+            category: .question,
+            confidence: 1.0,
+            context: "House Question",
+            suggestion: nil
+        )
+    }
+    
+    /// Clear the current house thought
+    func clearHouseThought() {
+        currentHouseThought = nil
+    }
 }
