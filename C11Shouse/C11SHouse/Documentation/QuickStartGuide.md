@@ -169,3 +169,11 @@ Remember to handle the new category in any switch statements throughout the code
 
 ## Future House Name
 The house name feature will be implemented separately. For now, the app uses "Your House" as a placeholder.
+
+## Known System Warnings
+You may see these warnings in the console - they are iOS system-level issues that don't affect app functionality:
+- `Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed` - iOS looking for voice assets
+- `IPCAUClient: can't connect to server` - Audio subsystem connection warning
+- `Unable to open mach-O at path: RenderBox.framework` - Metal rendering framework warning
+
+These can be safely ignored as the TTS and audio features work despite these system warnings.
