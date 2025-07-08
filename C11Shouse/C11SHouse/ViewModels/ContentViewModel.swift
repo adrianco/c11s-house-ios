@@ -91,6 +91,11 @@ class ContentViewModel: ObservableObject {
            let address = try? JSONDecoder().decode(Address.self, from: addressData) {
             currentAddress = address
             generateHouseNameFromAddress(address)
+            
+            // If we have an address, fetch weather
+            Task {
+                await refreshWeather()
+            }
         }
         
         // Load saved house name from notes
@@ -106,25 +111,16 @@ class ContentViewModel: ObservableObject {
     }
     
     func loadAddressAndWeather() async {
-        do {
-            // Get current location
-            let location = try await locationService.getCurrentLocation()
-            
-            // Lookup address
-            let address = try await locationService.lookupAddress(for: location)
-            currentAddress = address
-            
-            // Generate house name if not already set
-            if houseName == "Your House" {
-                generateHouseNameFromAddress(address)
-            }
-            
-            // Fetch weather
+        // First check if we already have a saved address
+        if currentAddress != nil {
+            // We have an address, fetch weather
             await refreshWeather()
-        } catch {
-            weatherError = error
-            updateHouseEmotionForError()
+            return
         }
+        
+        // No saved address, don't try to get location automatically
+        // User should set address through Notes view
+        updateHouseEmotionForNoAddress()
     }
     
     func refreshWeather() async {
@@ -282,6 +278,16 @@ class ContentViewModel: ObservableObject {
             category: .observation,
             confidence: 0.5,
             context: "Weather service error"
+        )
+    }
+    
+    private func updateHouseEmotionForNoAddress() {
+        houseThought = HouseThought(
+            thought: "I'd love to tell you about the weather! Please set your address in the Notes section first.",
+            emotion: .curious,
+            category: .suggestion,
+            confidence: 0.9,
+            context: "No address set"
         )
     }
     

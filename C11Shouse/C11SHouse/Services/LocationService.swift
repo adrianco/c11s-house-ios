@@ -86,8 +86,24 @@ class LocationServiceImpl: NSObject, LocationServiceProtocol {
             throw LocationError.notAuthorized
         }
         
+        // If we already have a location, return it immediately
+        if let currentLocation = currentLocationSubject.value {
+            return currentLocation
+        }
+        
         return try await withCheckedThrowingContinuation { continuation in
+            // Store continuation with timeout to prevent leaks
             self.locationContinuation = continuation
+            
+            // Set a timeout to prevent continuation leaks
+            Task {
+                try? await Task.sleep(nanoseconds: 10_000_000_000) // 10 seconds
+                if self.locationContinuation != nil {
+                    self.locationContinuation?.resume(throwing: LocationError.locationFailed(NSError(domain: "LocationTimeout", code: -1, userInfo: [NSLocalizedDescriptionKey: "Location request timed out"])))
+                    self.locationContinuation = nil
+                }
+            }
+            
             locationManager.requestLocation()
         }
     }

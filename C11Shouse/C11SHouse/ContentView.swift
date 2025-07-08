@@ -82,38 +82,60 @@ struct ContentView: View {
                         .padding(.bottom, 4)
                     }
                     
-                    // Weather display
-                    if let weather = viewModel.currentWeather {
-                        HStack(spacing: 12) {
-                            Image(systemName: weather.condition.icon)
-                                .font(.title2)
-                                .foregroundColor(.blue)
-                            
-                            Text(weather.temperature.formatted)
-                                .font(.title3)
-                                .fontWeight(.medium)
-                            
-                            Text(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                    // Weather display or address prompt
+                    if viewModel.currentAddress != nil {
+                        // Weather display
+                        if let weather = viewModel.currentWeather {
+                            HStack(spacing: 12) {
+                                Image(systemName: weather.condition.icon)
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                                
+                                Text(weather.temperature.formatted)
+                                    .font(.title3)
+                                    .fontWeight(.medium)
+                                
+                                Text(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 8)
+                            .background(Color.secondary.opacity(0.1))
+                            .cornerRadius(20)
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 8)
-                        .background(Color.secondary.opacity(0.1))
-                        .cornerRadius(20)
-                    }
-                    
-                    // Weather loading/error states
-                    if viewModel.isLoadingWeather {
-                        ProgressView()
-                            .padding(.top, 4)
-                    } else if viewModel.weatherError != nil {
-                        Button(action: {
-                            Task { await viewModel.refreshWeather() }
-                        }) {
-                            Label("Retry Weather", systemImage: "arrow.clockwise")
-                                .font(.caption)
-                                .foregroundColor(.orange)
+                        
+                        // Weather loading/error states
+                        if viewModel.isLoadingWeather {
+                            ProgressView()
+                                .padding(.top, 4)
+                        } else if viewModel.weatherError != nil {
+                            Button(action: {
+                                Task { await viewModel.refreshWeather() }
+                            }) {
+                                Label("Retry Weather", systemImage: "arrow.clockwise")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                            }
+                        }
+                    } else {
+                        // No address set - show prompt
+                        NavigationLink(destination: NotesView()) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "location.circle.fill")
+                                    .font(.body)
+                                    .foregroundColor(.blue)
+                                Text("Set your address to see weather")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2)
+                                    .foregroundColor(.blue)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(20)
                         }
                     }
                     

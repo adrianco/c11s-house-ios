@@ -48,6 +48,8 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
         )
         
         // Fetch current weather and forecasts from WeatherKit
+        // Note: WeatherKit may fail in simulator with sandbox errors
+        // It works correctly on real devices with proper entitlements
         let weather = try await weatherService.weather(for: location)
         
         // Convert WeatherKit data to our Weather model

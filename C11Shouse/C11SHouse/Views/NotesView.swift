@@ -39,6 +39,7 @@ struct NotesView: View {
     @State private var alertMessage = ""
     @State private var showClearAllAlert = false
     @State private var isLoadingAddress = false
+    @State private var detectedAddress: Address? = nil
     @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
@@ -171,6 +172,7 @@ struct NotesView: View {
                     let address = try await serviceContainer.locationService.lookupAddress(for: location)
                     
                     await MainActor.run {
+                        detectedAddress = address
                         editingText = address.fullAddress
                         originalText = ""  // Keep original as empty so they can cancel
                         isLoadingAddress = false
@@ -231,8 +233,34 @@ struct NotesView: View {
                     answer: trimmedText
                 )
                 
-                // If this is the address question, trigger house name generation
+                // If this is the address question, save address and trigger house name generation
                 if question.text == "Is this the right address?" && !trimmedText.isEmpty {
+                    // If we have a detected address with coordinates, use it
+                    if let detectedAddr = self.detectedAddress {
+                        // Update the detected address with any edits the user made
+                        let components = trimmedText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                        
+                        var finalAddress = detectedAddr
+                        if components.count >= 1 {
+                            finalAddress = Address(
+                                street: components[0],
+                                city: components.count > 1 ? components[1] : detectedAddr.city,
+                                state: components.count > 2 ? components[2].components(separatedBy: " ").first ?? detectedAddr.state : detectedAddr.state,
+                                postalCode: components.count > 2 && components[2].components(separatedBy: " ").count > 1 ? components[2].components(separatedBy: " ")[1] : detectedAddr.postalCode,
+                                country: detectedAddr.country,
+                                coordinate: detectedAddr.coordinate // Keep the accurate coordinates
+                            )
+                        }
+                        
+                        // Save to UserDefaults
+                        if let encoded = try? JSONEncoder().encode(finalAddress) {
+                            UserDefaults.standard.set(encoded, forKey: "confirmedHomeAddress")
+                        }
+                        
+                        // Save using LocationService method
+                        try? await serviceContainer.locationService.confirmAddress(finalAddress)
+                    }
+                    
                     // Extract just the street name for house naming
                     let streetName = trimmedText
                         .components(separatedBy: ",").first ?? trimmedText
