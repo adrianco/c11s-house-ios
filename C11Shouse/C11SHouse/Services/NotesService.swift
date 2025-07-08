@@ -372,9 +372,10 @@ extension NotesServiceProtocol {
         let weatherQuestion = Question(
             id: weatherQuestionId,
             text: "Current Weather Summary",
-            category: .general,
-            priority: .low,
-            helpText: "Automatically updated weather information"
+            category: .other,
+            displayOrder: 999,
+            isRequired: false,
+            hint: "Automatically updated weather information"
         )
         
         // Save the weather summary
@@ -401,9 +402,10 @@ extension NotesServiceProtocol {
         let houseNameQuestion = Question(
             id: houseNameQuestionId,
             text: "What is your house's name?",
-            category: .general,
-            priority: .high,
-            helpText: "A personalized name for your home"
+            category: .houseInfo,
+            displayOrder: 1,
+            isRequired: true,
+            hint: "A personalized name for your home"
         )
         
         // Save the house name

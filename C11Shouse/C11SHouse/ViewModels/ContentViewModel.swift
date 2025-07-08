@@ -251,10 +251,17 @@ class ContentViewModel: ObservableObject {
         
         // Add temperature context
         var finalThought = thought
-        if let temp = weather.temperature.value {
-            if temp > 30 { // Celsius
+        let temp = weather.temperature.value
+        if weather.temperature.unit == .celsius {
+            if temp > 30 {
                 finalThought += " It's \(weather.temperature.formatted) outside."
             } else if temp < 0 {
+                finalThought += " It's \(weather.temperature.formatted) - quite cold!"
+            }
+        } else { // Fahrenheit
+            if temp > 86 {
+                finalThought += " It's \(weather.temperature.formatted) outside."
+            } else if temp < 32 {
                 finalThought += " It's \(weather.temperature.formatted) - quite cold!"
             }
         }
