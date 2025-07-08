@@ -38,6 +38,7 @@ struct NotesView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var showClearAllAlert = false
+    @State private var isLoadingAddress = false
     @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
@@ -124,6 +125,7 @@ struct NotesView: View {
             isEditing: isEditing,
             editingText: $editingText,
             isTextFieldFocused: $isTextFieldFocused,
+            isLoadingAddress: isLoadingAddress && question.text == "Is this the right address?",
             onEdit: {
                 print("Edit button tapped for question: \(question.text)")
                 startEditing(question: question)
@@ -158,19 +160,60 @@ struct NotesView: View {
         print("Starting edit for question: \(question.text)")
         editingNoteId = question.id
         let currentAnswer = notesStore.note(for: question)?.answer ?? ""
-        print("Current answer: '\(currentAnswer)'")
-        editingText = currentAnswer
-        originalText = currentAnswer
-        print("Stored original text: '\(originalText)'")
         
-        // Focus the text field and position cursor at end
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            isTextFieldFocused = true
-            // Trigger cursor to end by appending and removing empty string
-            let temp = editingText
-            editingText = temp + " "
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                editingText = temp
+        // Check if this is the address question and no answer exists
+        if question.text == "Is this the right address?" && currentAnswer.isEmpty {
+            // Try to get current location and lookup address
+            isLoadingAddress = true
+            Task {
+                do {
+                    let location = try await serviceContainer.locationService.getCurrentLocation()
+                    let address = try await serviceContainer.locationService.lookupAddress(for: location)
+                    
+                    await MainActor.run {
+                        editingText = address.fullAddress
+                        originalText = ""  // Keep original as empty so they can cancel
+                        isLoadingAddress = false
+                        
+                        // Focus the text field
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            isTextFieldFocused = true
+                        }
+                    }
+                } catch {
+                    await MainActor.run {
+                        isLoadingAddress = false
+                        // If location fails, just use empty text
+                        editingText = currentAnswer
+                        originalText = currentAnswer
+                        
+                        // Show error message
+                        alertMessage = "Could not detect your address. Please enter it manually."
+                        showingAlert = true
+                        
+                        // Focus the text field
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            isTextFieldFocused = true
+                        }
+                    }
+                }
+            }
+        } else {
+            // Normal editing flow
+            print("Current answer: '\(currentAnswer)'")
+            editingText = currentAnswer
+            originalText = currentAnswer
+            print("Stored original text: '\(originalText)'")
+            
+            // Focus the text field and position cursor at end
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                isTextFieldFocused = true
+                // Trigger cursor to end by appending and removing empty string
+                let temp = editingText
+                editingText = temp + " "
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    editingText = temp
+                }
             }
         }
     }
@@ -187,6 +230,25 @@ struct NotesView: View {
                     for: question.id,
                     answer: trimmedText
                 )
+                
+                // If this is the address question, trigger house name generation
+                if question.text == "Is this the right address?" && !trimmedText.isEmpty {
+                    // Extract just the street name for house naming
+                    let streetName = trimmedText
+                        .components(separatedBy: ",").first ?? trimmedText
+                    
+                    let cleanStreetName = streetName
+                        .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
+                        .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#, 
+                                            with: "", 
+                                            options: [.regularExpression, .caseInsensitive])
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    
+                    if !cleanStreetName.isEmpty {
+                        let houseName = "\(cleanStreetName) House"
+                        await serviceContainer.notesService.saveHouseName(houseName)
+                    }
+                }
                 
                 print("Successfully saved note")
                 
@@ -277,6 +339,7 @@ struct NoteRowView: View {
     let isEditing: Bool
     @Binding var editingText: String
     var isTextFieldFocused: FocusState<Bool>.Binding
+    let isLoadingAddress: Bool
     let onEdit: () -> Void
     let onSave: () -> Void
     let onCancel: () -> Void
@@ -323,6 +386,16 @@ struct NoteRowView: View {
             if isEditing {
                 // Edit mode with TextEditor
                 VStack(spacing: 8) {
+                    if isLoadingAddress {
+                        HStack {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                            Text("Detecting your address...")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 8)
+                    }
                     // Buttons above text box to avoid keyboard covering them
                     HStack {
                         Button(action: {

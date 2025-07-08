@@ -227,17 +227,9 @@ struct ContentView: View {
                 await viewModel.requestLocationPermission()
             }
             
-            // If we don't have a saved address, try to get current location
-            if viewModel.currentAddress == nil && viewModel.hasLocationPermission {
-                do {
-                    let location = try await serviceContainer.locationService.getCurrentLocation()
-                    let address = try await serviceContainer.locationService.lookupAddress(for: location)
-                    detectedAddress = address
-                    showAddressConfirmation = true
-                } catch {
-                    // Handle error silently for now
-                    print("Location error: \(error)")
-                }
+            // Load address and weather data if we have permission
+            if viewModel.hasLocationPermission {
+                await viewModel.loadAddressAndWeather()
             }
         }
     }

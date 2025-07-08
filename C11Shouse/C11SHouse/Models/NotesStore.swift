@@ -211,10 +211,10 @@ extension Question {
         ),
         
         Question(
-            text: "What's your home address?",
+            text: "Is this the right address?",
             category: .houseInfo,
             displayOrder: 2,
-            hint: "Full street address for delivery and emergency services"
+            hint: "Confirm or edit your detected address"
         )
     ]
 }
