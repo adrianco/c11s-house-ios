@@ -210,33 +210,11 @@ extension Question {
             hint: "Enter your name or what you'd like the house to call you"
         ),
         
-        // Additional questions for future use
-        Question(
-            text: "What's your preferred wake-up time?",
-            category: .preferences,
-            displayOrder: 2,
-            hint: "Enter your usual wake-up time (e.g., 7:00 AM)"
-        ),
-        
         Question(
             text: "What's your home address?",
             category: .houseInfo,
-            displayOrder: 3,
+            displayOrder: 2,
             hint: "Full street address for delivery and emergency services"
-        ),
-        
-        Question(
-            text: "When was your last HVAC maintenance?",
-            category: .maintenance,
-            displayOrder: 4,
-            hint: "Date of last heating/cooling system service"
-        ),
-        
-        Question(
-            text: "Any allergies or dietary restrictions?",
-            category: .personal,
-            displayOrder: 5,
-            hint: "Important for meal planning and emergency information"
         )
     ]
 }
