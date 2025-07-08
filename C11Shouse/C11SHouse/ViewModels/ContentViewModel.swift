@@ -107,7 +107,6 @@ class ContentViewModel: ObservableObject {
         if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
            let address = try? JSONDecoder().decode(Address.self, from: addressData) {
             currentAddress = address
-            generateHouseNameFromAddress(address)
             
             // If we have an address, fetch weather
             Task {
@@ -162,7 +161,6 @@ class ContentViewModel: ObservableObject {
         do {
             try await locationService.confirmAddress(address)
             currentAddress = address
-            generateHouseNameFromAddress(address)
             await refreshWeather()
         } catch {
             weatherError = error
@@ -288,13 +286,24 @@ class ContentViewModel: ObservableObject {
     }
     
     private func updateHouseEmotionForError() {
-        houseThought = HouseThought(
-            thought: "I'm having trouble checking the weather right now. I'll try again soon.",
-            emotion: .confused,
-            category: .observation,
-            confidence: 0.5,
-            context: "Weather service error"
-        )
+        // Check if this is a sandbox error
+        if let error = weatherError as? WeatherError, case .sandboxRestriction = error {
+            houseThought = HouseThought(
+                thought: "Weather service isn't available in the simulator. It works great on real devices!",
+                emotion: .neutral,
+                category: .observation,
+                confidence: 0.8,
+                context: "Simulator limitation"
+            )
+        } else {
+            houseThought = HouseThought(
+                thought: "I'm having trouble checking the weather right now. I'll try again soon.",
+                emotion: .confused,
+                category: .observation,
+                confidence: 0.5,
+                context: "Weather service error"
+            )
+        }
     }
     
     private func updateHouseEmotionForNoAddress() {
@@ -320,7 +329,6 @@ class ContentViewModel: ObservableObject {
             // Only update if the address is different
             if currentAddress?.fullAddress != address.fullAddress {
                 currentAddress = address
-                generateHouseNameFromAddress(address)
                 
                 // Fetch weather for the new address
                 Task {
