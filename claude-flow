@@ -1,27 +1,71 @@
-#!/usr/bin/env bash
-# Claude-Flow local wrapper
-# This script ensures claude-flow runs from your project directory
+#!/usr/bin/env node
 
-# Save the current directory
-PROJECT_DIR="${PWD}"
+/**
+ * Claude Flow CLI - Universal Wrapper
+ * Works in both CommonJS and ES Module projects
+ */
 
-# Set environment to ensure correct working directory
-export PWD="${PROJECT_DIR}"
-export CLAUDE_WORKING_DIR="${PROJECT_DIR}"
+// Use dynamic import to work in both CommonJS and ES modules
+(async () => {
+  const { spawn } = await import('child_process');
+  const { resolve } = await import('path');
+  const { fileURLToPath } = await import('url');
+  
+  try {
+    // Try to use import.meta.url (ES modules)
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = resolve(__filename, '..');
+  } catch {
+    // Fallback for CommonJS
+  }
 
-# Try to find claude-flow
-# 1. Local node_modules
-if [ -f "${PROJECT_DIR}/node_modules/.bin/claude-flow" ]; then
-  cd "${PROJECT_DIR}"
-  exec "${PROJECT_DIR}/node_modules/.bin/claude-flow" "$@"
+  // Try multiple strategies to find claude-flow
+  const strategies = [
+    // 1. Local node_modules
+    async () => {
+      try {
+        const localPath = resolve(process.cwd(), 'node_modules/.bin/claude-flow');
+        const { existsSync } = await import('fs');
+        if (existsSync(localPath)) {
+          return spawn(localPath, process.argv.slice(2), { stdio: 'inherit' });
+        }
+      } catch {}
+    },
+    
+    // 2. Parent node_modules (monorepo)
+    async () => {
+      try {
+        const parentPath = resolve(process.cwd(), '../node_modules/.bin/claude-flow');
+        const { existsSync } = await import('fs');
+        if (existsSync(parentPath)) {
+          return spawn(parentPath, process.argv.slice(2), { stdio: 'inherit' });
+        }
+      } catch {}
+    },
+    
+    // 3. NPX with latest alpha version (prioritized over global)
+    async () => {
+      return spawn('npx', ['claude-flow@2.0.0-alpha.27', ...process.argv.slice(2)], { stdio: 'inherit' });
+    }
+  ];
 
-# 2. Global installation
-elif command -v claude-flow &> /dev/null; then
-  cd "${PROJECT_DIR}"
-  exec claude-flow "$@"
-
-# 3. Fallback to npx
-else
-  cd "${PROJECT_DIR}"
-  exec npx claude-flow@latest "$@"
-fi
+  // Try each strategy
+  for (const strategy of strategies) {
+    try {
+      const child = await strategy();
+      if (child) {
+        child.on('exit', (code) => process.exit(code || 0));
+        child.on('error', (err) => {
+          if (err.code !== 'ENOENT') {
+            console.error('Error:', err);
+            process.exit(1);
+          }
+        });
+        return;
+      }
+    } catch {}
+  }
+  
+  console.error('Could not find claude-flow. Please install it with: npm install claude-flow');
+  process.exit(1);
+})();

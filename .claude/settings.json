@@ -1,69 +1,103 @@
 {
+  "env": {
+    "CLAUDE_FLOW_AUTO_COMMIT": "false",
+    "CLAUDE_FLOW_AUTO_PUSH": "false",
+    "CLAUDE_FLOW_HOOKS_ENABLED": "true",
+    "CLAUDE_FLOW_TELEMETRY_ENABLED": "true",
+    "CLAUDE_FLOW_REMOTE_EXECUTION": "true",
+    "CLAUDE_FLOW_GITHUB_INTEGRATION": "true"
+  },
   "permissions": {
     "allow": [
-      "Bash(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "MultiEdit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "LS(*)",
-      "NotebookEdit(*)",
-      "NotebookRead(*)",
-      "WebFetch(*)",
-      "WebSearch(*)",
-      "TodoRead",
-      "TodoWrite",
-      "Agent(*)"
+      "Bash(npx claude-flow *)",
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(npm test *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push)",
+      "Bash(git config *)",
+      "Bash(gh *)",
+      "Bash(node *)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(ls *)"
     ],
-    "deny": []
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | sh)",
+      "Bash(eval *)"
+    ]
   },
-  "env": {
-    "BASH_DEFAULT_TIMEOUT_MS": "300000",
-    "BASH_MAX_TIMEOUT_MS": "600000",
-    "BASH_MAX_OUTPUT_LENGTH": "500000",
-    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "true",
-    "MAX_THINKING_TOKENS": "20000",
-    "MCP_TIMEOUT": "60000",
-    "MCP_TOOL_TIMEOUT": "120000",
-    "DISABLE_COST_WARNINGS": "1",
-    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "0",
-    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "8192"
-  },
-  "cleanupPeriodDays": 90,
-  "includeCoAuthoredBy": true,
-  "automation": {
-    "enabled": true,
-    "defaultTimeout": 300000,
-    "maxRetries": 3,
-    "retryBackoff": 2000,
-    "parallelExecution": true,
-    "batchOperations": true,
-    "autoSaveMemory": true,
-    "autoCommit": false
-  },
-  "claudeFlow": {
-    "version": "1.0.72",
-    "swarmDefaults": {
-      "maxAgents": 10,
-      "timeout": 3600000,
-      "parallel": true,
-      "monitor": true,
+  "hooks": {
+    "preEditHook": {
+      "command": "npx",
+      "args": ["claude-flow", "hooks", "pre-edit", "--file", "${file}", "--auto-assign-agents", "true", "--load-context", "true"],
+      "alwaysRun": false,
       "outputFormat": "json"
     },
-    "sparcDefaults": {
-      "timeout": 3600000,
-      "parallel": true,
-      "batch": true,
-      "memoryKey": "sparc_session"
+    "postEditHook": {
+      "command": "npx",
+      "args": ["claude-flow", "hooks", "post-edit", "--file", "${file}", "--format", "true", "--update-memory", "true", "--train-neural", "true"],
+      "alwaysRun": true,
+      "outputFormat": "json"
     },
-    "memoryDefaults": {
-      "maxSize": "1GB",
-      "autoCompress": true,
-      "autoCleanup": true,
-      "indexingEnabled": true,
-      "persistenceEnabled": true
+    "preCommandHook": {
+      "command": "npx",
+      "args": ["claude-flow", "hooks", "pre-command", "--command", "${command}", "--validate-safety", "true", "--prepare-resources", "true"],
+      "alwaysRun": false,
+      "outputFormat": "json"
+    },
+    "postCommandHook": {
+      "command": "npx",
+      "args": ["claude-flow", "hooks", "post-command", "--command", "${command}", "--track-metrics", "true", "--store-results", "true"],
+      "alwaysRun": false,
+      "outputFormat": "json"
+    },
+    "sessionEndHook": {
+      "command": "npx",
+      "args": ["claude-flow", "hooks", "session-end", "--generate-summary", "true", "--persist-state", "true", "--export-metrics", "true"],
+      "alwaysRun": true,
+      "outputFormat": "json"
     }
+  },
+  "mcpServers": {
+    "claude-flow": {
+      "command": "npx",
+      "args": [
+        "claude-flow",
+        "mcp",
+        "start"
+      ],
+      "env": {
+        "CLAUDE_FLOW_HOOKS_ENABLED": "true",
+        "CLAUDE_FLOW_TELEMETRY_ENABLED": "true",
+        "CLAUDE_FLOW_REMOTE_READY": "true",
+        "CLAUDE_FLOW_GITHUB_INTEGRATION": "true"
+      }
+    }
+  },
+  "includeCoAuthoredBy": true,
+  "features": {
+    "autoTopologySelection": true,
+    "parallelExecution": true,
+    "neuralTraining": true,
+    "bottleneckAnalysis": true,
+    "smartAutoSpawning": true,
+    "selfHealingWorkflows": true,
+    "crossSessionMemory": true,
+    "githubIntegration": true
+  },
+  "performance": {
+    "maxAgents": 10,
+    "defaultTopology": "hierarchical",
+    "executionStrategy": "parallel",
+    "tokenOptimization": true,
+    "cacheEnabled": true,
+    "telemetryLevel": "detailed"
   }
 }
