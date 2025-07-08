@@ -85,7 +85,6 @@ enum WeatherCondition: String, Codable {
     case drizzle
     case heavyRain
     case rain
-    case showers
     case flurries
     case heavySnow
     case sleet
@@ -103,6 +102,8 @@ enum WeatherCondition: String, Codable {
     case thunderstorms
     case tropicalStorm
     case hurricane
+    case sunShowers
+    case wintryMix
     
     init(from weatherCondition: WeatherKit.WeatherCondition) {
         switch weatherCondition {
@@ -120,7 +121,8 @@ enum WeatherCondition: String, Codable {
         case .drizzle: self = .drizzle
         case .heavyRain: self = .heavyRain
         case .rain: self = .rain
-        case .showers: self = .showers
+        case .sunShowers: self = .sunShowers
+        case .wintryMix: self = .wintryMix
         case .flurries: self = .flurries
         case .heavySnow: self = .heavySnow
         case .sleet: self = .sleet
@@ -150,8 +152,10 @@ enum WeatherCondition: String, Codable {
             return "cloud.fill"
         case .partlyCloudy: 
             return "cloud.sun.fill"
-        case .rain, .drizzle, .showers: 
+        case .rain, .drizzle: 
             return "cloud.rain.fill"
+        case .sunShowers:
+            return "cloud.sun.rain.fill"
         case .heavyRain: 
             return "cloud.heavyrain.fill"
         case .snow, .flurries, .heavySnow: 
@@ -167,6 +171,8 @@ enum WeatherCondition: String, Codable {
         case .windy, .breezy: 
             return "wind"
         case .sleet, .freezingRain, .freezingDrizzle: 
+            return "cloud.sleet.fill"
+        case .wintryMix:
             return "cloud.sleet.fill"
         case .hail: 
             return "cloud.hail.fill"

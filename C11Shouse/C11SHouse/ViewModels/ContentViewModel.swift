@@ -198,7 +198,7 @@ class ContentViewModel: ObservableObject {
             thought = "That's a lot of snow! I hope the heating is working well."
             intensity = 0.7
             
-        case .freezingRain, .freezingDrizzle, .hail:
+        case .freezingRain, .freezingDrizzle, .hail, .wintryMix:
             emotion = .concerned
             thought = "The ice could be dangerous. Please be careful if you go outside."
             intensity = 0.6
@@ -208,7 +208,7 @@ class ContentViewModel: ObservableObject {
             thought = "It's really pouring out there. Good thing we're cozy inside."
             intensity = 0.5
             
-        case .rain, .drizzle, .showers:
+        case .rain, .drizzle, .sunShowers:
             emotion = .thoughtful
             thought = "I love the sound of rain on the roof. Very peaceful."
             intensity = 0.3
