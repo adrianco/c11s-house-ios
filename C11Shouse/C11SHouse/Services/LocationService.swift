@@ -35,7 +35,6 @@ protocol LocationServiceProtocol {
 
 // MARK: - Implementation
 
-@MainActor
 class LocationServiceImpl: NSObject, LocationServiceProtocol {
     private let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()

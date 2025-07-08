@@ -33,7 +33,6 @@ protocol WeatherServiceProtocol {
 
 // MARK: - Implementation
 
-@MainActor
 class WeatherKitServiceImpl: WeatherServiceProtocol {
     private let weatherService = WeatherService.shared
     private let weatherUpdateSubject = PassthroughSubject<Weather, Never>()
