@@ -29,9 +29,22 @@
 		279E6BF22E15D6A60068863B /* C11SHouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C11SHouseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		27E2D8AF2E1DCF75002A68CE /* Exceptions for "C11SHouse" folder in "C11SHouse" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 279E6BDA2E15D6A50068863B /* C11SHouse */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		279E6BDD2E15D6A50068863B /* C11SHouse */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				27E2D8AF2E1DCF75002A68CE /* Exceptions for "C11SHouse" folder in "C11SHouse" target */,
+			);
 			path = C11SHouse;
 			sourceTree = "<group>";
 		};
@@ -398,8 +411,11 @@
 				DEVELOPMENT_TEAM = U2692L5558;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = C11SHouse/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Conscious House";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "C11S House can monitor weather conditions continuously to keep your house informed about changing conditions.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "C11S House needs access to your microphone to transcribe voice commands";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "C11S House needs speech recognition to convert your voice to text";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -430,8 +446,11 @@
 				DEVELOPMENT_TEAM = U2692L5558;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = C11SHouse/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Conscious House";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "C11S House can monitor weather conditions continuously to keep your house informed about changing conditions.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "C11S House needs access to your microphone to transcribe voice commands";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "C11S House needs speech recognition to convert your voice to text";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
