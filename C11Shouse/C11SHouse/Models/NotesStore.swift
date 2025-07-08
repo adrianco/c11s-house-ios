@@ -226,21 +226,31 @@ struct NotesStoreData: Codable {
 extension Question {
     /// The initial set of questions for the house
     static let predefinedQuestions: [Question] = [
-        // Personal category - starting with "What's your name?"
-        Question(
-            text: "What's your name?",
-            category: .personal,
-            displayOrder: 1,
-            isRequired: true,
-            hint: "Enter your name or what you'd like the house to call you"
-        ),
-        
+        // House info - address first
         Question(
             text: "Is this the right address?",
             category: .houseInfo,
-            displayOrder: 0,  // Make this come first, before name
+            displayOrder: 0,
             isRequired: true,
             hint: "Confirm or edit your detected address"
+        ),
+        
+        // House info - house name second
+        Question(
+            text: "What should I call this house?",
+            category: .houseInfo,
+            displayOrder: 1,
+            isRequired: true,
+            hint: "Give your house a name (e.g., 'Maple House', 'The Smith Home')"
+        ),
+        
+        // Personal category - user's name third
+        Question(
+            text: "What's your name?",
+            category: .personal,
+            displayOrder: 2,
+            isRequired: true,
+            hint: "Enter your name or what you'd like the house to call you"
         )
     ]
 }

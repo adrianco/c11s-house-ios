@@ -6,9 +6,8 @@
     <key>com.apple.developer.weatherkit</key>
     <true/>
     
-    <!-- Location Services (if using always authorization) -->
-    <key>com.apple.developer.location.always</key>
-    <true/>
+    <!-- Location Services - removed always authorization as it requires special approval -->
+    <!-- Using "when in use" authorization is sufficient for this app -->
     
     <!-- App Sandbox (required for macOS) -->
     <key>com.apple.security.app-sandbox</key>

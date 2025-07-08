@@ -23,6 +23,25 @@ import WeatherKit
 import CoreLocation
 import Combine
 
+// MARK: - Weather Service Errors
+
+enum WeatherError: LocalizedError {
+    case sandboxRestriction
+    case invalidLocation
+    case networkError(Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .sandboxRestriction:
+            return "Weather service is not available in the simulator. Please run on a real device."
+        case .invalidLocation:
+            return "Invalid location for weather data"
+        case .networkError(let error):
+            return "Network error: \(error.localizedDescription)"
+        }
+    }
+}
+
 // MARK: - Protocol
 
 protocol WeatherServiceProtocol {
@@ -47,35 +66,48 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
             longitude: coordinate.longitude
         )
         
-        // Fetch current weather and forecasts from WeatherKit
-        // Note: WeatherKit may fail in simulator with sandbox errors
-        // It works correctly on real devices with proper entitlements
-        let weather = try await weatherService.weather(for: location)
-        
-        // Convert WeatherKit data to our Weather model
-        let currentWeather = weather.currentWeather
-        let dailyForecast = weather.dailyForecast
-        let hourlyForecast = weather.hourlyForecast
-        
-        let weatherData = Weather(
-            temperature: Temperature(from: currentWeather.temperature),
-            condition: WeatherCondition(from: currentWeather.condition),
-            humidity: currentWeather.humidity,
-            windSpeed: currentWeather.wind.speed.value,
-            feelsLike: Temperature(from: currentWeather.apparentTemperature),
-            uvIndex: currentWeather.uvIndex.value,
-            pressure: currentWeather.pressure.value,
-            visibility: currentWeather.visibility.value,
-            dewPoint: currentWeather.dewPoint.value,
-            forecast: Array(dailyForecast.forecast.prefix(7).map { DailyForecast(from: $0) }),
-            hourlyForecast: Array(hourlyForecast.forecast.prefix(24).map { HourlyForecast(from: $0) }),
-            lastUpdated: Date()
-        )
-        
-        // Publish update
-        weatherUpdateSubject.send(weatherData)
-        
-        return weatherData
+        do {
+            // Fetch current weather and forecasts from WeatherKit
+            // Note: WeatherKit may fail in simulator with sandbox errors
+            // It works correctly on real devices with proper entitlements
+            let weather = try await weatherService.weather(for: location)
+            
+            // Convert WeatherKit data to our Weather model
+            let currentWeather = weather.currentWeather
+            let dailyForecast = weather.dailyForecast
+            let hourlyForecast = weather.hourlyForecast
+            
+            let weatherData = Weather(
+                temperature: Temperature(from: currentWeather.temperature),
+                condition: WeatherCondition(from: currentWeather.condition),
+                humidity: currentWeather.humidity,
+                windSpeed: currentWeather.wind.speed.value,
+                feelsLike: Temperature(from: currentWeather.apparentTemperature),
+                uvIndex: currentWeather.uvIndex.value,
+                pressure: currentWeather.pressure.value,
+                visibility: currentWeather.visibility.value,
+                dewPoint: currentWeather.dewPoint.value,
+                forecast: Array(dailyForecast.forecast.prefix(7).map { DailyForecast(from: $0) }),
+                hourlyForecast: Array(hourlyForecast.forecast.prefix(24).map { HourlyForecast(from: $0) }),
+                lastUpdated: Date()
+            )
+            
+            // Publish update
+            weatherUpdateSubject.send(weatherData)
+            
+            return weatherData
+        } catch {
+            // Check if this is a sandbox restriction error
+            if error.localizedDescription.contains("Sandbox restriction") || 
+               error.localizedDescription.contains("com.apple.weatherkit.authservice") {
+                // This is a known simulator issue
+                print("WeatherKit sandbox error (expected in simulator): \(error)")
+                throw WeatherError.sandboxRestriction
+            } else {
+                // Re-throw other errors
+                throw error
+            }
+        }
     }
     
     func fetchWeatherForAddress(_ address: Address) async throws -> Weather {
