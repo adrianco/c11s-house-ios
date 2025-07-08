@@ -120,12 +120,12 @@ struct ContentView: View {
                         }
                     } else {
                         // No address set - show prompt
-                        NavigationLink(destination: NotesView()) {
+                        NavigationLink(destination: ConversationView()) {
                             HStack(spacing: 8) {
                                 Image(systemName: "location.circle.fill")
                                     .font(.body)
                                     .foregroundColor(.blue)
-                                Text("Set your address to see weather")
+                                Text("Start a conversation to set up your home")
                                     .font(.caption)
                                     .foregroundColor(.blue)
                                 Image(systemName: "chevron.right")

@@ -120,6 +120,13 @@ struct Note: Codable, Equatable, Hashable {
         !answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
+    /// Whether this note needs to be reviewed in conversation
+    var needsConversationReview: Bool {
+        // Needs review if never updated via conversation or empty
+        let wasUpdatedViaConversation = metadata?["updated_via_conversation"] == "true"
+        return !wasUpdatedViaConversation || !isAnswered
+    }
+    
     init(
         questionId: UUID,
         answer: String = "",
@@ -194,6 +201,24 @@ struct NotesStoreData: Codable {
         let answeredCount = questions.filter { isAnswered($0) }.count
         return Double(answeredCount) / Double(questions.count) * 100
     }
+    
+    /// Get questions that need conversation review (required questions first)
+    func questionsNeedingReview() -> [Question] {
+        questions
+            .filter { question in
+                // Only consider questions that need review
+                let note = notes[question.id]
+                return note?.needsConversationReview ?? true
+            }
+            .sorted { q1, q2 in
+                // Required questions come first
+                if q1.isRequired != q2.isRequired {
+                    return q1.isRequired
+                }
+                // Then by display order
+                return q1.displayOrder < q2.displayOrder
+            }
+    }
 }
 
 // MARK: - Predefined Questions
@@ -214,6 +239,7 @@ extension Question {
             text: "Is this the right address?",
             category: .houseInfo,
             displayOrder: 2,
+            isRequired: true,
             hint: "Confirm or edit your detected address"
         )
     ]

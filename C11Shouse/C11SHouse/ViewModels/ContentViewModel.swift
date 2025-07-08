@@ -118,8 +118,7 @@ class ContentViewModel: ObservableObject {
             return
         }
         
-        // No saved address, don't try to get location automatically
-        // User should set address through Notes view
+        // No saved address, prompt user to set it via conversation
         updateHouseEmotionForNoAddress()
     }
     
@@ -283,11 +282,11 @@ class ContentViewModel: ObservableObject {
     
     private func updateHouseEmotionForNoAddress() {
         houseThought = HouseThought(
-            thought: "I'd love to tell you about the weather! Please set your address in the Notes section first.",
+            thought: "Hi! Let's have a conversation so I can learn about your home and help you better.",
             emotion: .curious,
             category: .suggestion,
             confidence: 0.9,
-            context: "No address set"
+            context: "Setup needed"
         )
     }
     

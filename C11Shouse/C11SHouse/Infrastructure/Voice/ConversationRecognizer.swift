@@ -436,4 +436,16 @@ final class ConversationRecognizer: ObservableObject {
     func clearHouseThought() {
         currentHouseThought = nil
     }
+    
+    /// Set a thank you thought when all questions are reviewed
+    func setThankYouThought() {
+        currentHouseThought = HouseThought(
+            thought: "Thank you! All your information is up to date. How else can I help you?",
+            emotion: .happy,
+            category: .greeting,
+            confidence: 1.0,
+            context: "Questions Complete",
+            suggestion: nil
+        )
+    }
 }

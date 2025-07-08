@@ -347,21 +347,34 @@ struct ConversationView: View {
         
         Task {
             do {
-                // Get the first unanswered question
-                let unansweredQuestions = try await serviceContainer.notesService.getUnansweredQuestions()
-                if let firstQuestion = unansweredQuestions.first {
-                    print("Found unanswered question: \(firstQuestion.text)")
+                // Get questions that need review (required questions first)
+                let notesStore = try await serviceContainer.notesService.loadNotesStore()
+                let questionsNeedingReview = notesStore.questionsNeedingReview()
+                
+                if let firstQuestion = questionsNeedingReview.first {
+                    print("Found question needing review: \(firstQuestion.text)")
+                    
+                    // Get the current answer if any
+                    let currentNote = notesStore.notes[firstQuestion.id]
+                    let currentAnswer = currentNote?.answer ?? ""
+                    
                     await MainActor.run {
                         currentQuestion = firstQuestion
+                        
                         // Set the house thought to display the question
-                        recognizer.setQuestionThought(firstQuestion.text)
+                        if currentAnswer.isEmpty {
+                            recognizer.setQuestionThought(firstQuestion.text)
+                        } else {
+                            // If there's already an answer, prompt for confirmation
+                            recognizer.setQuestionThought("I have '\(currentAnswer)' for '\(firstQuestion.text)'. Is this still correct?")
+                        }
                     }
                 } else {
-                    print("No unanswered questions found")
+                    print("No questions needing review")
                     await MainActor.run {
                         // No more questions - clear the current question
                         currentQuestion = nil
-                        recognizer.clearHouseThought()
+                        recognizer.setThankYouThought()
                     }
                 }
             } catch {
@@ -416,10 +429,11 @@ struct ConversationView: View {
                 // Clear any existing house thought to prevent duplicate speech
                 recognizer.clearHouseThought()
                 
-                // Save the answer
+                // Save the answer with conversation metadata
                 try await serviceContainer.notesService.saveOrUpdateNote(
                     for: question.id,
-                    answer: trimmedAnswer
+                    answer: trimmedAnswer,
+                    metadata: ["updated_via_conversation": "true"]
                 )
                 
                 // If this was the name question, update the userName
