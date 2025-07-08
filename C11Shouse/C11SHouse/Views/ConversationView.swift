@@ -64,11 +64,15 @@ struct ConversationView: View {
     @State private var isLoadingQuestion = false
     @State private var isSavingAnswer = false
     @State private var hasLoadedInitialQuestion = false
+    @State private var isInitializing = true
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Default house thought when no question is active
-    private var defaultHouseThought: HouseThought {
-        HouseThought(
+    private var defaultHouseThought: HouseThought? {
+        // Only show default thought after we've checked for questions
+        guard !isInitializing else { return nil }
+        
+        return HouseThought(
             thought: "Hi!",
             emotion: .happy,
             category: .greeting,
@@ -81,14 +85,16 @@ struct ConversationView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // House Thoughts component - always visible
-                HouseThoughtsView(
-                    thought: recognizer.currentHouseThought ?? defaultHouseThought,
-                    isMuted: $isMuted,
-                    onToggleMute: toggleMute
-                )
-                .padding(.horizontal)
-                .padding(.top)
+                // House Thoughts component - only visible when we have a thought
+                if let thought = recognizer.currentHouseThought ?? defaultHouseThought {
+                    HouseThoughtsView(
+                        thought: thought,
+                        isMuted: $isMuted,
+                        onToggleMute: toggleMute
+                    )
+                    .padding(.horizontal)
+                    .padding(.top)
+                }
                 
                 VStack(spacing: 10) {
                 HStack {
@@ -126,40 +132,101 @@ struct ConversationView: View {
                     }
                 }
                 
-                // Show action buttons when editing or when transcript has content
-                if isEditing || !persistentTranscript.isEmpty {
-                    HStack {
-                        if isEditing {
-                            Button(action: {
-                                // Cancel editing - restore original text
-                                persistentTranscript = currentSessionStart
-                                isEditing = false
-                            }) {
-                                Text("Cancel")
-                                    .foregroundColor(.red)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
+                // Action buttons - always visible above text box
+                HStack(spacing: 16) {
+                    // Talk/Stop button
+                    Button(action: {
+                        if recognizer.isRecording {
+                            // Stop recording and finalize the current session
+                            recognizer.toggleRecording()
+                            isNewSession = true
+                            
+                            // If we have a transcript and a current question, save the answer
+                            if !recognizer.transcript.isEmpty && currentQuestion != nil {
+                                saveAnswer()
+                                // Don't generate a generic thought when we're answering questions
+                            } else if !recognizer.transcript.isEmpty {
+                                // Only generate house thought if not in question mode
+                                recognizer.generateHouseThought(from: recognizer.transcript)
                             }
-                            .buttonStyle(BorderlessButtonStyle())
+                        } else {
+                            // Stop any ongoing TTS before starting new recording
+                            serviceContainer.ttsService.stopSpeaking()
+                            
+                            // Mark the start of a new recording session
+                            currentSessionStart = persistentTranscript
+                            isNewSession = true
+                            recognizer.transcript = ""
+                            recognizer.toggleRecording()
                         }
+                    }) {
+                        HStack {
+                            Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                .imageScale(.large)
+                            Text(recognizer.isRecording ? "Stop" : "Talk")
+                        }
+                        .foregroundColor(recognizer.isRecording ? .red : .blue)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                    .disabled(recognizer.authorizationStatus != .authorized || isEditing)
+                    
+                    Spacer()
+                    
+                    // Save button - only visible when there's text and a question
+                    if !persistentTranscript.isEmpty && currentQuestion != nil {
+                        Button(action: {
+                            saveAnswer()
+                        }) {
+                            Text("Save")
+                                .fontWeight(.medium)
+                                .foregroundColor(.blue)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
                         
                         Spacer()
-                        
-                        if !persistentTranscript.isEmpty && currentQuestion != nil {
-                            Button(action: {
-                                saveAnswer()
-                            }) {
-                                Text("Save")
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.blue)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                            }
-                            .buttonStyle(BorderlessButtonStyle())
-                        }
                     }
-                    .padding(.horizontal, 4)
+                    
+                    // Edit button
+                    Button(action: {
+                        isEditing.toggle()
+                    }) {
+                        HStack {
+                            Image(systemName: "pencil.circle.fill")
+                                .imageScale(.large)
+                            Text("Edit")
+                        }
+                        .foregroundColor(.orange)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
+                    
+                    Spacer()
+                    
+                    // Clear button
+                    Button(action: {
+                        recognizer.reset()
+                        persistentTranscript = ""
+                        currentSessionStart = ""
+                        isNewSession = true
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise.circle.fill")
+                                .imageScale(.large)
+                            Text("Clear")
+                        }
+                        .foregroundColor(.gray)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(BorderlessButtonStyle())
                 }
+                .padding(.horizontal, 4)
+                .padding(.bottom, 8)
                 
                 if isEditing {
                     TextEditor(text: $persistentTranscript)
@@ -183,81 +250,6 @@ struct ConversationView: View {
                     .cornerRadius(10)
                 }
             }
-            
-            // Button row - matching Notes view style
-            HStack(spacing: 16) {
-                Button(action: {
-                    if recognizer.isRecording {
-                        // Stop recording and finalize the current session
-                        recognizer.toggleRecording()
-                        isNewSession = true
-                        
-                        // If we have a transcript and a current question, save the answer
-                        if !recognizer.transcript.isEmpty && currentQuestion != nil {
-                            saveAnswer()
-                            // Don't generate a generic thought when we're answering questions
-                        } else if !recognizer.transcript.isEmpty {
-                            // Only generate house thought if not in question mode
-                            recognizer.generateHouseThought(from: recognizer.transcript)
-                        }
-                    } else {
-                        // Stop any ongoing TTS before starting new recording
-                        serviceContainer.ttsService.stopSpeaking()
-                        
-                        // Mark the start of a new recording session
-                        currentSessionStart = persistentTranscript
-                        isNewSession = true
-                        recognizer.transcript = ""
-                        recognizer.toggleRecording()
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                            .imageScale(.large)
-                        Text(recognizer.isRecording ? "Stop" : "Start")
-                    }
-                    .foregroundColor(recognizer.isRecording ? .red : .blue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                .disabled(recognizer.authorizationStatus != .authorized || isEditing)
-                    
-                Spacer()
-                    
-                Button(action: {
-                    isEditing.toggle()
-                }) {
-                    HStack {
-                        Image(systemName: "pencil.circle.fill")
-                            .imageScale(.large)
-                        Text("Edit")
-                    }
-                    .foregroundColor(.orange)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                
-                Spacer()
-                
-                Button(action: {
-                    recognizer.reset()
-                    persistentTranscript = ""
-                    currentSessionStart = ""
-                    isNewSession = true
-                }) {
-                    HStack {
-                        Image(systemName: "arrow.clockwise.circle.fill")
-                            .imageScale(.large)
-                        Text("Reset")
-                    }
-                    .foregroundColor(.gray)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                }
-                .buttonStyle(BorderlessButtonStyle())
-            } // End of button HStack
             } // End of main VStack
         } // End of ScrollView
         .navigationTitle("Conversations")
@@ -274,7 +266,7 @@ struct ConversationView: View {
             // Auto-play TTS when house thought changes (unless muted)
             if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
                 // Skip the initial default thought to avoid duplicate speech
-                if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought.thought {
+                if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought?.thought {
                     hasPlayedInitialThought = true
                     return
                 }
@@ -366,6 +358,11 @@ struct ConversationView: View {
                 let notesStore = try await serviceContainer.notesService.loadNotesStore()
                 let questionsNeedingReview = notesStore.questionsNeedingReview()
                 
+                // Mark initialization as complete once we've checked for questions
+                await MainActor.run {
+                    isInitializing = false
+                }
+                
                 if let firstQuestion = questionsNeedingReview.first {
                     
                     // Get the current answer if any
@@ -401,6 +398,9 @@ struct ConversationView: View {
                         // No more questions - clear the current question
                         currentQuestion = nil
                         recognizer.setThankYouThought()
+                        
+                        // Post notification that all questions are complete
+                        NotificationCenter.default.post(name: Notification.Name("AllQuestionsComplete"), object: nil)
                     }
                 }
             } catch {

@@ -77,6 +77,23 @@ class ContentViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
+        // Monitor for address changes in UserDefaults
+        NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.checkForAddressUpdate()
+            }
+            .store(in: &cancellables)
+        
+        // Monitor for all questions complete notification
+        NotificationCenter.default.publisher(for: Notification.Name("AllQuestionsComplete"))
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // Reload everything when questions are complete
+                self?.loadSavedData()
+            }
+            .store(in: &cancellables)
+        
         // Setup weather refresh timer (30 minutes)
         weatherTimer = Timer.scheduledTimer(withTimeInterval: 1800, repeats: true) { _ in
             Task { [weak self] in
@@ -293,5 +310,23 @@ class ContentViewModel: ObservableObject {
     private func saveWeatherSummary() async {
         guard let weather = currentWeather else { return }
         await notesService.saveWeatherSummary(weather)
+    }
+    
+    private func checkForAddressUpdate() {
+        // Check if we have a new address that we haven't loaded yet
+        if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
+           let address = try? JSONDecoder().decode(Address.self, from: addressData) {
+            
+            // Only update if the address is different
+            if currentAddress?.fullAddress != address.fullAddress {
+                currentAddress = address
+                generateHouseNameFromAddress(address)
+                
+                // Fetch weather for the new address
+                Task {
+                    await refreshWeather()
+                }
+            }
+        }
     }
 }

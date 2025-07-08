@@ -161,10 +161,6 @@ struct ContentView: View {
                         .padding(.bottom, 10)
                     }
                     
-                    Text("Record information about rooms and things\n\n Ask questions about how to get stuff done\n\n      Use your voice to control your home")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    
                     NavigationLink(destination: ConversationView()) {
                         HStack {
                             Image(systemName: "mic.fill")
