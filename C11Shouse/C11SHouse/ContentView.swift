@@ -32,6 +32,14 @@
  *   - Used note.text SF Symbol for visual consistency
  *   - Applied teal-to-blue gradient to differentiate from conversation button
  *   - Maintained consistent styling with existing button design
+ * - 2025-07-08: Weather and location integration
+ *   - Added ContentViewModel for weather data management
+ *   - Display current weather conditions with emoji icons
+ *   - House emotions react to weather conditions
+ *   - Location permission request on first launch
+ *   - Address confirmation sheet for detected location
+ *   - Weather refresh button with loading state
+ *   - Error handling for weather service failures
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -41,9 +49,13 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
-    @State private var showDetailView = false
-    @State private var houseEmotion = "Curious"
-    @State private var houseName = "Your House"
+    @StateObject private var viewModel: ContentViewModel
+    @State private var showAddressConfirmation = false
+    @State private var detectedAddress: Address?
+    
+    init() {
+        _viewModel = StateObject(wrappedValue: ServiceContainer.shared.makeContentViewModel())
+    }
     
     var body: some View {
         NavigationView {
@@ -56,14 +68,54 @@ struct ContentView: View {
                         .cornerRadius(20)
                         .shadow(radius: 5)
                     
-                    Text(houseName)
+                    Text(viewModel.houseName)
                         .font(.largeTitle)
                         .fontWeight(.bold)
                     
-                    Text("Feeling \(houseEmotion.lowercased())")
+                    if let thought = viewModel.houseThought {
+                        HStack(spacing: 4) {
+                            Text(thought.emotion.emoji)
+                            Text("Feeling \(thought.emotion.displayName.lowercased())")
+                        }
                         .font(.headline)
                         .foregroundStyle(.tint)
                         .padding(.bottom, 4)
+                    }
+                    
+                    // Weather display
+                    if let weather = viewModel.currentWeather {
+                        HStack(spacing: 12) {
+                            Image(systemName: weather.condition.icon)
+                                .font(.title2)
+                                .foregroundColor(.blue)
+                            
+                            Text(weather.temperature.formatted)
+                                .font(.title3)
+                                .fontWeight(.medium)
+                            
+                            Text(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        .background(Color.secondary.opacity(0.1))
+                        .cornerRadius(20)
+                    }
+                    
+                    // Weather loading/error states
+                    if viewModel.isLoadingWeather {
+                        ProgressView()
+                            .padding(.top, 4)
+                    } else if viewModel.weatherError != nil {
+                        Button(action: {
+                            Task { await viewModel.refreshWeather() }
+                        }) {
+                            Label("Retry Weather", systemImage: "arrow.clockwise")
+                                .font(.caption)
+                                .foregroundColor(.orange)
+                        }
+                    }
                     
                     Text("Conversations to help manage your house")
                         .font(.subheadline)
@@ -74,6 +126,24 @@ struct ContentView: View {
                 
                 // Main content area with navigation to voice transcription
                 VStack(spacing: 20) {
+                    // House thought display
+                    if let thought = viewModel.houseThought {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(thought.thought)
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                                .padding(.vertical, 12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.secondary.opacity(0.1))
+                                )
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
+                    }
+                    
                     Text("Record information about rooms and things\n\n Ask questions about how to get stuff done\n\n      Use your voice to control your home")
                         .font(.headline)
                         .foregroundColor(.secondary)
@@ -140,6 +210,36 @@ struct ContentView: View {
             .navigationBarHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
+        .onAppear {
+            checkLocationPermission()
+        }
+        .sheet(isPresented: $showAddressConfirmation) {
+            if let address = detectedAddress {
+                AddressConfirmationView(address: address)
+                    .environmentObject(viewModel)
+            }
+        }
+    }
+    
+    private func checkLocationPermission() {
+        Task {
+            if !viewModel.hasLocationPermission {
+                await viewModel.requestLocationPermission()
+            }
+            
+            // If we don't have a saved address, try to get current location
+            if viewModel.currentAddress == nil && viewModel.hasLocationPermission {
+                do {
+                    let location = try await serviceContainer.locationService.getCurrentLocation()
+                    let address = try await serviceContainer.locationService.lookupAddress(for: location)
+                    detectedAddress = address
+                    showAddressConfirmation = true
+                } catch {
+                    // Handle error silently for now
+                    print("Location error: \(error)")
+                }
+            }
+        }
     }
 }
 

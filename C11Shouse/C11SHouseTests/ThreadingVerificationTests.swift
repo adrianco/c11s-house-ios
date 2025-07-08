@@ -1,9 +1,23 @@
-//
-//  ThreadingVerificationTests.swift
-//  C11SHouseTests
-//
-//  Threading verification tests to ensure all UI updates happen on main thread
-//
+/*
+ * CONTEXT & PURPOSE:
+ * ThreadingVerificationTests validates that all UI-related updates in the app happen on the main
+ * thread, preventing UI freezes and crashes. It tests @Published properties, async/await code,
+ * and Combine publishers to ensure thread safety across voice services and view models.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-04: Initial implementation
+ *   - Comprehensive tests for all @MainActor-marked classes
+ *   - Tests verify @Published properties update on main thread
+ *   - Async/await operations tested for proper thread handling
+ *   - Combine publisher thread verification
+ *   - Tests for AudioEngine, VoiceTranscriptionViewModel, and PermissionManager
+ *   - XCTestExpectation used for async verification
+ *   - Thread.isMainThread checks ensure UI safety
+ *   - Tests simulate real-world scenarios (recording, transcription, permissions)
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
 
 import XCTest
 import Combine

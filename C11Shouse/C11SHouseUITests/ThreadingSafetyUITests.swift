@@ -1,9 +1,23 @@
-//
-//  ThreadingSafetyUITests.swift
-//  C11SHouseUITests
-//
-//  UI tests to verify threading safety during user interactions
-//
+/*
+ * CONTEXT & PURPOSE:
+ * ThreadingSafetyUITests performs UI-level testing to verify thread safety during real user
+ * interactions. It tests rapid UI actions, permission flows, and concurrent operations to
+ * ensure the app remains stable and responsive under various threading conditions.
+ *
+ * DECISION HISTORY:
+ * - 2025-07-04: Initial implementation
+ *   - UI tests for threading issues during user interactions
+ *   - Core Data concurrency debug flags enabled for thread violation detection
+ *   - Tests for rapid button tapping to catch race conditions
+ *   - Permission flow tests to verify main thread UI updates
+ *   - Navigation stress tests for thread safety
+ *   - Background/foreground transition tests
+ *   - XCUIApplication launch arguments for enhanced debugging
+ *   - Tests simulate real user behavior patterns
+ *
+ * FUTURE UPDATES:
+ * - [Add future changes and decisions here]
+ */
 
 import XCTest
 

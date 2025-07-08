@@ -61,6 +61,14 @@ class ServiceContainer: ObservableObject {
         TTSServiceImpl()
     }()
     
+    private(set) lazy var locationService: LocationServiceProtocol = {
+        LocationServiceImpl()
+    }()
+    
+    private(set) lazy var weatherService: WeatherServiceProtocol = {
+        WeatherKitServiceImpl()
+    }()
+    
     // MARK: - Configuration
     
     private(set) var configuration = TranscriptionConfiguration.default
@@ -75,6 +83,16 @@ class ServiceContainer: ObservableObject {
             audioRecorder: audioRecorder,
             transcriptionService: transcriptionService,
             permissionManager: permissionManager
+        )
+    }
+    
+    /// Create a new ContentViewModel with injected dependencies
+    @MainActor
+    func makeContentViewModel() -> ContentViewModel {
+        return ContentViewModel(
+            locationService: locationService,
+            weatherService: weatherService,
+            notesService: notesService
         )
     }
     

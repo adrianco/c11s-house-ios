@@ -1,0 +1,15 @@
+<!-- 
+Add these entries to your Info.plist file for WeatherKit and Location Services
+-->
+
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.</string>
+
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>C11S House can monitor weather conditions continuously to keep your house informed about changing conditions.</string>
+
+<!-- WeatherKit requires these capabilities in your Apple Developer account:
+     1. Enable WeatherKit service
+     2. Add com.apple.developer.weatherkit capability to your App ID
+     3. Generate provisioning profiles with WeatherKit enabled
+-->

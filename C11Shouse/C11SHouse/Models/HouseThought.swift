@@ -16,6 +16,11 @@
  *   - Identifiable for SwiftUI list handling
  *   - Category to classify different types of thoughts
  *   - Optional suggestion for actionable insights
+ * - 2025-07-08: Added weather-related emotions
+ *   - Extended Emotion enum with all emotional states
+ *   - Added emoji icons for each emotion
+ *   - Added intensity property for emotion strength
+ *   - House can now react to weather conditions with appropriate emotions
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -65,6 +70,9 @@ enum HouseEmotion: String, Codable, CaseIterable {
     case confused
     case proud
     case thoughtful
+    case worried
+    case content
+    case tired
     
     var displayName: String {
         switch self {
@@ -76,6 +84,9 @@ enum HouseEmotion: String, Codable, CaseIterable {
         case .confused: return "Confused"
         case .proud: return "Proud"
         case .thoughtful: return "Thoughtful"
+        case .worried: return "Worried"
+        case .content: return "Content"
+        case .tired: return "Tired"
         }
     }
     
@@ -89,6 +100,9 @@ enum HouseEmotion: String, Codable, CaseIterable {
         case .confused: return "😕"
         case .proud: return "😌"
         case .thoughtful: return "🧐"
+        case .worried: return "😟"
+        case .content: return "😌"
+        case .tired: return "😴"
         }
     }
 }

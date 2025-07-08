@@ -33,8 +33,11 @@
 import Foundation
 import Combine
 
+/// Type alias for backward compatibility
+typealias NotesService = NotesServiceProtocol
+
 /// Protocol defining the notes service interface
-protocol NotesService {
+protocol NotesServiceProtocol {
     /// Publisher for notes store updates
     var notesStorePublisher: AnyPublisher<NotesStoreData, Never> { get }
     
@@ -64,7 +67,7 @@ protocol NotesService {
 }
 
 /// Concrete implementation of NotesService using UserDefaults
-class NotesServiceImpl: NotesService {
+class NotesServiceImpl: NotesServiceProtocol {
     
     // MARK: - Constants
     
@@ -293,7 +296,7 @@ enum NotesError: LocalizedError {
 
 // MARK: - Convenience Extensions
 
-extension NotesService {
+extension NotesServiceProtocol {
     /// Save or update a note based on whether it exists
     func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
         let store = try await loadNotesStore()
@@ -328,5 +331,104 @@ extension NotesService {
     func getUnansweredQuestions() async throws -> [Question] {
         let store = try await loadNotesStore()
         return store.sortedQuestions.filter { !store.isAnswered($0) }
+    }
+}
+
+// MARK: - Weather and House Name Extensions
+
+extension NotesServiceProtocol {
+    /// Save current weather summary as a note
+    func saveWeatherSummary(_ weather: Weather) async {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        
+        let weatherSummary = """
+        🌤️ Weather Update - \(formatter.string(from: weather.lastUpdated))
+        
+        Current Conditions:
+        • Temperature: \(weather.temperature.formatted) (feels like \(weather.feelsLike.formatted))
+        • Condition: \(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
+        • Humidity: \(Int(weather.humidity * 100))%
+        • Wind Speed: \(String(format: "%.1f", weather.windSpeed)) m/s
+        • UV Index: \(weather.uvIndex)
+        • Pressure: \(String(format: "%.0f", weather.pressure)) hPa
+        • Visibility: \(String(format: "%.1f", weather.visibility / 1000)) km
+        
+        Today's Forecast:
+        """
+        
+        var fullSummary = weatherSummary
+        
+        // Add daily forecast
+        if let todayForecast = weather.forecast.first {
+            fullSummary += "\n• High: \(todayForecast.highTemperature.formatted)"
+            fullSummary += "\n• Low: \(todayForecast.lowTemperature.formatted)"
+            fullSummary += "\n• Chance of precipitation: \(Int(todayForecast.precipitationChance * 100))%"
+        }
+        
+        // Create a weather question if it doesn't exist
+        let weatherQuestionId = UUID(uuidString: "00000000-0000-0000-0000-000000000001") ?? UUID()
+        let weatherQuestion = Question(
+            id: weatherQuestionId,
+            text: "Current Weather Summary",
+            category: .general,
+            priority: .low,
+            helpText: "Automatically updated weather information"
+        )
+        
+        // Save the weather summary
+        do {
+            try await addQuestion(weatherQuestion)
+        } catch {
+            // Question might already exist, that's okay
+        }
+        
+        try? await saveOrUpdateNote(
+            for: weatherQuestionId,
+            answer: fullSummary,
+            metadata: [
+                "type": "weather_summary",
+                "timestamp": ISO8601DateFormatter().string(from: weather.lastUpdated)
+            ]
+        )
+    }
+    
+    /// Generate and save house name from address
+    func saveHouseName(_ name: String) async {
+        // Create a house name question if it doesn't exist
+        let houseNameQuestionId = UUID(uuidString: "00000000-0000-0000-0000-000000000002") ?? UUID()
+        let houseNameQuestion = Question(
+            id: houseNameQuestionId,
+            text: "What is your house's name?",
+            category: .general,
+            priority: .high,
+            helpText: "A personalized name for your home"
+        )
+        
+        // Save the house name
+        do {
+            try await addQuestion(houseNameQuestion)
+        } catch {
+            // Question might already exist, that's okay
+        }
+        
+        try? await saveOrUpdateNote(
+            for: houseNameQuestionId,
+            answer: name,
+            metadata: [
+                "type": "house_name",
+                "generated": "true"
+            ]
+        )
+    }
+    
+    /// Get saved house name
+    func getHouseName() async -> String? {
+        let houseNameQuestionId = UUID(uuidString: "00000000-0000-0000-0000-000000000002") ?? UUID()
+        if let note = try? await getNote(for: houseNameQuestionId) {
+            return note.answer
+        }
+        return nil
     }
 }
