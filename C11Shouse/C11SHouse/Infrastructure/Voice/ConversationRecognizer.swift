@@ -99,8 +99,7 @@ final class ConversationRecognizer: ObservableObject {
     // MARK: - Setup
     private func setupSpeechRecognizer() {
         isAvailable = speechRecognizer?.isAvailable ?? false
-        print("Conversation recognizer available: \(isAvailable)")
-        print("Conversation recognizer locale: \(speechRecognizer?.locale.identifier ?? "none")")
+        // Recognizer initialized
     }
     
     // MARK: - Authorization
@@ -108,7 +107,7 @@ final class ConversationRecognizer: ObservableObject {
         SFSpeechRecognizer.requestAuthorization { [weak self] status in
             DispatchQueue.main.async {
                 self?.authorizationStatus = status
-                print("Conversation authorization status: \(status)")
+                // Authorization status updated
                 
                 if status != .authorized {
                     self?.error = .notAuthorized
@@ -118,7 +117,7 @@ final class ConversationRecognizer: ObservableObject {
         
         AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
             DispatchQueue.main.async {
-                print("Conversation microphone permission granted: \(granted)")
+                // Microphone permission updated
                 if !granted {
                     self?.error = .microphoneAccessDenied
                 }
@@ -128,7 +127,7 @@ final class ConversationRecognizer: ObservableObject {
     
     // MARK: - Recording Control
     func startRecording() throws {
-        print("=== Starting Conversation Recording ===")
+        // Starting recording
         
         // Reset state
         error = nil
@@ -163,9 +162,9 @@ final class ConversationRecognizer: ObservableObject {
             // Use SAME configuration as working SimpleSpeechRecognizer
             try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
             try audioSession.setActive(true, options: [])
-            print("Conversation audio session configured successfully")
+            // Audio session configured
         } catch {
-            print("Conversation audio session error: \(error)")
+            // Audio session error: \(error)
             throw SpeechRecognitionError.audioEngineError
         }
         
@@ -186,12 +185,10 @@ final class ConversationRecognizer: ObservableObject {
             }
         }
         
-        print("Conversation recognition request configured")
+        // Recognition request configured
         
         // Configure audio engine
         let recordingFormat = inputNode.outputFormat(forBus: 0)
-        print("Conversation audio format: \(recordingFormat)")
-        print("Sample rate: \(recordingFormat.sampleRate), Channels: \(recordingFormat.channelCount)")
         
         // Use the device's native format to avoid format mismatch errors
         // The hardware expects its native format (48000 Hz in this case)
@@ -204,7 +201,7 @@ final class ConversationRecognizer: ObservableObject {
         audioEngine.prepare()
         try audioEngine.start()
         
-        print("Conversation audio engine started successfully")
+        // Audio engine started
         
         // Set recording flag early to prevent race conditions
         isRecording = true
@@ -219,7 +216,7 @@ final class ConversationRecognizer: ObservableObject {
                     // Don't clear transcript if we're terminating and new transcript is empty
                     if !newTranscript.isEmpty || (!self.isTerminating && self.isRecording) {
                         self.transcript = newTranscript
-                        print("Conversation transcript update: '\(self.transcript)'")
+                        // Transcript updated
                     }
                     
                     // Calculate confidence
@@ -248,22 +245,22 @@ final class ConversationRecognizer: ObservableObject {
                         }
                     }
                 } else if nsError.code == 1110 {
-                    print("Conversation: No speech detected yet, continuing...")
+                    // No speech detected yet
                 } else if nsError.code == 1101 {
                     // Silently ignore error 1101 - it's a known issue that doesn't affect operation
                 } else {
-                    print("Conversation recognition cancelled (code: \(nsError.code))")
+                    // Recognition cancelled
                 }
             }
         }
         
-        print("Conversation recording started successfully")
+        // Recording started
     }
     
     func stopRecording() {
         // Prevent multiple simultaneous stop calls
         guard !isTerminating else {
-            print("[ConversationRecognizer] Already terminating, skipping...")
+            // Already terminating
             return
         }
         
@@ -271,18 +268,18 @@ final class ConversationRecognizer: ObservableObject {
         isTerminating = true
         defer { isTerminating = false }
         
-        print("=== Stopping Conversation Recording ===")
+        // Stopping recording
         
         // Step 1: Cancel recognition task first
         if let task = recognitionTask {
-            print("[ConversationRecognizer] Cancelling recognition task...")
+            // Cancelling recognition task
             task.cancel()
             recognitionTask = nil
         }
         
         // Step 2: End audio gracefully
         if let request = recognitionRequest {
-            print("[ConversationRecognizer] Ending audio request...")
+            // Ending audio request
             request.endAudio()
             recognitionRequest = nil
         }
@@ -290,13 +287,13 @@ final class ConversationRecognizer: ObservableObject {
         // Step 3: Stop audio engine on audio queue
         audioEngineQueue.sync {
             if audioEngine.isRunning {
-                print("[ConversationRecognizer] Stopping audio engine...")
+                // Stopping audio engine
                 audioEngine.stop()
             }
             
             // Step 4: Remove tap only if installed
             if audioTapInstalled {
-                print("[ConversationRecognizer] Removing audio tap...")
+                // Removing audio tap
                 inputNode.removeTap(onBus: 0)
                 audioTapInstalled = false
             }
@@ -310,11 +307,11 @@ final class ConversationRecognizer: ObservableObject {
             // Only deactivate if not immediately starting a new recording
             if !self.isRecording {
                 do {
-                    print("[ConversationRecognizer] Deactivating audio session...")
+                    // Deactivating audio session
                     try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-                    print("[ConversationRecognizer] Audio session deactivated")
+                    // Audio session deactivated
                 } catch {
-                    print("[ConversationRecognizer] Error deactivating audio session: \(error)")
+                    // Error deactivating audio session
                     // Non-fatal error, continue
                 }
             }
@@ -334,7 +331,7 @@ final class ConversationRecognizer: ObservableObject {
     }
     
     func reset() {
-        print("[ConversationRecognizer] Resetting...")
+        // Resetting
         
         // Stop recording if active
         if isRecording {
@@ -347,7 +344,7 @@ final class ConversationRecognizer: ObservableObject {
             self?.confidence = 0.0
             self?.error = nil
             self?.currentHouseThought = nil
-            print("[ConversationRecognizer] Reset complete")
+            // Reset complete
         }
     }
     

@@ -119,24 +119,19 @@ struct ContentView: View {
                             }
                         }
                     } else {
-                        // No address set - show prompt
-                        NavigationLink(destination: ConversationView()) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "location.circle.fill")
-                                    .font(.body)
-                                    .foregroundColor(.blue)
-                                Text("Start a conversation to set up your home")
-                                    .font(.caption)
-                                    .foregroundColor(.blue)
-                                Image(systemName: "chevron.right")
-                                    .font(.caption2)
-                                    .foregroundColor(.blue)
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(20)
+                        // No address set - show message
+                        HStack(spacing: 8) {
+                            Image(systemName: "location.circle.fill")
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                            Text("Start a conversation to set up your home")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(Color.secondary.opacity(0.1))
+                        .cornerRadius(20)
                     }
                     
                     Text("Conversations to help manage your house")

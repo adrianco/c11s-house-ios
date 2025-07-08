@@ -126,6 +126,41 @@ struct ConversationView: View {
                     }
                 }
                 
+                // Show action buttons when editing or when transcript has content
+                if isEditing || !persistentTranscript.isEmpty {
+                    HStack {
+                        if isEditing {
+                            Button(action: {
+                                // Cancel editing - restore original text
+                                persistentTranscript = currentSessionStart
+                                isEditing = false
+                            }) {
+                                Text("Cancel")
+                                    .foregroundColor(.red)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
+                        
+                        Spacer()
+                        
+                        if !persistentTranscript.isEmpty && currentQuestion != nil {
+                            Button(action: {
+                                saveAnswer()
+                            }) {
+                                Text("Save")
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.blue)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
+                    }
+                    .padding(.horizontal, 4)
+                }
+                
                 if isEditing {
                     TextEditor(text: $persistentTranscript)
                         .padding(8)
@@ -149,8 +184,8 @@ struct ConversationView: View {
                 }
             }
             
-            // Button row - single row layout
-            HStack(spacing: 12) {
+            // Button row - matching Notes view style
+            HStack(spacing: 16) {
                 Button(action: {
                     if recognizer.isRecording {
                         // Stop recording and finalize the current session
@@ -177,86 +212,82 @@ struct ConversationView: View {
                     }
                 }) {
                     HStack {
-                        Image(systemName: recognizer.isRecording ? "stop.fill" : "mic.fill")
+                        Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                            .imageScale(.large)
                         Text(recognizer.isRecording ? "Stop" : "Start")
                     }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(recognizer.isRecording ? Color.red : Color.blue)
-                    .cornerRadius(10)
+                    .foregroundColor(recognizer.isRecording ? .red : .blue)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
                 }
+                .buttonStyle(BorderlessButtonStyle())
                 .disabled(recognizer.authorizationStatus != .authorized || isEditing)
                     
-                    Button(action: {
+                Spacer()
+                    
+                Button(action: {
                     isEditing.toggle()
                 }) {
                     HStack {
-                        Image(systemName: isEditing ? "checkmark.circle.fill" : "pencil.circle.fill")
-                        Text(isEditing ? "Done" : "Edit")
+                        Image(systemName: "pencil.circle.fill")
+                            .imageScale(.large)
+                        Text("Edit")
                     }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(isEditing ? Color.green : Color.orange)
-                    .cornerRadius(10)
+                    .foregroundColor(.orange)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
                 }
+                .buttonStyle(BorderlessButtonStyle())
                 
-                Button("Reset") {
+                Spacer()
+                
+                Button(action: {
                     recognizer.reset()
                     persistentTranscript = ""
                     currentSessionStart = ""
                     isNewSession = true
+                }) {
+                    HStack {
+                        Image(systemName: "arrow.clockwise.circle.fill")
+                            .imageScale(.large)
+                        Text("Reset")
+                    }
+                    .foregroundColor(.gray)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
                 }
-                .foregroundColor(.white)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Color.gray)
-                .cornerRadius(10)
-                    
-                // Save button removed - saving happens automatically
+                .buttonStyle(BorderlessButtonStyle())
             } // End of button HStack
             } // End of main VStack
         } // End of ScrollView
         .navigationTitle("Conversations")
         .onAppear {
-            print("ConversationView onAppear - muted: \(isMuted), hasLoadedInitialQuestion: \(hasLoadedInitialQuestion)")
-            // Set default thought initially
-            if recognizer.currentHouseThought == nil {
-                recognizer.currentHouseThought = defaultHouseThought
-            }
             // Only load the initial question once
             if !hasLoadedInitialQuestion {
                 hasLoadedInitialQuestion = true
+                // Load question immediately without default thought
                 loadCurrentQuestion()
                 loadUserName()
             }
         }
         .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
-            print("House thought changed - Old: '\(oldValue?.thought ?? "nil")' New: '\(newValue?.thought ?? "nil")' Muted: \(isMuted)")
-            
             // Auto-play TTS when house thought changes (unless muted)
             if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
                 // Skip the initial default thought to avoid duplicate speech
                 if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought.thought {
-                    print("Skipping initial default thought")
                     hasPlayedInitialThought = true
                     return
                 }
                 
                 // Skip speaking during answer saving to prevent conflicts
                 if isSavingAnswer {
-                    print("Skipping TTS during answer save")
                     return
                 }
                 
-                print("Will speak house thought after delay")
                 // Add small delay to ensure audio session is ready
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     speakHouseThought()
                 }
-            } else {
-                print("Not speaking - muted: \(isMuted), newValue: \(newValue != nil), different: \(newValue?.thought != oldValue?.thought)")
             }
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
@@ -297,23 +328,9 @@ struct ConversationView: View {
     }
     
     private func speakHouseThought() {
-        guard !isMuted else { 
-            print("TTS is muted")
-            return 
-        }
-        
-        guard let thought = recognizer.currentHouseThought else { 
-            print("No current house thought to speak")
-            return 
-        }
-        
-        // Check if already speaking to avoid duplicate attempts
-        guard !serviceContainer.ttsService.isSpeaking else {
-            print("TTS is already speaking, skipping")
-            return
-        }
-        
-        print("Speaking house thought: \(thought.thought)")
+        guard !isMuted else { return }
+        guard let thought = recognizer.currentHouseThought else { return }
+        guard !serviceContainer.ttsService.isSpeaking else { return }
         
         Task {
             do {
@@ -327,9 +344,9 @@ struct ConversationView: View {
             } catch {
                 // Only log non-interruption errors
                 if case TTSError.speechInterrupted = error {
-                    print("Speech was interrupted (expected behavior)")
+                    // Expected behavior - speech was interrupted
                 } else {
-                    print("Error speaking house thought: \(error)")
+                    print("Error speaking: \(error)")
                 }
             }
         }
@@ -338,11 +355,9 @@ struct ConversationView: View {
     private func loadCurrentQuestion() {
         // Prevent duplicate loading
         guard !isLoadingQuestion else { 
-            print("Already loading question, skipping")
             return 
         }
         
-        print("Loading current question...")
         isLoadingQuestion = true
         
         Task {
@@ -352,7 +367,6 @@ struct ConversationView: View {
                 let questionsNeedingReview = notesStore.questionsNeedingReview()
                 
                 if let firstQuestion = questionsNeedingReview.first {
-                    print("Found question needing review: \(firstQuestion.text)")
                     
                     // Get the current answer if any
                     let currentNote = notesStore.notes[firstQuestion.id]
@@ -383,7 +397,6 @@ struct ConversationView: View {
                         }
                     }
                 } else {
-                    print("No questions needing review")
                     await MainActor.run {
                         // No more questions - clear the current question
                         currentQuestion = nil
@@ -391,13 +404,12 @@ struct ConversationView: View {
                     }
                 }
             } catch {
-                print("Error loading questions: \(error)")
+                // Error loading questions
             }
             
             // Reset loading flag after a delay to prevent rapid calls
             await MainActor.run {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    print("Resetting isLoadingQuestion flag")
                     isLoadingQuestion = false
                 }
             }
@@ -434,7 +446,6 @@ struct ConversationView: View {
                 
                 // Only save if there's actual content
                 guard !trimmedAnswer.isEmpty else {
-                    print("Skipping save - answer is empty")
                     isSavingAnswer = false
                     return
                 }
@@ -479,7 +490,6 @@ struct ConversationView: View {
     
     private func toggleMute() {
         isMuted.toggle()
-        print("Mute state changed to: \(isMuted) (automatically persisted)")
         
         if isMuted {
             // Stop any current speech when muting
@@ -510,7 +520,6 @@ struct ConversationView: View {
                 recognizer.setQuestionThought(question.text)
             }
         } catch {
-            print("Failed to detect address: \(error)")
             await MainActor.run {
                 // On error, just ask the question normally
                 recognizer.setQuestionThought(question.text)
@@ -530,7 +539,7 @@ struct ConversationView: View {
                 let location = try await serviceContainer.locationService.getCurrentLocation()
                 coordinate = Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
             } catch {
-                print("Could not get coordinates: \(error)")
+                // Could not get coordinates
             }
             
             let street = components[0]
