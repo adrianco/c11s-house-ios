@@ -238,7 +238,7 @@ extension Question {
         Question(
             text: "Is this the right address?",
             category: .houseInfo,
-            displayOrder: 2,
+            displayOrder: 0,  // Make this come first, before name
             isRequired: true,
             hint: "Confirm or edit your detected address"
         )

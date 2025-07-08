@@ -361,12 +361,25 @@ struct ConversationView: View {
                     await MainActor.run {
                         currentQuestion = firstQuestion
                         
-                        // Set the house thought to display the question
-                        if currentAnswer.isEmpty {
+                        // For address question, special handling (check both old and new texts)
+                        if firstQuestion.text == "Is this the right address?" || firstQuestion.text == "What's your home address?" {
+                            if currentAnswer.isEmpty {
+                                // Try to detect the address
+                                Task {
+                                    await detectAndPreloadAddress(for: firstQuestion)
+                                }
+                            } else {
+                                // Pre-populate with existing answer
+                                persistentTranscript = currentAnswer
+                                recognizer.setQuestionThought(firstQuestion.text)
+                            }
+                        } else if currentAnswer.isEmpty {
+                            // No answer yet, just ask the question
                             recognizer.setQuestionThought(firstQuestion.text)
                         } else {
-                            // If there's already an answer, prompt for confirmation
-                            recognizer.setQuestionThought("I have '\(currentAnswer)' for '\(firstQuestion.text)'. Is this still correct?")
+                            // For other questions with answers, pre-populate and ask for confirmation
+                            persistentTranscript = currentAnswer
+                            recognizer.setQuestionThought("\(firstQuestion.text) (Current answer: \(currentAnswer))")
                         }
                     }
                 } else {
@@ -441,6 +454,11 @@ struct ConversationView: View {
                     userName = trimmedAnswer
                 }
                 
+                // If this was the address question, save it properly and generate house name
+                if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+                    await handleAddressSaved(trimmedAnswer)
+                }
+                
                 // Clear the current question
                 currentQuestion = nil
                 persistentTranscript = ""
@@ -466,6 +484,93 @@ struct ConversationView: View {
         if isMuted {
             // Stop any current speech when muting
             serviceContainer.ttsService.stopSpeaking()
+        }
+    }
+    
+    private func detectAndPreloadAddress(for question: Question) async {
+        do {
+            // Check if we have location permission
+            let status = await serviceContainer.locationService.authorizationStatusPublisher.values.first { _ in true } ?? .notDetermined
+            
+            guard status == .authorizedWhenInUse || status == .authorizedAlways else {
+                // No permission, just ask the question
+                await MainActor.run {
+                    recognizer.setQuestionThought(question.text)
+                }
+                return
+            }
+            
+            // Try to detect the address
+            let location = try await serviceContainer.locationService.getCurrentLocation()
+            let address = try await serviceContainer.locationService.lookupAddress(for: location)
+            
+            await MainActor.run {
+                // Pre-populate the transcript with detected address
+                persistentTranscript = address.fullAddress
+                recognizer.setQuestionThought(question.text)
+            }
+        } catch {
+            print("Failed to detect address: \(error)")
+            await MainActor.run {
+                // On error, just ask the question normally
+                recognizer.setQuestionThought(question.text)
+            }
+        }
+    }
+    
+    private func handleAddressSaved(_ addressText: String) async {
+        // Parse the address and save it properly
+        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        
+        if components.count >= 3 {
+            // Try to get coordinates from current location
+            var coordinate = Coordinate(latitude: 0, longitude: 0)
+            
+            do {
+                let location = try await serviceContainer.locationService.getCurrentLocation()
+                coordinate = Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            } catch {
+                print("Could not get coordinates: \(error)")
+            }
+            
+            let street = components[0]
+            let city = components[1]
+            let stateZip = components[2].components(separatedBy: " ")
+            let state = stateZip.first ?? ""
+            let postalCode = stateZip.count > 1 ? stateZip[1] : ""
+            
+            let address = Address(
+                street: street,
+                city: city,
+                state: state,
+                postalCode: postalCode,
+                country: "United States",
+                coordinate: coordinate
+            )
+            
+            // Save to UserDefaults and LocationService
+            if let encoded = try? JSONEncoder().encode(address) {
+                UserDefaults.standard.set(encoded, forKey: "confirmedHomeAddress")
+            }
+            
+            do {
+                try await serviceContainer.locationService.confirmAddress(address)
+            } catch {
+                print("Error confirming address: \(error)")
+            }
+            
+            // Generate and save house name
+            let streetName = street
+                .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
+                .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#, 
+                                    with: "", 
+                                    options: [.regularExpression, .caseInsensitive])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            if !streetName.isEmpty {
+                let houseName = "\(streetName) House"
+                await serviceContainer.notesService.saveHouseName(houseName)
+            }
         }
     }
     
