@@ -20,6 +20,11 @@
  *   - Thread-safe audio level updates via main queue dispatch
  *   - Error handling with descriptive TranscriptionError types
  *
+ * - 2025-01-09: Swift 6 concurrency fixes
+ *   - Made class final and added @unchecked Sendable conformance
+ *   - Replaced DispatchQueue.main.async with Task { @MainActor } for Swift 6 compliance
+ *   - Fixed capture of non-sendable types in @Sendable closures
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -36,7 +41,7 @@ import AVFoundation
 import Combine
 
 /// Concrete implementation of AudioRecorderService using AVAudioEngine
-class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
+final class AudioRecorderServiceImpl: NSObject, AudioRecorderService, @unchecked Sendable {
     
     // MARK: - Published Properties
     
@@ -134,7 +139,7 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
         
         do {
             try audioEngine.start()
-            DispatchQueue.main.async { [weak self] in
+            Task { @MainActor [weak self] in
                 self?.isRecordingSubject.send(true)
             }
         } catch {
@@ -151,7 +156,7 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
         // Stop recording
         audioEngine.stop()
         inputNode?.removeTap(onBus: 0)
-        DispatchQueue.main.async { [weak self] in
+        Task { @MainActor [weak self] in
             self?.isRecordingSubject.send(false)
             self?.audioLevelSubject.send(.silent)
         }
@@ -183,7 +188,7 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
         }
         
         inputNode?.removeTap(onBus: 0)
-        DispatchQueue.main.async { [weak self] in
+        Task { @MainActor [weak self] in
             self?.isRecordingSubject.send(false)
             self?.audioLevelSubject.send(.silent)
         }
@@ -243,7 +248,7 @@ class AudioRecorderServiceImpl: NSObject, AudioRecorderService {
             averageLevel: averageLevel
         )
         
-        DispatchQueue.main.async { [weak self] in
+        Task { @MainActor [weak self] in
             self?.audioLevelSubject.send(audioLevel)
         }
     }

@@ -18,6 +18,11 @@
  *   - Pre-utterance delay for natural speech flow
  *   - Progress tracking for UI feedback
  *
+ * - 2025-01-09: Swift 6 concurrency fixes
+ *   - Made class final and added @unchecked Sendable conformance
+ *   - Replaced DispatchQueue.main.async with Task { @MainActor } for Swift 6 compliance
+ *   - Fixed capture of non-sendable AVSpeechUtterance in @Sendable closure
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -53,7 +58,7 @@ struct TTSConfiguration {
 }
 
 /// Concrete implementation of TTSService using AVSpeechSynthesizer
-class TTSServiceImpl: NSObject, TTSService {
+final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
     
     // MARK: - Published Properties
     
@@ -148,7 +153,7 @@ class TTSServiceImpl: NSObject, TTSService {
             self.speechContinuation = continuation
             
             // Start speaking
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.isSpeaking = true
                 self.speechProgress = 0.0
                 self.synthesizer.speak(utterance)
