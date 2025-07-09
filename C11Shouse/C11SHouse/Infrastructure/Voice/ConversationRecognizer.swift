@@ -24,6 +24,9 @@
  *   - Maintained all error handling and stability improvements
  *   - Updated logging prefixes for clarity
  *
+ * - 2025-01-09: Swift 6 concurrency fixes
+ *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -36,7 +39,7 @@
 //
 
 import Foundation
-import Speech
+@preconcurrency import Speech
 import AVFoundation
 
 /// Speech recognizer optimized for conversational interactions

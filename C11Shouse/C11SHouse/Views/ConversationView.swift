@@ -36,6 +36,8 @@
  *   - Integrated HouseThoughtsView above transcript display
  *   - Provides interactive Q&A interface for house consciousness
  *   - First question: "What's your name?" for personalization
+ * - 2025-01-09: Swift 6 concurrency fixes
+ *   - Added @preconcurrency to Speech import to suppress Sendable warnings
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -49,7 +51,7 @@
 //
 
 import SwiftUI
-import Speech
+@preconcurrency import Speech
 
 struct ConversationView: View {
     @StateObject private var recognizer = ConversationRecognizer()

@@ -22,6 +22,9 @@
  *   - 20-second timeout for on-device (shorter due to local processing)
  *   - Automatic cleanup of temporary files in defer blocks
  *
+ * - 2025-01-09: Swift 6 concurrency fixes
+ *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -34,7 +37,7 @@
 //
 
 import Foundation
-import Speech
+@preconcurrency import Speech
 import AVFoundation
 
 /// Concrete implementation of TranscriptionService using Apple's Speech framework

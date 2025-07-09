@@ -26,6 +26,7 @@
  *   - Removed withCheckedContinuation wrapper for cleaner async code
  *   - Fixed recordPermission property access to use AVAudioSession.sharedInstance()
  *   - Use fully qualified enum cases (AVAudioSession.RecordPermission.*) to avoid deprecation warnings
+ *   - Added @preconcurrency to Speech import to suppress Sendable warnings
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -42,7 +43,7 @@
 import Foundation
 import AVFoundation
 import AVFAudio
-import Speech
+@preconcurrency import Speech
 import Combine
 import UIKit
 
