@@ -133,7 +133,7 @@ struct ConversationView: View {
                 }
                 
                 // Action buttons - always visible above text box
-                HStack(spacing: 16) {
+                HStack(spacing: 8) {
                     // Talk/Stop button
                     Button(action: {
                         if recognizer.isRecording {
@@ -160,14 +160,15 @@ struct ConversationView: View {
                             recognizer.toggleRecording()
                         }
                     }) {
-                        HStack {
+                        HStack(spacing: 4) {
                             Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                .imageScale(.large)
+                                .imageScale(.medium)
                             Text(recognizer.isRecording ? "Stop" : "Talk")
+                                .font(.caption)
                         }
                         .foregroundColor(recognizer.isRecording ? .red : .blue)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     .disabled(recognizer.authorizationStatus != .authorized || isEditing)
@@ -180,10 +181,11 @@ struct ConversationView: View {
                             saveAnswer()
                         }) {
                             Text("Save")
+                                .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.blue)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 3)
                         }
                         .buttonStyle(BorderlessButtonStyle())
                         
@@ -194,14 +196,15 @@ struct ConversationView: View {
                     Button(action: {
                         isEditing.toggle()
                     }) {
-                        HStack {
+                        HStack(spacing: 4) {
                             Image(systemName: "pencil.circle.fill")
-                                .imageScale(.large)
+                                .imageScale(.medium)
                             Text("Edit")
+                                .font(.caption)
                         }
                         .foregroundColor(.orange)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     
@@ -214,19 +217,20 @@ struct ConversationView: View {
                         currentSessionStart = ""
                         isNewSession = true
                     }) {
-                        HStack {
+                        HStack(spacing: 4) {
                             Image(systemName: "arrow.clockwise.circle.fill")
-                                .imageScale(.large)
+                                .imageScale(.medium)
                             Text("Clear")
+                                .font(.caption)
                         }
                         .foregroundColor(.gray)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }
                 .padding(.horizontal, 4)
-                .padding(.bottom, 8)
+                .padding(.bottom, 6)
                 
                 if isEditing {
                     TextEditor(text: $persistentTranscript)
@@ -378,6 +382,26 @@ struct ConversationView: View {
                                 // Try to detect the address
                                 Task {
                                     await detectAndPreloadAddress(for: firstQuestion)
+                                }
+                            } else {
+                                // Pre-populate with existing answer
+                                persistentTranscript = currentAnswer
+                                recognizer.setQuestionThought(firstQuestion.text)
+                            }
+                        } else if firstQuestion.text == "What should I call this house?" {
+                            // For house name question, suggest a default based on address
+                            if currentAnswer.isEmpty {
+                                // Check if we have an address to generate a suggestion
+                                if let addressNote = notesStore.notes.values.first(where: { 
+                                    notesStore.questions.first(where: { $0.id == $1.questionId })?.text == "Is this the right address?" 
+                                }), !addressNote.answer.isEmpty {
+                                    // Generate suggested house name from address
+                                    let suggestedName = generateHouseNameSuggestion(from: addressNote.answer)
+                                    persistentTranscript = suggestedName
+                                    recognizer.setQuestionThought(firstQuestion.text)
+                                } else {
+                                    // No address yet, just ask the question
+                                    recognizer.setQuestionThought(firstQuestion.text)
                                 }
                             } else {
                                 // Pre-populate with existing answer
@@ -573,6 +597,27 @@ struct ConversationView: View {
                 print("Error confirming address: \(error)")
             }
         }
+    }
+    
+    private func generateHouseNameSuggestion(from addressText: String) -> String {
+        // Parse the address to extract street name
+        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        
+        if let street = components.first {
+            let streetName = street
+                .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
+                .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#, 
+                                    with: "", 
+                                    options: [.regularExpression, .caseInsensitive])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            if !streetName.isEmpty {
+                return "\(streetName) House"
+            }
+        }
+        
+        // If we can't extract a street name, return a generic suggestion
+        return "My House"
     }
     
 }
