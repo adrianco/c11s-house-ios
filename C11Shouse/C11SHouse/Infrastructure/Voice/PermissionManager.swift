@@ -46,7 +46,7 @@ public final class PermissionManager: ObservableObject {
     // MARK: - Published Properties
     
     /// Current microphone permission status
-    @Published public private(set) var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+    @Published public private(set) var microphonePermissionStatus: AVAudioApplication.RecordPermission = .undetermined
     
     /// Current speech recognition permission status
     @Published public private(set) var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
@@ -83,31 +83,16 @@ public final class PermissionManager: ObservableObject {
     
     /// Request microphone permission
     public func requestMicrophonePermission() async {
-        let currentPermission: AVAudioSession.RecordPermission
-        if #available(iOS 17.0, *) {
-            currentPermission = AVAudioApplication.shared.recordPermission
-        } else {
-            currentPermission = AVAudioSession.sharedInstance().recordPermission
-        }
+        let currentPermission = AVAudioApplication.shared.recordPermission
         
         switch currentPermission {
         case .undetermined:
             await withCheckedContinuation { continuation in
-                if #available(iOS 17.0, *) {
-                    AVAudioApplication.requestRecordPermission { [weak self] granted in
-                        Task { @MainActor in
-                            self?.microphonePermissionStatus = granted ? .granted : .denied
-                            self?.updateAllPermissionsStatus()
-                            continuation.resume()
-                        }
-                    }
-                } else {
-                    AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
-                        Task { @MainActor in
-                            self?.microphonePermissionStatus = granted ? .granted : .denied
-                            self?.updateAllPermissionsStatus()
-                            continuation.resume()
-                        }
+                AVAudioApplication.requestRecordPermission { [weak self] granted in
+                    Task { @MainActor in
+                        self?.microphonePermissionStatus = granted ? .granted : .denied
+                        self?.updateAllPermissionsStatus()
+                        continuation.resume()
                     }
                 }
             }
@@ -181,11 +166,7 @@ public final class PermissionManager: ObservableObject {
     }
     
     private func checkCurrentPermissions() {
-        if #available(iOS 17.0, *) {
-            microphonePermissionStatus = AVAudioApplication.shared.recordPermission
-        } else {
-            microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
-        }
+        microphonePermissionStatus = AVAudioApplication.shared.recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         updateAllPermissionsStatus()
     }

@@ -1,5 +1,8 @@
 # Claude Code Configuration for Claude Flow
 
+## 📱 iOS Version Support
+**IMPORTANT**: This project targets iOS 18.0 and later only. All backward compatibility code for earlier iOS versions should be removed.
+
 ## 🚀 IMPORTANT: Claude Flow AI-Driven Development
 
 ### Claude Code Handles:

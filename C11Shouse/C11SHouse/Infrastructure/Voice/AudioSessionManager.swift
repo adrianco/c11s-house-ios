@@ -122,19 +122,10 @@ final class AudioSessionManager: NSObject, ObservableObject {
     @discardableResult
     func requestRecordingPermission() async -> Bool {
         await withCheckedContinuation { continuation in
-            if #available(iOS 17.0, *) {
-                AVAudioApplication.requestRecordPermission { [weak self] granted in
-                    Task { @MainActor in
-                        self?.hasRecordingPermission = granted
-                        continuation.resume(returning: granted)
-                    }
-                }
-            } else {
-                audioSession.requestRecordPermission { [weak self] granted in
-                    Task { @MainActor in
-                        self?.hasRecordingPermission = granted
-                        continuation.resume(returning: granted)
-                    }
+            AVAudioApplication.requestRecordPermission { [weak self] granted in
+                Task { @MainActor in
+                    self?.hasRecordingPermission = granted
+                    continuation.resume(returning: granted)
                 }
             }
         }
@@ -172,24 +163,13 @@ final class AudioSessionManager: NSObject, ObservableObject {
     
     /// Checks the current recording permission status
     private func checkRecordingPermission() {
-        if #available(iOS 17.0, *) {
-            switch AVAudioApplication.shared.recordPermission {
-            case .granted:
-                hasRecordingPermission = true
-            case .denied, .undetermined:
-                hasRecordingPermission = false
-            @unknown default:
-                hasRecordingPermission = false
-            }
-        } else {
-            switch audioSession.recordPermission {
-            case .granted:
-                hasRecordingPermission = true
-            case .denied, .undetermined:
-                hasRecordingPermission = false
-            @unknown default:
-                hasRecordingPermission = false
-            }
+        switch AVAudioApplication.shared.recordPermission {
+        case .granted:
+            hasRecordingPermission = true
+        case .denied, .undetermined:
+            hasRecordingPermission = false
+        @unknown default:
+            hasRecordingPermission = false
         }
     }
     
