@@ -256,11 +256,36 @@ class NotesServiceImpl: NotesServiceProtocol {
     }
     
     private func migrateStore(_ store: NotesStoreData) throws -> NotesStoreData {
-        // Handle future migrations based on version
-        // For now, just update the version
+        var migratedQuestions = store.questions
+        var migratedNotes = store.notes
+        
+        // Migrate old house name question to new one
+        let oldHouseNameQuestionId = UUID(uuidString: "00000000-0000-0000-0000-000000000002") ?? UUID()
+        
+        // Check if we have the old question
+        if let oldQuestionIndex = migratedQuestions.firstIndex(where: { $0.text == "What is your house's name?" }) {
+            // Find the new question
+            if let newQuestion = migratedQuestions.first(where: { $0.text == "What should I call this house?" }) {
+                // Transfer the note from old to new if it exists
+                if let oldNote = migratedNotes[oldHouseNameQuestionId] {
+                    migratedNotes[newQuestion.id] = Note(
+                        questionId: newQuestion.id,
+                        answer: oldNote.answer,
+                        createdAt: oldNote.createdAt,
+                        lastModified: oldNote.lastModified,
+                        metadata: oldNote.metadata
+                    )
+                }
+                // Remove the old note
+                migratedNotes.removeValue(forKey: oldHouseNameQuestionId)
+            }
+            // Remove the old question
+            migratedQuestions.remove(at: oldQuestionIndex)
+        }
+        
         return NotesStoreData(
-            questions: store.questions,
-            notes: store.notes,
+            questions: migratedQuestions,
+            notes: migratedNotes,
             version: currentVersion
         )
     }
@@ -397,38 +422,27 @@ extension NotesServiceProtocol {
     
     /// Generate and save house name from address
     func saveHouseName(_ name: String) async {
-        // Create a house name question if it doesn't exist
-        let houseNameQuestionId = UUID(uuidString: "00000000-0000-0000-0000-000000000002") ?? UUID()
-        let houseNameQuestion = Question(
-            id: houseNameQuestionId,
-            text: "What is your house's name?",
-            category: .houseInfo,
-            displayOrder: 1,
-            isRequired: true,
-            hint: "A personalized name for your home"
-        )
-        
-        // Save the house name
-        do {
-            try await addQuestion(houseNameQuestion)
-        } catch {
-            // Question might already exist, that's okay
+        // Find the house name question from predefined questions
+        let notesStore = try? await loadNotesStore()
+        if let houseNameQuestion = notesStore?.questions.first(where: { $0.text == "What should I call this house?" }) {
+            try? await saveOrUpdateNote(
+                for: houseNameQuestion.id,
+                answer: name,
+                metadata: [
+                    "type": "house_name",
+                    "updated_via_conversation": "true"
+                ]
+            )
         }
-        
-        try? await saveOrUpdateNote(
-            for: houseNameQuestionId,
-            answer: name,
-            metadata: [
-                "type": "house_name",
-                "generated": "true"
-            ]
-        )
     }
     
     /// Get saved house name
     func getHouseName() async -> String? {
-        let houseNameQuestionId = UUID(uuidString: "00000000-0000-0000-0000-000000000002") ?? UUID()
-        if let note = try? await getNote(for: houseNameQuestionId) {
+        // Find the house name question from predefined questions
+        let notesStore = try? await loadNotesStore()
+        if let houseNameQuestion = notesStore?.questions.first(where: { $0.text == "What should I call this house?" }),
+           let note = notesStore?.notes[houseNameQuestion.id],
+           !note.answer.isEmpty {
             return note.answer
         }
         return nil
