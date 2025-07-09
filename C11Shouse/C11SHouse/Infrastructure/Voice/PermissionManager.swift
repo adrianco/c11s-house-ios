@@ -21,9 +21,10 @@
  *   - Extension methods for convenience boolean checks
  *
  * - 2025-01-09: iOS 18+ migration and Swift 6 concurrency fixes
- *   - Fixed AVAudioApplication.RecordPermission type (kept as AVAudioSession.RecordPermission)
+ *   - Migrated from AVAudioSession.RecordPermission to AVAudioApplication.RecordPermission
  *   - Updated requestRecordPermission to use async/await API
  *   - Removed withCheckedContinuation wrapper for cleaner async code
+ *   - Fixed deprecated enum case usage with explicit AVAudioApplication.RecordPermission.undetermined
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -51,7 +52,7 @@ public final class PermissionManager: ObservableObject {
     // MARK: - Published Properties
     
     /// Current microphone permission status
-    @Published public private(set) var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+    @Published public private(set) var microphonePermissionStatus: AVAudioApplication.RecordPermission = AVAudioApplication.RecordPermission.undetermined
     
     /// Current speech recognition permission status
     @Published public private(set) var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
