@@ -25,6 +25,7 @@
  *   - Updated requestRecordPermission to use AVAudioApplication async/await API
  *   - Removed withCheckedContinuation wrapper for cleaner async code
  *   - Fixed recordPermission property access to use AVAudioSession.sharedInstance()
+ *   - Use fully qualified enum cases (AVAudioSession.RecordPermission.*) to avoid deprecation warnings
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -52,7 +53,7 @@ public final class PermissionManager: ObservableObject {
     // MARK: - Published Properties
     
     /// Current microphone permission status
-    @Published public private(set) var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+    @Published public private(set) var microphonePermissionStatus: AVAudioSession.RecordPermission = AVAudioSession.RecordPermission.undetermined
     
     /// Current speech recognition permission status
     @Published public private(set) var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
@@ -92,17 +93,17 @@ public final class PermissionManager: ObservableObject {
         let currentPermission = AVAudioSession.sharedInstance().recordPermission
         
         switch currentPermission {
-        case .undetermined:
+        case AVAudioSession.RecordPermission.undetermined:
             let granted = await AVAudioApplication.requestRecordPermission()
-            microphonePermissionStatus = granted ? .granted : .denied
+            microphonePermissionStatus = granted ? AVAudioSession.RecordPermission.granted : AVAudioSession.RecordPermission.denied
             updateAllPermissionsStatus()
-        case .denied:
-            microphonePermissionStatus = .denied
+        case AVAudioSession.RecordPermission.denied:
+            microphonePermissionStatus = AVAudioSession.RecordPermission.denied
             permissionError = "Microphone access denied. Please enable it in Settings."
-        case .granted:
-            microphonePermissionStatus = .granted
+        case AVAudioSession.RecordPermission.granted:
+            microphonePermissionStatus = AVAudioSession.RecordPermission.granted
         @unknown default:
-            microphonePermissionStatus = .denied
+            microphonePermissionStatus = AVAudioSession.RecordPermission.denied
         }
         updateAllPermissionsStatus()
     }
@@ -172,7 +173,7 @@ public final class PermissionManager: ObservableObject {
     }
     
     private func updateAllPermissionsStatus() {
-        allPermissionsGranted = microphonePermissionStatus == .granted &&
+        allPermissionsGranted = microphonePermissionStatus == AVAudioSession.RecordPermission.granted &&
                                speechRecognitionPermissionStatus == .authorized
         
         // Clear error if all permissions are granted
@@ -195,7 +196,7 @@ public enum PermissionType {
 extension PermissionManager {
     /// Convenience computed properties for permission status
     public var isMicrophoneGranted: Bool {
-        microphonePermissionStatus == .granted
+        microphonePermissionStatus == AVAudioSession.RecordPermission.granted
     }
     
     public var isSpeechRecognitionGranted: Bool {
@@ -205,11 +206,11 @@ extension PermissionManager {
     /// Human-readable permission status descriptions
     public var microphoneStatusDescription: String {
         switch microphonePermissionStatus {
-        case .undetermined:
+        case AVAudioSession.RecordPermission.undetermined:
             return "Not requested"
-        case .denied:
+        case AVAudioSession.RecordPermission.denied:
             return "Denied"
-        case .granted:
+        case AVAudioSession.RecordPermission.granted:
             return "Granted"
         @unknown default:
             return "Unknown"

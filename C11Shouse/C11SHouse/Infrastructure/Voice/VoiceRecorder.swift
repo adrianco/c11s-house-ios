@@ -246,7 +246,7 @@ final class VoiceRecorder: ObservableObject {
     
     /// Checks current permission status
     private func checkPermission() {
-        hasPermission = AVAudioApplication.shared.recordPermission == .granted
+        hasPermission = AVAudioSession.sharedInstance().recordPermission == .granted
     }
     
     /// Generates a unique recording URL
