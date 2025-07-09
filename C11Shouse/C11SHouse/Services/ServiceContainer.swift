@@ -73,6 +73,21 @@ class ServiceContainer: ObservableObject {
     
     private(set) var configuration = TranscriptionConfiguration.default
     
+    // MARK: - Coordinators
+    
+    private(set) lazy var questionFlowCoordinator: QuestionFlowCoordinator = {
+        QuestionFlowCoordinator(notesService: notesService)
+    }()
+    
+    private(set) lazy var addressManager: AddressManager = {
+        AddressManager(notesService: notesService, locationService: locationService)
+    }()
+    
+    @MainActor
+    private(set) lazy var conversationStateManager: ConversationStateManager = {
+        ConversationStateManager(notesService: notesService, ttsService: ttsService)
+    }()
+    
     // MARK: - Factory Methods
     
     /// Create a new VoiceTranscriptionViewModel with injected dependencies

@@ -53,19 +53,20 @@ import Speech
 
 struct ConversationView: View {
     @StateObject private var recognizer = ConversationRecognizer()
-    @State private var persistentTranscript = ""
-    @State private var isEditing = false
-    @State private var currentSessionStart = ""
-    @State private var isNewSession = true
-    @State private var currentQuestion: Question?
-    @State private var userName: String = ""
+    @StateObject private var stateManager: ConversationStateManager
+    @StateObject private var questionFlow: QuestionFlowCoordinator
+    @StateObject private var addressManager: AddressManager
     @AppStorage("conversationViewMuted") private var isMuted = false
-    @State private var hasPlayedInitialThought = false
-    @State private var isLoadingQuestion = false
-    @State private var isSavingAnswer = false
     @State private var hasLoadedInitialQuestion = false
     @State private var isInitializing = true
     @EnvironmentObject private var serviceContainer: ServiceContainer
+    
+    init() {
+        let container = ServiceContainer.shared
+        _stateManager = StateObject(wrappedValue: container.conversationStateManager)
+        _questionFlow = StateObject(wrappedValue: container.questionFlowCoordinator)
+        _addressManager = StateObject(wrappedValue: container.addressManager)
+    }
     
     // Default house thought when no question is active
     private var defaultHouseThought: HouseThought? {
@@ -121,7 +122,7 @@ struct ConversationView: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    Text(userName.isEmpty ? "Real-time Transcript:" : "\(userName)'s Response:")
+                    Text(stateManager.getTranscriptHeader())
                         .font(.headline)
                     
                     if recognizer.confidence > 0 {
@@ -139,10 +140,10 @@ struct ConversationView: View {
                         if recognizer.isRecording {
                             // Stop recording and finalize the current session
                             recognizer.toggleRecording()
-                            isNewSession = true
+                            stateManager.isNewSession = true
                             
                             // If we have a transcript and a current question, save the answer
-                            if !recognizer.transcript.isEmpty && currentQuestion != nil {
+                            if !recognizer.transcript.isEmpty && questionFlow.currentQuestion != nil {
                                 saveAnswer()
                                 // Don't generate a generic thought when we're answering questions
                             } else if !recognizer.transcript.isEmpty {
@@ -151,11 +152,10 @@ struct ConversationView: View {
                             }
                         } else {
                             // Stop any ongoing TTS before starting new recording
-                            serviceContainer.ttsService.stopSpeaking()
+                            stateManager.stopSpeaking()
                             
                             // Mark the start of a new recording session
-                            currentSessionStart = persistentTranscript
-                            isNewSession = true
+                            stateManager.startNewRecordingSession()
                             recognizer.transcript = ""
                             recognizer.toggleRecording()
                         }
@@ -171,12 +171,12 @@ struct ConversationView: View {
                         .padding(.vertical, 3)
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    .disabled(recognizer.authorizationStatus != .authorized || isEditing)
+                    .disabled(recognizer.authorizationStatus != .authorized || stateManager.isEditing)
                     
                     Spacer()
                     
                     // Save button - only visible when there's text and a question
-                    if !persistentTranscript.isEmpty && currentQuestion != nil {
+                    if !stateManager.persistentTranscript.isEmpty && questionFlow.currentQuestion != nil {
                         Button(action: {
                             saveAnswer()
                         }) {
@@ -194,7 +194,7 @@ struct ConversationView: View {
                     
                     // Edit button
                     Button(action: {
-                        isEditing.toggle()
+                        stateManager.toggleEditing()
                     }) {
                         HStack(spacing: 4) {
                             Image(systemName: "pencil.circle.fill")
@@ -213,9 +213,7 @@ struct ConversationView: View {
                     // Clear button
                     Button(action: {
                         recognizer.reset()
-                        persistentTranscript = ""
-                        currentSessionStart = ""
-                        isNewSession = true
+                        stateManager.clearTranscript()
                     }) {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.clockwise.circle.fill")
@@ -232,8 +230,8 @@ struct ConversationView: View {
                 .padding(.horizontal, 4)
                 .padding(.bottom, 6)
                 
-                if isEditing {
-                    TextEditor(text: $persistentTranscript)
+                if stateManager.isEditing {
+                    TextEditor(text: $stateManager.persistentTranscript)
                         .padding(8)
                         .frame(minHeight: 150)
                         .background(Color.gray.opacity(0.1))
@@ -244,7 +242,7 @@ struct ConversationView: View {
                         )
                 } else {
                     ScrollView {
-                        Text(persistentTranscript.isEmpty ? "Say something..." : persistentTranscript)
+                        Text(stateManager.persistentTranscript.isEmpty ? "Say something..." : stateManager.persistentTranscript)
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -262,21 +260,23 @@ struct ConversationView: View {
             if !hasLoadedInitialQuestion {
                 hasLoadedInitialQuestion = true
                 // Load question immediately without default thought
-                loadCurrentQuestion()
-                loadUserName()
+                Task {
+                    await questionFlow.loadNextQuestion()
+                    await stateManager.loadUserName()
+                }
             }
         }
         .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
             // Auto-play TTS when house thought changes (unless muted)
             if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
                 // Skip the initial default thought to avoid duplicate speech
-                if !hasPlayedInitialThought && newValue?.thought == defaultHouseThought?.thought {
-                    hasPlayedInitialThought = true
+                if !stateManager.hasPlayedInitialThought && newValue?.thought == defaultHouseThought?.thought {
+                    stateManager.hasPlayedInitialThought = true
                     return
                 }
                 
                 // Skip speaking during answer saving to prevent conflicts
-                if isSavingAnswer {
+                if stateManager.isSavingAnswer {
                     return
                 }
                 
@@ -289,18 +289,13 @@ struct ConversationView: View {
         .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Handle incremental speech recognition updates
             if !newValue.isEmpty {
-                if isNewSession {
-                    // First update in a new session - add space if needed
-                    if !currentSessionStart.isEmpty {
-                        persistentTranscript = currentSessionStart + " " + newValue
-                    } else {
-                        persistentTranscript = newValue
-                    }
-                    isNewSession = false
-                } else {
-                    // Subsequent update - replace from session start
-                    persistentTranscript = currentSessionStart + (currentSessionStart.isEmpty ? "" : " ") + newValue
-                }
+                stateManager.updateTranscript(with: newValue)
+            }
+        }
+        .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
+            // Handle question changes
+            Task {
+                await handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue)
             }
         }
         .onDisappear {
@@ -309,7 +304,7 @@ struct ConversationView: View {
                 recognizer.stopRecording()
             }
             // Stop any ongoing TTS
-            serviceContainer.ttsService.stopSpeaking()
+            stateManager.stopSpeaking()
         }
     }
     
@@ -326,172 +321,99 @@ struct ConversationView: View {
     private func speakHouseThought() {
         guard !isMuted else { return }
         guard let thought = recognizer.currentHouseThought else { return }
-        guard !serviceContainer.ttsService.isSpeaking else { return }
         
         Task {
-            do {
-                // Speak the thought
-                try await serviceContainer.ttsService.speak(thought.thought, language: nil)
-                
-                // Optionally speak the suggestion too
-                if let suggestion = thought.suggestion {
-                    try await serviceContainer.ttsService.speak(suggestion, language: nil)
-                }
-            } catch {
-                // Only log non-interruption errors
-                if case TTSError.speechInterrupted = error {
-                    // Expected behavior - speech was interrupted
-                } else {
-                    print("Error speaking: \(error)")
-                }
-            }
-        }
-    }
-    
-    private func loadCurrentQuestion() {
-        // Prevent duplicate loading
-        guard !isLoadingQuestion else { 
-            return 
-        }
-        
-        isLoadingQuestion = true
-        
-        Task {
-            do {
-                // Get questions that need review (required questions first)
-                let notesStore = try await serviceContainer.notesService.loadNotesStore()
-                let questionsNeedingReview = notesStore.questionsNeedingReview()
-                
-                // Mark initialization as complete once we've checked for questions
-                await MainActor.run {
-                    isInitializing = false
-                }
-                
-                if let firstQuestion = questionsNeedingReview.first {
-                    
-                    // Get the current answer if any
-                    let currentNote = notesStore.notes[firstQuestion.id]
-                    let currentAnswer = currentNote?.answer ?? ""
-                    
-                    await MainActor.run {
-                        currentQuestion = firstQuestion
-                        
-                        // For address question, special handling (check both old and new texts)
-                        if firstQuestion.text == "Is this the right address?" || firstQuestion.text == "What's your home address?" {
-                            if currentAnswer.isEmpty {
-                                // Try to detect the address
-                                Task {
-                                    await detectAndPreloadAddress(for: firstQuestion)
-                                }
-                            } else {
-                                // Pre-populate with existing answer
-                                persistentTranscript = currentAnswer
-                                recognizer.setQuestionThought(firstQuestion.text)
-                            }
-                        } else if firstQuestion.text == "What should I call this house?" {
-                            // For house name question, suggest a default based on address
-                            if currentAnswer.isEmpty {
-                                // Check if we have an address to generate a suggestion
-                                if let addressQuestion = notesStore.questions.first(where: { $0.text == "Is this the right address?" }),
-                                   let addressNote = notesStore.notes[addressQuestion.id],
-                                   !addressNote.answer.isEmpty {
-                                    // Generate suggested house name from address
-                                    let suggestedName = generateHouseNameSuggestion(from: addressNote.answer)
-                                    persistentTranscript = suggestedName
-                                    recognizer.setQuestionThought(firstQuestion.text)
-                                } else {
-                                    // No address yet, just ask the question
-                                    recognizer.setQuestionThought(firstQuestion.text)
-                                }
-                            } else {
-                                // Pre-populate with existing answer
-                                persistentTranscript = currentAnswer
-                                recognizer.setQuestionThought(firstQuestion.text)
-                            }
-                        } else if currentAnswer.isEmpty {
-                            // No answer yet, just ask the question
-                            recognizer.setQuestionThought(firstQuestion.text)
-                        } else {
-                            // For other questions with answers, pre-populate and ask for confirmation
-                            persistentTranscript = currentAnswer
-                            recognizer.setQuestionThought("\(firstQuestion.text) (Current answer: \(currentAnswer))")
-                        }
-                    }
-                } else {
-                    await MainActor.run {
-                        // No more questions - clear the current question
-                        currentQuestion = nil
-                        recognizer.setThankYouThought()
-                        
-                        // Post notification that all questions are complete
-                        NotificationCenter.default.post(name: Notification.Name("AllQuestionsComplete"), object: nil)
-                    }
-                }
-            } catch {
-                // Error loading questions
-            }
+            await stateManager.speak(thought.thought, isMuted: isMuted)
             
-            // Reset loading flag after a delay to prevent rapid calls
-            await MainActor.run {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    isLoadingQuestion = false
-                }
+            // Optionally speak the suggestion too
+            if let suggestion = thought.suggestion {
+                await stateManager.speak(suggestion, isMuted: isMuted)
             }
         }
     }
     
-    private func loadUserName() {
-        Task {
-            do {
-                // Try to load the user's name if already saved
-                let questions = try await serviceContainer.notesService.loadNotesStore().questions
-                if let nameQuestion = questions.first(where: { $0.text == "What's your name?" }),
-                   let note = try await serviceContainer.notesService.getNote(for: nameQuestion.id),
-                   !note.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    userName = note.answer.trimmingCharacters(in: .whitespacesAndNewlines)
-                }
-            } catch {
-                print("Error loading user name: \(error)")
+    private func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?) async {
+        guard let question = newQuestion else {
+            // No more questions
+            if questionFlow.hasCompletedAllQuestions {
+                recognizer.setThankYouThought()
             }
+            return
+        }
+        
+        // Mark initialization as complete
+        isInitializing = false
+        
+        // Get current answer if any
+        let currentAnswer = await questionFlow.getCurrentAnswer(for: question) ?? ""
+        
+        // Handle different question types
+        if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+            if currentAnswer.isEmpty {
+                // Try to detect the address
+                do {
+                    let detected = try await addressManager.detectCurrentAddress()
+                    stateManager.persistentTranscript = detected.fullAddress
+                    recognizer.setQuestionThought(question.text)
+                } catch {
+                    recognizer.setQuestionThought(question.text)
+                }
+            } else {
+                // Pre-populate with existing answer
+                stateManager.persistentTranscript = currentAnswer
+                recognizer.setQuestionThought(question.text)
+            }
+        } else if question.text == "What should I call this house?" {
+            if currentAnswer.isEmpty {
+                // Generate suggestion from address if available
+                if let addressAnswer = await questionFlow.getAnswer(for: "Is this the right address?"),
+                   !addressAnswer.isEmpty {
+                    let suggestedName = addressManager.generateHouseName(from: addressAnswer)
+                    stateManager.persistentTranscript = suggestedName
+                }
+            } else {
+                stateManager.persistentTranscript = currentAnswer
+            }
+            recognizer.setQuestionThought(question.text)
+        } else if currentAnswer.isEmpty {
+            // No answer yet, just ask the question
+            recognizer.setQuestionThought(question.text)
+        } else {
+            // Pre-populate and ask for confirmation
+            stateManager.persistentTranscript = currentAnswer
+            recognizer.setQuestionThought("\(question.text) (Current answer: \(currentAnswer))")
         }
     }
+    
     
     private func saveAnswer() {
-        guard let question = currentQuestion else { return }
+        guard let question = questionFlow.currentQuestion else { return }
         
         // Prevent multiple saves
-        guard !isSavingAnswer else { return }
+        guard !stateManager.isSavingAnswer else { return }
         
-        isSavingAnswer = true
+        stateManager.beginSavingAnswer()
         
         Task {
             do {
-                let trimmedAnswer = persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                // Only save if there's actual content
-                guard !trimmedAnswer.isEmpty else {
-                    isSavingAnswer = false
-                    return
-                }
+                let trimmedAnswer = stateManager.persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
                 
                 // Clear any existing house thought to prevent duplicate speech
                 recognizer.clearHouseThought()
                 
-                // Save the answer with conversation metadata
-                try await serviceContainer.notesService.saveOrUpdateNote(
-                    for: question.id,
-                    answer: trimmedAnswer,
-                    metadata: ["updated_via_conversation": "true"]
-                )
+                // Save the answer
+                try await questionFlow.saveAnswer(trimmedAnswer)
                 
                 // If this was the name question, update the userName
                 if question.text == "What's your name?" {
-                    userName = trimmedAnswer
+                    await stateManager.updateUserName(trimmedAnswer)
                 }
                 
                 // If this was the address question, save it properly
                 if question.text == "Is this the right address?" || question.text == "What's your home address?" {
-                    await handleAddressSaved(trimmedAnswer)
+                    if let address = addressManager.parseAddress(trimmedAnswer) {
+                        try await addressManager.saveAddress(address)
+                    }
                 }
                 
                 // If this was the house name question, save it to ContentViewModel
@@ -499,21 +421,14 @@ struct ConversationView: View {
                     await serviceContainer.notesService.saveHouseName(trimmedAnswer)
                 }
                 
-                // Clear the current question
-                currentQuestion = nil
-                persistentTranscript = ""
-                
-                // Small delay to allow UI to update
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    // Load the next unanswered question
-                    loadCurrentQuestion()
-                    isSavingAnswer = false
-                }
+                // Clear the transcript
+                stateManager.clearTranscript()
                 
             } catch {
                 print("Error saving answer: \(error)")
-                isSavingAnswer = false
             }
+            
+            stateManager.endSavingAnswer()
         }
     }
     
@@ -522,102 +437,9 @@ struct ConversationView: View {
         
         if isMuted {
             // Stop any current speech when muting
-            serviceContainer.ttsService.stopSpeaking()
+            stateManager.stopSpeaking()
         }
     }
     
-    private func detectAndPreloadAddress(for question: Question) async {
-        do {
-            // Check if we have location permission
-            let status = await serviceContainer.locationService.authorizationStatusPublisher.values.first { _ in true } ?? .notDetermined
-            
-            guard status == .authorizedWhenInUse || status == .authorizedAlways else {
-                // No permission, just ask the question
-                await MainActor.run {
-                    recognizer.setQuestionThought(question.text)
-                }
-                return
-            }
-            
-            // Try to detect the address
-            let location = try await serviceContainer.locationService.getCurrentLocation()
-            let address = try await serviceContainer.locationService.lookupAddress(for: location)
-            
-            await MainActor.run {
-                // Pre-populate the transcript with detected address
-                persistentTranscript = address.fullAddress
-                recognizer.setQuestionThought(question.text)
-            }
-        } catch {
-            await MainActor.run {
-                // On error, just ask the question normally
-                recognizer.setQuestionThought(question.text)
-            }
-        }
-    }
-    
-    private func handleAddressSaved(_ addressText: String) async {
-        // Parse the address and save it properly
-        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-        
-        if components.count >= 3 {
-            // Try to get coordinates from current location
-            var coordinate = Coordinate(latitude: 0, longitude: 0)
-            
-            do {
-                let location = try await serviceContainer.locationService.getCurrentLocation()
-                coordinate = Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            } catch {
-                // Could not get coordinates
-            }
-            
-            let street = components[0]
-            let city = components[1]
-            let stateZip = components[2].components(separatedBy: " ")
-            let state = stateZip.first ?? ""
-            let postalCode = stateZip.count > 1 ? stateZip[1] : ""
-            
-            let address = Address(
-                street: street,
-                city: city,
-                state: state,
-                postalCode: postalCode,
-                country: "United States",
-                coordinate: coordinate
-            )
-            
-            // Save to UserDefaults and LocationService
-            if let encoded = try? JSONEncoder().encode(address) {
-                UserDefaults.standard.set(encoded, forKey: "confirmedHomeAddress")
-            }
-            
-            do {
-                try await serviceContainer.locationService.confirmAddress(address)
-            } catch {
-                print("Error confirming address: \(error)")
-            }
-        }
-    }
-    
-    private func generateHouseNameSuggestion(from addressText: String) -> String {
-        // Parse the address to extract street name
-        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-        
-        if let street = components.first {
-            let streetName = street
-                .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
-                .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#, 
-                                    with: "", 
-                                    options: [.regularExpression, .caseInsensitive])
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            if !streetName.isEmpty {
-                return "\(streetName) House"
-            }
-        }
-        
-        // If we can't extract a street name, return a generic suggestion
-        return "My House"
-    }
     
 }
