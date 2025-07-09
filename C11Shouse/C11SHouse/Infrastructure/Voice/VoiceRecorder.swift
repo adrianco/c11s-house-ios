@@ -26,6 +26,8 @@
  * - 2025-01-09: iOS 18+ migration
  *   - Changed AVAudioSession.sharedInstance().recordPermission to AVAudioApplication.shared.recordPermission
  *   - Added AVFAudio import for AVAudioApplication
+ *   - Updated getAudioDuration to use async load(.duration) API instead of deprecated duration property
+ *   - Used semaphore to bridge async/sync since called from synchronous compactMap
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -265,9 +267,31 @@ final class VoiceRecorder: ObservableObject {
     /// - Returns: Duration in seconds
     private func getAudioDuration(url: URL) -> TimeInterval {
         let audioAsset = AVURLAsset(url: url)
-        let duration = audioAsset.duration
-        if duration.isValid && !duration.isIndefinite {
-            return CMTimeGetSeconds(duration)
+        
+        // Since this is called from a sync context (compactMap), we need to bridge async to sync
+        // In a production app, consider making getSavedRecordings async to properly use the new API
+        let semaphore = DispatchSemaphore(value: 0)
+        var loadedDuration: CMTime = .invalid
+        var loadError: Error?
+        
+        Task {
+            do {
+                loadedDuration = try await audioAsset.load(.duration)
+            } catch {
+                loadError = error
+            }
+            semaphore.signal()
+        }
+        
+        semaphore.wait()
+        
+        if let error = loadError {
+            print("Failed to load audio duration: \(error)")
+            return 0
+        }
+        
+        if loadedDuration.isValid && !loadedDuration.isIndefinite {
+            return CMTimeGetSeconds(loadedDuration)
         } else {
             return 0
         }
