@@ -2644,3 +2644,6 @@
   4. Requires iOS 16+ for WeatherKit support
 
   The code has been pushed to GitHub and is ready to build and test in Xcode! 🚀
+
+July 9th goal, when claude install issues are figured out
+./claude-flow swarm "current code base runs but is messy, keep the views as they are now, but do a detailed code review of the logic that implements the user flow as they use the app for the first time, and create a plan to clean it up. Don't change the code yet"
