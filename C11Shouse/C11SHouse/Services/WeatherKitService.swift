@@ -97,11 +97,22 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
             
             return weatherData
         } catch {
+            // Log the full error for debugging
+            print("WeatherKit Error Details:")
+            print("- Error: \(error)")
+            print("- Localized: \(error.localizedDescription)")
+            print("- Domain: \((error as NSError).domain)")
+            print("- Code: \((error as NSError).code)")
+            
             // Check if this is a sandbox restriction error
             if error.localizedDescription.contains("Sandbox restriction") || 
                error.localizedDescription.contains("com.apple.weatherkit.authservice") {
-                // This is a known simulator issue
-                print("WeatherKit sandbox error (expected in simulator): \(error)")
+                // This shouldn't happen on physical devices
+                print("WARNING: WeatherKit sandbox error on physical device!")
+                print("This usually indicates:")
+                print("1. Bundle ID mismatch with provisioning profile")
+                print("2. WeatherKit not properly configured in App ID")
+                print("3. Provisioning profile needs regeneration")
                 throw WeatherError.sandboxRestriction
             } else {
                 // Re-throw other errors
