@@ -20,7 +20,6 @@
 import Foundation
 import SwiftUI
 
-@MainActor
 class ConversationStateManager: ObservableObject {
     // MARK: - Published Properties
     

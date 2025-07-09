@@ -20,7 +20,6 @@
 import Foundation
 import Combine
 
-@MainActor
 class QuestionFlowCoordinator: ObservableObject {
     // MARK: - Published Properties
     
@@ -46,7 +45,9 @@ class QuestionFlowCoordinator: ObservableObject {
     func loadNextQuestion() async {
         guard !isLoadingQuestion else { return }
         
-        isLoadingQuestion = true
+        await MainActor.run {
+            isLoadingQuestion = true
+        }
         defer { 
             Task { @MainActor in
                 self.isLoadingQuestion = false
@@ -58,18 +59,24 @@ class QuestionFlowCoordinator: ObservableObject {
             let questionsNeedingReview = notesStore.questionsNeedingReview()
             
             if let nextQuestion = questionsNeedingReview.first {
-                currentQuestion = nextQuestion
-                hasCompletedAllQuestions = false
+                await MainActor.run {
+                    currentQuestion = nextQuestion
+                    hasCompletedAllQuestions = false
+                }
             } else {
-                currentQuestion = nil
-                hasCompletedAllQuestions = true
+                await MainActor.run {
+                    currentQuestion = nil
+                    hasCompletedAllQuestions = true
+                }
                 
                 // Post notification that all questions are complete
                 NotificationCenter.default.post(name: Notification.Name("AllQuestionsComplete"), object: nil)
             }
         } catch {
             print("Error loading questions: \(error)")
-            currentQuestion = nil
+            await MainActor.run {
+                currentQuestion = nil
+            }
         }
     }
     
@@ -104,7 +111,9 @@ class QuestionFlowCoordinator: ObservableObject {
         )
         
         // Clear current question after saving
-        currentQuestion = nil
+        await MainActor.run {
+            currentQuestion = nil
+        }
         
         // Load the next question
         await loadNextQuestion()

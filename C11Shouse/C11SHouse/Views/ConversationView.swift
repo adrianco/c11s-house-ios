@@ -62,10 +62,9 @@ struct ConversationView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     init() {
-        let container = ServiceContainer.shared
-        _stateManager = StateObject(wrappedValue: container.conversationStateManager)
-        _questionFlow = StateObject(wrappedValue: container.questionFlowCoordinator)
-        _addressManager = StateObject(wrappedValue: container.addressManager)
+        _stateManager = StateObject(wrappedValue: ServiceContainer.shared.conversationStateManager)
+        _questionFlow = StateObject(wrappedValue: ServiceContainer.shared.questionFlowCoordinator)
+        _addressManager = StateObject(wrappedValue: ServiceContainer.shared.addressManager)
     }
     
     // Default house thought when no question is active

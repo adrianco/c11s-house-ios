@@ -19,7 +19,6 @@
 import Foundation
 import CoreLocation
 
-@MainActor
 class AddressManager: ObservableObject {
     // MARK: - Published Properties
     
@@ -42,8 +41,14 @@ class AddressManager: ObservableObject {
     
     /// Detect current address using location services
     func detectCurrentAddress() async throws -> Address {
-        isDetectingAddress = true
-        defer { isDetectingAddress = false }
+        await MainActor.run {
+            isDetectingAddress = true
+        }
+        defer {
+            Task { @MainActor in
+                isDetectingAddress = false
+            }
+        }
         
         // Check location permission
         let status = await locationService.authorizationStatusPublisher.values.first { _ in true } ?? .notDetermined

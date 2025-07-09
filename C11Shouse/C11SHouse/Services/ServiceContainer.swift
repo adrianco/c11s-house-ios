@@ -51,6 +51,7 @@ class ServiceContainer: ObservableObject {
         TranscriptionServiceImpl()
     }()
     
+    @MainActor
     private(set) lazy var permissionManager = PermissionManager.shared
     
     private(set) lazy var notesService: NotesService = {
@@ -83,7 +84,6 @@ class ServiceContainer: ObservableObject {
         AddressManager(notesService: notesService, locationService: locationService)
     }()
     
-    @MainActor
     private(set) lazy var conversationStateManager: ConversationStateManager = {
         ConversationStateManager(notesService: notesService, ttsService: ttsService)
     }()
