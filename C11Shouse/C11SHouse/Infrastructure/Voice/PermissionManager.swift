@@ -34,6 +34,7 @@
 
 import Foundation
 import AVFoundation
+import AVFAudio
 import Speech
 import Combine
 import UIKit
@@ -85,11 +86,21 @@ public final class PermissionManager: ObservableObject {
         switch AVAudioSession.sharedInstance().recordPermission {
         case .undetermined:
             await withCheckedContinuation { continuation in
-                AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
-                    Task { @MainActor in
-                        self?.microphonePermissionStatus = granted ? .granted : .denied
-                        self?.updateAllPermissionsStatus()
-                        continuation.resume()
+                if #available(iOS 17.0, *) {
+                    AVAudioApplication.requestRecordPermission { [weak self] granted in
+                        Task { @MainActor in
+                            self?.microphonePermissionStatus = granted ? .granted : .denied
+                            self?.updateAllPermissionsStatus()
+                            continuation.resume()
+                        }
+                    }
+                } else {
+                    AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
+                        Task { @MainActor in
+                            self?.microphonePermissionStatus = granted ? .granted : .denied
+                            self?.updateAllPermissionsStatus()
+                            continuation.resume()
+                        }
                     }
                 }
             }

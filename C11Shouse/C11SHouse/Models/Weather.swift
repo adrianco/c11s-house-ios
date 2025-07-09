@@ -49,6 +49,8 @@ struct Temperature: Codable {
             return String(format: "%.0f°C", value)
         case .fahrenheit:
             return String(format: "%.0f°F", value)
+        @unknown default:
+            return String(format: "%.0f°", value)
         }
     }
     

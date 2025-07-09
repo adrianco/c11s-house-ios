@@ -31,6 +31,7 @@
 
 import Foundation
 import AVFoundation
+import AVFAudio
 import Combine
 
 /// Manages the AVAudioSession configuration and lifecycle for voice recording
@@ -121,10 +122,19 @@ final class AudioSessionManager: NSObject, ObservableObject {
     @discardableResult
     func requestRecordingPermission() async -> Bool {
         await withCheckedContinuation { continuation in
-            audioSession.requestRecordPermission { [weak self] granted in
-                Task { @MainActor in
-                    self?.hasRecordingPermission = granted
-                    continuation.resume(returning: granted)
+            if #available(iOS 17.0, *) {
+                AVAudioApplication.requestRecordPermission { [weak self] granted in
+                    Task { @MainActor in
+                        self?.hasRecordingPermission = granted
+                        continuation.resume(returning: granted)
+                    }
+                }
+            } else {
+                audioSession.requestRecordPermission { [weak self] granted in
+                    Task { @MainActor in
+                        self?.hasRecordingPermission = granted
+                        continuation.resume(returning: granted)
+                    }
                 }
             }
         }

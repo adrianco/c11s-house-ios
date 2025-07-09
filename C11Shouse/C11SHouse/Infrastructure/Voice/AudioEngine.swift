@@ -255,7 +255,6 @@ final class AudioEngine: ObservableObject {
     private func processAudioBuffer(_ buffer: AVAudioPCMBuffer, time: AVAudioTime) {
         guard let channelData = buffer.floatChannelData else { return }
         
-        let channelCount = Int(buffer.format.channelCount)
         let frameCount = Int(buffer.frameLength)
         
         // Calculate RMS for audio level
@@ -310,10 +309,10 @@ final class AudioEngine: ObservableObject {
         stopDurationTimer()
         
         durationTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
-            guard let self = self,
-                  let startTime = self.recordingStartTime else { return }
+            guard let self = self else { return }
             
             Task { @MainActor in
+                guard let startTime = self.recordingStartTime else { return }
                 self.recordingDuration = Date().timeIntervalSince(startTime)
             }
         }

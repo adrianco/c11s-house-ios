@@ -392,9 +392,9 @@ struct ConversationView: View {
                             // For house name question, suggest a default based on address
                             if currentAnswer.isEmpty {
                                 // Check if we have an address to generate a suggestion
-                                if let addressNote = notesStore.notes.values.first(where: { 
-                                    notesStore.questions.first(where: { $0.id == $1.questionId })?.text == "Is this the right address?" 
-                                }), !addressNote.answer.isEmpty {
+                                if let addressQuestion = notesStore.questions.first(where: { $0.text == "Is this the right address?" }),
+                                   let addressNote = notesStore.notes[addressQuestion.id],
+                                   !addressNote.answer.isEmpty {
                                     // Generate suggested house name from address
                                     let suggestedName = generateHouseNameSuggestion(from: addressNote.answer)
                                     persistentTranscript = suggestedName
