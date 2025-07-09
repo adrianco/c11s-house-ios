@@ -21,10 +21,10 @@
  *   - Extension methods for convenience boolean checks
  *
  * - 2025-01-09: iOS 18+ migration and Swift 6 concurrency fixes
- *   - Migrated from AVAudioSession.RecordPermission to AVAudioApplication.RecordPermission
- *   - Updated requestRecordPermission to use async/await API
+ *   - Kept AVAudioSession.RecordPermission type (still used in iOS 18)
+ *   - Updated requestRecordPermission to use AVAudioApplication async/await API
  *   - Removed withCheckedContinuation wrapper for cleaner async code
- *   - Fixed deprecated enum case usage with explicit AVAudioApplication.RecordPermission.undetermined
+ *   - Fixed recordPermission property access to use AVAudioSession.sharedInstance()
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -52,7 +52,7 @@ public final class PermissionManager: ObservableObject {
     // MARK: - Published Properties
     
     /// Current microphone permission status
-    @Published public private(set) var microphonePermissionStatus: AVAudioApplication.RecordPermission = AVAudioApplication.RecordPermission.undetermined
+    @Published public private(set) var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
     
     /// Current speech recognition permission status
     @Published public private(set) var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
@@ -89,7 +89,7 @@ public final class PermissionManager: ObservableObject {
     
     /// Request microphone permission
     public func requestMicrophonePermission() async {
-        let currentPermission = AVAudioApplication.shared.recordPermission
+        let currentPermission = AVAudioSession.sharedInstance().recordPermission
         
         switch currentPermission {
         case .undetermined:
@@ -166,7 +166,7 @@ public final class PermissionManager: ObservableObject {
     }
     
     private func checkCurrentPermissions() {
-        microphonePermissionStatus = AVAudioApplication.shared.recordPermission
+        microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         updateAllPermissionsStatus()
     }

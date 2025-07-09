@@ -19,6 +19,10 @@
  *   - Staggered dot animation with 0.2s delay between dots
  *   - Preview provider with multiple states for development
  *
+ * - 2025-01-09: iOS 18+ migration
+ *   - Updated onChange modifier to use new two-parameter closure syntax
+ *   - Fixed deprecation warning for onChange(of:perform:)
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -100,7 +104,7 @@ struct TranscriptionView: View {
                         .background(Color.gray.opacity(0.05))
                         .cornerRadius(12)
                         .padding(.horizontal)
-                        .onChange(of: transcription) { newValue in
+                        .onChange(of: transcription) { _, newValue in
                             startTypewriterEffect(text: newValue)
                         }
                         .onAppear {
