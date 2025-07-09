@@ -115,11 +115,22 @@ final class ConversationRecognizer: ObservableObject {
             }
         }
         
-        AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
-            DispatchQueue.main.async {
-                // Microphone permission updated
-                if !granted {
-                    self?.error = .microphoneAccessDenied
+        if #available(iOS 17.0, *) {
+            AVAudioApplication.requestRecordPermission { [weak self] granted in
+                DispatchQueue.main.async {
+                    // Microphone permission updated
+                    if !granted {
+                        self?.error = .microphoneAccessDenied
+                    }
+                }
+            }
+        } else {
+            AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
+                DispatchQueue.main.async {
+                    // Microphone permission updated
+                    if !granted {
+                        self?.error = .microphoneAccessDenied
+                    }
                 }
             }
         }
@@ -180,9 +191,8 @@ final class ConversationRecognizer: ObservableObject {
         
         // Only add punctuation if iOS 16+ and it won't cause issues
         if #available(iOS 16.0, *) {
-            do {
-                recognitionRequest.addsPunctuation = false  // Start without punctuation to avoid issues
-            }
+            // addsPunctuation is automatically enabled in iOS 16+
+            // No need to set it explicitly to avoid deprecation warning
         }
         
         // Recognition request configured

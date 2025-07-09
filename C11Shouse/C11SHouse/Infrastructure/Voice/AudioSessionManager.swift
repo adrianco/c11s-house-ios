@@ -172,13 +172,24 @@ final class AudioSessionManager: NSObject, ObservableObject {
     
     /// Checks the current recording permission status
     private func checkRecordingPermission() {
-        switch audioSession.recordPermission {
-        case .granted:
-            hasRecordingPermission = true
-        case .denied, .undetermined:
-            hasRecordingPermission = false
-        @unknown default:
-            hasRecordingPermission = false
+        if #available(iOS 17.0, *) {
+            switch AVAudioApplication.shared.recordPermission {
+            case .granted:
+                hasRecordingPermission = true
+            case .denied, .undetermined:
+                hasRecordingPermission = false
+            @unknown default:
+                hasRecordingPermission = false
+            }
+        } else {
+            switch audioSession.recordPermission {
+            case .granted:
+                hasRecordingPermission = true
+            case .denied, .undetermined:
+                hasRecordingPermission = false
+            @unknown default:
+                hasRecordingPermission = false
+            }
         }
     }
     

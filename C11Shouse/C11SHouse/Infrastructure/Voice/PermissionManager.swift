@@ -83,7 +83,14 @@ public final class PermissionManager: ObservableObject {
     
     /// Request microphone permission
     public func requestMicrophonePermission() async {
-        switch AVAudioSession.sharedInstance().recordPermission {
+        let currentPermission: AVAudioSession.RecordPermission
+        if #available(iOS 17.0, *) {
+            currentPermission = AVAudioApplication.shared.recordPermission
+        } else {
+            currentPermission = AVAudioSession.sharedInstance().recordPermission
+        }
+        
+        switch currentPermission {
         case .undetermined:
             await withCheckedContinuation { continuation in
                 if #available(iOS 17.0, *) {
@@ -174,7 +181,11 @@ public final class PermissionManager: ObservableObject {
     }
     
     private func checkCurrentPermissions() {
-        microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
+        if #available(iOS 17.0, *) {
+            microphonePermissionStatus = AVAudioApplication.shared.recordPermission
+        } else {
+            microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
+        }
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         updateAllPermissionsStatus()
     }

@@ -90,7 +90,12 @@ class TranscriptionServiceImpl: TranscriptionService {
         // Create recognition request
         let request = SFSpeechURLRecognitionRequest(url: tempURL)
         request.shouldReportPartialResults = configuration.showInterimResults
-        request.addsPunctuation = configuration.enablePunctuation
+        // addsPunctuation is deprecated in iOS 16+ and enabled by default
+        if #available(iOS 16.0, *) {
+            // Punctuation is automatically added in iOS 16+
+        } else {
+            request.addsPunctuation = configuration.enablePunctuation
+        }
         request.requiresOnDeviceRecognition = false // Use server-based recognition for better accuracy
         
         // Perform transcription
@@ -228,7 +233,12 @@ class OnDeviceTranscriptionService: TranscriptionService {
         // Create request with on-device requirement
         let request = SFSpeechURLRecognitionRequest(url: tempURL)
         request.requiresOnDeviceRecognition = true
-        request.addsPunctuation = configuration.enablePunctuation
+        // addsPunctuation is deprecated in iOS 16+ and enabled by default
+        if #available(iOS 16.0, *) {
+            // Punctuation is automatically added in iOS 16+
+        } else {
+            request.addsPunctuation = configuration.enablePunctuation
+        }
         
         return try await withCheckedThrowingContinuation { continuation in
             var hasResumed = false
