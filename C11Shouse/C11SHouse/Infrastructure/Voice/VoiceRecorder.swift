@@ -23,6 +23,10 @@
  *   - AudioEngineDelegate implementation for event handling
  *   - Async/await API for recording operations
  *
+ * - 2025-01-09: iOS 18+ migration
+ *   - Changed AVAudioSession.sharedInstance().recordPermission to AVAudioApplication.shared.recordPermission
+ *   - Added AVFAudio import for AVAudioApplication
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -38,6 +42,7 @@ import Foundation
 import SwiftUI
 import Combine
 import AVFoundation
+import AVFAudio
 
 /// High-level voice recorder that provides a SwiftUI-friendly interface
 @MainActor
@@ -241,7 +246,7 @@ final class VoiceRecorder: ObservableObject {
     
     /// Checks current permission status
     private func checkPermission() {
-        hasPermission = AVAudioSession.sharedInstance().recordPermission == .granted
+        hasPermission = AVAudioApplication.shared.recordPermission == .granted
     }
     
     /// Generates a unique recording URL
