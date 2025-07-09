@@ -14,6 +14,12 @@
  *   - Comprehensive error handling
  *   - WeatherKit integration for Apple ecosystem
  *
+ * - 2025-01-09: Refactored to use coordinators
+ *   - Delegated weather logic to WeatherCoordinator
+ *   - Delegated address parsing to AddressManager
+ *   - Removed direct weather service dependency
+ *   - Weather state now accessed through coordinator
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -27,16 +33,19 @@ class ContentViewModel: ObservableObject {
     // Published properties for UI binding
     @Published var houseName: String = "Your House"
     @Published var houseThought: HouseThought?
-    @Published var currentWeather: Weather?
     @Published var currentAddress: Address?
-    @Published var isLoadingWeather = false
-    @Published var weatherError: Error?
     @Published var hasLocationPermission = false
     
-    // Services
+    // Weather state (delegated to coordinator)
+    var currentWeather: Weather? { weatherCoordinator.currentWeather }
+    var isLoadingWeather: Bool { weatherCoordinator.isLoadingWeather }
+    var weatherError: Error? { weatherCoordinator.weatherError }
+    
+    // Services and Coordinators
     private let locationService: LocationServiceProtocol
-    private let weatherService: WeatherServiceProtocol
     private let notesService: NotesServiceProtocol
+    private let weatherCoordinator: WeatherCoordinator
+    private let addressManager: AddressManager
     
     // Combine subscriptions
     private var cancellables = Set<AnyCancellable>()
@@ -44,12 +53,14 @@ class ContentViewModel: ObservableObject {
     
     init(
         locationService: LocationServiceProtocol,
-        weatherService: WeatherServiceProtocol,
-        notesService: NotesServiceProtocol
+        weatherCoordinator: WeatherCoordinator,
+        notesService: NotesServiceProtocol,
+        addressManager: AddressManager
     ) {
         self.locationService = locationService
-        self.weatherService = weatherService
+        self.weatherCoordinator = weatherCoordinator
         self.notesService = notesService
+        self.addressManager = addressManager
         
         setupBindings()
         loadSavedData()
@@ -316,10 +327,6 @@ class ContentViewModel: ObservableObject {
         )
     }
     
-    private func saveWeatherSummary() async {
-        guard let weather = currentWeather else { return }
-        await notesService.saveWeatherSummary(weather)
-    }
     
     private func checkForAddressUpdate() {
         // Check if we have a new address that we haven't loaded yet
