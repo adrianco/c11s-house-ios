@@ -37,9 +37,12 @@
  *   - Display current weather conditions with emoji icons
  *   - House emotions react to weather conditions
  *   - Location permission request on first launch
- *   - Address confirmation sheet for detected location
  *   - Weather refresh button with loading state
  *   - Error handling for weather service failures
+ * - 2025-01-09: Removed unused AddressConfirmationView
+ *   - Address lookup happens in background and populates notes
+ *   - User edits address through conversation flow, not separate view
+ *   - Removed showAddressConfirmation state and sheet presentation
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -50,8 +53,6 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var viewModel: ContentViewModel
-    @State private var showAddressConfirmation = false
-    @State private var detectedAddress: Address?
     
     init() {
         _viewModel = StateObject(wrappedValue: ServiceContainer.shared.makeContentViewModel())
@@ -225,12 +226,6 @@ struct ContentView: View {
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {
             checkLocationPermission()
-        }
-        .sheet(isPresented: $showAddressConfirmation) {
-            if let address = detectedAddress {
-                AddressConfirmationView(address: address)
-                    .environmentObject(viewModel)
-            }
         }
     }
     
