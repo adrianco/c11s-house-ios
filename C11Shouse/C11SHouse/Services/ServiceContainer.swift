@@ -98,7 +98,7 @@ class ServiceContainer: ObservableObject {
     }()
     
     private(set) lazy var weatherCoordinator: WeatherCoordinator = {
-        WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationManager: locationManager)
+        WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationService: locationService)
     }()
     
     // MARK: - ViewModel Factory

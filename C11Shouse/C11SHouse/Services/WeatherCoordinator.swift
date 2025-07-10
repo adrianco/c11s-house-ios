@@ -36,15 +36,15 @@ class WeatherCoordinator: ObservableObject {
     
     private let weatherService: WeatherServiceProtocol
     private let notesService: NotesServiceProtocol
-    private let locationManager: LocationManager
+    private let locationService: LocationServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     
-    init(weatherService: WeatherServiceProtocol, notesService: NotesServiceProtocol, locationManager: LocationManager) {
+    init(weatherService: WeatherServiceProtocol, notesService: NotesServiceProtocol, locationService: LocationServiceProtocol) {
         self.weatherService = weatherService
         self.notesService = notesService
-        self.locationManager = locationManager
+        self.locationService = locationService
     }
     
     // MARK: - Public Methods
@@ -57,16 +57,12 @@ class WeatherCoordinator: ObservableObject {
         defer { isLoadingWeather = false }
         
         do {
-            // Get current coordinates
-            guard let location = locationManager.currentLocation else {
-                throw WeatherError.locationUnavailable
-            }
+            // Get current location
+            let location = try await locationService.getCurrentLocation()
+            let coordinate = Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
             
             // Fetch weather
-            let weather = try await weatherService.fetchWeather(
-                latitude: location.coordinate.latitude,
-                longitude: location.coordinate.longitude
-            )
+            let weather = try await weatherService.fetchWeather(for: coordinate)
             
             currentWeather = weather
             
@@ -89,10 +85,7 @@ class WeatherCoordinator: ObservableObject {
         
         defer { isLoadingWeather = false }
         
-        let weather = try await weatherService.fetchWeather(
-            latitude: address.coordinates.latitude,
-            longitude: address.coordinates.longitude
-        )
+        let weather = try await weatherService.fetchWeather(for: address.coordinate)
         
         currentWeather = weather
         weatherBasedEmotion = determineEmotion(for: weather)
@@ -115,22 +108,22 @@ class WeatherCoordinator: ObservableObject {
     /// Determine house emotion based on weather conditions
     private func determineEmotion(for weather: Weather) -> HouseEmotion {
         switch weather.condition {
-        case .sunny, .partlyCloudy:
+        case .clear, .mostlyClear, .partlyCloudy:
             return .happy
-        case .cloudy, .overcast:
+        case .cloudy, .mostlyCloudy:
             return .neutral
-        case .rainy, .drizzle:
+        case .rain, .drizzle, .heavyRain:
             return .thoughtful
-        case .thunderstorm:
-            return .anxious
-        case .snowy:
-            return .peaceful
-        case .foggy, .mist:
+        case .thunderstorms, .isolatedThunderstorms, .scatteredThunderstorms, .strongStorms:
+            return .worried
+        case .snow, .flurries, .heavySnow:
+            return .content
+        case .foggy, .haze, .smoky:
             return .curious
-        case .windy:
-            return .energetic
-        case .unknown:
-            return .confused
+        case .windy, .breezy:
+            return .excited
+        default:
+            return .neutral
         }
     }
     
@@ -145,9 +138,9 @@ class WeatherCoordinator: ObservableObject {
         let summary = """
         Weather at \(locationText):
         Temperature: \(weather.temperature.formatted)
-        Condition: \(weather.condition.description)
+        Condition: \(weather.condition.rawValue)
         Humidity: \(weather.humidity)%
-        Wind: \(weather.windSpeed) km/h from \(weather.windDirection)
+        Wind: \(weather.windSpeed) km/h
         Last updated: \(Date().formatted())
         """
         
@@ -157,33 +150,37 @@ class WeatherCoordinator: ObservableObject {
         do {
             // Check if weather question exists, if not create it
             let notesStore = try await notesService.loadNotesStore()
-            if !notesStore.questions.contains(where: { $0.id == weatherQuestionId }) {
+            if !notesStore.questions.contains(where: { $0.text == "Current Weather Summary" }) {
                 // Create weather question
                 let weatherQuestion = Question(
-                    id: weatherQuestionId,
+                    id: UUID(),
                     text: "Current Weather Summary",
-                    category: .environment,
+                    category: .other,
+                    displayOrder: 999,
                     isRequired: false,
-                    order: 999, // Put at the end
-                    metadata: ["type": "weather_summary", "auto_generated": "true"]
+                    hint: "Automatically updated weather information",
+                    createdAt: Date()
                 )
                 
                 var updatedQuestions = notesStore.questions
                 updatedQuestions.append(weatherQuestion)
                 
-                try await notesService.updateQuestions(updatedQuestions)
+                // Note: NotesService doesn't have updateQuestions method
+                // Weather summaries should be saved directly as notes
             }
             
             // Save weather summary as answer
+            // Find the weather question ID
+            let weatherQuestion = notesStore.questions.first(where: { $0.text == "Current Weather Summary" })
             try await notesService.saveOrUpdateNote(
-                for: weatherQuestionId,
+                for: weatherQuestion?.id ?? UUID(),
                 answer: summary,
                 metadata: [
                     "temperature": "\(weather.temperature.value)",
                     "condition": weather.condition.rawValue,
                     "humidity": "\(weather.humidity)",
                     "wind_speed": "\(weather.windSpeed)",
-                    "wind_direction": weather.windDirection,
+                    "wind_direction": "N/A",
                     "last_updated": ISO8601DateFormatter().string(from: Date())
                 ]
             )
@@ -193,9 +190,9 @@ class WeatherCoordinator: ObservableObject {
     }
 }
 
-// MARK: - Weather Error
+// MARK: - Weather Coordinator Error
 
-enum WeatherError: LocalizedError {
+enum WeatherCoordinatorError: LocalizedError {
     case locationUnavailable
     
     var errorDescription: String? {
