@@ -1,0 +1,13 @@
+{
+  "objective": "init",
+  "strategy": "auto",
+  "mode": "centralized",
+  "maxAgents": 5,
+  "timeout": 60,
+  "parallel": false,
+  "monitor": false,
+  "output": "json",
+  "outputDir": "./reports",
+  "timestamp": "2025-07-10T17:19:26.608Z",
+  "id": "swarm-auto-centralized-1752167966608"
+}

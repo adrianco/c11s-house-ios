@@ -2647,3 +2647,11 @@
 
 July 9th goal, when claude install issues are figured out
 ./claude-flow swarm "current code base runs but is messy, keep the views as they are now, but do a detailed code review of the logic that implements the user flow as they use the app for the first time, and create a plan to clean it up. Don't change the code yet"
+
+First phase implemented.
+
+Spent ages getting Apple Xcode cloud setup, trying to get around Weatherkit sandbox error
+
+July 10 - reinstalled claude-flow for alpha 43 (up from 27)
+finally managed to create an icon for the app
+testflight distribution works

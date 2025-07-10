@@ -19,6 +19,10 @@
  *   - Private initializer enforces singleton usage
  *   - Service references are read-only externally for encapsulation
  *
+ * - 2025-01-09: Added coordinators to Phase 2 refactoring
+ *   - Added WeatherCoordinator for weather business logic
+ *   - Updated ContentViewModel factory to use coordinators
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -88,6 +92,10 @@ class ServiceContainer: ObservableObject {
         ConversationStateManager(notesService: notesService, ttsService: ttsService)
     }()
     
+    private(set) lazy var weatherCoordinator: WeatherCoordinator = {
+        WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationManager: locationManager)
+    }()
+    
     // MARK: - Factory Methods
     
     /// Create a new VoiceTranscriptionViewModel with injected dependencies
@@ -106,8 +114,9 @@ class ServiceContainer: ObservableObject {
     func makeContentViewModel() -> ContentViewModel {
         return ContentViewModel(
             locationService: locationService,
-            weatherService: weatherService,
-            notesService: notesService
+            weatherCoordinator: weatherCoordinator,
+            notesService: notesService,
+            addressManager: addressManager
         )
     }
     

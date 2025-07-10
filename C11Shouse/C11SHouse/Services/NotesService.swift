@@ -1,9 +1,16 @@
 /*
  * CONTEXT & PURPOSE:
- * NotesService provides the service layer for managing house-related Q&A notes. It handles
- * persistence using UserDefaults, provides methods for CRUD operations on questions and notes,
- * and publishes reactive updates for UI synchronization. The service ensures data consistency
- * and provides a clean API for the view layer.
+ * NotesService is the CENTRAL PERSISTENT MEMORY SYSTEM for the entire app. It serves as the
+ * single source of truth for all user data, house preferences, Q&A responses, weather summaries,
+ * and any other contextual information the house consciousness needs to remember. This service
+ * is designed to be the foundation for AI context and backend synchronization.
+ *
+ * ARCHITECTURAL ROLE:
+ * - Central Memory: All user data and house state is persisted here
+ * - AI Context Provider: All notes will be provided as context for AI conversations
+ * - Backend Ready: Designed to easily sync with a future backend service
+ * - Extensible: New note types can be added without breaking existing functionality
+ * - Single Source of Truth: All coordinators and services persist data through NotesService
  *
  * DECISION HISTORY:
  * - 2025-07-07: Initial implementation
@@ -18,9 +25,16 @@
  *   - Error handling with descriptive error types
  *   - Batch update support for efficiency
  *   - Change tracking with lastModified timestamps
+ * - 2025-01-09: Documented as central memory system
+ *   - Clarified role as the app's persistent memory foundation
+ *   - Emphasized importance for AI context and backend sync
+ *   - Documented that all coordinators should persist through this service
  *
  * FUTURE UPDATES:
- * - [Add future changes and decisions here]
+ * - Backend synchronization for cross-device persistence
+ * - Additional note types (reminders, maintenance logs, preferences)
+ * - AI context optimization (relevance scoring, context windows)
+ * - Encrypted storage for sensitive information
  */
 
 //
@@ -359,10 +373,46 @@ extension NotesServiceProtocol {
     }
 }
 
+// MARK: - Convenience Extensions
+
+/*
+ * These extensions provide convenience methods for common operations.
+ * While coordinators handle the business logic, these methods offer
+ * direct access to specific note types for flexibility.
+ */
+
+extension NotesServiceProtocol {
+    
+    /// Get the current question that needs to be answered
+    func getCurrentQuestion() async -> Question? {
+        let notesStore = try? await loadNotesStore()
+        return notesStore?.questionsNeedingReview().first
+    }
+    
+    /// Get the next unanswered question
+    func getNextUnansweredQuestion() async -> Question? {
+        let notesStore = try? await loadNotesStore()
+        return notesStore?.questions.first { question in
+            notesStore?.notes[question.id] == nil && question.isRequired
+        }
+    }
+    
+    /// Get a specific note by question text (convenience method)
+    func getNote(forQuestionText questionText: String) async -> Note? {
+        let notesStore = try? await loadNotesStore()
+        if let question = notesStore?.questions.first(where: { $0.text == questionText }),
+           let note = notesStore?.notes[question.id] {
+            return note
+        }
+        return nil
+    }
+}
+
 // MARK: - Weather and House Name Extensions
 
 extension NotesServiceProtocol {
     /// Save current weather summary as a note
+    /// Note: This is primarily used by WeatherCoordinator. Direct usage should be avoided.
     func saveWeatherSummary(_ weather: Weather) async {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
