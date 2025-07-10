@@ -62,7 +62,7 @@ final class ThreadingVerificationTests: XCTestCase {
     func testVoiceTranscriptionViewModelStateUpdatesOnMainThread() async {
         let expectation = XCTestExpectation(description: "State updates on main thread")
         let container = ServiceContainer.shared
-        let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
+        let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
         
         await viewModel.$state
             .dropFirst()
@@ -131,7 +131,7 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Timer Lifecycle Tests
     
     func testTimerProperCleanup() async {
-        let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
+        let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
         
         // Start recording (creates timers)
         await viewModel.startRecording()
@@ -154,7 +154,7 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - State Consistency Tests
     
     func testRapidStateChangesThreadSafety() async {
-        let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
+        let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
         let operationCount = 50
         
         await withTaskGroup(of: Void.self) { group in
@@ -185,7 +185,7 @@ final class ThreadingVerificationTests: XCTestCase {
         
         // Create a scope for the view model
         do {
-            let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
+            let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
             weakViewModel = viewModel
             
             await viewModel.startRecording()
@@ -202,7 +202,7 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Integration Tests
     
     func testFullRecordingFlowThreadSafety() async {
-        let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
+        let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
         var updateCount = 0
         let updateExpectation = XCTestExpectation(description: "Multiple UI updates")
         
@@ -244,7 +244,7 @@ final class ThreadingVerificationTests: XCTestCase {
             let expectation = XCTestExpectation(description: "Performance test")
             
             Task { @MainActor in
-                let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
+                let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
                 
                 // Perform multiple UI updates
                 for _ in 0..<100 {
