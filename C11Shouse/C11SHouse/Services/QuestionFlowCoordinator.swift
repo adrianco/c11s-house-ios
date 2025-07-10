@@ -204,20 +204,21 @@ class QuestionFlowCoordinator: ObservableObject {
     }
     
     /// Handle question change events
-    func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: inout Bool) async {
+    /// Returns true if still initializing, false otherwise
+    func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
         guard let question = newQuestion else {
             // No more questions
             if hasCompletedAllQuestions {
                 await conversationRecognizer?.setThankYouThought()
             }
-            return
+            return isInitializing
         }
         
         // Mark initialization as complete
-        isInitializing = false
+        let newInitializingState = false
         
         guard let stateManager = conversationStateManager,
-              let recognizer = conversationRecognizer else { return }
+              let recognizer = conversationRecognizer else { return newInitializingState }
         
         // Get current answer if any
         let currentAnswer = await getCurrentAnswer(for: question) ?? ""
@@ -261,6 +262,8 @@ class QuestionFlowCoordinator: ObservableObject {
             stateManager.persistentTranscript = currentAnswer
             await recognizer.setQuestionThought("\(question.text) (Current answer: \(currentAnswer))")
         }
+        
+        return newInitializingState
     }
     
     // MARK: - Private Methods

@@ -314,7 +314,10 @@ struct ConversationView: View {
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
             // Handle question changes
             Task {
-                await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: &isInitializing)
+                let newInitializingState = await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: isInitializing)
+                await MainActor.run {
+                    isInitializing = newInitializingState
+                }
             }
         }
         .onDisappear {
