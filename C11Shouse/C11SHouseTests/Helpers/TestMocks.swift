@@ -13,7 +13,21 @@
 import Foundation
 import Combine
 import CoreLocation
+import AVFoundation
+import Speech
 @testable import C11SHouse
+
+// MARK: - Supporting Types
+
+enum PermissionType {
+    case microphone
+    case speechRecognition
+}
+
+enum WeatherServiceError: Error {
+    case networkError
+    case dataUnavailable
+}
 
 // MARK: - Location Service Mocks
 
@@ -133,67 +147,87 @@ class MockTTSService: TTSService {
     func setPitch(_ pitch: Float) {
         // No-op for tests
     }
+    
+    func setVolume(_ volume: Float) {
+        // No-op for tests
+    }
 }
 
 // MARK: - Notes Service Mocks
 
-class MockNotesService: NotesServiceProtocol {
-    var notesStorePublisher: AnyPublisher<NotesStore, Never> {
+class SharedMockNotesService: NotesServiceProtocol {
+    var notesStorePublisher: AnyPublisher<NotesStoreData, Never> {
         notesStoreSubject.eraseToAnyPublisher()
     }
     
-    private let notesStoreSubject = CurrentValueSubject<NotesStore, Never>(NotesStore(questions: [], notes: [:]))
+    private let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
+        questions: Question.predefinedQuestions,
+        notes: [:],
+        version: 1
+    ))
     
+    var mockNotesStore: NotesStoreData
     var savedNotes: [Note] = []
     var loadNotesStoreCalled = false
     var saveHouseNameCalled = false
     var lastSavedHouseName: String?
-    
-    var mockNotesStore = NotesStore(questions: [], notes: [:])
     var mockHouseName: String?
     
-    func loadNotesStore() async throws -> NotesStore {
+    init() {
+        self.mockNotesStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: 1
+        )
+    }
+    
+    func loadNotesStore() async throws -> NotesStoreData {
         loadNotesStoreCalled = true
         return mockNotesStore
     }
     
     func saveNote(_ note: Note) async throws {
         savedNotes.append(note)
-        var currentStore = mockNotesStore
-        currentStore.notes[note.questionId] = note
-        mockNotesStore = currentStore
+        mockNotesStore.notes[note.questionId] = note
         notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func getNote(for questionId: UUID) async throws -> Note? {
-        return mockNotesStore.notes[questionId]
     }
     
     func updateNote(_ note: Note) async throws {
         if let index = savedNotes.firstIndex(where: { $0.questionId == note.questionId }) {
             savedNotes[index] = note
         }
-        var currentStore = mockNotesStore
-        currentStore.notes[note.questionId] = note
-        mockNotesStore = currentStore
+        mockNotesStore.notes[note.questionId] = note
         notesStoreSubject.send(mockNotesStore)
     }
     
-    func deleteNote(questionId: UUID) async throws {
+    func deleteNote(for questionId: UUID) async throws {
         savedNotes.removeAll { $0.questionId == questionId }
-        var currentStore = mockNotesStore
-        currentStore.notes.removeValue(forKey: questionId)
-        mockNotesStore = currentStore
+        mockNotesStore.notes.removeValue(forKey: questionId)
         notesStoreSubject.send(mockNotesStore)
     }
     
-    func exportNotes() async throws -> Data {
-        return try JSONEncoder().encode(mockNotesStore)
+    func addQuestion(_ question: Question) async throws {
+        mockNotesStore.questions.append(question)
+        notesStoreSubject.send(mockNotesStore)
     }
     
-    func importNotes(from data: Data) async throws {
-        let imported = try JSONDecoder().decode(NotesStore.self, from: data)
-        mockNotesStore = imported
+    func deleteQuestion(_ questionId: UUID) async throws {
+        mockNotesStore.questions.removeAll { $0.id == questionId }
+        mockNotesStore.notes.removeValue(forKey: questionId)
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func resetToDefaults() async throws {
+        mockNotesStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: 1
+        )
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func clearAllData() async throws {
+        mockNotesStore.notes.removeAll()
         notesStoreSubject.send(mockNotesStore)
     }
     
@@ -211,7 +245,6 @@ class MockNotesService: NotesServiceProtocol {
         let note = Note(
             questionId: questionId,
             answer: answer,
-            timestamp: Date(),
             metadata: metadata
         )
         try await saveNote(note)
@@ -220,7 +253,7 @@ class MockNotesService: NotesServiceProtocol {
 
 // MARK: - Weather Service Mocks
 
-class MockWeatherKitService: WeatherKitServiceProtocol {
+class MockWeatherKitService: WeatherServiceProtocol {
     var weatherPublisher: AnyPublisher<Weather?, Never> {
         weatherSubject.eraseToAnyPublisher()
     }
@@ -230,12 +263,18 @@ class MockWeatherKitService: WeatherKitServiceProtocol {
     var fetchWeatherCalled = false
     var mockWeather: Weather?
     var shouldThrowError = false
+    var responseDelay: TimeInterval = 0
     
     func fetchWeather(for coordinate: Coordinate) async throws -> Weather {
         fetchWeatherCalled = true
         
+        // Simulate network delay if specified
+        if responseDelay > 0 {
+            try await Task.sleep(nanoseconds: UInt64(responseDelay * 1_000_000_000))
+        }
+        
         if shouldThrowError {
-            throw WeatherError.serviceUnavailable
+            throw WeatherServiceError.networkError
         }
         
         let weather = mockWeather ?? Weather(
@@ -255,6 +294,12 @@ class MockWeatherKitService: WeatherKitServiceProtocol {
         
         weatherSubject.send(weather)
         return weather
+    }
+    
+    // Additional method for compatibility with other tests
+    func fetchWeather(latitude: Double, longitude: Double) async throws -> Weather {
+        let coordinate = Coordinate(latitude: latitude, longitude: longitude)
+        return try await fetchWeather(for: coordinate)
     }
 }
 
@@ -289,7 +334,7 @@ class MockConversationRecognizer: ConversationRecognizerProtocol {
 
 // MARK: - Address Manager Mock
 
-class MockAddressManager: AddressManager {
+class SharedMockAddressManager: AddressManager {
     var detectCurrentAddressCalled = false
     var mockDetectedAddress: Address?
     var parseAddressCalled = false
@@ -326,36 +371,43 @@ class MockAddressManager: AddressManager {
 
 // MARK: - Permission Manager Mock
 
-class MockPermissionManager: PermissionManagerProtocol {
-    var mockLocationStatus: PermissionStatus = .notDetermined
-    var mockMicrophoneStatus: PermissionStatus = .notDetermined
-    var mockSpeechStatus: PermissionStatus = .notDetermined
+class MockPermissionManager: ObservableObject {
+    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+    @Published var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
+    @Published var allPermissionsGranted: Bool = false
+    @Published var permissionError: String?
     
-    func checkLocationPermission() async -> PermissionStatus {
-        return mockLocationStatus
+    func requestAllPermissions() async {
+        microphonePermissionStatus = .granted
+        speechRecognitionPermissionStatus = .authorized
+        allPermissionsGranted = true
     }
     
-    func requestLocationPermission() async -> PermissionStatus {
-        mockLocationStatus = .authorized
-        return mockLocationStatus
+    func requestMicrophonePermission() async {
+        microphonePermissionStatus = .granted
+        updateAllPermissionsStatus()
     }
     
-    func checkMicrophonePermission() async -> PermissionStatus {
-        return mockMicrophoneStatus
+    func requestSpeechRecognitionPermission() async {
+        speechRecognitionPermissionStatus = .authorized
+        updateAllPermissionsStatus()
     }
     
-    func requestMicrophonePermission() async -> PermissionStatus {
-        mockMicrophoneStatus = .authorized
-        return mockMicrophoneStatus
+    func isPermissionGranted(_ permission: PermissionType) -> Bool {
+        switch permission {
+        case .microphone:
+            return microphonePermissionStatus == .granted
+        case .speechRecognition:
+            return speechRecognitionPermissionStatus == .authorized
+        }
     }
     
-    func checkSpeechRecognitionPermission() async -> PermissionStatus {
-        return mockSpeechStatus
+    func openAppSettings() {
+        // Mock implementation
     }
     
-    func requestSpeechRecognitionPermission() async -> PermissionStatus {
-        mockSpeechStatus = .authorized
-        return mockSpeechStatus
+    private func updateAllPermissionsStatus() {
+        allPermissionsGranted = microphonePermissionStatus == .granted && speechRecognitionPermissionStatus == .authorized
     }
 }
 

@@ -29,7 +29,7 @@ class WeatherIntegrationTests: XCTestCase {
     
     private var weatherCoordinator: WeatherCoordinator!
     private var locationManagerMock: MockLocationManager!
-    private var weatherServiceMock: MockWeatherService!
+    private var weatherServiceMock: MockWeatherKitService!
     private var notesService: NotesService!
     private var cancellables: Set<AnyCancellable>!
     
@@ -43,7 +43,7 @@ class WeatherIntegrationTests: XCTestCase {
         // Create services
         notesService = NotesServiceImpl()
         locationManagerMock = MockLocationManager()
-        weatherServiceMock = MockWeatherService()
+        weatherServiceMock = MockWeatherKitService()
         
         // Create weather coordinator with mocked services
         weatherCoordinator = WeatherCoordinator(
@@ -53,12 +53,12 @@ class WeatherIntegrationTests: XCTestCase {
         )
         
         // Clear any existing data
-        try await notesService.clearAllNotes()
+        try await notesService.clearAllData()
     }
     
     override func tearDown() async throws {
         cancellables = nil
-        try await notesService.clearAllNotes()
+        try await notesService.clearAllData()
         try await super.tearDown()
     }
     
@@ -69,7 +69,7 @@ class WeatherIntegrationTests: XCTestCase {
         
         // Step 1: Setup location
         let mockLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
-        locationServiceMock.getCurrentLocationResult = .success(mockLocation)
+        locationManagerMock.currentLocation = mockLocation
         
         // Step 2: Setup weather data
         let mockWeather = C11SHouse.Weather(
@@ -130,7 +130,7 @@ class WeatherIntegrationTests: XCTestCase {
     func testWeatherEmotionMapping() async throws {
         // Test various weather conditions and their emotion mappings
         
-        locationServiceMock.getCurrentLocationResult = .success(CLLocation(latitude: 37.7749, longitude: -122.4194))
+        locationManagerMock.currentLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
         
         let testCases: [(C11SHouse.Weather, HouseEmotion)] = [
             // Happy conditions - pleasant temperature, clear skies
@@ -211,8 +211,9 @@ class WeatherIntegrationTests: XCTestCase {
             street: "1 Apple Park Way",
             city: "Cupertino",
             state: "CA",
-            zipCode: "95014",
-            coordinates: (latitude: 37.3349, longitude: -122.0090)
+            postalCode: "95014",
+            country: "USA",
+            coordinate: Coordinate(latitude: 37.3349, longitude: -122.0090)
         )
         
         let mockWeather = createWeather(temp: 75, condition: .partlyCloudy, humidity: 0.45)
@@ -253,7 +254,7 @@ class WeatherIntegrationTests: XCTestCase {
         let notesStore = try await notesService.loadNotesStore()
         let weatherNotes = notesStore.notes.values.filter { note in
             note.metadata?["type"] == "weather_summary" ||
-            note.questionId.contains("weather")
+            notesStore.questions.contains { $0.id == note.questionId && $0.text.lowercased().contains("weather") }
         }
         
         // Should have at least one weather-related note
@@ -272,7 +273,7 @@ class WeatherIntegrationTests: XCTestCase {
             .store(in: &cancellables)
         
         // Setup successful response
-        locationServiceMock.getCurrentLocationResult = .success(CLLocation(latitude: 37.7749, longitude: -122.4194))
+        locationManagerMock.currentLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
         weatherServiceMock.mockWeather = createWeather(temp: 70, condition: .clear)
         
         // Add delay to weather service to observe loading state
@@ -335,38 +336,8 @@ class MockLocationManager: ObservableObject {
     }
 }
 
-class MockWeatherService: WeatherServiceProtocol {
-    var mockWeather: Weather?
-    var shouldThrowError = false
-    var responseDelay: TimeInterval = 0
-    
-    func fetchWeather(latitude: Double, longitude: Double) async throws -> Weather {
-        // Simulate network delay if specified
-        if responseDelay > 0 {
-            try await Task.sleep(nanoseconds: UInt64(responseDelay * 1_000_000_000))
-        }
-        
-        if shouldThrowError {
-            throw WeatherServiceError.networkError
-        }
-        
-        guard let weather = mockWeather else {
-            throw WeatherServiceError.dataUnavailable
-        }
-        
-        return weather
-    }
-}
+// MockWeatherService is now defined in TestMocks.swift as MockWeatherKitService
 
-// MARK: - Protocols
-
-protocol WeatherServiceProtocol {
-    func fetchWeather(latitude: Double, longitude: Double) async throws -> Weather
-}
-
-enum WeatherServiceError: Error {
-    case networkError
-    case dataUnavailable
-}
+// WeatherServiceProtocol and WeatherServiceError are now defined in TestMocks.swift
 
 // Note: Address model is now imported from main app

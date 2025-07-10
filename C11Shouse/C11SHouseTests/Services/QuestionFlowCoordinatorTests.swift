@@ -24,6 +24,14 @@ import XCTest
 import Combine
 @testable import C11SHouse
 
+// MARK: - Protocols for Testing
+
+protocol ConversationRecognizerProtocol {
+    func setQuestionThought(_ question: String) async
+    func setThankYouThought() async
+    func clearHouseThought() async
+}
+
 // MARK: - Mock NotesService
 
 class MockNotesService: NotesServiceProtocol {
@@ -217,22 +225,22 @@ class MockConversationStateManager: ConversationStateManager {
     }
 }
 
-class MockConversationRecognizer: ConversationRecognizer {
+class MockConversationRecognizer: ConversationRecognizerProtocol {
     var clearHouseThoughtCallCount = 0
     var setQuestionThoughtCallCount = 0
     var setThankYouThoughtCallCount = 0
     var lastQuestionThought: String?
     
-    override func clearHouseThought() {
+    func clearHouseThought() async {
         clearHouseThoughtCallCount += 1
     }
     
-    override func setQuestionThought(_ question: String) {
+    func setQuestionThought(_ question: String) async {
         setQuestionThoughtCallCount += 1
         lastQuestionThought = question
     }
     
-    override func setThankYouThought() {
+    func setThankYouThought() async {
         setThankYouThoughtCallCount += 1
     }
 }
