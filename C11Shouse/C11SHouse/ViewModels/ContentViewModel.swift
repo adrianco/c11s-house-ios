@@ -174,7 +174,7 @@ class ContentViewModel: ObservableObject {
             currentAddress = address
             await refreshWeather()
         } catch {
-            weatherError = error
+            print("Failed to confirm address: \(error)")
         }
     }
     

@@ -97,6 +97,7 @@ class ServiceContainer: ObservableObject {
         ConversationStateManager(notesService: notesService, ttsService: ttsService)
     }()
     
+    @MainActor
     private(set) lazy var weatherCoordinator: WeatherCoordinator = {
         WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationService: locationService)
     }()
