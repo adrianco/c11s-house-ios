@@ -76,8 +76,8 @@ class LocationServiceTests: XCTestCase {
     }
     
     func testLocationErrorTypes() {
-        XCTAssertEqual(LocationError.notAuthorized.errorDescription, "Location access not authorized")
-        XCTAssertEqual(LocationError.geocodingFailed.errorDescription, "Failed to lookup address")
-        XCTAssertEqual(LocationError.incompleteAddress.errorDescription, "Address information is incomplete")
+        XCTAssertEqual(LocationError.notAuthorized.errorDescription, "Location services not authorized")
+        XCTAssertEqual(LocationError.geocodingFailed.errorDescription, "Geocoding failed")
+        XCTAssertEqual(LocationError.incompleteAddress.errorDescription, "Incomplete address")
     }
 }

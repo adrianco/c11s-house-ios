@@ -369,12 +369,4 @@ enum WeatherServiceError: Error {
     case dataUnavailable
 }
 
-// MARK: - Address Model for Testing
-
-struct Address {
-    let street: String
-    let city: String
-    let state: String
-    let zipCode: String
-    let coordinates: (latitude: Double, longitude: Double)
-}
+// Note: Address model is now imported from main app
