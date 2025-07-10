@@ -166,4 +166,17 @@ class ConversationStateManager: ObservableObject {
         isSavingAnswer = false
         hasPlayedInitialThought = false
     }
+    
+    /// Speak a house thought using TTS if not muted
+    func speakHouseThought(_ thought: HouseThought?, isMuted: Bool) async {
+        guard !isMuted else { return }
+        guard let thought = thought else { return }
+        
+        await speak(thought.thought, isMuted: isMuted)
+        
+        // Optionally speak the suggestion too
+        if let suggestion = thought.suggestion {
+            await speak(suggestion, isMuted: isMuted)
+        }
+    }
 }

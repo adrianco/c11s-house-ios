@@ -38,6 +38,9 @@
  *   - First question: "What's your name?" for personalization
  * - 2025-01-09: Swift 6 concurrency fixes
  *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ * - 2025-07-10: Updated to use ViewModelFactory
+ *   - Changed ConversationStateManager creation to use ViewModelFactory
+ *   - Maintains separation of concerns for dependency injection
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -64,9 +67,15 @@ struct ConversationView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     init() {
-        _stateManager = StateObject(wrappedValue: ServiceContainer.shared.conversationStateManager)
+        let conversationStateManager = ViewModelFactory.shared.makeConversationStateManager()
+        _stateManager = StateObject(wrappedValue: conversationStateManager)
         _questionFlow = StateObject(wrappedValue: ServiceContainer.shared.questionFlowCoordinator)
         _addressManager = StateObject(wrappedValue: ServiceContainer.shared.addressManager)
+        
+        // Set up dependencies for QuestionFlowCoordinator
+        ServiceContainer.shared.questionFlowCoordinator.conversationStateManager = conversationStateManager
+        ServiceContainer.shared.questionFlowCoordinator.addressManager = ServiceContainer.shared.addressManager
+        ServiceContainer.shared.questionFlowCoordinator.serviceContainer = ServiceContainer.shared
     }
     
     // Default house thought when no question is active
@@ -145,7 +154,9 @@ struct ConversationView: View {
                             
                             // If we have a transcript and a current question, save the answer
                             if !recognizer.transcript.isEmpty && questionFlow.currentQuestion != nil {
-                                saveAnswer()
+                                Task {
+                                    await questionFlow.saveAnswer()
+                                }
                                 // Don't generate a generic thought when we're answering questions
                             } else if !recognizer.transcript.isEmpty {
                                 // Only generate house thought if not in question mode
@@ -179,7 +190,9 @@ struct ConversationView: View {
                     // Save button - only visible when there's text and a question
                     if !stateManager.persistentTranscript.isEmpty && questionFlow.currentQuestion != nil {
                         Button(action: {
-                            saveAnswer()
+                            Task {
+                                await questionFlow.saveAnswer()
+                            }
                         }) {
                             Text("Save")
                                 .font(.caption)
@@ -257,6 +270,9 @@ struct ConversationView: View {
         } // End of ScrollView
         .navigationTitle("Conversations")
         .onAppear {
+            // Set up recognizer reference
+            questionFlow.conversationRecognizer = recognizer
+            
             // Only load the initial question once
             if !hasLoadedInitialQuestion {
                 hasLoadedInitialQuestion = true
@@ -283,7 +299,9 @@ struct ConversationView: View {
                 
                 // Add small delay to ensure audio session is ready
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    speakHouseThought()
+                    Task {
+                        await stateManager.speakHouseThought(recognizer.currentHouseThought, isMuted: isMuted)
+                    }
                 }
             }
         }
@@ -296,7 +314,7 @@ struct ConversationView: View {
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
             // Handle question changes
             Task {
-                await handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue)
+                await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: &isInitializing)
             }
         }
         .onDisappear {
@@ -309,129 +327,6 @@ struct ConversationView: View {
         }
     }
     
-    private func authStatusText(_ status: SFSpeechRecognizerAuthorizationStatus) -> String {
-        switch status {
-        case .authorized: return "Authorized"
-        case .denied: return "Denied"
-        case .restricted: return "Restricted"
-        case .notDetermined: return "Not Determined"
-        @unknown default: return "Unknown"
-        }
-    }
-    
-    private func speakHouseThought() {
-        guard !isMuted else { return }
-        guard let thought = recognizer.currentHouseThought else { return }
-        
-        Task {
-            await stateManager.speak(thought.thought, isMuted: isMuted)
-            
-            // Optionally speak the suggestion too
-            if let suggestion = thought.suggestion {
-                await stateManager.speak(suggestion, isMuted: isMuted)
-            }
-        }
-    }
-    
-    private func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?) async {
-        guard let question = newQuestion else {
-            // No more questions
-            if questionFlow.hasCompletedAllQuestions {
-                recognizer.setThankYouThought()
-            }
-            return
-        }
-        
-        // Mark initialization as complete
-        isInitializing = false
-        
-        // Get current answer if any
-        let currentAnswer = await questionFlow.getCurrentAnswer(for: question) ?? ""
-        
-        // Handle different question types
-        if question.text == "Is this the right address?" || question.text == "What's your home address?" {
-            if currentAnswer.isEmpty {
-                // Try to detect the address
-                do {
-                    let detected = try await addressManager.detectCurrentAddress()
-                    stateManager.persistentTranscript = detected.fullAddress
-                    recognizer.setQuestionThought(question.text)
-                } catch {
-                    recognizer.setQuestionThought(question.text)
-                }
-            } else {
-                // Pre-populate with existing answer
-                stateManager.persistentTranscript = currentAnswer
-                recognizer.setQuestionThought(question.text)
-            }
-        } else if question.text == "What should I call this house?" {
-            if currentAnswer.isEmpty {
-                // Generate suggestion from address if available
-                if let addressAnswer = await questionFlow.getAnswer(for: "Is this the right address?"),
-                   !addressAnswer.isEmpty {
-                    let suggestedName = addressManager.generateHouseName(from: addressAnswer)
-                    stateManager.persistentTranscript = suggestedName
-                }
-            } else {
-                stateManager.persistentTranscript = currentAnswer
-            }
-            recognizer.setQuestionThought(question.text)
-        } else if currentAnswer.isEmpty {
-            // No answer yet, just ask the question
-            recognizer.setQuestionThought(question.text)
-        } else {
-            // Pre-populate and ask for confirmation
-            stateManager.persistentTranscript = currentAnswer
-            recognizer.setQuestionThought("\(question.text) (Current answer: \(currentAnswer))")
-        }
-    }
-    
-    
-    private func saveAnswer() {
-        guard let question = questionFlow.currentQuestion else { return }
-        
-        // Prevent multiple saves
-        guard !stateManager.isSavingAnswer else { return }
-        
-        stateManager.beginSavingAnswer()
-        
-        Task {
-            do {
-                let trimmedAnswer = stateManager.persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
-                
-                // Clear any existing house thought to prevent duplicate speech
-                recognizer.clearHouseThought()
-                
-                // Save the answer
-                try await questionFlow.saveAnswer(trimmedAnswer)
-                
-                // If this was the name question, update the userName
-                if question.text == "What's your name?" {
-                    await stateManager.updateUserName(trimmedAnswer)
-                }
-                
-                // If this was the address question, save it properly
-                if question.text == "Is this the right address?" || question.text == "What's your home address?" {
-                    if let address = addressManager.parseAddress(trimmedAnswer) {
-                        try await addressManager.saveAddress(address)
-                    }
-                }
-                
-                // If this was the house name question, save it to ContentViewModel
-                if question.text == "What should I call this house?" {
-                    await serviceContainer.notesService.saveHouseName(trimmedAnswer)
-                }
-                
-                // Clear the transcript
-                stateManager.clearTranscript()
-                
-            } catch {
-                print("Error saving answer: \(error)")
-            }
-            
-            stateManager.endSavingAnswer()
-        }
-    }
     
     private func toggleMute() {
         isMuted.toggle()
@@ -441,6 +336,4 @@ struct ConversationView: View {
             stateManager.stopSpeaking()
         }
     }
-    
-    
 }

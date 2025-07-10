@@ -32,6 +32,12 @@ class QuestionFlowCoordinator: ObservableObject {
     private let notesService: NotesServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
+    // Dependencies for complex operations
+    weak var conversationStateManager: ConversationStateManager?
+    weak var conversationRecognizer: ConversationRecognizer?
+    weak var addressManager: AddressManager?
+    weak var serviceContainer: ServiceContainer?
+    
     // MARK: - Initialization
     
     init(notesService: NotesServiceProtocol) {
@@ -90,7 +96,57 @@ class QuestionFlowCoordinator: ObservableObject {
         }
     }
     
-    /// Save an answer for the current question
+    /// Save an answer for the current question with full integration
+    func saveAnswer() async {
+        guard let question = currentQuestion else { return }
+        guard let stateManager = conversationStateManager else { return }
+        guard let recognizer = conversationRecognizer else { return }
+        
+        // Prevent multiple saves
+        guard !stateManager.isSavingAnswer else { return }
+        
+        stateManager.beginSavingAnswer()
+        
+        do {
+            let trimmedAnswer = stateManager.persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            // Clear any existing house thought to prevent duplicate speech
+            recognizer.clearHouseThought()
+            
+            // Save the answer using the existing method
+            try await saveAnswer(trimmedAnswer)
+            
+            // If this was the name question, update the userName
+            if question.text == "What's your name?" {
+                await stateManager.updateUserName(trimmedAnswer)
+            }
+            
+            // If this was the address question, save it properly
+            if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+                if let manager = addressManager,
+                   let address = manager.parseAddress(trimmedAnswer) {
+                    try await manager.saveAddress(address)
+                }
+            }
+            
+            // If this was the house name question, save it to ContentViewModel
+            if question.text == "What should I call this house?" {
+                if let container = serviceContainer {
+                    await container.notesService.saveHouseName(trimmedAnswer)
+                }
+            }
+            
+            // Clear the transcript
+            stateManager.clearTranscript()
+            
+        } catch {
+            print("Error saving answer: \(error)")
+        }
+        
+        stateManager.endSavingAnswer()
+    }
+    
+    /// Save an answer for the current question (basic version)
     func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
         guard let question = currentQuestion else {
             throw QuestionFlowError.noCurrentQuestion
@@ -145,6 +201,66 @@ class QuestionFlowCoordinator: ObservableObject {
             print("Error getting answer: \(error)")
         }
         return nil
+    }
+    
+    /// Handle question change events
+    func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: inout Bool) async {
+        guard let question = newQuestion else {
+            // No more questions
+            if hasCompletedAllQuestions {
+                conversationRecognizer?.setThankYouThought()
+            }
+            return
+        }
+        
+        // Mark initialization as complete
+        isInitializing = false
+        
+        guard let stateManager = conversationStateManager,
+              let recognizer = conversationRecognizer else { return }
+        
+        // Get current answer if any
+        let currentAnswer = await getCurrentAnswer(for: question) ?? ""
+        
+        // Handle different question types
+        if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+            if currentAnswer.isEmpty {
+                // Try to detect the address
+                do {
+                    if let manager = addressManager {
+                        let detected = try await manager.detectCurrentAddress()
+                        stateManager.persistentTranscript = detected.fullAddress
+                        recognizer.setQuestionThought(question.text)
+                    }
+                } catch {
+                    recognizer.setQuestionThought(question.text)
+                }
+            } else {
+                // Pre-populate with existing answer
+                stateManager.persistentTranscript = currentAnswer
+                recognizer.setQuestionThought(question.text)
+            }
+        } else if question.text == "What should I call this house?" {
+            if currentAnswer.isEmpty {
+                // Generate suggestion from address if available
+                if let addressAnswer = await getAnswer(for: "Is this the right address?"),
+                   !addressAnswer.isEmpty,
+                   let manager = addressManager {
+                    let suggestedName = manager.generateHouseName(from: addressAnswer)
+                    stateManager.persistentTranscript = suggestedName
+                }
+            } else {
+                stateManager.persistentTranscript = currentAnswer
+            }
+            recognizer.setQuestionThought(question.text)
+        } else if currentAnswer.isEmpty {
+            // No answer yet, just ask the question
+            recognizer.setQuestionThought(question.text)
+        } else {
+            // Pre-populate and ask for confirmation
+            stateManager.persistentTranscript = currentAnswer
+            recognizer.setQuestionThought("\(question.text) (Current answer: \(currentAnswer))")
+        }
     }
     
     // MARK: - Private Methods

@@ -69,56 +69,19 @@ class AddressManager: ObservableObject {
     
     /// Parse address text into Address object
     func parseAddress(_ addressText: String) -> Address? {
-        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-        
-        guard components.count >= 3 else { return nil }
-        
-        let street = components[0]
-        let city = components[1]
-        let stateZip = components[2].components(separatedBy: " ")
-        let state = stateZip.first ?? ""
-        let postalCode = stateZip.count > 1 ? stateZip[1] : ""
-        
         // Try to get coordinates if we have a detected address
-        let coordinate = detectedAddress?.coordinate ?? Coordinate(latitude: 0, longitude: 0)
-        
-        return Address(
-            street: street,
-            city: city,
-            state: state,
-            postalCode: postalCode,
-            country: components.count > 3 ? components[3] : "United States",
-            coordinate: coordinate
-        )
+        let coordinate = detectedAddress?.coordinate
+        return AddressParser.parseAddress(addressText, coordinate: coordinate)
     }
     
     /// Generate house name suggestion from address
     func generateHouseName(from addressText: String) -> String {
-        // Parse the address to extract street name
-        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-        
-        if let street = components.first {
-            return generateHouseNameFromStreet(street)
-        }
-        
-        // If we can't extract a street name, return a generic suggestion
-        return "My House"
+        return AddressParser.generateHouseNameFromAddress(addressText)
     }
     
     /// Generate house name from street component
     func generateHouseNameFromStreet(_ street: String) -> String {
-        let streetName = street
-            .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
-            .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#, 
-                                with: "", 
-                                options: [.regularExpression, .caseInsensitive])
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if !streetName.isEmpty {
-            return "\(streetName) House"
-        }
-        
-        return "My House"
+        return AddressParser.generateHouseName(from: street)
     }
     
     /// Save address to persistent storage

@@ -43,6 +43,10 @@
  *   - Address lookup happens in background and populates notes
  *   - User edits address through conversation flow, not separate view
  *   - Removed showAddressConfirmation state and sheet presentation
+ * - 2025-07-10: Updated to use ViewModelFactory
+ *   - Changed from ServiceContainer.shared.makeContentViewModel()
+ *   - Now using ViewModelFactory.shared.makeContentViewModel()
+ *   - Follows separation of concerns principle
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -55,7 +59,7 @@ struct ContentView: View {
     @StateObject private var viewModel: ContentViewModel
     
     init() {
-        _viewModel = StateObject(wrappedValue: ServiceContainer.shared.makeContentViewModel())
+        _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
     }
     
     var body: some View {

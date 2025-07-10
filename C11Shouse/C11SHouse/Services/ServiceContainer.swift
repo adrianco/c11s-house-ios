@@ -23,6 +23,11 @@
  *   - Added WeatherCoordinator for weather business logic
  *   - Updated ContentViewModel factory to use coordinators
  *
+ * - 2025-07-10: Refactored ViewModel creation
+ *   - Moved ViewModel factory methods to ViewModelFactory class
+ *   - Added ViewModelFactory property for centralized ViewModel creation
+ *   - Follows Single Responsibility Principle
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -96,29 +101,13 @@ class ServiceContainer: ObservableObject {
         WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationManager: locationManager)
     }()
     
-    // MARK: - Factory Methods
+    // MARK: - ViewModel Factory
     
-    /// Create a new VoiceTranscriptionViewModel with injected dependencies
+    /// Factory for creating ViewModels with proper dependency injection
     @MainActor
-    func makeVoiceTranscriptionViewModel() -> VoiceTranscriptionViewModel {
-        return VoiceTranscriptionViewModel(
-            configuration: configuration,
-            audioRecorder: audioRecorder,
-            transcriptionService: transcriptionService,
-            permissionManager: permissionManager
-        )
-    }
-    
-    /// Create a new ContentViewModel with injected dependencies
-    @MainActor
-    func makeContentViewModel() -> ContentViewModel {
-        return ContentViewModel(
-            locationService: locationService,
-            weatherCoordinator: weatherCoordinator,
-            notesService: notesService,
-            addressManager: addressManager
-        )
-    }
+    private(set) lazy var viewModelFactory: ViewModelFactory = {
+        ViewModelFactory(serviceContainer: self)
+    }()
     
     /// Update configuration
     func updateConfiguration(_ newConfiguration: TranscriptionConfiguration) {

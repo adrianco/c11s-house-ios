@@ -179,16 +179,9 @@ class ContentViewModel: ObservableObject {
     }
     
     private func generateHouseNameFromAddress(_ address: Address) {
-        let streetName = address.street
-            .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
-            .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\b"#, 
-                                with: "", 
-                                options: [.regularExpression, .caseInsensitive])
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        houseName = AddressParser.generateHouseName(from: address.street)
         
-        if !streetName.isEmpty {
-            houseName = "\(streetName) House"
-            
+        if houseName != "My House" {
             // Save to notes
             Task {
                 await notesService.saveHouseName(houseName)

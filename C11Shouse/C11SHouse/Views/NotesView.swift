@@ -237,20 +237,8 @@ struct NotesView: View {
                 if question.text == "Is this the right address?" && !trimmedText.isEmpty {
                     // If we have a detected address with coordinates, use it
                     if let detectedAddr = self.detectedAddress {
-                        // Update the detected address with any edits the user made
-                        let components = trimmedText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-                        
-                        var finalAddress = detectedAddr
-                        if components.count >= 1 {
-                            finalAddress = Address(
-                                street: components[0],
-                                city: components.count > 1 ? components[1] : detectedAddr.city,
-                                state: components.count > 2 ? components[2].components(separatedBy: " ").first ?? detectedAddr.state : detectedAddr.state,
-                                postalCode: components.count > 2 && components[2].components(separatedBy: " ").count > 1 ? components[2].components(separatedBy: " ")[1] : detectedAddr.postalCode,
-                                country: detectedAddr.country,
-                                coordinate: detectedAddr.coordinate // Keep the accurate coordinates
-                            )
-                        }
+                        // Parse the user's edited address while keeping detected coordinates
+                        let finalAddress = AddressParser.parseAddress(trimmedText, coordinate: detectedAddr.coordinate) ?? detectedAddr
                         
                         // Save to UserDefaults
                         if let encoded = try? JSONEncoder().encode(finalAddress) {
@@ -261,19 +249,9 @@ struct NotesView: View {
                         try? await serviceContainer.locationService.confirmAddress(finalAddress)
                     }
                     
-                    // Extract just the street name for house naming
-                    let streetName = trimmedText
-                        .components(separatedBy: ",").first ?? trimmedText
-                    
-                    let cleanStreetName = streetName
-                        .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
-                        .replacingOccurrences(of: #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#, 
-                                            with: "", 
-                                            options: [.regularExpression, .caseInsensitive])
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                    
-                    if !cleanStreetName.isEmpty {
-                        let houseName = "\(cleanStreetName) House"
+                    // Generate and save house name from the address
+                    let houseName = AddressParser.generateHouseNameFromAddress(trimmedText)
+                    if houseName != "My House" {
                         await serviceContainer.notesService.saveHouseName(houseName)
                     }
                 }
