@@ -183,8 +183,9 @@ final class ThreadingVerificationTests: XCTestCase {
     func testNoRetainCyclesInTimers() async {
         weak var weakViewModel: VoiceTranscriptionViewModel?
         
-        await autoreleasepool {
-            let viewModel = await ServiceContainer.shared.makeVoiceTranscriptionViewModel()
+        // Create a scope for the view model
+        do {
+            let viewModel = ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
             weakViewModel = viewModel
             
             await viewModel.startRecording()
