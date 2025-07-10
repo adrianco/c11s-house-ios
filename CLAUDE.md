@@ -1,8 +1,5 @@
 # Claude Code Configuration for Claude Flow
 
-## 📱 iOS Version Support
-**IMPORTANT**: This project targets iOS 18.0 and later only. All backward compatibility code for earlier iOS versions should be removed.
-
 ## 🚀 IMPORTANT: Claude Flow AI-Driven Development
 
 ### Claude Code Handles:
@@ -605,60 +602,3 @@ Claude Flow extends the base coordination with:
 ---
 
 Remember: **Claude Flow coordinates, Claude Code creates!** Start with `mcp__claude-flow__swarm_init` to enhance your development workflow.
-
-## 📝 Swift File Documentation Requirements
-
-### MANDATORY: Block Comments for All Swift Files
-
-**Every Swift file (.swift) MUST begin with a block comment that includes:**
-
-```swift
-/*
- * CONTEXT & PURPOSE:
- * [Clear explanation of what this file does and its role in the system]
- *
- * DECISION HISTORY:
- * - YYYY-MM-DD: Initial implementation
- *   - [List key decisions made]
- *   - [Explain why certain approaches were chosen]
- *   - [Document any trade-offs considered]
- * - YYYY-MM-DD: [Subsequent changes]
- *   - [What changed and why]
- *
- * FUTURE UPDATES:
- * - [Placeholder for future changes - update when modifying the file]
- */
-```
-
-### Rules:
-1. **New Files**: ALWAYS create this block comment as the first thing in any new Swift file
-2. **Modified Files**: ALWAYS update the DECISION HISTORY section with:
-   - Current date (YYYY-MM-DD format)
-   - What you changed
-   - Why you made the change
-3. **Test Files**: Include these comments in test files too - explain what is being tested and why
-4. **No Exceptions**: This applies to ALL Swift files including:
-   - Views
-   - Models
-   - ViewModels
-   - Services
-   - Infrastructure
-   - Tests
-   - Utilities
-   - Extensions
-
-### Example Update When Modifying a File:
-```swift
- * - 2025-07-08: Added weather integration
- *   - Integrated weather service to display on ContentView
- *   - House emotions now react to weather conditions
- *   - Chose OpenWeatherMap API for reliability and free tier
-```
-
-This ensures every file has a clear history of decisions and changes, making the codebase self-documenting and easier to understand.
-
-## Important Instruction Reminders
-- Do what has been asked; nothing more, nothing less
-- NEVER create files unless they're absolutely necessary for achieving your goal
-- ALWAYS prefer editing an existing file to creating a new one
-- NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User

@@ -1,0 +1,10 @@
+{
+  "default": [
+    {
+      "key": "qa-test-key",
+      "value": "qa-test-value",
+      "namespace": "default",
+      "timestamp": 1752168145598
+    }
+  ]
+}

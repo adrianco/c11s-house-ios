@@ -1,0 +1,46 @@
+{
+  "name": "claude-flow-implementation",
+  "version": "2.0.0-alpha.27",
+  "description": "Claude Flow core implementation for iOS House project",
+  "type": "module",
+  "main": "claude-flow-core.js",
+  "scripts": {
+    "init": "node claude-flow-init.js",
+    "start": "node claude-flow-core.js init",
+    "test": "node --test",
+    "swarm:init": "node claude-flow-core.js swarm init",
+    "agent:spawn": "node claude-flow-core.js agent spawn",
+    "task:run": "node claude-flow-core.js task run",
+    "status": "node claude-flow-core.js status",
+    "metrics": "node claude-flow-core.js metrics",
+    "report": "node claude-flow-core.js report"
+  },
+  "dependencies": {
+    "claude-flow": "^2.0.0-alpha.27"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "keywords": [
+    "claude-flow",
+    "ai",
+    "swarm",
+    "orchestration",
+    "memory",
+    "persistence"
+  ],
+  "author": "Claude Flow Implementation Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "claude-flow",
+    "claude-flow-init.js",
+    "claude-flow-core.js",
+    "memory-persistence.js",
+    "agent-coordination.js",
+    "session-manager.js",
+    ".claude/settings.json"
+  ]
+}
