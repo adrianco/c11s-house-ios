@@ -26,7 +26,7 @@ class InitialSetupFlowTests: XCTestCase {
     
     // MARK: - Properties
     
-    private var notesService: NotesService!
+    private var notesService: NotesServiceProtocol!
     private var locationServiceMock: MockLocationService!
     private var permissionManagerMock: MockPermissionManager!
     private var addressManager: AddressManager!
@@ -68,12 +68,14 @@ class InitialSetupFlowTests: XCTestCase {
         questionFlowCoordinator.addressManager = addressManager
         
         // Clear any existing data
-        try await notesService.clearAllNotes()
+        let emptyStore = NotesStore(questions: [], notes: [:])
+        try await notesService.importNotes(from: JSONEncoder().encode(emptyStore))
     }
     
     override func tearDown() async throws {
         cancellables = nil
-        try await notesService.clearAllNotes()
+        let emptyStore = NotesStore(questions: [], notes: [:])
+        try await notesService.importNotes(from: JSONEncoder().encode(emptyStore))
         try await super.tearDown()
     }
     
@@ -97,20 +99,24 @@ class InitialSetupFlowTests: XCTestCase {
         permissionManagerMock.mockLocationStatus = .authorized
         
         // Step 3: Detect current address
-        locationServiceMock.mockLocation = MockLocation(latitude: 37.3317, longitude: -122.0302)
-        locationServiceMock.mockPlacemark = MockPlacemark(
-            name: "Apple Park",
-            thoroughfare: "1 Apple Park Way",
-            locality: "Cupertino",
-            administrativeArea: "CA",
-            postalCode: "95014"
+        let mockLocation = CLLocation(latitude: 37.3317, longitude: -122.0302)
+        locationServiceMock.getCurrentLocationResult = .success(mockLocation)
+        locationServiceMock.lookupAddressResult = .success(
+            Address(
+                street: "1 Apple Park Way",
+                city: "Cupertino",
+                state: "CA",
+                postalCode: "95014",
+                country: "USA",
+                coordinate: Coordinate(latitude: 37.3317, longitude: -122.0302)
+            )
         )
         
         let detectedAddress = try await addressManager.detectCurrentAddress()
         XCTAssertEqual(detectedAddress.street, "1 Apple Park Way")
         XCTAssertEqual(detectedAddress.city, "Cupertino")
         XCTAssertEqual(detectedAddress.state, "CA")
-        XCTAssertEqual(detectedAddress.zipCode, "95014")
+        XCTAssertEqual(detectedAddress.postalCode, "95014")
         
         // Step 4: Load and answer address confirmation question
         await questionFlowCoordinator.loadNextQuestion()
@@ -226,8 +232,8 @@ class InitialSetupFlowTests: XCTestCase {
         // Test setup flow with network/geocoding errors
         
         // Configure location service to fail geocoding
-        locationServiceMock.mockLocation = MockLocation(latitude: 0, longitude: 0)
-        locationServiceMock.mockPlacemark = nil // This will cause geocoding to fail
+        locationServiceMock.getCurrentLocationResult = .success(CLLocation(latitude: 0, longitude: 0))
+        locationServiceMock.lookupAddressResult = .failure(LocationError.geocodingFailed)
         
         // Grant permission
         permissionManagerMock.mockLocationStatus = .authorized
@@ -260,13 +266,17 @@ class InitialSetupFlowTests: XCTestCase {
         // Test that data persists correctly throughout setup
         
         // Setup mock data
-        locationServiceMock.mockLocation = MockLocation(latitude: 34.0522, longitude: -118.2437)
-        locationServiceMock.mockPlacemark = MockPlacemark(
-            name: "Downtown LA",
-            thoroughfare: "100 Main St",
-            locality: "Los Angeles",
-            administrativeArea: "CA",
-            postalCode: "90012"
+        let mockLocation = CLLocation(latitude: 34.0522, longitude: -118.2437)
+        locationServiceMock.getCurrentLocationResult = .success(mockLocation)
+        locationServiceMock.lookupAddressResult = .success(
+            Address(
+                street: "100 Main St",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90012",
+                country: "USA",
+                coordinate: Coordinate(latitude: 34.0522, longitude: -118.2437)
+            )
         )
         
         // Save data at each step and verify persistence
@@ -376,46 +386,4 @@ class InitialSetupFlowTests: XCTestCase {
     }
 }
 
-// MARK: - Mock Permission Manager
-
-class MockPermissionManager: ObservableObject {
-    @Published var mockLocationStatus: PermissionStatus = .notDetermined
-    @Published var mockMicrophoneGranted = false
-    @Published var mockSpeechGranted = false
-    
-    func checkLocationPermission() async -> PermissionStatus {
-        return mockLocationStatus
-    }
-    
-    func requestLocationPermission() async {
-        if mockLocationStatus == .notDetermined {
-            mockLocationStatus = .authorized
-        }
-    }
-    
-    func checkMicrophonePermission() async -> Bool {
-        return mockMicrophoneGranted
-    }
-    
-    func requestMicrophonePermission() async -> Bool {
-        mockMicrophoneGranted = true
-        return true
-    }
-    
-    func checkSpeechRecognitionPermission() async -> Bool {
-        return mockSpeechGranted
-    }
-    
-    func requestSpeechRecognitionPermission() async -> Bool {
-        mockSpeechGranted = true
-        return true
-    }
-}
-
-// Permission status enum for testing
-enum PermissionStatus {
-    case notDetermined
-    case authorized
-    case denied
-    case restricted
-}
+// Note: Mock types are now centralized in TestMocks.swift

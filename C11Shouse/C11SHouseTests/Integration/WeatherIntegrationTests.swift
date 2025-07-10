@@ -69,10 +69,10 @@ class WeatherIntegrationTests: XCTestCase {
         
         // Step 1: Setup location
         let mockLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
-        locationManagerMock.currentLocation = mockLocation
+        locationServiceMock.getCurrentLocationResult = .success(mockLocation)
         
         // Step 2: Setup weather data
-        let mockWeather = Weather(
+        let mockWeather = C11SHouse.Weather(
             temperature: Temperature(value: 68.0, unit: .fahrenheit),
             condition: .clear,
             humidity: 0.65,
@@ -90,7 +90,7 @@ class WeatherIntegrationTests: XCTestCase {
         
         // Step 3: Fetch weather
         let expectation = expectation(description: "Weather update")
-        var receivedWeather: Weather?
+        var receivedWeather: C11SHouse.Weather?
         var receivedEmotion: HouseEmotion?
         
         weatherCoordinator.$currentWeather
@@ -130,9 +130,9 @@ class WeatherIntegrationTests: XCTestCase {
     func testWeatherEmotionMapping() async throws {
         // Test various weather conditions and their emotion mappings
         
-        locationManagerMock.currentLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
+        locationServiceMock.getCurrentLocationResult = .success(CLLocation(latitude: 37.7749, longitude: -122.4194))
         
-        let testCases: [(Weather, HouseEmotion)] = [
+        let testCases: [(C11SHouse.Weather, HouseEmotion)] = [
             // Happy conditions - pleasant temperature, clear skies
             (createWeather(temp: 72, condition: .clear, humidity: 0.5, uvIndex: 4, windSpeed: 5), .happy),
             
@@ -272,7 +272,7 @@ class WeatherIntegrationTests: XCTestCase {
             .store(in: &cancellables)
         
         // Setup successful response
-        locationManagerMock.currentLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
+        locationServiceMock.getCurrentLocationResult = .success(CLLocation(latitude: 37.7749, longitude: -122.4194))
         weatherServiceMock.mockWeather = createWeather(temp: 70, condition: .clear)
         
         // Add delay to weather service to observe loading state
@@ -299,7 +299,7 @@ class WeatherIntegrationTests: XCTestCase {
         uvIndex: Int = 5,
         windSpeed: Double = 10
     ) -> Weather {
-        return Weather(
+        return C11SHouse.Weather(
             temperature: Temperature(value: temp, unit: .fahrenheit),
             condition: condition,
             humidity: humidity,

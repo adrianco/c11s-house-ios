@@ -70,7 +70,7 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
             state: "CA",
             postalCode: "94105",
             country: "USA",
-            coordinate: location.coordinate
+            coordinate: Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         )
     }
     
@@ -510,7 +510,7 @@ class AddressManagerTests: XCTestCase {
             state: "CA",
             postalCode: "91608",
             country: "USA",
-            coordinate: location.coordinate
+            coordinate: Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         )
         
         // 2. Detect current address

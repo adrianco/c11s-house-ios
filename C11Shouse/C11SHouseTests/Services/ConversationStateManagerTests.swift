@@ -28,12 +28,24 @@ import Combine
 
 class MockTTSServiceForStateManager: TTSService {
     var isSpeaking = false
+    
+    var isSpeakingPublisher: AnyPublisher<Bool, Never> {
+        isSpeakingSubject.eraseToAnyPublisher()
+    }
+    
+    var speechProgressPublisher: AnyPublisher<Float, Never> {
+        speechProgressSubject.eraseToAnyPublisher()
+    }
+    
+    private let isSpeakingSubject = CurrentValueSubject<Bool, Never>(false)
+    private let speechProgressSubject = CurrentValueSubject<Float, Never>(0.0)
+    
     var speakCallCount = 0
     var stopSpeakingCallCount = 0
     var lastSpokenText: String?
     var lastLanguage: String?
     var shouldThrowError = false
-    var errorToThrow: Error = TTSError.speechInterrupted
+    var errorToThrow: Error = NSError(domain: "TTSError", code: 1, userInfo: nil)
     
     func speak(_ text: String, language: String?) async throws {
         if shouldThrowError {
@@ -43,15 +55,35 @@ class MockTTSServiceForStateManager: TTSService {
         lastSpokenText = text
         lastLanguage = language
         isSpeaking = true
+        isSpeakingSubject.send(true)
         
         // Simulate speaking duration
         try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        
         isSpeaking = false
+        isSpeakingSubject.send(false)
     }
     
     func stopSpeaking() {
         stopSpeakingCallCount += 1
         isSpeaking = false
+        isSpeakingSubject.send(false)
+    }
+    
+    func pauseSpeaking() {
+        // No-op for tests
+    }
+    
+    func continueSpeaking() {
+        // No-op for tests
+    }
+    
+    func setRate(_ rate: Float) {
+        // No-op for tests
+    }
+    
+    func setPitch(_ pitch: Float) {
+        // No-op for tests
     }
 }
 

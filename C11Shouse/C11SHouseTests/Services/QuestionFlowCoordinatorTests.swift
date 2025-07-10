@@ -60,7 +60,7 @@ class MockNotesService: NotesServiceProtocol {
     
     func saveNote(_ note: Note) async throws {
         if shouldThrowError {
-            throw errorToThrow ?? NotesError.encodingFailed(NSError(domain: "test", code: 1))
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         saveNoteCallCount += 1
         mockNotesStore.notes[note.questionId] = note
@@ -82,7 +82,7 @@ class MockNotesService: NotesServiceProtocol {
     
     func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]?) async throws {
         if shouldThrowError {
-            throw errorToThrow ?? NotesError.encodingFailed(NSError(domain: "test", code: 1))
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         saveOrUpdateNoteCallCount += 1
         let note = Note(questionId: questionId, answer: answer, metadata: metadata)
@@ -248,7 +248,7 @@ class MockAddressManager: AddressManager {
     override func detectCurrentAddress() async throws -> Address {
         detectCurrentAddressCallCount += 1
         if shouldThrowError {
-            throw AddressError.locationPermissionDenied
+            throw LocationError.locationUnavailable
         }
         return mockDetectedAddress ?? Address(
             street: "123 Main St",
@@ -256,7 +256,7 @@ class MockAddressManager: AddressManager {
             state: "IL",
             postalCode: "62701",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 39.7817, longitude: -89.6501)
+            coordinate: Coordinate(latitude: 39.7817, longitude: -89.6501)
         )
     }
     
@@ -268,7 +268,7 @@ class MockAddressManager: AddressManager {
     override func saveAddress(_ address: Address) async throws {
         saveAddressCallCount += 1
         if shouldThrowError {
-            throw AddressError.saveFailed(NSError(domain: "test", code: 1))
+            throw NSError(domain: "test", code: 1)
         }
     }
     
@@ -284,7 +284,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     var sut: QuestionFlowCoordinator!
     var mockNotesService: MockNotesService!
     var mockStateManager: MockConversationStateManager!
-    var mockRecognizer: MockConversationRecognizer!
+    // mockRecognizer removed - using protocol-based mock
     var mockAddressManager: MockAddressManager!
     var cancellables: Set<AnyCancellable>!
     
@@ -298,14 +298,15 @@ class QuestionFlowCoordinatorTests: XCTestCase {
             notesService: mockNotesService,
             ttsService: MockTTSService()
         )
-        mockRecognizer = MockConversationRecognizer()
+        // Use protocol-based mock for ConversationRecognizer
+        let recognizerMock = MockConversationRecognizer()
         mockAddressManager = MockAddressManager(
             notesService: mockNotesService,
             locationService: MockLocationService()
         )
         
         sut.conversationStateManager = mockStateManager
-        sut.conversationRecognizer = mockRecognizer
+        sut.conversationRecognizer = recognizerMock as? ConversationRecognizer
         sut.addressManager = mockAddressManager
         
         cancellables = Set<AnyCancellable>()
@@ -316,7 +317,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut = nil
         mockNotesService = nil
         mockStateManager = nil
-        mockRecognizer = nil
+        // mockRecognizer removed
         mockAddressManager = nil
         super.tearDown()
     }
@@ -793,45 +794,4 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     }
 }
 
-// MARK: - Mock Support Services
-
-class MockTTSService: TTSService {
-    var isSpeaking: Bool = false
-    
-    func speak(_ text: String, language: String?) async throws {
-        // Mock implementation
-    }
-    
-    func stopSpeaking() {
-        isSpeaking = false
-    }
-}
-
-class MockLocationService: LocationServiceProtocol {
-    var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
-        Just(.authorizedWhenInUse).eraseToAnyPublisher()
-    }
-    
-    func requestLocationPermission() async -> CLAuthorizationStatus {
-        return .authorizedWhenInUse
-    }
-    
-    func getCurrentLocation() async throws -> CLLocation {
-        return CLLocation(latitude: 39.7817, longitude: -89.6501)
-    }
-    
-    func lookupAddress(for location: CLLocation) async throws -> Address {
-        return Address(
-            street: "123 Main St",
-            city: "Springfield",
-            state: "IL",
-            postalCode: "62701",
-            country: "USA",
-            coordinate: location.coordinate
-        )
-    }
-    
-    func confirmAddress(_ address: Address) async throws {
-        // Mock implementation
-    }
-}
+// Note: Mock types are now centralized in TestMocks.swift

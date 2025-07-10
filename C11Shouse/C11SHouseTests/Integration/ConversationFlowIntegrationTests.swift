@@ -18,6 +18,7 @@
 
 import XCTest
 import Combine
+import CoreLocation
 @testable import C11SHouse
 
 @MainActor
@@ -31,7 +32,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
     private var addressManager: AddressManager!
     private var notesService: NotesService!
     private var locationServiceMock: MockLocationService!
-    private var weatherServiceMock: MockWeatherService!
+    private var weatherServiceMock: MockWeatherKitService!
     private var ttsMock: MockTTSService!
     private var cancellables: Set<AnyCancellable>!
     
@@ -46,7 +47,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
         notesService = NotesServiceImpl()
         ttsMock = MockTTSService()
         locationServiceMock = MockLocationService()
-        weatherServiceMock = MockWeatherService()
+        weatherServiceMock = MockWeatherKitService()
         
         // Create coordinators with real dependencies
         conversationStateManager = ConversationStateManager(
@@ -68,12 +69,16 @@ class ConversationFlowIntegrationTests: XCTestCase {
         questionFlowCoordinator.addressManager = addressManager
         
         // Clear any existing data
-        try await notesService.clearAllNotes()
+        // Note: clearAllNotes might not exist, using alternative approach
+        let emptyStore = NotesStore(questions: [], notes: [:])
+        try await notesService.importNotes(from: JSONEncoder().encode(emptyStore))
     }
     
     override func tearDown() async throws {
         cancellables = nil
-        try await notesService.clearAllNotes()
+        // Clear notes
+        let emptyStore = NotesStore(questions: [], notes: [:])
+        try await notesService.importNotes(from: JSONEncoder().encode(emptyStore))
         try await super.tearDown()
     }
     
@@ -92,13 +97,17 @@ class ConversationFlowIntegrationTests: XCTestCase {
         // Step 2: Simulate user answering the address question
         if firstQuestion?.text == "Is this the right address?" {
             // Mock location service should provide an address
-            locationServiceMock.mockLocation = MockLocation(latitude: 37.7749, longitude: -122.4194)
-            locationServiceMock.mockPlacemark = MockPlacemark(
-                name: "Test Location",
-                thoroughfare: "123 Main",
-                locality: "San Francisco",
-                administrativeArea: "CA",
-                postalCode: "94105"
+            let mockLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
+            locationServiceMock.getCurrentLocationResult = .success(mockLocation)
+            locationServiceMock.lookupAddressResult = .success(
+                Address(
+                    street: "123 Main",
+                    city: "San Francisco",
+                    state: "CA",
+                    postalCode: "94105",
+                    country: "USA",
+                    coordinate: Coordinate(latitude: 37.7749, longitude: -122.4194)
+                )
             )
             
             // Detect address (should populate transcript)
@@ -202,13 +211,17 @@ class ConversationFlowIntegrationTests: XCTestCase {
     
     func testAddressDetectionFlow() async throws {
         // Setup location mock
-        locationServiceMock.mockLocation = MockLocation(latitude: 40.7128, longitude: -74.0060)
-        locationServiceMock.mockPlacemark = MockPlacemark(
-            name: "Empire State Building",
-            thoroughfare: "350 5th Ave",
-            locality: "New York",
-            administrativeArea: "NY",
-            postalCode: "10118"
+        let mockLocation = CLLocation(latitude: 40.7128, longitude: -74.0060)
+        locationServiceMock.getCurrentLocationResult = .success(mockLocation)
+        locationServiceMock.lookupAddressResult = .success(
+            Address(
+                street: "350 5th Ave",
+                city: "New York",
+                state: "NY",
+                postalCode: "10118",
+                country: "USA",
+                coordinate: Coordinate(latitude: 40.7128, longitude: -74.0060)
+            )
         )
         
         // Load address question
@@ -225,7 +238,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
         XCTAssertEqual(detected.street, "350 5th Ave")
         XCTAssertEqual(detected.city, "New York")
         XCTAssertEqual(detected.state, "NY")
-        XCTAssertEqual(detected.zipCode, "10118")
+        XCTAssertEqual(detected.postalCode, "10118")
         
         // Save detected address
         conversationStateManager.persistentTranscript = detected.fullAddress
@@ -350,76 +363,4 @@ class ConversationFlowIntegrationTests: XCTestCase {
     }
 }
 
-// MARK: - Mock Services
-
-class MockLocationService: LocationServiceProtocol {
-    var mockLocation: MockLocation?
-    var mockPlacemark: MockPlacemark?
-    var shouldThrowError = false
-    
-    func requestLocationPermission() async throws {
-        if shouldThrowError {
-            throw LocationError.permissionDenied
-        }
-    }
-    
-    func getCurrentLocation() async throws -> (latitude: Double, longitude: Double) {
-        if shouldThrowError {
-            throw LocationError.locationUnavailable
-        }
-        guard let location = mockLocation else {
-            throw LocationError.locationUnavailable
-        }
-        return (location.latitude, location.longitude)
-    }
-    
-    func reverseGeocode(latitude: Double, longitude: Double) async throws -> AddressComponents {
-        if shouldThrowError {
-            throw LocationError.geocodingFailed
-        }
-        guard let placemark = mockPlacemark else {
-            throw LocationError.geocodingFailed
-        }
-        
-        return AddressComponents(
-            street: placemark.thoroughfare ?? "",
-            city: placemark.locality ?? "",
-            state: placemark.administrativeArea ?? "",
-            zipCode: placemark.postalCode ?? "",
-            country: "USA"
-        )
-    }
-}
-
-class MockTTSService: TTSService {
-    var speakCallCount = 0
-    var lastSpokenText: String?
-    
-    func speak(_ text: String) {
-        speakCallCount += 1
-        lastSpokenText = text
-    }
-    
-    func stopSpeaking() {
-        // No-op for mock
-    }
-}
-
-struct MockLocation {
-    let latitude: Double
-    let longitude: Double
-}
-
-struct MockPlacemark {
-    let name: String?
-    let thoroughfare: String?
-    let locality: String?
-    let administrativeArea: String?
-    let postalCode: String?
-}
-
-enum LocationError: Error {
-    case permissionDenied
-    case locationUnavailable
-    case geocodingFailed
-}
+// Note: Mock types are now centralized in TestMocks.swift
