@@ -78,13 +78,12 @@ class ContentViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        // Subscribe to weather updates
-        weatherService.weatherUpdatePublisher
+        // Subscribe to weather updates from coordinator
+        weatherCoordinator.$currentWeather
             .receive(on: DispatchQueue.main)
+            .compactMap { $0 }
             .sink { [weak self] weather in
-                self?.currentWeather = weather
                 self?.updateHouseEmotionForWeather(weather)
-                Task { await self?.saveWeatherSummary() }
             }
             .store(in: &cancellables)
         
@@ -152,20 +151,11 @@ class ContentViewModel: ObservableObject {
     func refreshWeather() async {
         guard let address = currentAddress else { return }
         
-        isLoadingWeather = true
-        weatherError = nil
-        
         do {
-            let weather = try await weatherService.fetchWeatherForAddress(address)
-            currentWeather = weather
-            updateHouseEmotionForWeather(weather)
-            await saveWeatherSummary()
+            _ = try await weatherCoordinator.fetchWeather(for: address)
         } catch {
-            weatherError = error
             updateHouseEmotionForError()
         }
-        
-        isLoadingWeather = false
     }
     
     func confirmAddress(_ address: Address) async {
