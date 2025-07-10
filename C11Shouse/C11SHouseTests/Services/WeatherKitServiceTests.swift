@@ -11,6 +11,10 @@
  *   - Validate weather condition mapping
  *   - Test publisher updates for reactive UI
  *   - Verify forecast data inclusion
+ * - 2025-07-10: Added WeatherKit entitlement and API tests
+ *   - Test WeatherKit entitlement configuration
+ *   - Test actual WeatherKit API integration
+ *   - Verify weather data fetching for San Francisco location
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -18,6 +22,8 @@
 
 import XCTest
 import Combine
+import WeatherKit
+import CoreLocation
 @testable import C11SHouse
 
 class WeatherKitServiceTests: XCTestCase {
@@ -66,5 +72,17 @@ class WeatherKitServiceTests: XCTestCase {
         XCTAssertEqual(WeatherCondition.snow.icon, "cloud.snow.fill")
         XCTAssertEqual(WeatherCondition.thunderstorms.icon, "cloud.bolt.rain.fill")
         XCTAssertEqual(WeatherCondition.foggy.icon, "cloud.fog.fill")
+    }
+    
+    func testWeatherKitEntitlement() {
+        // Test entitlement exists
+        let hasWeatherKit = Bundle.main.object(forInfoDictionaryKey: "com.apple.developer.weatherkit") != nil
+        XCTAssertTrue(hasWeatherKit, "WeatherKit entitlement missing")
+    }
+    
+    func testWeatherKitAPI() async throws {
+        let location = CLLocation(latitude: 37.7749, longitude: -122.4194)
+        let weather = try await WeatherService.shared.weather(for: location)
+        XCTAssertNotNil(weather.currentWeather)
     }
 }
