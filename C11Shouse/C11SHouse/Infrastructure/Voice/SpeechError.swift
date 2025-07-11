@@ -18,7 +18,7 @@
 import Foundation
 import Speech
 
-enum SpeechError: Error, LocalizedError {
+enum SpeechError: Error, LocalizedError, Equatable {
     case noSpeechDetected
     case recordingError(NSError)
     case cancelled
