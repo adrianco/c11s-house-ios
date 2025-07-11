@@ -223,7 +223,7 @@ class WeatherCoordinator: ObservableObject {
                     answer: content,
                     metadata: [
                         "type": "houseInfo",
-                        "updated_via_conversation": "false", // This ensures it won't appear in conversation
+                        "updated_via_conversation": "true", // Mark as valid, no user confirmation needed
                         "lastUpdated": Date().ISO8601Format(),
                         "automatic": "true"
                     ]
@@ -244,7 +244,7 @@ class WeatherCoordinator: ObservableObject {
                     answer: content,
                     metadata: [
                         "type": "houseInfo",
-                        "updated_via_conversation": "false", // This ensures it won't appear in conversation
+                        "updated_via_conversation": "true", // Mark as valid, no user confirmation needed
                         "lastUpdated": Date().ISO8601Format(),
                         "automatic": "true"
                     ]
