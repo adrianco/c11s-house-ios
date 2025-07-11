@@ -153,14 +153,15 @@ class AddressSuggestionService {
     
     /// Create a house name suggestion response
     func createHouseNameSuggestionResponse(_ suggestions: [String]) -> HouseThought {
-        let suggestionText = suggestions.prefix(2).joined(separator: " or ")
+        // Use the first suggestion as the primary one
+        let primarySuggestion = suggestions.first ?? "My House"
         return HouseThought(
-            thought: "What should I call this house?",
+            thought: "What should I call this house?\n\n\(primarySuggestion)",
             emotion: .excited,
             category: .question,
             confidence: 1.0,
             context: "House Naming",
-            suggestion: "How about \(suggestionText)?"
+            suggestion: nil  // Don't use suggestion field to keep it simple
         )
     }
 }

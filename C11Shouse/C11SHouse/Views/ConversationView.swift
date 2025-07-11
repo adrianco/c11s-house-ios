@@ -580,17 +580,31 @@ struct MessageBubble: View {
         self.onAddressSubmit = onAddressSubmit
     }
     
-    // Check if this is an address question with pre-populated content
-    private var isAddressQuestion: Bool {
-        message.content.contains("Is this the right address?") && message.content.contains("\n")
+    // Check if this is a question with a suggested answer
+    private var isQuestionWithSuggestion: Bool {
+        // Check for common question patterns with newlines indicating suggested answers
+        let questionPatterns = [
+            "Is this the right address?",
+            "What's your home address?",
+            "What should I call this house?",
+            "What's your name?",
+            "What's your phone number?",
+            "What's your email?"
+        ]
+        
+        return questionPatterns.contains(where: { pattern in
+            message.content.contains(pattern) && message.content.contains("\n")
+        })
     }
     
-    // Extract address from message if it exists
-    private var extractedAddress: String? {
-        if isAddressQuestion {
-            let components = message.content.components(separatedBy: "\n")
-            if components.count > 1 {
-                return components[1...].joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+    // Extract question and suggested answer
+    private var questionAndAnswer: (question: String, answer: String)? {
+        if isQuestionWithSuggestion {
+            let components = message.content.components(separatedBy: "\n\n")
+            if components.count >= 2 {
+                let question = components[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let answer = components[1...].joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+                return (question, answer)
             }
         }
         return nil
@@ -603,10 +617,15 @@ struct MessageBubble: View {
             }
             
             VStack(alignment: message.isFromUser ? .trailing : .leading, spacing: 4) {
-                if !message.isFromUser && isAddressQuestion, let address = extractedAddress {
-                    // Use special address question view
-                    AddressQuestionView(detectedAddress: address) { editedAddress in
-                        onAddressSubmit?(editedAddress)
+                if !message.isFromUser && isQuestionWithSuggestion, 
+                   let (question, answer) = questionAndAnswer {
+                    // Use generic suggested answer view
+                    SuggestedAnswerQuestionView(
+                        question: question,
+                        suggestedAnswer: answer,
+                        icon: SuggestedAnswerQuestionView.icon(for: question)
+                    ) { editedAnswer in
+                        onAddressSubmit?(editedAnswer)
                     }
                 } else {
                     // Regular message bubble

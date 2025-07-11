@@ -291,9 +291,19 @@ class QuestionFlowCoordinator: ObservableObject {
             // No answer yet, just ask the question
             await recognizer.setQuestionThought(question.text)
         } else {
-            // Pre-populate and ask for confirmation
+            // Pre-populate and ask for confirmation with consistent format
             stateManager.persistentTranscript = currentAnswer
-            await recognizer.setQuestionThought("\(question.text) (Current answer: \(currentAnswer))")
+            
+            // Create a house thought with the question and suggested answer
+            let thought = HouseThought(
+                thought: "\(question.text)\n\n\(currentAnswer)",
+                emotion: .curious,
+                category: .question,
+                confidence: 0.9,
+                context: "Confirming existing answer",
+                suggestion: nil
+            )
+            recognizer.currentHouseThought = thought
         }
         
         return newInitializingState
