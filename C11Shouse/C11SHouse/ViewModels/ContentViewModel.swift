@@ -137,6 +137,15 @@ class ContentViewModel: ObservableObject {
     }
     
     func loadAddressAndWeather() async {
+        // Check if required questions are answered
+        let requiredComplete = await notesService.areAllRequiredQuestionsAnswered()
+        
+        if !requiredComplete {
+            // Show curious emotion when required questions aren't answered
+            updateHouseEmotionForUnansweredQuestions()
+            return
+        }
+        
         // First check if we already have a saved address
         if currentAddress != nil {
             // We have an address, fetch weather
@@ -144,8 +153,9 @@ class ContentViewModel: ObservableObject {
             return
         }
         
-        // No saved address, prompt user to set it via conversation
-        updateHouseEmotionForNoAddress()
+        // Required questions are answered but no address yet
+        // Show content/happy emotion since we know about the user
+        updateHouseEmotionForKnownUser()
     }
     
     func refreshWeather() async {
@@ -307,6 +317,26 @@ class ContentViewModel: ObservableObject {
             category: .suggestion,
             confidence: 0.9,
             context: "Setup needed"
+        )
+    }
+    
+    private func updateHouseEmotionForUnansweredQuestions() {
+        houseThought = HouseThought(
+            thought: "I'm curious to learn more about you and your home. Let's chat!",
+            emotion: .curious,
+            category: .question,
+            confidence: 0.9,
+            context: "Questions pending"
+        )
+    }
+    
+    private func updateHouseEmotionForKnownUser() {
+        houseThought = HouseThought(
+            thought: "It's nice to know you! I'm here whenever you need help with your home.",
+            emotion: .content,
+            category: .greeting,
+            confidence: 0.9,
+            context: "User known"
         )
     }
     

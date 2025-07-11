@@ -62,7 +62,6 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var viewModel: ContentViewModel
-    @State private var showOnboardingInvitation = false
     @State private var showSettings = false
     @State private var showNotesView = false
     @State private var showVoiceSettings = false
@@ -134,22 +133,6 @@ struct ContentView: View {
                                     .foregroundColor(.orange)
                             }
                         }
-                    } else {
-                        // No address set - show onboarding invitation
-                        Button(action: { showOnboardingInvitation = true }) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "sparkles")
-                                    .font(.body)
-                                    .foregroundColor(.blue)
-                                Text("Tap here to set up your home")
-                                    .font(.caption)
-                                    .foregroundColor(.blue)
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(20)
-                        }
                     }
                     
                     Text("Conversations to help manage your house")
@@ -182,7 +165,7 @@ struct ContentView: View {
                     NavigationLink(destination: ConversationView()) {
                         HStack {
                             Image(systemName: "message.fill")
-                            Text("Chat with House")
+                            Text("Start Conversation")
                             Image(systemName: "chevron.right")
                         }
                         .font(.headline)
@@ -289,13 +272,8 @@ struct ContentView: View {
     
     private func checkOnboardingStatus() {
         Task {
-            // Check if required questions are answered
-            let requiredComplete = await serviceContainer.notesService.areAllRequiredQuestionsAnswered()
-            
-            // Show invitation if setup not complete
-            await MainActor.run {
-                showOnboardingInvitation = !requiredComplete && viewModel.currentAddress == nil
-            }
+            // Trigger loading address and weather, which will set appropriate house emotion
+            await viewModel.loadAddressAndWeather()
         }
     }
 }
