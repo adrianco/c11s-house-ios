@@ -114,16 +114,20 @@ struct ConversationView: View {
                             .id(message.id)
                         }
                         
-                        // Invisible anchor for scrolling
+                        // Invisible anchor for scrolling with extra padding
                         Color.clear
-                            .frame(height: 1)
+                            .frame(height: 60) // Increased height to ensure messages clear the input area
                             .id("bottom")
                     }
                     .padding()
+                    .padding(.bottom, 20) // Extra bottom padding
                 }
                 .onChange(of: messageStore.messages.count) { _, _ in
-                    withAnimation {
-                        proxy.scrollTo("bottom", anchor: .bottom)
+                    // Delay slightly to ensure message is rendered
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            proxy.scrollTo("bottom", anchor: .bottom)
+                        }
                     }
                 }
                 .onChange(of: scrollToBottom) { _, shouldScroll in
@@ -300,6 +304,11 @@ struct ConversationView: View {
                     // If there's a pre-populated transcript, show it in the text field
                     if !stateManager.persistentTranscript.isEmpty {
                         inputText = stateManager.persistentTranscript
+                    }
+                    
+                    // Trigger scroll to bottom after a brief delay to ensure message is rendered
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        scrollToBottom = true
                     }
                     
                     // Speak the question if not muted
