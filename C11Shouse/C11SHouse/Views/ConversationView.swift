@@ -203,7 +203,7 @@ struct ConversationView: View {
                                 .disabled(pendingVoiceText.isEmpty)
                             }
                         } else {
-                            VStack(spacing: 8) {
+                            HStack {
                                 // Show live transcript while recording
                                 if recognizer.isRecording && !recognizer.transcript.isEmpty {
                                     Text(recognizer.transcript)
@@ -214,22 +214,27 @@ struct ConversationView: View {
                                         .background(Color(UIColor.secondarySystemFill))
                                         .cornerRadius(12)
                                         .transition(.opacity)
+                                        .frame(maxWidth: .infinity)
+                                } else {
+                                    Spacer()
                                 }
                                 
-                                Spacer()
-                                
-                                Button(action: toggleRecording) {
-                                    Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                        .font(.system(size: 60))
-                                        .foregroundColor(recognizer.isRecording ? .red : .blue)
+                                VStack(spacing: 4) {
+                                    Button(action: toggleRecording) {
+                                        Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(recognizer.isRecording ? .red : .blue)
+                                    }
+                                    .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
+                                    
+                                    Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
-                                .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
                                 
-                                Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                
-                                Spacer()
+                                if !recognizer.isRecording || recognizer.transcript.isEmpty {
+                                    Spacer()
+                                }
                             }
                         }
                     }
@@ -279,15 +284,16 @@ struct ConversationView: View {
                     )
                     messageStore.addMessage(questionMessage)
                     
-                    // Speak the question if not muted (in background)
+                    // Speak the question if not muted
                     if !isMuted {
+                        let thought = HouseThought(
+                            thought: question.text,
+                            emotion: .curious,
+                            category: .question,
+                            confidence: 1.0
+                        )
+                        // Don't wait for speech to complete - let it run in background
                         Task {
-                            let thought = HouseThought(
-                                thought: question.text,
-                                emotion: .curious,
-                                category: .question,
-                                confidence: 1.0
-                            )
                             try? await stateManager.speak(thought.thought, isMuted: isMuted)
                         }
                     }
@@ -387,7 +393,7 @@ struct ConversationView: View {
                 )
                 messageStore.addMessage(acknowledgment)
                 
-                // Speak acknowledgment if not muted
+                // Speak acknowledgment and then load next question
                 if !isMuted {
                     let thought = HouseThought(
                         thought: "Thank you! I've saved that information.",
@@ -395,12 +401,11 @@ struct ConversationView: View {
                         category: .greeting,
                         confidence: 1.0
                     )
-                    Task {
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                    }
+                    // Wait for speech to complete before loading next question
+                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
                 
-                // Load next question immediately
+                // Load next question after acknowledgment is spoken
                 await questionFlow.loadNextQuestion()
             } else {
                 // Check for note creation commands

@@ -251,23 +251,21 @@ struct ContentView: View {
                 
                 Spacer()
             }
+            // Hidden navigation links inside ZStack
+            .background(
+                Group {
+                    NavigationLink(destination: NotesView(), isActive: $showNotesView) {
+                        EmptyView()
+                    }
+                    NavigationLink(destination: VoiceSettingsView(), isActive: $showVoiceSettings) {
+                        EmptyView()
+                    }
+                    NavigationLink(destination: VoiceTestView(), isActive: $showVoiceTest) {
+                        EmptyView()
+                    }
+                }
+            )
             }  // End of ZStack
-            
-            // Hidden navigation links
-            NavigationLink(destination: NotesView(), isActive: $showNotesView) {
-                EmptyView()
-            }
-            .hidden()
-            
-            NavigationLink(destination: VoiceSettingsView(), isActive: $showVoiceSettings) {
-                EmptyView()
-            }
-            .hidden()
-            
-            NavigationLink(destination: VoiceTestView(), isActive: $showVoiceTest) {
-                EmptyView()
-            }
-            .hidden()
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {
