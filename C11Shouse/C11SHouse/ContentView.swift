@@ -64,6 +64,9 @@ struct ContentView: View {
     @StateObject private var viewModel: ContentViewModel
     @State private var showOnboardingInvitation = false
     @State private var showSettings = false
+    @State private var showNotesView = false
+    @State private var showVoiceSettings = false
+    @State private var showVoiceTest = false
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -222,15 +225,15 @@ struct ContentView: View {
                     Spacer()
                     
                     Menu {
-                        NavigationLink(destination: NotesView()) {
+                        Button(action: { showNotesView = true }) {
                             Label("Manage Notes", systemImage: "note.text")
                         }
                         
-                        NavigationLink(destination: VoiceSettingsView()) {
+                        Button(action: { showVoiceSettings = true }) {
                             Label("Voice Settings", systemImage: "speaker.wave.2.fill")
                         }
                         
-                        NavigationLink(destination: VoiceTestView()) {
+                        Button(action: { showVoiceTest = true }) {
                             Label("Test Voice", systemImage: "waveform")
                         }
                     } label: {
@@ -251,6 +254,21 @@ struct ContentView: View {
             }  // End of ZStack
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
+        .background(
+            NavigationLink(destination: NotesView(), isActive: $showNotesView) {
+                EmptyView()
+            }
+        )
+        .background(
+            NavigationLink(destination: VoiceSettingsView(), isActive: $showVoiceSettings) {
+                EmptyView()
+            }
+        )
+        .background(
+            NavigationLink(destination: VoiceTestView(), isActive: $showVoiceTest) {
+                EmptyView()
+            }
+        )
         .onAppear {
             checkLocationPermission()
             checkOnboardingStatus()

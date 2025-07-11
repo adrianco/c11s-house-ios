@@ -389,8 +389,8 @@ struct ConversationView: View {
                     try? await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
                 
-                // Load next question after a short delay
-                try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
+                // Load next question after a brief delay
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
                 await questionFlow.loadNextQuestion()
             } else {
                 // Check for note creation commands
