@@ -157,49 +157,12 @@ class WeatherCoordinator: ObservableObject {
         Last updated: \(Date().formatted())
         """
         
-        // Create or update a weather note
-        let weatherQuestionId = "weather_summary"
-        
-        do {
-            // Check if weather question exists, if not create it
-            let notesStore = try await notesService.loadNotesStore()
-            if !notesStore.questions.contains(where: { $0.text == "Current Weather Summary" }) {
-                // Create weather question
-                let weatherQuestion = Question(
-                    id: UUID(),
-                    text: "Current Weather Summary",
-                    category: .other,
-                    displayOrder: 999,
-                    isRequired: false,
-                    hint: "Automatically updated weather information",
-                    createdAt: Date()
-                )
-                
-                var updatedQuestions = notesStore.questions
-                updatedQuestions.append(weatherQuestion)
-                
-                // Note: NotesService doesn't have updateQuestions method
-                // Weather summaries should be saved directly as notes
-            }
-            
-            // Save weather summary as answer
-            // Find the weather question ID
-            let weatherQuestion = notesStore.questions.first(where: { $0.text == "Current Weather Summary" })
-            try await notesService.saveOrUpdateNote(
-                for: weatherQuestion?.id ?? UUID(),
-                answer: summary,
-                metadata: [
-                    "temperature": "\(weather.temperature.value)",
-                    "condition": weather.condition.rawValue,
-                    "humidity": "\(weather.humidity)",
-                    "wind_speed": "\(weather.windSpeed)",
-                    "wind_direction": "N/A",
-                    "last_updated": ISO8601DateFormatter().string(from: Date())
-                ]
-            )
-        } catch {
-            print("Failed to save weather summary: \(error)")
-        }
+        // Save as a custom status note
+        await notesService.saveCustomNote(
+            title: "Weather Status",
+            content: summary,
+            category: "Status"
+        )
     }
     
     /// Save weather error as a note
@@ -247,25 +210,12 @@ class WeatherCoordinator: ObservableObject {
         Note: This error has been logged. Weather features may be limited until this is resolved.
         """
         
-        do {
-            // Find or create weather error question
-            let notesStore = try await notesService.loadNotesStore()
-            let weatherErrorQuestion = notesStore.questions.first(where: { $0.text == "Weather Service Status" })
-            
-            try await notesService.saveOrUpdateNote(
-                for: weatherErrorQuestion?.id ?? UUID(),
-                answer: errorSummary,
-                metadata: [
-                    "error_type": errorType,
-                    "location": locationText,
-                    "timestamp": ISO8601DateFormatter().string(from: Date()),
-                    "error_code": "\((error as NSError).code)",
-                    "error_domain": (error as NSError).domain
-                ]
-            )
-        } catch {
-            print("Failed to save weather error: \(error)")
-        }
+        // Save as a custom status note
+        await notesService.saveCustomNote(
+            title: "Weather Service Error",
+            content: errorSummary,
+            category: "Status"
+        )
     }
 }
 
