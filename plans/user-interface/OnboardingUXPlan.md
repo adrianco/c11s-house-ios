@@ -56,7 +56,7 @@ This document outlines the comprehensive user experience plan for onboarding new
 **Goal**: Gather essential information through conversational UI
 
 1. **Invitation**
-   - If "required" notes are not confirmed yet, show a message inviting the user to start a conversation to set things up
+   - If "required" notes are not confirmed yet, show a message inviting the user to start a conversation to set things up. All conversations take place in the same chat style interface view. The only difference from normal conversations is the house leads the questions during setup. There are no new views.
 
 2. **Transition to Conversation**
    - Pre-load transcript with address from Note if available

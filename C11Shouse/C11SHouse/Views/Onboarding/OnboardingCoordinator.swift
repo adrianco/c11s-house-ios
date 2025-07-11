@@ -31,7 +31,7 @@ enum OnboardingPhase: Int, CaseIterable {
         case .permissions:
             return "Setup"
         case .completion:
-            return "Add Notes"
+            return "Complete Setup"
         }
     }
 }

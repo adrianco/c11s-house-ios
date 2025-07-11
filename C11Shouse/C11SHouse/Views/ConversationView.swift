@@ -83,8 +83,11 @@ struct ConversationView: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(messageStore.messages) { message in
-                            MessageBubble(message: message)
-                                .id(message.id)
+                            MessageBubble(message: message) { editedAddress in
+                                // Handle address submission
+                                handleAddressSubmission(editedAddress)
+                            }
+                            .id(message.id)
                         }
                         
                         // Invisible anchor for scrolling
@@ -215,22 +218,40 @@ struct ConversationView: View {
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
             // When a new question appears, add it to the chat
             if let question = newValue, oldValue != newValue {
-                let questionMessage = Message(
-                    content: question.text,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(questionMessage)
-                
-                // Speak the question if not muted
-                if !isMuted {
-                    let thought = HouseThought(
-                        thought: question.text,
-                        emotion: .curious,
-                        category: .question,
-                        confidence: 1.0
+                Task {
+                    var messageContent = question.text
+                    
+                    // Special handling for address questions
+                    if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+                        // Try to detect current address
+                        if let addressManager = questionFlow.addressManager {
+                            do {
+                                let detectedAddress = try await addressManager.detectCurrentAddress()
+                                messageContent = "Is this the right address?\n\(detectedAddress.fullAddress)"
+                            } catch {
+                                // If detection fails, just show the question
+                                messageContent = "What's your home address?"
+                            }
+                        }
+                    }
+                    
+                    let questionMessage = Message(
+                        content: messageContent,
+                        isFromUser: false,
+                        isVoice: !isMuted
                     )
-                    Task {
+                    await MainActor.run {
+                        messageStore.addMessage(questionMessage)
+                    }
+                    
+                    // Speak the question if not muted
+                    if !isMuted {
+                        let thought = HouseThought(
+                            thought: question.text,
+                            emotion: .curious,
+                            category: .question,
+                            confidence: 1.0
+                        )
                         try? await stateManager.speak(thought.thought, isMuted: isMuted)
                     }
                 }
@@ -348,8 +369,16 @@ struct ConversationView: View {
                 try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
                 await questionFlow.loadNextQuestion()
             } else {
-                // Generate house response
-                await generateHouseResponse(for: input)
+                // Check for note creation commands
+                let lowercased = input.lowercased()
+                if lowercased.contains("new room note") || lowercased.contains("add room note") {
+                    await handleRoomNoteCreation()
+                } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
+                    await handleDeviceNoteCreation()
+                } else {
+                    // Generate house response
+                    await generateHouseResponse(for: input)
+                }
             }
             
             await MainActor.run {
@@ -380,12 +409,95 @@ struct ConversationView: View {
             }
         }
     }
+    
+    private func handleRoomNoteCreation() async {
+        let thought = HouseThought(
+            thought: "I'll help you create a room note. What room would you like to add a note about?",
+            emotion: .curious,
+            category: .question,
+            confidence: 1.0
+        )
+        
+        await MainActor.run {
+            let message = Message(
+                content: thought.thought,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                Task {
+                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                }
+            }
+        }
+    }
+    
+    private func handleDeviceNoteCreation() async {
+        let thought = HouseThought(
+            thought: "I'll help you create a device note. What device or appliance would you like to add a note about?",
+            emotion: .curious,
+            category: .question,
+            confidence: 1.0
+        )
+        
+        await MainActor.run {
+            let message = Message(
+                content: thought.thought,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                Task {
+                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                }
+            }
+        }
+    }
+    
+    private func handleAddressSubmission(_ address: String) {
+        // Add user's response as a message
+        let userMessage = Message(
+            content: address,
+            isFromUser: true,
+            isVoice: false
+        )
+        messageStore.addMessage(userMessage)
+        
+        // Process as regular input
+        processUserInput(address)
+    }
 }
 
 // MARK: - Message Bubble View
 
 struct MessageBubble: View {
     let message: Message
+    let onAddressSubmit: ((String) -> Void)?
+    
+    init(message: Message, onAddressSubmit: ((String) -> Void)? = nil) {
+        self.message = message
+        self.onAddressSubmit = onAddressSubmit
+    }
+    
+    // Check if this is an address question with pre-populated content
+    private var isAddressQuestion: Bool {
+        message.content.contains("Is this the right address?") && message.content.contains("\n")
+    }
+    
+    // Extract address from message if it exists
+    private var extractedAddress: String? {
+        if isAddressQuestion {
+            let components = message.content.components(separatedBy: "\n")
+            if components.count > 1 {
+                return components[1...].joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+        }
+        return nil
+    }
     
     var body: some View {
         HStack {
@@ -394,21 +506,29 @@ struct MessageBubble: View {
             }
             
             VStack(alignment: message.isFromUser ? .trailing : .leading, spacing: 4) {
-                Text(message.content)
+                if !message.isFromUser && isAddressQuestion, let address = extractedAddress {
+                    // Use special address question view
+                    AddressQuestionView(detectedAddress: address) { editedAddress in
+                        onAddressSubmit?(editedAddress)
+                    }
+                } else {
+                    // Regular message bubble
+                    Text(message.content)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .background(message.isFromUser ? Color.blue : Color(UIColor.secondarySystemBackground))
                     .foregroundColor(message.isFromUser ? .white : .primary)
-                    .cornerRadius(20)
-                    .overlay(
-                        message.isVoice ?
-                        Image(systemName: "mic.fill")
-                            .font(.caption2)
-                            .foregroundColor(message.isFromUser ? .white.opacity(0.7) : .secondary)
-                            .offset(x: message.isFromUser ? -8 : 8, y: -8)
-                        : nil,
-                        alignment: message.isFromUser ? .topTrailing : .topLeading
-                    )
+                        .cornerRadius(20)
+                        .overlay(
+                            message.isVoice ?
+                            Image(systemName: "mic.fill")
+                                .font(.caption2)
+                                .foregroundColor(message.isFromUser ? .white.opacity(0.7) : .secondary)
+                                .offset(x: message.isFromUser ? -8 : 8, y: -8)
+                            : nil,
+                            alignment: message.isFromUser ? .topTrailing : .topLeading
+                        )
+                }
                 
                 Text(formatTimestamp(message.timestamp))
                     .font(.caption2)
@@ -435,6 +555,20 @@ struct MessageBubble: View {
         }
         
         return formatter.string(from: date)
+    }
+    
+    private func saveEditedAddress() async {
+        isEditingAddress = false
+        
+        // Create a message showing the user's response
+        let userMessage = Message(
+            content: editedAddress,
+            isFromUser: true,
+            isVoice: false
+        )
+        
+        // This will be handled by the parent view's message store
+        // For now, we just update the UI
     }
 }
 
