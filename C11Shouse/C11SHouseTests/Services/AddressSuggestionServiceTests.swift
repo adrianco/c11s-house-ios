@@ -230,36 +230,6 @@ class MockNotesService: NotesServiceProtocol {
     func saveHouseName(_ name: String) async {}
 }
 
-class MockLocationService: LocationServiceProtocol {
-    var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
-        CurrentValueSubject<CLAuthorizationStatus, Never>(.authorizedWhenInUse).eraseToAnyPublisher()
-    }
-    
-    var locationPublisher: AnyPublisher<CLLocation?, Never> {
-        CurrentValueSubject<CLLocation?, Never>(nil).eraseToAnyPublisher()
-    }
-    
-    func requestLocationPermission() async -> CLAuthorizationStatus {
-        return .authorizedWhenInUse
-    }
-    
-    func getCurrentLocation() async throws -> CLLocation {
-        return CLLocation(latitude: 37.7749, longitude: -122.4194)
-    }
-    
-    func lookupAddress(for location: CLLocation) async throws -> Address {
-        return Address(
-            street: "123 Main Street",
-            city: "San Francisco",
-            state: "CA",
-            postalCode: "94105",
-            country: "United States",
-            coordinate: Coordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        )
-    }
-    
-    func confirmAddress(_ address: Address) async throws {}
-}
 
 class MockWeatherService: WeatherServiceProtocol {
     func getCurrentWeather(for location: CLLocation) async throws -> WeatherData {

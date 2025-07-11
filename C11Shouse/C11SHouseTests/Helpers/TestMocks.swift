@@ -40,6 +40,10 @@ class MockLocationService: LocationServiceProtocol {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
     
+    var locationPublisher: AnyPublisher<CLLocation?, Never> {
+        currentLocationSubject.eraseToAnyPublisher()
+    }
+    
     private let currentLocationSubject = CurrentValueSubject<CLLocation?, Never>(nil)
     private let authorizationStatusSubject = CurrentValueSubject<CLAuthorizationStatus, Never>(.notDetermined)
     
@@ -54,6 +58,12 @@ class MockLocationService: LocationServiceProtocol {
     func requestLocationPermission() async {
         requestLocationPermissionCalled = true
         authorizationStatusSubject.send(.authorizedWhenInUse)
+    }
+    
+    func requestLocationPermission() async -> CLAuthorizationStatus {
+        requestLocationPermissionCalled = true
+        authorizationStatusSubject.send(.authorizedWhenInUse)
+        return .authorizedWhenInUse
     }
     
     func getCurrentLocation() async throws -> CLLocation {
@@ -149,6 +159,10 @@ class MockTTSService: TTSService {
     }
     
     func setVolume(_ volume: Float) {
+        // No-op for tests
+    }
+    
+    func setVoice(_ voiceIdentifier: String?) {
         // No-op for tests
     }
 }
