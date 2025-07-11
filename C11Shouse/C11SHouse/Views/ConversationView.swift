@@ -264,8 +264,11 @@ struct ConversationView: View {
             // When a new question appears, add it to the chat
             if let question = newValue, oldValue != newValue {
                 Task { @MainActor in
-                    // Give handleQuestionChange a moment to set up the house thought
-                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
+                    // First, let handleQuestionChange process the question
+                    _ = await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: false)
+                    
+                    // Give a moment for any state updates to settle
+                    try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 second
                     
                     var messageContent = question.text
                     var spokenContent = question.text
@@ -301,9 +304,14 @@ struct ConversationView: View {
                     )
                     messageStore.addMessage(questionMessage)
                     
-                    // If there's a pre-populated transcript, show it in the text field
+                    // Check for pre-populated transcript after handleQuestionChange
                     if !stateManager.persistentTranscript.isEmpty {
                         inputText = stateManager.persistentTranscript
+                        // Force text field update
+                        isTextFieldFocused = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            isTextFieldFocused = true
+                        }
                     }
                     
                     // Trigger scroll to bottom after a brief delay to ensure message is rendered
@@ -332,6 +340,11 @@ struct ConversationView: View {
     private func setupView() {
         // Set up recognizer reference
         questionFlow.conversationRecognizer = recognizer
+        
+        // Set up address suggestion service if not already set
+        if questionFlow.addressSuggestionService == nil {
+            questionFlow.addressSuggestionService = serviceContainer.addressSuggestionService
+        }
         
         // Load initial state
         Task {
