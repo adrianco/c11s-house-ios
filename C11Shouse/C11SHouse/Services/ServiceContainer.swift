@@ -92,6 +92,7 @@ class ServiceContainer: ObservableObject {
         AddressManager(notesService: notesService, locationService: locationService)
     }()
     
+    @MainActor
     private(set) lazy var conversationStateManager: ConversationStateManager = {
         ConversationStateManager(notesService: notesService, ttsService: ttsService)
     }()

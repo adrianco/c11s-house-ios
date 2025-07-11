@@ -88,18 +88,6 @@ extension NotesServiceProtocol {
         }
     }
     
-    /// Get all unanswered questions sorted by priority
-    func getUnansweredQuestions() async -> [Question] {
-        do {
-            let notesStore = try await loadNotesStore()
-            return notesStore.sortedQuestions.filter { question in
-                notesStore.notes[question.id] == nil
-            }
-        } catch {
-            print("Error loading unanswered questions: \(error)")
-            return []
-        }
-    }
     
     /// Check if a specific question has been answered
     func isQuestionAnswered(_ questionId: UUID) async -> Bool {

@@ -210,17 +210,19 @@ struct OnboardingPermissionsView: View {
 
 // MARK: - Permission Card
 
+// Define PermissionStatus at file level
+enum PermissionStatus {
+    case granted
+    case denied
+    case notDetermined
+}
+
 struct PermissionCard: View {
-    enum Status {
-        case granted
-        case denied
-        case notDetermined
-    }
     
     let icon: String
     let title: String
     let description: String
-    let status: Status
+    let status: PermissionStatus
     let isRequired: Bool
     var onTap: (() -> Void)? = nil
     
