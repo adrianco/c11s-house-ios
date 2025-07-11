@@ -259,9 +259,11 @@ class QuestionFlowCoordinator: ObservableObject {
         } else if question.text == "What should I call this house?" {
             if currentAnswer.isEmpty {
                 // Generate suggestions from address if available
-                if let addressAnswer = await getAnswer(for: "Is this the right address?") ?? 
-                                          await getAnswer(for: "What's your home address?"),
-                   !addressAnswer.isEmpty {
+                var addressAnswer: String? = await getAnswer(for: "Is this the right address?")
+                if addressAnswer == nil {
+                    addressAnswer = await getAnswer(for: "What's your home address?")
+                }
+                if let addressAnswer = addressAnswer, !addressAnswer.isEmpty {
                     
                     if let suggestionService = addressSuggestionService {
                         let suggestions = suggestionService.generateHouseNameSuggestions(from: addressAnswer)
