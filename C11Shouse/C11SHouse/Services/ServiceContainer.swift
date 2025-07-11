@@ -55,6 +55,7 @@ class ServiceContainer: ObservableObject {
         AudioRecorderServiceImpl()
     }()
     
+    @MainActor
     private(set) lazy var transcriptionService: TranscriptionService = {
         // Use standard service by default, can switch to on-device if needed
         TranscriptionServiceImpl()
@@ -116,11 +117,13 @@ class ServiceContainer: ObservableObject {
     }
     
     /// Switch to on-device transcription for privacy
+    @MainActor
     func useOnDeviceTranscription() {
         transcriptionService = OnDeviceTranscriptionService()
     }
     
     /// Switch back to standard transcription
+    @MainActor
     func useStandardTranscription() {
         transcriptionService = TranscriptionServiceImpl()
     }
