@@ -2655,3 +2655,8 @@ Spent ages getting Apple Xcode cloud setup, trying to get around Weatherkit sand
 July 10 - reinstalled claude-flow for alpha 43 (up from 27)
 finally managed to create an icon for the app
 testflight distribution works
+
+Created and edited UI onboarding flow to be what I want, and ran a hive mind to implement that functionality and matching tests. Left it, code not pushed or compiled.
+
+July 11th
+./claude-flow hive-mind spawn "Perform a code review of the current implementation and document the code path taken by the user onboarding flow into a new plans/code-review.md file, fix any bugs you find along the way" --claude

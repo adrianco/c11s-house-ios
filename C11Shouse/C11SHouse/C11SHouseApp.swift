@@ -27,9 +27,10 @@ struct C11SHouseApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(serviceContainer)
+                .withOnboarding(serviceContainer: serviceContainer)
                 .task {
-                    // Request permissions on app launch
-                    await requestPermissionsIfNeeded()
+                    // Request permissions through onboarding flow
+                    // The onboarding coordinator will handle permission requests
                 }
         }
     }

@@ -230,26 +230,17 @@ final class ConversationRecognizer: ObservableObject {
             }
             
             if let error = error {
-                let nsError = error as NSError
+                let speechError = SpeechError(nsError: error as NSError)
                 
-                // Filter out cancellation errors and "no speech detected" during normal operation
-                let cancellationCodes = [203, 216, 301] // Cancellation codes
-                let ignorableCodes = [1110, 1101] // "No speech detected", "Speech recording error"
-                
-                if !cancellationCodes.contains(nsError.code) && !ignorableCodes.contains(nsError.code) {
+                if !speechError.isIgnorable {
                     DispatchQueue.main.async {
-                        self.error = .recognitionError(error.localizedDescription)
+                        self.error = .recognitionError(speechError.localizedDescription ?? error.localizedDescription)
                         if self.isRecording && !self.isTerminating {
                             self.stopRecording()
                         }
                     }
-                } else if nsError.code == 1110 {
-                    // No speech detected yet
-                } else if nsError.code == 1101 {
-                    // Silently ignore error 1101 - it's a known issue that doesn't affect operation
-                } else {
-                    // Recognition cancelled
                 }
+                // Ignorable errors are silently handled
             }
         }
         

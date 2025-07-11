@@ -25,6 +25,13 @@
  * - 2025-01-09: Swift 6 concurrency fixes
  *   - Added @preconcurrency to Speech import to suppress Sendable warnings
  *
+ * - 2025-07-10: Modernized concurrency patterns
+ *   - Replaced objc_sync_enter/exit with actor-based approach
+ *   - Added TranscriptionTaskHandler actor for thread-safe continuation management
+ *   - Converted timeout handling to use Task.sleep instead of DispatchQueue
+ *   - Added @MainActor to both service classes for UI integration
+ *   - Maintained all existing functionality while simplifying concurrency
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -41,6 +48,7 @@ import Foundation
 import AVFoundation
 
 /// Concrete implementation of TranscriptionService using Apple's Speech framework
+@MainActor
 class TranscriptionServiceImpl: TranscriptionService {
     
     // MARK: - Private Properties
@@ -96,84 +104,72 @@ class TranscriptionServiceImpl: TranscriptionService {
         // addsPunctuation is automatically enabled in iOS 16+
         request.requiresOnDeviceRecognition = false // Use server-based recognition for better accuracy
         
+        // Create a task handler actor to manage continuation state safely
+        let taskHandler = TranscriptionTaskHandler()
+        
         // Perform transcription
         return try await withCheckedThrowingContinuation { continuation in
-            var hasResumed = false
-            
-            recognitionTask = recognizer.recognitionTask(with: request) { result, error in
-                var shouldProcess = false
-                objc_sync_enter(continuation)
-                if !hasResumed {
-                    shouldProcess = true
-                }
-                objc_sync_exit(continuation)
+            Task {
+                await taskHandler.setContinuation(continuation)
                 
-                guard shouldProcess else { return } // Prevent multiple resumptions
-                
-                if let error = error {
-                    objc_sync_enter(continuation)
-                    hasResumed = true
-                    objc_sync_exit(continuation)
-                    if (error as NSError).code == 203 { // No speech detected
-                        continuation.resume(throwing: TranscriptionError.transcriptionFailed("No speech detected"))
-                    } else {
-                        continuation.resume(throwing: TranscriptionError.transcriptionFailed(error.localizedDescription))
-                    }
-                    return
-                }
-                
-                if let result = result {
-                    if result.isFinal {
-                        objc_sync_enter(continuation)
-                        hasResumed = true
-                        objc_sync_exit(continuation)
+                recognitionTask = recognizer.recognitionTask(with: request) { result, error in
+                    Task {
+                        guard await taskHandler.shouldProcess() else { return }
                         
-                        // Calculate duration from audio file
-                        let duration = self.getAudioDuration(from: tempURL) ?? 0
-                        
-                        // Get alternatives
-                        let alternatives = result.transcriptions.dropFirst().prefix(3).map { $0.formattedString }
-                        
-                        // Extract segments
-                        let segments = result.bestTranscription.segments.map { segment in
-                            TranscriptionSegment(
-                                text: segment.substring,
-                                confidence: segment.confidence,
-                                timestamp: segment.timestamp,
-                                duration: segment.duration
-                            )
+                        if let error = error {
+                            await taskHandler.resume(with: {
+                                if (error as NSError).code == 203 { // No speech detected
+                                    continuation.resume(throwing: TranscriptionError.transcriptionFailed("No speech detected"))
+                                } else {
+                                    continuation.resume(throwing: TranscriptionError.transcriptionFailed(error.localizedDescription))
+                                }
+                            })
+                            return
                         }
                         
-                        // Create transcription result
-                        let transcriptionResult = TranscriptionResult(
-                            text: result.bestTranscription.formattedString,
-                            confidence: Float(result.transcriptions.first?.segments.first?.confidence ?? 0),
-                            duration: duration,
-                            timestamp: Date(),
-                            detectedLanguage: configuration.languageCode,
-                            alternatives: Array(alternatives),
-                            segments: segments,
-                            isFinal: true
-                        )
-                        
-                        continuation.resume(returning: transcriptionResult)
+                        if let result = result, result.isFinal {
+                            await taskHandler.resume(with: {
+                                // Calculate duration from audio file
+                                let duration = self.getAudioDuration(from: tempURL) ?? 0
+                                
+                                // Get alternatives
+                                let alternatives = result.transcriptions.dropFirst().prefix(3).map { $0.formattedString }
+                                
+                                // Extract segments
+                                let segments = result.bestTranscription.segments.map { segment in
+                                    TranscriptionSegment(
+                                        text: segment.substring,
+                                        confidence: segment.confidence,
+                                        timestamp: segment.timestamp,
+                                        duration: segment.duration
+                                    )
+                                }
+                                
+                                // Create transcription result
+                                let transcriptionResult = TranscriptionResult(
+                                    text: result.bestTranscription.formattedString,
+                                    confidence: Float(result.transcriptions.first?.segments.first?.confidence ?? 0),
+                                    duration: duration,
+                                    timestamp: Date(),
+                                    detectedLanguage: configuration.languageCode,
+                                    alternatives: Array(alternatives),
+                                    segments: segments,
+                                    isFinal: true
+                                )
+                                
+                                continuation.resume(returning: transcriptionResult)
+                            })
+                        }
                     }
                 }
-            }
-            
-            // Set a timeout to prevent hanging
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak self] in
-                var shouldResume = false
-                objc_sync_enter(continuation)
-                if !hasResumed {
-                    hasResumed = true
-                    shouldResume = true
-                }
-                objc_sync_exit(continuation)
                 
-                if shouldResume {
-                    self?.recognitionTask?.cancel()
-                    continuation.resume(throwing: TranscriptionError.transcriptionFailed("Transcription timeout"))
+                // Set a timeout to prevent hanging
+                Task {
+                    try? await Task.sleep(nanoseconds: 30_000_000_000) // 30 seconds
+                    await taskHandler.resume(with: { [weak self] in
+                        self?.recognitionTask?.cancel()
+                        continuation.resume(throwing: TranscriptionError.transcriptionFailed("Transcription timeout"))
+                    })
                 }
             }
         }
@@ -202,6 +198,7 @@ class TranscriptionServiceImpl: TranscriptionService {
 }
 
 /// Alternative implementation using on-device transcription for privacy
+@MainActor
 class OnDeviceTranscriptionService: TranscriptionService {
     
     private let speechRecognizer: SFSpeechRecognizer?
@@ -233,71 +230,83 @@ class OnDeviceTranscriptionService: TranscriptionService {
         request.requiresOnDeviceRecognition = true
         // addsPunctuation is automatically enabled in iOS 16+
         
+        // Create a task handler actor to manage continuation state safely
+        let taskHandler = TranscriptionTaskHandler()
+        
         return try await withCheckedThrowingContinuation { continuation in
-            var hasResumed = false
-            
-            let task = recognizer.recognitionTask(with: request) { result, error in
-                var shouldProcess = false
-                objc_sync_enter(continuation)
-                if !hasResumed {
-                    shouldProcess = true
-                }
-                objc_sync_exit(continuation)
+            Task {
+                await taskHandler.setContinuation(continuation)
                 
-                guard shouldProcess else { return }
-                
-                if let error = error {
-                    objc_sync_enter(continuation)
-                    hasResumed = true
-                    objc_sync_exit(continuation)
-                    continuation.resume(throwing: TranscriptionError.transcriptionFailed(error.localizedDescription))
-                    return
-                }
-                
-                if let result = result, result.isFinal {
-                    objc_sync_enter(continuation)
-                    hasResumed = true
-                    objc_sync_exit(continuation)
-                    
-                    let segments = result.bestTranscription.segments.map { segment in
-                        TranscriptionSegment(
-                            text: segment.substring,
-                            confidence: segment.confidence,
-                            timestamp: segment.timestamp,
-                            duration: segment.duration
-                        )
+                let task = recognizer.recognitionTask(with: request) { result, error in
+                    Task {
+                        guard await taskHandler.shouldProcess() else { return }
+                        
+                        if let error = error {
+                            await taskHandler.resume(with: {
+                                continuation.resume(throwing: TranscriptionError.transcriptionFailed(error.localizedDescription))
+                            })
+                            return
+                        }
+                        
+                        if let result = result, result.isFinal {
+                            await taskHandler.resume(with: {
+                                let segments = result.bestTranscription.segments.map { segment in
+                                    TranscriptionSegment(
+                                        text: segment.substring,
+                                        confidence: segment.confidence,
+                                        timestamp: segment.timestamp,
+                                        duration: segment.duration
+                                    )
+                                }
+                                
+                                let transcriptionResult = TranscriptionResult(
+                                    text: result.bestTranscription.formattedString,
+                                    confidence: 0.95, // On-device doesn't provide confidence scores
+                                    duration: 0, // Calculate if needed
+                                    timestamp: Date(),
+                                    detectedLanguage: configuration.languageCode,
+                                    alternatives: [],
+                                    segments: segments,
+                                    isFinal: true
+                                )
+                                
+                                continuation.resume(returning: transcriptionResult)
+                            })
+                        }
                     }
-                    
-                    let transcriptionResult = TranscriptionResult(
-                        text: result.bestTranscription.formattedString,
-                        confidence: 0.95, // On-device doesn't provide confidence scores
-                        duration: 0, // Calculate if needed
-                        timestamp: Date(),
-                        detectedLanguage: configuration.languageCode,
-                        alternatives: [],
-                        segments: segments,
-                        isFinal: true
-                    )
-                    
-                    continuation.resume(returning: transcriptionResult)
                 }
-            }
-            
-            // Timeout protection
-            DispatchQueue.main.asyncAfter(deadline: .now() + 20) { [weak task] in
-                var shouldResume = false
-                objc_sync_enter(continuation)
-                if !hasResumed {
-                    hasResumed = true
-                    shouldResume = true
-                }
-                objc_sync_exit(continuation)
                 
-                if shouldResume {
-                    task?.cancel()
-                    continuation.resume(throwing: TranscriptionError.transcriptionFailed("On-device transcription timeout"))
+                // Timeout protection
+                Task {
+                    try? await Task.sleep(nanoseconds: 20_000_000_000) // 20 seconds
+                    await taskHandler.resume(with: { [weak task] in
+                        task?.cancel()
+                        continuation.resume(throwing: TranscriptionError.transcriptionFailed("On-device transcription timeout"))
+                    })
                 }
             }
         }
+    }
+}
+
+// MARK: - TranscriptionTaskHandler Actor
+
+/// Actor to handle continuation state safely across concurrent contexts
+private actor TranscriptionTaskHandler {
+    private var hasResumed = false
+    private var continuation: CheckedContinuation<TranscriptionResult, Error>?
+    
+    func setContinuation(_ continuation: CheckedContinuation<TranscriptionResult, Error>) {
+        self.continuation = continuation
+    }
+    
+    func shouldProcess() -> Bool {
+        return !hasResumed
+    }
+    
+    func resume(with closure: @escaping () -> Void) {
+        guard !hasResumed else { return }
+        hasResumed = true
+        closure()
     }
 }

@@ -57,6 +57,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var viewModel: ContentViewModel
+    @State private var showOnboardingInvitation = false
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -124,19 +125,21 @@ struct ContentView: View {
                             }
                         }
                     } else {
-                        // No address set - show message
-                        HStack(spacing: 8) {
-                            Image(systemName: "location.circle.fill")
-                                .font(.body)
-                                .foregroundColor(.secondary)
-                            Text("Start a conversation to set up your home")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        // No address set - show onboarding invitation
+                        Button(action: { showOnboardingInvitation = true }) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "sparkles")
+                                    .font(.body)
+                                    .foregroundColor(.blue)
+                                Text("Tap here to set up your home")
+                                    .font(.caption)
+                                    .foregroundColor(.blue)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(20)
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(Color.secondary.opacity(0.1))
-                        .cornerRadius(20)
                     }
                     
                     Text("Conversations to help manage your house")
@@ -230,6 +233,7 @@ struct ContentView: View {
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {
             checkLocationPermission()
+            checkOnboardingStatus()
         }
     }
     
@@ -242,6 +246,18 @@ struct ContentView: View {
             // Load address and weather data if we have permission
             if viewModel.hasLocationPermission {
                 await viewModel.loadAddressAndWeather()
+            }
+        }
+    }
+    
+    private func checkOnboardingStatus() {
+        Task {
+            // Check if required questions are answered
+            let requiredComplete = await serviceContainer.notesService.areAllRequiredQuestionsAnswered()
+            
+            // Show invitation if setup not complete
+            await MainActor.run {
+                showOnboardingInvitation = !requiredComplete && viewModel.currentAddress == nil
             }
         }
     }

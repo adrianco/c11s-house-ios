@@ -35,7 +35,6 @@ import AVFAudio
 import Combine
 
 /// Manages the AVAudioSession configuration and lifecycle for voice recording
-@MainActor
 final class AudioSessionManager: NSObject, ObservableObject {
     
     // MARK: - Properties
