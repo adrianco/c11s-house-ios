@@ -234,8 +234,10 @@ class OnboardingCoordinator: ObservableObject {
 
 struct OnboardingModifier: ViewModifier {
     @StateObject private var coordinator: OnboardingCoordinator
+    private let serviceContainer: ServiceContainer
     
     init(serviceContainer: ServiceContainer) {
+        self.serviceContainer = serviceContainer
         _coordinator = StateObject(wrappedValue: OnboardingCoordinator(
             notesService: serviceContainer.notesService,
             permissionManager: serviceContainer.permissionManager,
@@ -251,6 +253,7 @@ struct OnboardingModifier: ViewModifier {
             if coordinator.showOnboarding {
                 OnboardingContainerView()
                     .environmentObject(coordinator)
+                    .environmentObject(serviceContainer)
                     .transition(.opacity)
                     .zIndex(1)
             }

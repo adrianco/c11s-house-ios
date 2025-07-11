@@ -21,18 +21,15 @@ import CoreLocation
 struct OnboardingPersonalizationView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var conversationState = ViewModelFactory.shared.makeConversationStateManager()
-    @StateObject private var questionFlow: QuestionFlowCoordinator
     @State private var isTransitioning = false
     @State private var showConversation = false
     
     let onComplete: () -> Void
     
-    init(onComplete: @escaping () -> Void) {
-        self.onComplete = onComplete
-        _questionFlow = StateObject(wrappedValue: ServiceContainer.shared.questionFlowCoordinator)
-    }
-    
     var body: some View {
+        // Use the questionFlowCoordinator from serviceContainer
+        let questionFlow = serviceContainer.questionFlowCoordinator
+        
         VStack(spacing: 0) {
             if !showConversation {
                 // Intro Screen
@@ -125,11 +122,12 @@ struct OnboardingPersonalizationView: View {
         
         // Start with the first question
         Task {
-            await questionFlow.loadNextQuestion()
+            await serviceContainer.questionFlowCoordinator.loadNextQuestion()
         }
     }
     
     private func setupQuestionFlow() {
+        let questionFlow = serviceContainer.questionFlowCoordinator
         // Set up dependencies
         questionFlow.conversationStateManager = conversationState
         questionFlow.addressManager = serviceContainer.addressManager
@@ -149,7 +147,7 @@ struct OnboardingPersonalizationView: View {
 
 struct EmbeddedConversationView: View {
     @ObservedObject var conversationState: ConversationStateManager
-    @ObservedObject var questionFlow: QuestionFlowCoordinator
+    var questionFlow: QuestionFlowCoordinator
     @StateObject private var recognizer = ConversationRecognizer()
     @State private var currentQuestionIndex = 0
     @AppStorage("onboardingMuted") private var isMuted = false

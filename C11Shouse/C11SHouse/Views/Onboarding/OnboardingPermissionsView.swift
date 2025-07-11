@@ -19,6 +19,7 @@ import SwiftUI
 
 struct OnboardingPermissionsView: View {
     @ObservedObject var permissionManager: PermissionManager
+    @EnvironmentObject private var serviceContainer: ServiceContainer
     let onContinue: () -> Void
     
     @State private var isRequestingPermissions = false
@@ -178,11 +179,11 @@ struct OnboardingPermissionsView: View {
             
             // Background address lookup if location permission granted
             if permissionManager.hasLocationPermission {
+                let addressManager = serviceContainer.addressManager
                 Task.detached(priority: .background) {
                     do {
                         let startTime = Date()
-                        // Get the address manager from service container
-                        let addressManager = await ServiceContainer.shared.addressManager
+                        // Use the captured address manager
                         let address = try await addressManager.detectCurrentAddress()
                         
                         // Save to notes for later use in conversation
