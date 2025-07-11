@@ -173,6 +173,31 @@ struct OnboardingPermissionsView: View {
                 await permissionManager.requestLocationPermission()
             }
             
+            // Background address lookup if location permission granted
+            if permissionManager.hasLocationPermission {
+                Task.detached(priority: .background) {
+                    do {
+                        let startTime = Date()
+                        // Get the address manager from service container
+                        let addressManager = await ServiceContainer.shared.addressManager
+                        let address = try await addressManager.detectCurrentAddress()
+                        
+                        // Save to notes for later use in conversation
+                        await addressManager.saveAddressToNotes(address)
+                        
+                        let duration = Date().timeIntervalSince(startTime)
+                        OnboardingLogger.shared.logServiceCall("address_detection", phase: "permissions", success: true, duration: duration)
+                        OnboardingLogger.shared.logFeatureUsage("auto_address_detection", phase: "permissions", details: [
+                            "address": address
+                        ])
+                    } catch {
+                        print("Background address detection failed: \(error)")
+                        OnboardingLogger.shared.logServiceCall("address_detection", phase: "permissions", success: false)
+                        OnboardingLogger.shared.logError(error, phase: "permissions", recovery: "User will need to enter address manually")
+                    }
+                }
+            }
+            
             await MainActor.run {
                 isRequestingPermissions = false
             }

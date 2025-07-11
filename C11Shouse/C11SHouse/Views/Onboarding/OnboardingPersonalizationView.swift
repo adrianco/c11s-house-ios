@@ -64,7 +64,10 @@ struct OnboardingPersonalizationView: View {
                     Spacer()
                     
                     // Start Conversation Button
-                    Button(action: startConversation) {
+                    Button(action: {
+                        OnboardingLogger.shared.logButtonTap("start_conversation", phase: "personalization")
+                        startConversation()
+                    }) {
                         HStack {
                             Image(systemName: "mic.fill")
                             Text("Start Conversation")
@@ -110,6 +113,7 @@ struct OnboardingPersonalizationView: View {
         }
         .animation(.easeInOut(duration: 0.4), value: showConversation)
         .onAppear {
+            OnboardingLogger.shared.logUserAction("view_appeared", phase: "personalization")
             setupQuestionFlow()
         }
     }
@@ -130,6 +134,14 @@ struct OnboardingPersonalizationView: View {
         questionFlow.conversationStateManager = conversationState
         questionFlow.addressManager = serviceContainer.addressManager
         questionFlow.serviceContainer = serviceContainer
+        
+        // Set up address suggestion service
+        let addressSuggestionService = AddressSuggestionService(
+            addressManager: serviceContainer.addressManager,
+            locationService: serviceContainer.locationService,
+            weatherCoordinator: serviceContainer.weatherCoordinator
+        )
+        questionFlow.addressSuggestionService = addressSuggestionService
     }
 }
 
@@ -195,7 +207,13 @@ struct EmbeddedConversationView: View {
                     HStack(spacing: 16) {
                         // Skip Button (only for non-required questions)
                         if let question = questionFlow.currentQuestion, !question.isRequired {
-                            Button(action: skipQuestion) {
+                            Button(action: {
+                                OnboardingLogger.shared.logButtonTap("skip_question", phase: "personalization")
+                                OnboardingLogger.shared.logUserAction("question_skipped", phase: "personalization", details: [
+                                    "question": question.text
+                                ])
+                                skipQuestion()
+                            }) {
                                 Text("Skip")
                                     .font(.body)
                                     .foregroundColor(.secondary)
@@ -205,7 +223,16 @@ struct EmbeddedConversationView: View {
                         Spacer()
                         
                         // Confirm Button
-                        Button(action: confirmAnswer) {
+                        Button(action: {
+                            OnboardingLogger.shared.logButtonTap("confirm_answer", phase: "personalization")
+                            if let question = questionFlow.currentQuestion {
+                                OnboardingLogger.shared.logUserAction("answer_confirmed", phase: "personalization", details: [
+                                    "question": question.text,
+                                    "answer_length": conversationState.persistentTranscript.count
+                                ])
+                            }
+                            confirmAnswer()
+                        }) {
                             HStack {
                                 Image(systemName: "checkmark")
                                 Text("Confirm")
@@ -233,7 +260,12 @@ struct EmbeddedConversationView: View {
                 
                 HStack {
                     // Mute Toggle
-                    Button(action: { isMuted.toggle() }) {
+                    Button(action: { 
+                        isMuted.toggle()
+                        OnboardingLogger.shared.logFeatureUsage("mute_toggle", phase: "personalization", details: [
+                            "muted": isMuted
+                        ])
+                    }) {
                         Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
                             .font(.title2)
                             .foregroundColor(isMuted ? .orange : .blue)
@@ -259,7 +291,10 @@ struct EmbeddedConversationView: View {
                     Spacer()
                     
                     // Clear Button
-                    Button(action: { conversationState.clearTranscript() }) {
+                    Button(action: { 
+                        OnboardingLogger.shared.logButtonTap("clear_transcript", phase: "personalization")
+                        conversationState.clearTranscript() 
+                    }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
                             .foregroundColor(.gray)
@@ -283,19 +318,22 @@ struct EmbeddedConversationView: View {
                 updateQuestionIndex()
             }
         }
-        .onChange(of: recognizer.latestTranscription) { _, newValue in
+        .onChange(of: recognizer.transcript) { _, newValue in
             if !newValue.isEmpty {
-                conversationState.updateTranscriptFromSession(
-                    newValue,
-                    at: conversationState.currentSessionStartIndex,
-                    isFinal: recognizer.isFinalTranscription
-                )
+                conversationState.updateTranscript(with: newValue)
+                if let question = questionFlow.currentQuestion {
+                    OnboardingLogger.shared.logVoiceInput(
+                        phase: "personalization",
+                        duration: 0, // Could track actual duration if needed
+                        transcript: newValue
+                    )
+                }
             }
         }
     }
     
     private func setupConversation() {
-        recognizer.conversationRecognizerDelegate = conversationState
+        // Set up recognizer reference
         questionFlow.conversationRecognizer = recognizer
         
         // Load first question
@@ -307,9 +345,11 @@ struct EmbeddedConversationView: View {
     private func toggleRecording() {
         if recognizer.isRecording {
             recognizer.stopRecording()
+            OnboardingLogger.shared.logUserAction("recording_stopped", phase: "personalization")
         } else {
             conversationState.startNewRecordingSession()
             recognizer.startRecording()
+            OnboardingLogger.shared.logUserAction("recording_started", phase: "personalization")
         }
     }
     

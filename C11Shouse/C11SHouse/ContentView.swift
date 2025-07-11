@@ -211,6 +211,48 @@ struct ContentView: View {
                         .cornerRadius(25)
                         .shadow(radius: 5)
                     }
+                    
+                    HStack(spacing: 15) {
+                        NavigationLink(destination: VoiceSettingsView()) {
+                            HStack {
+                                Image(systemName: "speaker.wave.2.fill")
+                                Text("Voice Settings")
+                            }
+                            .font(.callout)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.mint, .cyan]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(20)
+                            .shadow(radius: 3)
+                        }
+                        
+                        NavigationLink(destination: VoiceTestView()) {
+                            HStack {
+                                Image(systemName: "waveform")
+                                Text("Test Voice")
+                            }
+                            .font(.callout)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.indigo, .purple]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(20)
+                            .shadow(radius: 3)
+                        }
+                    }
                 }
                 .frame(maxHeight: .infinity)
                 

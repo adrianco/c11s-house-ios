@@ -61,7 +61,7 @@ This document outlines the comprehensive user experience plan for onboarding new
 2. **Transition to Conversation**
    - Pre-load transcript with address from Note if available
    - Conversation question asking user to confirm address
-   - IF speaker isn't muted, speak the question, then turn on microphone to listen for answer trasncription. If speaker is muted, rely on text based conversation with now audio in/out.
+   - IF speaker isn't muted, speak the question, then turn on microphone to listen for answer transcription. If speaker is muted, rely on text based conversation with no audio in/out.
    - Once address note has been saved by user, lookup weather based on that address as a background activity, save weather summary as a note and summarize on content view, with appropriate emotion response. If there is an error looking up weather, save a summary of the error in the note (during development, include full error log details).
 
 2. **House Naming**

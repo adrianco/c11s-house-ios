@@ -22,6 +22,8 @@
  */
 
 import SwiftUI
+import Combine
+import UIKit
 
 struct HouseThoughtsView: View {
     let thought: HouseThought
@@ -32,7 +34,14 @@ struct HouseThoughtsView: View {
     @State private var typewriterText = ""
     @State private var typewriterIndex = 0
     @State private var typewriterTimer: Timer?
+    @State private var isSpeaking = false
+    @State private var isPaused = false
+    @State private var hasSpoken = false
     @EnvironmentObject private var serviceContainer: ServiceContainer
+    
+    private var ttsService: TTSService {
+        serviceContainer.ttsService
+    }
     
     var body: some View {
             VStack(alignment: .leading, spacing: 12) {
@@ -64,25 +73,53 @@ struct HouseThoughtsView: View {
                     
                     Spacer()
                     
-                    // Mute/Unmute button
-                    Button(action: onToggleMute) {
-                        Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .padding(10)
-                            .background(
-                                Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [.blue, .purple]),
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
+                    // Voice control buttons
+                    HStack(spacing: 12) {
+                        // Play/Pause/Replay button
+                        Button(action: handlePlayPauseAction) {
+                            Image(systemName: playPauseIcon)
+                                .font(.title3)
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [.green, .mint]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
                                         )
-                                    )
-                            )
-                            .shadow(radius: 5)
+                                )
+                                .shadow(radius: 3)
+                        }
+                        .buttonStyle(ScaleButtonStyle())
+                        .disabled(isMuted)
+                        .accessibilityLabel(playPauseAccessibilityLabel)
+                        .accessibilityHint(playPauseAccessibilityHint)
+                        
+                        // Mute/Unmute button
+                        Button(action: onToggleMute) {
+                            Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                                .padding(10)
+                                .background(
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                gradient: Gradient(colors: [.blue, .purple]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                )
+                                .shadow(radius: 5)
+                        }
+                        .buttonStyle(ScaleButtonStyle())
+                        .accessibilityLabel(isMuted ? "Unmute voice" : "Mute voice")
+                        .accessibilityHint(isMuted ? "Double tap to enable voice synthesis" : "Double tap to disable voice synthesis")
                     }
-                    .buttonStyle(ScaleButtonStyle())
                 }
                 
                 // Thought content with typewriter effect
@@ -98,6 +135,8 @@ struct HouseThoughtsView: View {
                     .onAppear {
                         startTypewriterEffect(text: thought.thought)
                     }
+                    .accessibilityLabel("House thought")
+                    .accessibilityValue(thought.thought)
                 
                 // Suggestion if available
                 if let suggestion = thought.suggestion {
@@ -148,6 +187,14 @@ struct HouseThoughtsView: View {
                 withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                     isAnimating = true
                 }
+                observeTTSState()
+                // Auto-play when not muted
+                if !isMuted && !hasSpoken {
+                    speakThought()
+                }
+                
+                // Post accessibility notification for new thought
+                UIAccessibility.post(notification: .announcement, argument: "New house thought: \(thought.thought)")
             }
             .onDisappear {
                 isAnimating = false
@@ -155,6 +202,18 @@ struct HouseThoughtsView: View {
                 typewriterIndex = 0
                 typewriterTimer?.invalidate()
                 typewriterTimer = nil
+                // Stop speaking when view disappears
+                ttsService.stopSpeaking()
+            }
+            .onChange(of: thought.thought) { oldValue, newValue in
+                // Reset speech state when thought changes
+                hasSpoken = false
+                isSpeaking = false
+                isPaused = false
+                // Auto-play new thought if not muted
+                if !isMuted {
+                    speakThought()
+                }
             }
     }
     
@@ -177,6 +236,116 @@ struct HouseThoughtsView: View {
                 timer.invalidate()
                 typewriterTimer = nil
             }
+        }
+    }
+    
+    // MARK: - Voice Control
+    
+    private var playPauseIcon: String {
+        if isSpeaking && !isPaused {
+            return "pause.fill"
+        } else if isPaused {
+            return "play.fill"
+        } else if hasSpoken {
+            return "arrow.clockwise"
+        } else {
+            return "play.fill"
+        }
+    }
+    
+    private func handlePlayPauseAction() {
+        if isSpeaking && !isPaused {
+            // Pause
+            ttsService.pauseSpeaking()
+            isPaused = true
+        } else if isPaused {
+            // Resume
+            ttsService.continueSpeaking()
+            isPaused = false
+        } else {
+            // Play or replay
+            speakThought()
+        }
+    }
+    
+    private func speakThought() {
+        guard !isMuted else { return }
+        
+        // Don't auto-speak if VoiceOver is running to avoid conflicts
+        guard !UIAccessibility.isVoiceOverRunning else { return }
+        
+        // Respect reduce motion preference for auto-play
+        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        
+        Task {
+            do {
+                hasSpoken = true
+                isSpeaking = true
+                isPaused = false
+                
+                // Speak the main thought
+                try await ttsService.speak(thought.thought, language: nil)
+                
+                // If there's a suggestion, speak it too
+                if let suggestion = thought.suggestion {
+                    try await ttsService.speak(suggestion, language: nil)
+                }
+                
+                isSpeaking = false
+                isPaused = false
+            } catch {
+                // Handle speech error silently
+                isSpeaking = false
+                isPaused = false
+                
+                // Only log non-interruption errors
+                if case TTSError.speechInterrupted = error {
+                    // Expected when stopped manually
+                } else {
+                    print("Error speaking house thought: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func observeTTSState() {
+        // Subscribe to TTS state changes
+        ttsService.isSpeakingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] speaking in
+                self?.isSpeaking = speaking
+                if !speaking {
+                    self?.isPaused = false
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    @State private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Accessibility
+    
+    private var playPauseAccessibilityLabel: String {
+        if isSpeaking && !isPaused {
+            return "Pause speech"
+        } else if isPaused {
+            return "Resume speech"
+        } else if hasSpoken {
+            return "Replay speech"
+        } else {
+            return "Play speech"
+        }
+    }
+    
+    private var playPauseAccessibilityHint: String {
+        if isSpeaking && !isPaused {
+            return "Double tap to pause the current speech"
+        } else if isPaused {
+            return "Double tap to resume the paused speech"
+        } else if hasSpoken {
+            return "Double tap to replay the house thought"
+        } else {
+            return "Double tap to hear the house thought"
         }
     }
 }

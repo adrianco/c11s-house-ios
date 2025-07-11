@@ -1,5 +1,26 @@
 # Claude Code Configuration for Claude Flow
 
+## 📁 Documentation Organization
+
+Please keep all new documentation organized in the `/plans` directory:
+- `/plans/` - Current planning documents and active designs
+- `/plans/archive/` - Older versions and completed reviews
+- `/plans/implementation/` - Implementation summaries and technical details
+- `/plans/user-interface/` - UI/UX plans and designs
+
+This helps maintain a clean project structure and makes documentation easy to find.
+
+**Note:** Please ignore `creation-log.md` - it's an auto-generated file that doesn't need to be edited or referenced.
+
+## 🔄 Git Push Reminder
+
+**Important:** After completing each update or feature implementation, please push the changes to GitHub to keep the remote repository synchronized. This ensures:
+- Work is backed up and accessible to the team
+- CI/CD pipelines can run on the latest code
+- Other developers can see and build upon recent changes
+
+Use `git push` after committing your changes.
+
 ## 🚀 IMPORTANT: Claude Flow AI-Driven Development
 
 ### Claude Code Handles:

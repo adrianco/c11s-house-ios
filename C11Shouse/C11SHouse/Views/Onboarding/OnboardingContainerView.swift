@@ -90,7 +90,7 @@ struct OnboardingContainerView: View {
                         ))
                         
                     case .completion:
-                        OnboardingCompletionView {
+                        Phase4TutorialView {
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 coordinator.completeOnboarding()
                             }

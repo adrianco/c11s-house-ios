@@ -179,4 +179,16 @@ class ConversationStateManager: ObservableObject {
             await speak(suggestion, isMuted: isMuted)
         }
     }
+    
+    /// Update transcript from session with proper handling
+    func updateTranscriptFromSession(_ newText: String, at startIndex: String, isFinal: Bool) {
+        if startIndex == currentSessionStart {
+            updateTranscript(with: newText)
+        }
+    }
+    
+    /// Get the current session start index
+    var currentSessionStartIndex: String {
+        return currentSessionStart
+    }
 }

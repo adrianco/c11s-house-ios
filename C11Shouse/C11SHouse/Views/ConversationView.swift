@@ -284,26 +284,8 @@ struct ConversationView: View {
             }
         }
         .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
-            // Auto-play TTS when house thought changes (unless muted)
-            if !isMuted && newValue != nil && newValue?.thought != oldValue?.thought {
-                // Skip the initial default thought to avoid duplicate speech
-                if !stateManager.hasPlayedInitialThought && newValue?.thought == defaultHouseThought?.thought {
-                    stateManager.hasPlayedInitialThought = true
-                    return
-                }
-                
-                // Skip speaking during answer saving to prevent conflicts
-                if stateManager.isSavingAnswer {
-                    return
-                }
-                
-                // Add small delay to ensure audio session is ready
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    Task {
-                        await stateManager.speakHouseThought(recognizer.currentHouseThought, isMuted: isMuted)
-                    }
-                }
-            }
+            // The HouseThoughtsView now handles auto-play internally
+            // This reduces duplication and ensures voice is handled consistently
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Handle incremental speech recognition updates

@@ -128,7 +128,10 @@ struct OnboardingWelcomeView: View {
             Spacer()
             
             // Continue Button
-            Button(action: onContinue) {
+            Button(action: {
+                OnboardingLogger.shared.logButtonTap("begin_setup", phase: "welcome")
+                onContinue()
+            }) {
                 Text("Begin Setup")
                     .font(.headline)
                     .foregroundColor(.white)
@@ -165,6 +168,9 @@ struct OnboardingWelcomeView: View {
             withAnimation {
                 isAnimating = true
             }
+            
+            // Log welcome view appearance
+            OnboardingLogger.shared.logUserAction("view_appeared", phase: "welcome")
             
             // Trigger content animation after a short delay
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {

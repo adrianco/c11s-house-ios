@@ -37,6 +37,7 @@ class QuestionFlowCoordinator: ObservableObject {
     weak var conversationRecognizer: ConversationRecognizer?
     weak var addressManager: AddressManager?
     weak var serviceContainer: ServiceContainer?
+    var addressSuggestionService: AddressSuggestionService?
     
     // MARK: - Initialization
     
@@ -121,11 +122,16 @@ class QuestionFlowCoordinator: ObservableObject {
                 await stateManager.updateUserName(trimmedAnswer)
             }
             
-            // If this was the address question, save it properly
+            // If this was the address question, save it properly and fetch weather
             if question.text == "Is this the right address?" || question.text == "What's your home address?" {
                 if let manager = addressManager,
                    let address = manager.parseAddress(trimmedAnswer) {
                     try await manager.saveAddress(address)
+                    
+                    // Trigger weather fetch after address confirmation
+                    if let suggestionService = addressSuggestionService {
+                        await suggestionService.fetchWeatherForConfirmedAddress(address)
+                    }
                 }
             }
             
@@ -228,7 +234,14 @@ class QuestionFlowCoordinator: ObservableObject {
             if currentAnswer.isEmpty {
                 // Try to detect the address
                 do {
-                    if let manager = addressManager {
+                    if let suggestionService = addressSuggestionService {
+                        let detectedAddress = try await suggestionService.suggestCurrentAddress()
+                        stateManager.persistentTranscript = detectedAddress
+                        
+                        // Set house thought with address confirmation
+                        let thought = suggestionService.createAddressConfirmationResponse(detectedAddress)
+                        recognizer.currentHouseThought = thought
+                    } else if let manager = addressManager {
                         let detected = try await manager.detectCurrentAddress()
                         stateManager.persistentTranscript = detected.fullAddress
                         await recognizer.setQuestionThought(question.text)
@@ -243,17 +256,33 @@ class QuestionFlowCoordinator: ObservableObject {
             }
         } else if question.text == "What should I call this house?" {
             if currentAnswer.isEmpty {
-                // Generate suggestion from address if available
-                if let addressAnswer = await getAnswer(for: "Is this the right address?"),
-                   !addressAnswer.isEmpty,
-                   let manager = addressManager {
-                    let suggestedName = manager.generateHouseName(from: addressAnswer)
-                    stateManager.persistentTranscript = suggestedName
+                // Generate suggestions from address if available
+                if let addressAnswer = await getAnswer(for: "Is this the right address?") ?? 
+                                          await getAnswer(for: "What's your home address?"),
+                   !addressAnswer.isEmpty {
+                    
+                    if let suggestionService = addressSuggestionService {
+                        let suggestions = suggestionService.generateHouseNameSuggestions(from: addressAnswer)
+                        if !suggestions.isEmpty {
+                            // Pre-populate with first suggestion
+                            stateManager.persistentTranscript = suggestions.first!
+                            
+                            // Set house thought with all suggestions
+                            let thought = suggestionService.createHouseNameSuggestionResponse(suggestions)
+                            recognizer.currentHouseThought = thought
+                        }
+                    } else if let manager = addressManager {
+                        let suggestedName = manager.generateHouseName(from: addressAnswer)
+                        stateManager.persistentTranscript = suggestedName
+                        await recognizer.setQuestionThought(question.text)
+                    }
+                } else {
+                    await recognizer.setQuestionThought(question.text)
                 }
             } else {
                 stateManager.persistentTranscript = currentAnswer
+                await recognizer.setQuestionThought(question.text)
             }
-            await recognizer.setQuestionThought(question.text)
         } else if currentAnswer.isEmpty {
             // No answer yet, just ask the question
             await recognizer.setQuestionThought(question.text)

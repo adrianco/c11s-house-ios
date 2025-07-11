@@ -17,6 +17,7 @@
 
 import SwiftUI
 import Combine
+import OSLog
 
 enum OnboardingPhase: Int, CaseIterable {
     case welcome = 0
@@ -33,7 +34,7 @@ enum OnboardingPhase: Int, CaseIterable {
         case .personalization:
             return "Personalize"
         case .completion:
-            return "Complete"
+            return "Add Notes"
         }
     }
 }
@@ -100,6 +101,10 @@ class OnboardingCoordinator: ObservableObject {
         startTime = Date()
         currentPhase = .welcome
         recordPhaseStart(.welcome)
+        
+        // Start logging session
+        OnboardingLogger.shared.startSession()
+        OnboardingLogger.shared.logPhaseTransition(from: nil, to: "welcome")
     }
     
     /// Move to the next phase
@@ -112,16 +117,27 @@ class OnboardingCoordinator: ObservableObject {
         
         recordPhaseCompletion(currentPhase)
         
+        let oldPhase = currentPhase.title
         let nextPhase = OnboardingPhase.allCases[currentIndex + 1]
         currentPhase = nextPhase
         recordPhaseStart(nextPhase)
+        
+        // Log phase transition
+        OnboardingLogger.shared.logPhaseTransition(from: oldPhase, to: nextPhase.title)
     }
     
     /// Skip to a specific phase (for testing or recovery)
     func skipToPhase(_ phase: OnboardingPhase) {
         recordPhaseCompletion(currentPhase)
+        let oldPhase = currentPhase.title
         currentPhase = phase
         recordPhaseStart(phase)
+        
+        // Log skip action
+        OnboardingLogger.shared.logUserAction("phase_skip", phase: oldPhase, details: [
+            "skipped_to": phase.title
+        ])
+        OnboardingLogger.shared.logPhaseTransition(from: oldPhase, to: phase.title)
     }
     
     /// Complete the onboarding process
@@ -138,6 +154,16 @@ class OnboardingCoordinator: ObservableObject {
         showOnboarding = false
         isInitializingOnboarding = false
         
+        // Log completion
+        OnboardingLogger.shared.logUserAction("onboarding_complete", phase: currentPhase.title)
+        OnboardingLogger.shared.endSession(completed: true)
+        
+        // Print copyable log
+        let copyableLog = OnboardingLogger.shared.getCopyableLog()
+        print("\n=== COPYABLE ONBOARDING LOG ===\n")
+        print(copyableLog)
+        print("\n=== END OF LOG ===\n")
+        
         // Notify other parts of the app
         NotificationCenter.default.post(name: Notification.Name("OnboardingComplete"), object: nil)
     }
@@ -151,7 +177,36 @@ class OnboardingCoordinator: ObservableObject {
     
     /// Request all permissions
     func requestPermissions() async {
-        await permissionManager.requestAllPermissions()
+        // Log permission requests
+        OnboardingLogger.shared.logUserAction("request_all_permissions", phase: "permissions")
+        
+        await permissionManager.requestMicrophonePermission()
+        OnboardingLogger.shared.logPermissionRequest("microphone", granted: permissionManager.isMicrophoneGranted)
+        
+        await permissionManager.requestSpeechRecognitionPermission()
+        OnboardingLogger.shared.logPermissionRequest("speech_recognition", granted: permissionManager.isSpeechRecognitionGranted)
+        
+        if !permissionManager.hasLocationPermission {
+            await permissionManager.requestLocationPermission()
+            OnboardingLogger.shared.logPermissionRequest("location", granted: permissionManager.hasLocationPermission)
+        }
+    }
+    
+    // MARK: - Logging Methods
+    
+    /// Log a user action in the current phase
+    func logAction(_ action: String, details: [String: Any]? = nil) {
+        OnboardingLogger.shared.logUserAction(action, phase: currentPhase.title, details: details)
+    }
+    
+    /// Log feature usage in the current phase
+    func logFeature(_ feature: String, details: [String: Any]? = nil) {
+        OnboardingLogger.shared.logFeatureUsage(feature, phase: currentPhase.title, details: details)
+    }
+    
+    /// Log an error in the current phase
+    func logError(_ error: Error, recovery: String? = nil) {
+        OnboardingLogger.shared.logError(error, phase: currentPhase.title, recovery: recovery)
     }
     
     // MARK: - Private Methods

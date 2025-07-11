@@ -497,4 +497,45 @@ extension NotesServiceProtocol {
         }
         return nil
     }
+    
+    /// Save a custom note (for room notes, device notes, etc.)
+    func saveCustomNote(title: String, content: String, category: String) async {
+        // Create a unique question for this custom note
+        let customQuestion = Question(
+            text: title,
+            category: .other,
+            displayOrder: 1000 + Int.random(in: 0...999), // High display order for custom notes
+            isRequired: false,
+            hint: "Custom \(category) note"
+        )
+        
+        // Try to add the question
+        do {
+            try await addQuestion(customQuestion)
+            
+            // Save the note content
+            try await saveOrUpdateNote(
+                for: customQuestion.id,
+                answer: content,
+                metadata: [
+                    "type": "custom_\(category)",
+                    "category": category,
+                    "created_via": "tutorial"
+                ]
+            )
+        } catch {
+            // If question already exists (unlikely with UUID), try updating
+            if let existingQuestion = try? await loadNotesStore().questions.first(where: { $0.text == title }) {
+                try? await saveOrUpdateNote(
+                    for: existingQuestion.id,
+                    answer: content,
+                    metadata: [
+                        "type": "custom_\(category)",
+                        "category": category,
+                        "updated_via": "tutorial"
+                    ]
+                )
+            }
+        }
+    }
 }
