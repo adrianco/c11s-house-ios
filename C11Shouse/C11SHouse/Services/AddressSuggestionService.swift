@@ -142,12 +142,12 @@ class AddressSuggestionService {
     /// Create a pre-populated response for address confirmation
     func createAddressConfirmationResponse(_ detectedAddress: String) -> HouseThought {
         return HouseThought(
-            thought: "I've detected your location. Is this the right address?",
+            thought: "I've detected your location. Is this the right address?\n\n\(detectedAddress)",
             emotion: .curious,
             category: .question,
             confidence: 0.9,
             context: "Address Detection",
-            suggestion: "You can edit the address if needed"
+            suggestion: nil  // Remove the edit suggestion since it's confusing
         )
     }
     

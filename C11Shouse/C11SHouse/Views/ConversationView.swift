@@ -286,7 +286,12 @@ struct ConversationView: View {
                         if let suggestion = houseThought.suggestion {
                             messageContent += "\n\n" + suggestion
                         }
-                        spokenContent = houseThought.thought
+                        // For address questions, only speak the question part, not the address
+                        if question.text.contains("address") && houseThought.thought.contains("\n") {
+                            spokenContent = houseThought.thought.components(separatedBy: "\n").first ?? houseThought.thought
+                        } else {
+                            spokenContent = houseThought.thought
+                        }
                     } else {
                         // Special handling for address questions
                         if question.text == "Is this the right address?" || question.text == "What's your home address?" {
