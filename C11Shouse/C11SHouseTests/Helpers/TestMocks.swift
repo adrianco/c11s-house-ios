@@ -311,7 +311,7 @@ class MockWeatherKitService: WeatherServiceProtocol {
 
 // Remove duplicate protocol definition - use the one from main codebase
 
-class MockConversationRecognizer: NSObject {
+class MockConversationRecognizerService: NSObject {
     var setQuestionThoughtCalled = false
     var lastQuestionThought: String?
     

@@ -33,6 +33,14 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
     
+    var currentLocationPublisher: AnyPublisher<CLLocation?, Never> {
+        CurrentValueSubject<CLLocation?, Never>(mockLocation).eraseToAnyPublisher()
+    }
+    
+    var locationPublisher: AnyPublisher<CLLocation?, Never> {
+        CurrentValueSubject<CLLocation?, Never>(mockLocation).eraseToAnyPublisher()
+    }
+    
     private let authorizationStatusSubject = CurrentValueSubject<CLAuthorizationStatus, Never>(.authorizedWhenInUse)
     
     var requestLocationPermissionCallCount = 0
@@ -44,6 +52,11 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     var shouldThrowLookupError = false
     var mockLocation: CLLocation?
     var mockAddress: Address?
+    
+    func requestLocationPermission() async {
+        requestLocationPermissionCallCount += 1
+        authorizationStatusSubject.send(authorizationStatus)
+    }
     
     func requestLocationPermission() async -> CLAuthorizationStatus {
         requestLocationPermissionCallCount += 1

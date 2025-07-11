@@ -85,6 +85,14 @@ class MockTTSServiceForStateManager: NSObject, TTSService {
     func setPitch(_ pitch: Float) {
         // No-op for tests
     }
+    
+    func setVolume(_ volume: Float) {
+        // No-op for tests
+    }
+    
+    func setVoice(_ voiceIdentifier: String?) {
+        // No-op for tests
+    }
 }
 
 // MARK: - ConversationStateManagerTests

@@ -295,7 +295,7 @@ class WeatherIntegrationTests: XCTestCase {
     
     private func createWeather(
         temp: Double,
-        condition: WeatherCondition,
+        condition: C11SHouse.WeatherCondition,
         humidity: Double = 0.5,
         uvIndex: Int = 5,
         windSpeed: Double = 10
