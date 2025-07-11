@@ -41,7 +41,7 @@ class WeatherIntegrationTests: XCTestCase {
         cancellables = Set<AnyCancellable>()
         
         // Create services
-        notesService = NotesServiceImpl()
+        notesService = NotesService()
         locationManagerMock = MockLocationManager()
         weatherServiceMock = MockWeatherKitService()
         
@@ -49,7 +49,7 @@ class WeatherIntegrationTests: XCTestCase {
         weatherCoordinator = WeatherCoordinator(
             weatherService: weatherServiceMock,
             notesService: notesService,
-            locationManager: locationManagerMock
+            locationService: MockLocationService()
         )
         
         // Clear any existing data
@@ -134,25 +134,25 @@ class WeatherIntegrationTests: XCTestCase {
         
         let testCases: [(C11SHouse.Weather, HouseEmotion)] = [
             // Happy conditions - pleasant temperature, clear skies
-            (createWeather(temp: 72, condition: .clear, humidity: 0.5, uvIndex: 4, windSpeed: 5), .happy),
+            (createWeather(temp: 72, condition: WeatherCondition.clear, humidity: 0.5, uvIndex: 4, windSpeed: 5), .happy),
             
-            // Energetic conditions - cool, partly cloudy, breezy
-            (createWeather(temp: 65, condition: .partlyCloudy, humidity: 0.4, uvIndex: 6, windSpeed: 15), .energetic),
+            // Excited conditions - cool, partly cloudy, breezy
+            (createWeather(temp: 65, condition: WeatherCondition.partlyCloudy, humidity: 0.4, uvIndex: 6, windSpeed: 15), .excited),
             
-            // Calm conditions - mild, cloudy
-            (createWeather(temp: 60, condition: .cloudy, humidity: 0.7, uvIndex: 2, windSpeed: 3), .calm),
+            // Neutral conditions - mild, cloudy
+            (createWeather(temp: 60, condition: WeatherCondition.cloudy, humidity: 0.7, uvIndex: 2, windSpeed: 3), .neutral),
             
-            // Melancholy conditions - rainy, dark
-            (createWeather(temp: 50, condition: .rain, humidity: 0.85, uvIndex: 0, windSpeed: 20), .melancholy),
+            // Thoughtful conditions - rainy, dark
+            (createWeather(temp: 50, condition: WeatherCondition.rain, humidity: 0.85, uvIndex: 0, windSpeed: 20), .thoughtful),
             
-            // Cozy conditions - cold, snowy
-            (createWeather(temp: 35, condition: .snow, humidity: 0.9, uvIndex: 0, windSpeed: 10), .cozy),
+            // Content conditions - cold, snowy
+            (createWeather(temp: 35, condition: WeatherCondition.snow, humidity: 0.9, uvIndex: 0, windSpeed: 10), .content),
             
-            // Alert conditions - extreme heat
-            (createWeather(temp: 100, condition: .hot, humidity: 0.3, uvIndex: 11, windSpeed: 25), .alert),
+            // Tired conditions - extreme heat
+            (createWeather(temp: 100, condition: WeatherCondition.hot, humidity: 0.3, uvIndex: 11, windSpeed: 25), .tired),
             
-            // Sleepy conditions - mild night (assuming coordinator checks time)
-            (createWeather(temp: 68, condition: .clear, humidity: 0.6, uvIndex: 0, windSpeed: 2), .sleepy)
+            // Happy conditions - mild night (assuming coordinator checks time)
+            (createWeather(temp: 68, condition: WeatherCondition.clear, humidity: 0.6, uvIndex: 0, windSpeed: 2), .happy)
         ]
         
         for (weather, expectedEmotion) in testCases {
@@ -216,7 +216,7 @@ class WeatherIntegrationTests: XCTestCase {
             coordinate: Coordinate(latitude: 37.3349, longitude: -122.0090)
         )
         
-        let mockWeather = createWeather(temp: 75, condition: .partlyCloudy, humidity: 0.45)
+        let mockWeather = createWeather(temp: 75, condition: WeatherCondition.partlyCloudy, humidity: 0.45)
         weatherServiceMock.mockWeather = mockWeather
         
         let weather = try await weatherCoordinator.fetchWeather(for: address)
@@ -237,7 +237,7 @@ class WeatherIntegrationTests: XCTestCase {
         
         let mockWeather = createWeather(
             temp: 78,
-            condition: .sunShowers,
+            condition: WeatherCondition.sunShowers,
             humidity: 0.55,
             uvIndex: 7,
             windSpeed: 12
@@ -274,7 +274,7 @@ class WeatherIntegrationTests: XCTestCase {
         
         // Setup successful response
         locationManagerMock.currentLocation = CLLocation(latitude: 37.7749, longitude: -122.4194)
-        weatherServiceMock.mockWeather = createWeather(temp: 70, condition: .clear)
+        weatherServiceMock.mockWeather = createWeather(temp: 70, condition: WeatherCondition.clear)
         
         // Add delay to weather service to observe loading state
         weatherServiceMock.responseDelay = 0.1
@@ -295,11 +295,11 @@ class WeatherIntegrationTests: XCTestCase {
     
     private func createWeather(
         temp: Double,
-        condition: C11SHouse.WeatherCondition,
+        condition: WeatherCondition,
         humidity: Double = 0.5,
         uvIndex: Int = 5,
         windSpeed: Double = 10
-    ) -> Weather {
+    ) -> C11SHouse.Weather {
         return C11SHouse.Weather(
             temperature: Temperature(value: temp, unit: .fahrenheit),
             condition: condition,

@@ -289,7 +289,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     var mockNotesService: MockNotesService!
     var mockStateManager: MockConversationStateManager!
     // mockRecognizer removed - using protocol-based mock
-    var mockAddressManager: MockAddressManagerForFlow!
+    var mockAddressManager: MockAddressManager!
     var cancellables: Set<AnyCancellable>!
     
     override func setUp() {
