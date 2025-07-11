@@ -46,6 +46,7 @@ import AVFAudio
 @preconcurrency import Speech
 import Combine
 import UIKit
+import CoreLocation
 
 /// Manages permissions for microphone and speech recognition
 @MainActor
@@ -58,6 +59,9 @@ public final class PermissionManager: ObservableObject {
     
     /// Current speech recognition permission status
     @Published public private(set) var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
+    
+    /// Current location permission status
+    @Published public private(set) var locationPermissionStatus: CLAuthorizationStatus = .notDetermined
     
     /// Combined status indicating if all permissions are granted
     @Published public private(set) var allPermissionsGranted: Bool = false
@@ -87,6 +91,7 @@ public final class PermissionManager: ObservableObject {
     public func requestAllPermissions() async {
         await requestMicrophonePermission()
         await requestSpeechRecognitionPermission()
+        await requestLocationPermission()
     }
     
     /// Request microphone permission
@@ -136,6 +141,29 @@ public final class PermissionManager: ObservableObject {
         updateAllPermissionsStatus()
     }
     
+    /// Request location permission
+    public func requestLocationPermission() async {
+        let locationManager = CLLocationManager()
+        let currentStatus = locationManager.authorizationStatus
+        
+        switch currentStatus {
+        case .notDetermined:
+            // Request permission through location manager
+            locationManager.requestWhenInUseAuthorization()
+            // Note: The actual permission result will be received through the delegate
+            // For now, we just update the status
+            locationPermissionStatus = currentStatus
+        case .denied, .restricted:
+            locationPermissionStatus = currentStatus
+            permissionError = "Location access denied. Please enable it in Settings."
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationPermissionStatus = currentStatus
+        @unknown default:
+            locationPermissionStatus = .denied
+        }
+        updateAllPermissionsStatus()
+    }
+    
     /// Check if a specific permission is granted
     public func isPermissionGranted(_ permission: PermissionType) -> Bool {
         switch permission {
@@ -143,6 +171,8 @@ public final class PermissionManager: ObservableObject {
             return microphonePermissionStatus == .granted
         case .speechRecognition:
             return speechRecognitionPermissionStatus == .authorized
+        case .location:
+            return locationPermissionStatus == .authorizedWhenInUse || locationPermissionStatus == .authorizedAlways
         }
     }
     
@@ -170,12 +200,14 @@ public final class PermissionManager: ObservableObject {
     private func checkCurrentPermissions() {
         microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
+        locationPermissionStatus = CLLocationManager().authorizationStatus
         updateAllPermissionsStatus()
     }
     
     private func updateAllPermissionsStatus() {
         allPermissionsGranted = microphonePermissionStatus == AVAudioSession.RecordPermission.granted &&
                                speechRecognitionPermissionStatus == .authorized
+        // Location is optional, so don't require it for allPermissionsGranted
         
         // Clear error if all permissions are granted
         if allPermissionsGranted {
@@ -190,6 +222,7 @@ public final class PermissionManager: ObservableObject {
 public enum PermissionType {
     case microphone
     case speechRecognition
+    case location
 }
 
 // MARK: - Extensions
@@ -202,6 +235,10 @@ extension PermissionManager {
     
     public var isSpeechRecognitionGranted: Bool {
         speechRecognitionPermissionStatus == .authorized
+    }
+    
+    public var hasLocationPermission: Bool {
+        locationPermissionStatus == .authorizedWhenInUse || locationPermissionStatus == .authorizedAlways
     }
     
     /// Human-readable permission status descriptions
@@ -228,6 +265,23 @@ extension PermissionManager {
             return "Restricted"
         case .authorized:
             return "Authorized"
+        @unknown default:
+            return "Unknown"
+        }
+    }
+    
+    public var locationStatusDescription: String {
+        switch locationPermissionStatus {
+        case .notDetermined:
+            return "Not requested"
+        case .denied:
+            return "Denied"
+        case .restricted:
+            return "Restricted"
+        case .authorizedAlways:
+            return "Always authorized"
+        case .authorizedWhenInUse:
+            return "When in use"
         @unknown default:
             return "Unknown"
         }

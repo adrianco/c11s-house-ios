@@ -45,7 +45,10 @@ import UIKit
 // This is a helper to create an app icon programmatically
 // You can run this in a playground or temporary view to generate the icon
 
-struct AppIconCreator {
+// Note: AppIconCreator is now defined in Models/AppIconCreator.swift
+// This file is kept for reference and the preview
+
+struct AppIconCreatorLegacy {
     static func createIcon(size: CGSize) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         
@@ -138,7 +141,7 @@ struct AppIconCreator {
 struct AppIconPreview: View {
     var body: some View {
         VStack(spacing: 20) {
-            Image(uiImage: AppIconCreator.createIcon(size: CGSize(width: 1024, height: 1024)))
+            Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 1024, height: 1024)))
                 .resizable()
                 .frame(width: 200, height: 200)
                 .cornerRadius(40)

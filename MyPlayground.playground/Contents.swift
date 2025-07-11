@@ -3,7 +3,8 @@ import UIKit
 import PlaygroundSupport
 
 // This is a helper to create an app icon programmatically
-struct AppIconCreator {
+// Note: AppIconCreator is now in Models/AppIconCreator.swift
+struct PlaygroundAppIconCreator {
     static func createIcon(size: CGSize) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: size)
         
@@ -94,7 +95,7 @@ struct AppIconCreator {
 
 // Full screen view to show actual 1024x1024 image
 struct FullScreenIconView: View {
-    let iconImage = AppIconCreator.createIcon(size: CGSize(width: 1024, height: 1024))
+    let iconImage = PlaygroundAppIconCreator.createIcon(size: CGSize(width: 1024, height: 1024))
     
     var body: some View {
         ZStack {

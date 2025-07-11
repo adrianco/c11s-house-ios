@@ -98,6 +98,7 @@ class QuestionFlowCoordinator: ObservableObject {
     }
     
     /// Save an answer for the current question with full integration
+    @MainActor
     func saveAnswer() async {
         guard let question = currentQuestion else { return }
         guard let stateManager = conversationStateManager else { return }
@@ -211,6 +212,7 @@ class QuestionFlowCoordinator: ObservableObject {
     
     /// Handle question change events
     /// Returns true if still initializing, false otherwise
+    @MainActor
     func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
         guard let question = newQuestion else {
             // No more questions
