@@ -21,6 +21,14 @@ This helps maintain a clean project structure and makes documentation easy to fi
 
 Use `git push` after committing your changes.
 
+## 🏗️ Build Environment Note
+
+**Note:** Xcode is not available in this Claude Code environment. Changes must be saved and pushed to GitHub to be built elsewhere. When making iOS/Swift changes:
+- Ensure all Swift syntax is correct
+- Follow SwiftUI best practices
+- Test compilation will happen outside this environment
+- Focus on code correctness rather than running builds
+
 ## 🚀 IMPORTANT: Claude Flow AI-Driven Development
 
 ### Claude Code Handles:
