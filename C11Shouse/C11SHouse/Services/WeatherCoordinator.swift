@@ -152,17 +152,13 @@ class WeatherCoordinator: ObservableObject {
         Weather at \(locationText):
         Temperature: \(weather.temperature.formatted)
         Condition: \(weather.condition.rawValue)
-        Humidity: \(weather.humidity)%
-        Wind: \(weather.windSpeed) km/h
+        Humidity: \(Int(weather.humidity * 100))%
+        Wind: \(Int(weather.windSpeed)) km/h
         Last updated: \(Date().formatted())
         """
         
-        // Save as a custom status note
-        await notesService.saveCustomNote(
-            title: "Weather Status",
-            content: summary,
-            category: "Status"
-        )
+        // Update or create weather status note
+        await updateWeatherStatusNote(summary)
     }
     
     /// Save weather error as a note
@@ -210,12 +206,43 @@ class WeatherCoordinator: ObservableObject {
         Note: This error has been logged. Weather features may be limited until this is resolved.
         """
         
-        // Save as a custom status note
-        await notesService.saveCustomNote(
-            title: "Weather Service Error",
-            content: errorSummary,
-            category: "Status"
-        )
+        // Update or create weather status note with error
+        await updateWeatherStatusNote(errorSummary)
+    }
+    
+    /// Update or create a single weather status note
+    private func updateWeatherStatusNote(_ content: String) async {
+        do {
+            let notesStore = try await notesService.loadNotesStore()
+            
+            // Look for existing weather status question/key
+            if let existingQuestion = notesStore.questions.first(where: { $0.text == "Weather Status" }) {
+                // Update existing note
+                try await notesService.saveOrUpdateNote(
+                    for: existingQuestion.id,
+                    answer: content,
+                    metadata: ["type": "status", "category": "Status", "lastUpdated": Date().ISO8601Format()]
+                )
+            } else {
+                // Create new weather status entry (not a conversation question)
+                let weatherStatusKey = Question(
+                    text: "Weather Status",
+                    category: .other,
+                    displayOrder: 9999, // Very high so it's never shown in conversation
+                    isRequired: false,
+                    hint: "Automatic weather status tracking"
+                )
+                
+                try await notesService.addQuestion(weatherStatusKey)
+                try await notesService.saveOrUpdateNote(
+                    for: weatherStatusKey.id,
+                    answer: content,
+                    metadata: ["type": "status", "category": "Status", "lastUpdated": Date().ISO8601Format()]
+                )
+            }
+        } catch {
+            print("Failed to update weather status note: \(error)")
+        }
     }
 }
 

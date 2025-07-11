@@ -380,6 +380,11 @@ struct ConversationView: View {
             
             // Load any pending questions
             await questionFlow.loadNextQuestion()
+            
+            // Scroll to bottom after initial setup
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                scrollToBottom = true
+            }
         }
     }
     
