@@ -373,40 +373,6 @@ extension NotesServiceProtocol {
     }
 }
 
-// MARK: - Convenience Extensions
-
-/*
- * These extensions provide convenience methods for common operations.
- * While coordinators handle the business logic, these methods offer
- * direct access to specific note types for flexibility.
- */
-
-extension NotesServiceProtocol {
-    
-    /// Get the current question that needs to be answered
-    func getCurrentQuestion() async -> Question? {
-        let notesStore = try? await loadNotesStore()
-        return notesStore?.questionsNeedingReview().first
-    }
-    
-    /// Get the next unanswered question
-    func getNextUnansweredQuestion() async -> Question? {
-        let notesStore = try? await loadNotesStore()
-        return notesStore?.questions.first { question in
-            notesStore?.notes[question.id] == nil && question.isRequired
-        }
-    }
-    
-    /// Get a specific note by question text (convenience method)
-    func getNote(forQuestionText questionText: String) async -> Note? {
-        let notesStore = try? await loadNotesStore()
-        if let question = notesStore?.questions.first(where: { $0.text == questionText }),
-           let note = notesStore?.notes[question.id] {
-            return note
-        }
-        return nil
-    }
-}
 
 // MARK: - Weather and House Name Extensions
 

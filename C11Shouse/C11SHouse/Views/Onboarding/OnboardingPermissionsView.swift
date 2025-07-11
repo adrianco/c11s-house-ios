@@ -57,7 +57,8 @@ struct OnboardingPermissionsView: View {
                     icon: "mic.fill",
                     title: "Microphone",
                     description: "To hear your voice commands",
-                    status: permissionManager.microphoneAuthorizationStatus,
+                    status: permissionManager.isMicrophoneGranted ? .granted : 
+                            (permissionManager.microphonePermissionStatus == .denied ? .denied : .notDetermined),
                     isRequired: true
                 )
                 
@@ -65,7 +66,8 @@ struct OnboardingPermissionsView: View {
                     icon: "waveform",
                     title: "Speech Recognition",
                     description: "To understand your requests",
-                    status: permissionManager.speechRecognitionAuthorizationStatus,
+                    status: permissionManager.isSpeechRecognitionGranted ? .granted : 
+                            (permissionManager.speechRecognitionPermissionStatus == .denied ? .denied : .notDetermined),
                     isRequired: true
                 )
                 
@@ -73,7 +75,8 @@ struct OnboardingPermissionsView: View {
                     icon: "location.fill",
                     title: "Location",
                     description: "To provide local weather and context",
-                    status: permissionManager.locationAuthorizationStatus,
+                    status: permissionManager.hasLocationPermission ? .granted : 
+                            (permissionManager.locationPermissionStatus == .denied || permissionManager.locationPermissionStatus == .restricted ? .denied : .notDetermined),
                     isRequired: false
                 ) {
                     showLocationExplanation = true
@@ -208,10 +211,16 @@ struct OnboardingPermissionsView: View {
 // MARK: - Permission Card
 
 struct PermissionCard: View {
+    enum Status {
+        case granted
+        case denied
+        case notDetermined
+    }
+    
     let icon: String
     let title: String
     let description: String
-    let status: PermissionStatus
+    let status: Status
     let isRequired: Bool
     var onTap: (() -> Void)? = nil
     
