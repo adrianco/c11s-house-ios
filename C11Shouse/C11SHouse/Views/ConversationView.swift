@@ -26,6 +26,7 @@ struct ConversationView: View {
     @StateObject private var stateManager: ConversationStateManager
     @StateObject private var questionFlow: QuestionFlowCoordinator
     @EnvironmentObject private var serviceContainer: ServiceContainer
+    @Environment(\.presentationMode) var presentationMode
     
     @State private var inputText = ""
     @State private var isMuted = false
@@ -48,10 +49,33 @@ struct ConversationView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Header with mute button
+            // Header with back and mute buttons
             HStack {
+                // Back button
+                NavigationLink(destination: EmptyView()) {
+                    EmptyView()
+                }
+                .navigationBarBackButtonHidden(true)
+                .overlay(
+                    Button(action: {
+                        // Use presentationMode to go back
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                            Text("Back")
+                                .font(.body)
+                        }
+                        .foregroundColor(.blue)
+                    }
+                )
+                
+                Spacer()
+                
                 Text("House Chat")
-                    .font(.largeTitle)
+                    .font(.title2)
                     .fontWeight(.bold)
                 
                 Spacer()

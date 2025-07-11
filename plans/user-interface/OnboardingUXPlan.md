@@ -77,7 +77,7 @@ This document outlines the comprehensive user experience plan for onboarding new
    - Hi 'name', as the conscious mind for 'house name' at 'address' I'm going to keep an eye on things for you, help you answer questions about the house and help manage devices in various rooms".
 
 ### Phase 4: Add First Notes (4-5 minutes)
-**Goal**: Showcase key features through interactive tutorial
+**Goal**: Showcase key features through interactive chat tutorial
 
 1. **Conversation Tutorial**
    - Guided first conversation
