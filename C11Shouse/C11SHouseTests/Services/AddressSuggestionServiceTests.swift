@@ -152,7 +152,7 @@ class MockAddressManagerForSuggestion: AddressManager {
     var detectCurrentAddressCalled = false
     
     init() {
-        let mockNotesService = MockNotesService()
+        let mockNotesService = SharedMockNotesService()
         let mockLocationService = MockLocationService()
         super.init(
             notesService: mockNotesService,
@@ -175,8 +175,8 @@ class MockWeatherCoordinator: WeatherCoordinator {
     var lastFetchedAddress: Address?
     
     init() {
-        let mockWeatherService = MockWeatherService()
-        let mockNotesService = MockNotesService()
+        let mockWeatherService = MockWeatherKitService()
+        let mockNotesService = SharedMockNotesService()
         let mockLocationService = MockLocationService()
         super.init(
             weatherService: mockWeatherService,
