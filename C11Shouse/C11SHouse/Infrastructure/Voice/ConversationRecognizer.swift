@@ -260,28 +260,35 @@ final class ConversationRecognizer: ObservableObject {
         
         // Stopping recording
         
-        // Step 1: Cancel recognition task first
-        if let task = recognitionTask {
-            // Cancelling recognition task
-            task.cancel()
-            recognitionTask = nil
-        }
-        
-        // Step 2: End audio gracefully
+        // Step 1: End audio first to capture any final results
         if let request = recognitionRequest {
             // Ending audio request
             request.endAudio()
-            recognitionRequest = nil
+            // Don't nil out the request yet - let it finish
         }
         
-        // Step 3: Stop audio engine on audio queue
+        // Step 2: Give a moment for final results to come through
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
+            
+            // Step 3: Now cancel recognition task
+            if let task = self.recognitionTask {
+                // Cancelling recognition task
+                task.cancel()
+                self.recognitionTask = nil
+            }
+            
+            self.recognitionRequest = nil
+        }
+        
+        // Step 4: Stop audio engine immediately on audio queue
         audioEngineQueue.sync {
             if audioEngine.isRunning {
                 // Stopping audio engine
                 audioEngine.stop()
             }
             
-            // Step 4: Remove tap only if installed
+            // Step 5: Remove tap only if installed
             if audioTapInstalled {
                 // Removing audio tap
                 inputNode.removeTap(onBus: 0)
@@ -289,11 +296,11 @@ final class ConversationRecognizer: ObservableObject {
             }
         }
         
-        // Step 5: Update recording state (already on main thread due to @MainActor)
+        // Step 6: Update recording state (already on main thread due to @MainActor)
         isRecording = false
         
-        // Step 6: Deactivate audio session with proper error handling
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        // Step 7: Deactivate audio session with proper error handling
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             // Only deactivate if not immediately starting a new recording
             if !self.isRecording {
                 do {

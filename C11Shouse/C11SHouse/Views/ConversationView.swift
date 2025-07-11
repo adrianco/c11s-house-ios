@@ -193,6 +193,8 @@ struct ConversationView: View {
                                 Button(action: {
                                     showVoiceConfirmation = false
                                     pendingVoiceText = ""
+                                    recognizer.transcript = ""
+                                    isTextFieldFocused = false
                                 }) {
                                     Image(systemName: "xmark.circle.fill")
                                         .font(.title2)
@@ -252,10 +254,15 @@ struct ConversationView: View {
             setupView()
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
-            // When recording completes with transcript
-            if !recognizer.isRecording && !newValue.isEmpty && oldValue != newValue {
-                // Show confirmation with editable text
+            // Update pending voice text while recording
+            if recognizer.isRecording && !newValue.isEmpty {
                 pendingVoiceText = newValue
+            }
+        }
+        .onChange(of: recognizer.isRecording) { oldValue, newValue in
+            // When recording stops, show confirmation if we have text
+            if oldValue == true && newValue == false && !pendingVoiceText.isEmpty {
+                // Show confirmation with editable text
                 showVoiceConfirmation = true
                 isTextFieldFocused = true
             }
@@ -377,6 +384,8 @@ struct ConversationView: View {
         } else {
             stateManager.stopSpeaking()
             recognizer.transcript = ""
+            pendingVoiceText = ""  // Clear any previous pending text
+            showVoiceConfirmation = false  // Ensure confirmation is hidden
             recognizer.toggleRecording()
         }
     }
@@ -404,10 +413,11 @@ struct ConversationView: View {
         let userMessage = Message(content: text, isFromUser: true, isVoice: true)
         messageStore.addMessage(userMessage)
         
-        // Clear voice confirmation
+        // Clear voice confirmation and recognizer state
         pendingVoiceText = ""
         showVoiceConfirmation = false
         recognizer.transcript = ""
+        isTextFieldFocused = false
         
         // Process message
         processUserInput(text)
