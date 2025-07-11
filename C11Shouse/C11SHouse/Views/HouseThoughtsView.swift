@@ -312,10 +312,10 @@ struct HouseThoughtsView: View {
         // Subscribe to TTS state changes
         ttsService.isSpeakingPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] speaking in
-                self?.isSpeaking = speaking
+            .sink { speaking in
+                isSpeaking = speaking
                 if !speaking {
-                    self?.isPaused = false
+                    isPaused = false
                 }
             }
             .store(in: &cancellables)
