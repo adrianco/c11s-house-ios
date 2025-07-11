@@ -260,18 +260,31 @@ struct ConversationView: View {
             // When a new question appears, add it to the chat
             if let question = newValue, oldValue != newValue {
                 Task { @MainActor in
-                    var messageContent = question.text
+                    // Give handleQuestionChange a moment to set up the house thought
+                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
                     
-                    // Special handling for address questions
-                    if question.text == "Is this the right address?" || question.text == "What's your home address?" {
-                        // Try to detect current address
-                        if let addressManager = questionFlow.addressManager {
-                            do {
-                                let detectedAddress = try await addressManager.detectCurrentAddress()
-                                messageContent = "Is this the right address?\n\(detectedAddress.fullAddress)"
-                            } catch {
-                                // If detection fails, just show the question
-                                messageContent = "What's your home address?"
+                    var messageContent = question.text
+                    var spokenContent = question.text
+                    
+                    // Check if there's a house thought with suggestions
+                    if let houseThought = recognizer.currentHouseThought {
+                        messageContent = houseThought.thought
+                        if let suggestion = houseThought.suggestion {
+                            messageContent += "\n\n" + suggestion
+                        }
+                        spokenContent = houseThought.thought
+                    } else {
+                        // Special handling for address questions
+                        if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+                            // Try to detect current address
+                            if let addressManager = questionFlow.addressManager {
+                                do {
+                                    let detectedAddress = try await addressManager.detectCurrentAddress()
+                                    messageContent = "Is this the right address?\n\(detectedAddress.fullAddress)"
+                                } catch {
+                                    // If detection fails, just show the question
+                                    messageContent = "What's your home address?"
+                                }
                             }
                         }
                     }
@@ -284,17 +297,16 @@ struct ConversationView: View {
                     )
                     messageStore.addMessage(questionMessage)
                     
+                    // If there's a pre-populated transcript, show it in the text field
+                    if !stateManager.persistentTranscript.isEmpty {
+                        inputText = stateManager.persistentTranscript
+                    }
+                    
                     // Speak the question if not muted
                     if !isMuted {
-                        let thought = HouseThought(
-                            thought: question.text,
-                            emotion: .curious,
-                            category: .question,
-                            confidence: 1.0
-                        )
                         // Don't wait for speech to complete - let it run in background
                         Task {
-                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                            try? await stateManager.speak(spokenContent, isMuted: isMuted)
                         }
                     }
                 }
@@ -393,7 +405,7 @@ struct ConversationView: View {
                 )
                 messageStore.addMessage(acknowledgment)
                 
-                // Speak acknowledgment and then load next question
+                // Speak acknowledgment and wait for completion
                 if !isMuted {
                     let thought = HouseThought(
                         thought: "Thank you! I've saved that information.",
@@ -403,9 +415,12 @@ struct ConversationView: View {
                     )
                     // Wait for speech to complete before loading next question
                     try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    
+                    // Add a small pause after thank you for natural flow
+                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
                 }
                 
-                // Load next question after acknowledgment is spoken
+                // Load next question after acknowledgment is complete
                 await questionFlow.loadNextQuestion()
             } else {
                 // Check for note creation commands
