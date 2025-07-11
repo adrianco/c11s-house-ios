@@ -203,9 +203,21 @@ struct ConversationView: View {
                                 .disabled(pendingVoiceText.isEmpty)
                             }
                         } else {
-                            Spacer()
-                            
-                            VStack(spacing: 4) {
+                            VStack(spacing: 8) {
+                                // Show live transcript while recording
+                                if recognizer.isRecording && !recognizer.transcript.isEmpty {
+                                    Text(recognizer.transcript)
+                                        .font(.body)
+                                        .foregroundColor(.primary)
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 8)
+                                        .background(Color(UIColor.secondarySystemFill))
+                                        .cornerRadius(12)
+                                        .transition(.opacity)
+                                }
+                                
+                                Spacer()
+                                
                                 Button(action: toggleRecording) {
                                     Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
                                         .font(.system(size: 60))
@@ -216,9 +228,9 @@ struct ConversationView: View {
                                 Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
+                                
+                                Spacer()
                             }
-                            
-                            Spacer()
                         }
                     }
                 }
@@ -242,7 +254,7 @@ struct ConversationView: View {
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
             // When a new question appears, add it to the chat
             if let question = newValue, oldValue != newValue {
-                Task {
+                Task { @MainActor in
                     var messageContent = question.text
                     
                     // Special handling for address questions
@@ -259,24 +271,25 @@ struct ConversationView: View {
                         }
                     }
                     
+                    // Add question message immediately on main actor
                     let questionMessage = Message(
                         content: messageContent,
                         isFromUser: false,
                         isVoice: !isMuted
                     )
-                    await MainActor.run {
-                        messageStore.addMessage(questionMessage)
-                    }
+                    messageStore.addMessage(questionMessage)
                     
-                    // Speak the question if not muted
+                    // Speak the question if not muted (in background)
                     if !isMuted {
-                        let thought = HouseThought(
-                            thought: question.text,
-                            emotion: .curious,
-                            category: .question,
-                            confidence: 1.0
-                        )
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        Task {
+                            let thought = HouseThought(
+                                thought: question.text,
+                                emotion: .curious,
+                                category: .question,
+                                confidence: 1.0
+                            )
+                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        }
                     }
                 }
             }
@@ -358,25 +371,21 @@ struct ConversationView: View {
     private func processUserInput(_ input: String) {
         isProcessing = true
         
-        Task {
+        Task { @MainActor in
             // Update state manager transcript
-            await MainActor.run {
-                stateManager.persistentTranscript = input
-            }
+            stateManager.persistentTranscript = input
             
             // Check if this answers a current question
             if questionFlow.currentQuestion != nil {
                 await questionFlow.saveAnswer()
                 
-                // Add acknowledgment message
+                // Add acknowledgment message immediately
                 let acknowledgment = Message(
                     content: "Thank you! I've saved that information.",
                     isFromUser: false,
                     isVoice: !isMuted
                 )
-                await MainActor.run {
-                    messageStore.addMessage(acknowledgment)
-                }
+                messageStore.addMessage(acknowledgment)
                 
                 // Speak acknowledgment if not muted
                 if !isMuted {
@@ -386,11 +395,12 @@ struct ConversationView: View {
                         category: .greeting,
                         confidence: 1.0
                     )
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    Task {
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    }
                 }
                 
-                // Load next question after a brief delay
-                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                // Load next question immediately
                 await questionFlow.loadNextQuestion()
             } else {
                 // Check for note creation commands

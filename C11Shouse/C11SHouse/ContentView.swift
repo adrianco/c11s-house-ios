@@ -252,23 +252,24 @@ struct ContentView: View {
                 Spacer()
             }
             }  // End of ZStack
-        }
-        .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
-        .background(
+            
+            // Hidden navigation links
             NavigationLink(destination: NotesView(), isActive: $showNotesView) {
                 EmptyView()
             }
-        )
-        .background(
+            .hidden()
+            
             NavigationLink(destination: VoiceSettingsView(), isActive: $showVoiceSettings) {
                 EmptyView()
             }
-        )
-        .background(
+            .hidden()
+            
             NavigationLink(destination: VoiceTestView(), isActive: $showVoiceTest) {
                 EmptyView()
             }
-        )
+            .hidden()
+        }
+        .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {
             checkLocationPermission()
             checkOnboardingStatus()
