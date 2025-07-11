@@ -2680,4 +2680,4 @@ The setup conversation view is not needed. There should be only one conversation
   to have a scrolling view that looks like two people chatting in a messaging app. There is a Mute button. If it is muted then chat is only via text, if unmuted then voice is used to say house output and
    transcribe user input. Conversation history is saved so that users can scroll back to see what was said.
 
-   
+Updated the UX plan to be clearer that a chat interfaces is needed

@@ -53,11 +53,11 @@ struct OnboardingCompletionView: View {
                     .padding(.top)
                 
                 VStack(alignment: .leading, spacing: 12) {
-                    FeatureRow(icon: "message.fill", text: "Chat with your house")
-                    FeatureRow(icon: "note.text", text: "Create notes about rooms and devices")
-                    FeatureRow(icon: "questionmark.circle", text: "Answer setup questions")
-                    FeatureRow(icon: "cloud.sun.fill", text: "Get weather updates")
-                    FeatureRow(icon: "mic.fill", text: "Use voice or text input")
+                    CompletionFeatureRow(icon: "message.fill", text: "Chat with your house")
+                    CompletionFeatureRow(icon: "note.text", text: "Create notes about rooms and devices")
+                    CompletionFeatureRow(icon: "questionmark.circle", text: "Answer setup questions")
+                    CompletionFeatureRow(icon: "cloud.sun.fill", text: "Get weather updates")
+                    CompletionFeatureRow(icon: "mic.fill", text: "Use voice or text input")
                 }
                 .padding(.horizontal, 40)
             }
@@ -96,7 +96,7 @@ struct OnboardingCompletionView: View {
 
 // MARK: - Supporting Views
 
-struct FeatureRow: View {
+struct CompletionFeatureRow: View {
     let icon: String
     let text: String
     
