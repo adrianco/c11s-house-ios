@@ -83,7 +83,18 @@ class ContentViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .sink { [weak self] weather in
-                self?.updateHouseEmotionForWeather(weather)
+                guard let self = self else { return }
+                
+                // Only update weather-based emotions if setup is complete
+                Task {
+                    let requiredComplete = await self.notesService.areAllRequiredQuestionsAnswered()
+                    if requiredComplete {
+                        await MainActor.run {
+                            self.updateHouseEmotionForWeather(weather)
+                        }
+                    }
+                    // Otherwise keep the curious emotion for setup
+                }
             }
             .store(in: &cancellables)
         
@@ -168,7 +179,12 @@ class ContentViewModel: ObservableObject {
         do {
             _ = try await weatherCoordinator.fetchWeather(for: address)
         } catch {
-            updateHouseEmotionForError()
+            // Only update emotion for error if all required questions are answered
+            let requiredComplete = await notesService.areAllRequiredQuestionsAnswered()
+            if requiredComplete {
+                updateHouseEmotionForError()
+            }
+            // Otherwise keep the curious emotion for setup
         }
     }
     
