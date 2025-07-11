@@ -333,8 +333,15 @@ struct ConversationView: View {
                     
                     // Speak the question if not muted
                     if !isMuted {
-                        // Don't wait for speech to complete - let it run in background
+                        // Wait a moment for any previous speech to complete
                         Task {
+                            // If TTS is currently speaking, wait for it to finish
+                            while stateManager.isSpeaking {
+                                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                            }
+                            // Add a small pause for natural conversation flow
+                            try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+                            // Now speak the question
                             try? await stateManager.speak(spokenContent, isMuted: isMuted)
                         }
                     }
