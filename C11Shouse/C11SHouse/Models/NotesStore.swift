@@ -206,6 +206,10 @@ struct NotesStoreData: Codable {
     func questionsNeedingReview() -> [Question] {
         questions
             .filter { question in
+                // Exclude Weather question from conversation flow
+                if question.text == "Weather" {
+                    return false
+                }
                 // Only include actual questions that need conversation review
                 let note = notes[question.id]
                 return note?.needsConversationReview ?? true

@@ -215,7 +215,7 @@ class WeatherCoordinator: ObservableObject {
         do {
             let notesStore = try await notesService.loadNotesStore()
             
-            // Look for existing weather status entry
+            // Look for existing weather entry
             if let existingQuestion = notesStore.questions.first(where: { $0.text == "Weather" }) {
                 // Update existing note
                 try await notesService.saveOrUpdateNote(
