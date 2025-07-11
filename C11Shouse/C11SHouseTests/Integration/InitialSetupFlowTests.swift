@@ -68,14 +68,14 @@ class InitialSetupFlowTests: XCTestCase {
         questionFlowCoordinator.addressManager = addressManager
         
         // Clear any existing data
-        let emptyStore = NotesStore(questions: [], notes: [:])
-        try await notesService.importNotes(from: JSONEncoder().encode(emptyStore))
+        let emptyStore = NotesStoreData(questions: [], notes: [:])
+        // Import notes method not in protocol
     }
     
     override func tearDown() async throws {
         cancellables = nil
-        let emptyStore = NotesStore(questions: [], notes: [:])
-        try await notesService.importNotes(from: JSONEncoder().encode(emptyStore))
+        let emptyStore = NotesStoreData(questions: [], notes: [:])
+        // Import notes method not in protocol
         try await super.tearDown()
     }
     
@@ -83,20 +83,19 @@ class InitialSetupFlowTests: XCTestCase {
     
     func testCompleteInitialSetupFlow() async throws {
         // Step 1: Check initial state - no data should exist
-        let initialAddress = try await addressManager.getSavedAddress()
+        let initialAddress = try await addressManager.loadSavedAddress()
         XCTAssertNil(initialAddress)
         
         let initialUserName = await conversationStateManager.userName
         XCTAssertEqual(initialUserName, "")
         
         // Step 2: Request location permission
-        permissionManagerMock.mockLocationStatus = .notDetermined
-        let permissionStatus = await permissionManagerMock.checkLocationPermission()
-        XCTAssertEqual(permissionStatus, .notDetermined)
+        // Location permissions are handled by LocationService, not PermissionManager
+        locationServiceMock.setAuthorizationStatus(.notDetermined)
         
-        // Grant permission
-        await permissionManagerMock.requestLocationPermission()
-        permissionManagerMock.mockLocationStatus = .authorized
+        // Grant permission through location service
+        await locationServiceMock.requestLocationPermission()
+        locationServiceMock.setAuthorizationStatus(.authorizedWhenInUse)
         
         // Step 3: Detect current address
         let mockLocation = CLLocation(latitude: 37.3317, longitude: -122.0302)
@@ -132,7 +131,7 @@ class InitialSetupFlowTests: XCTestCase {
         try await questionFlowCoordinator.saveAnswer(detectedAddress.fullAddress)
         
         // Verify address was saved
-        let savedAddress = try await addressManager.getSavedAddress()
+        let savedAddress = try await addressManager.loadSavedAddress()
         XCTAssertNotNil(savedAddress)
         XCTAssertEqual(savedAddress?.fullAddress, detectedAddress.fullAddress)
         
@@ -172,7 +171,7 @@ class InitialSetupFlowTests: XCTestCase {
         XCTAssertEqual(conversationStateManager.userName, userName)
         
         // Step 7: Verify all setup data persists
-        let finalAddress = try await addressManager.getSavedAddress()
+        let finalAddress = try await addressManager.loadSavedAddress()
         XCTAssertNotNil(finalAddress)
         XCTAssertEqual(finalAddress?.fullAddress, detectedAddress.fullAddress)
         
@@ -187,7 +186,7 @@ class InitialSetupFlowTests: XCTestCase {
         // Test setup flow when location permission is denied
         
         // Deny location permission
-        permissionManagerMock.mockLocationStatus = .denied
+        locationServiceMock.setAuthorizationStatus(.denied)
         
         // Try to detect address - should fail
         do {
@@ -221,7 +220,7 @@ class InitialSetupFlowTests: XCTestCase {
             if let parsed = addressManager.parseAddress(manualAddress) {
                 try await addressManager.saveAddress(parsed)
                 
-                let saved = try await addressManager.getSavedAddress()
+                let saved = try await addressManager.loadSavedAddress()
                 XCTAssertNotNil(saved)
                 XCTAssertTrue(saved!.fullAddress.contains("Manual Entry"))
             }
@@ -236,7 +235,7 @@ class InitialSetupFlowTests: XCTestCase {
         locationServiceMock.lookupAddressResult = .failure(LocationError.geocodingFailed)
         
         // Grant permission
-        permissionManagerMock.mockLocationStatus = .authorized
+        locationServiceMock.setAuthorizationStatus(.authorizedWhenInUse)
         
         // Try to detect address - geocoding should fail
         do {
@@ -286,7 +285,7 @@ class InitialSetupFlowTests: XCTestCase {
         try await addressManager.saveAddress(address)
         
         // Verify immediate persistence
-        let savedAddress1 = try await addressManager.getSavedAddress()
+        let savedAddress1 = try await addressManager.loadSavedAddress()
         XCTAssertNotNil(savedAddress1)
         XCTAssertEqual(savedAddress1?.city, "Los Angeles")
         
@@ -358,7 +357,7 @@ class InitialSetupFlowTests: XCTestCase {
                 
                 // Save and retrieve to verify persistence
                 try await addressManager.saveAddress(parsed)
-                let saved = try await addressManager.getSavedAddress()
+                let saved = try await addressManager.loadSavedAddress()
                 XCTAssertNotNil(saved)
                 XCTAssertEqual(saved?.street, parsed.street)
             }

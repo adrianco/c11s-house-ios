@@ -254,11 +254,11 @@ class SharedMockNotesService: NotesServiceProtocol {
 // MARK: - Weather Service Mocks
 
 class MockWeatherKitService: WeatherServiceProtocol {
-    var weatherPublisher: AnyPublisher<Weather?, Never> {
-        weatherSubject.eraseToAnyPublisher()
+    var weatherUpdatePublisher: AnyPublisher<Weather, Never> {
+        weatherUpdateSubject.eraseToAnyPublisher()
     }
     
-    private let weatherSubject = CurrentValueSubject<Weather?, Never>(nil)
+    private let weatherUpdateSubject = PassthroughSubject<Weather, Never>()
     
     var fetchWeatherCalled = false
     var mockWeather: Weather?
@@ -292,8 +292,12 @@ class MockWeatherKitService: WeatherServiceProtocol {
             lastUpdated: Date()
         )
         
-        weatherSubject.send(weather)
+        weatherUpdateSubject.send(weather)
         return weather
+    }
+    
+    func fetchWeatherForAddress(_ address: Address) async throws -> Weather {
+        return try await fetchWeather(for: address.coordinate ?? Coordinate(latitude: 0, longitude: 0))
     }
     
     // Additional method for compatibility with other tests
@@ -305,13 +309,9 @@ class MockWeatherKitService: WeatherServiceProtocol {
 
 // MARK: - Conversation Recognizer Mock
 
-protocol ConversationRecognizerProtocol {
-    func setQuestionThought(_ question: String) async
-    func setThankYouThought() async
-    func clearHouseThought() async
-}
+// Remove duplicate protocol definition - use the one from main codebase
 
-class MockConversationRecognizer: ConversationRecognizerProtocol {
+class MockConversationRecognizer: NSObject {
     var setQuestionThoughtCalled = false
     var lastQuestionThought: String?
     
@@ -369,6 +369,14 @@ class SharedMockAddressManager: AddressManager {
     }
 }
 
+// MARK: - Permission Status
+
+enum PermissionStatus {
+    case granted
+    case denied
+    case notDetermined
+}
+
 // MARK: - Permission Manager Mock
 
 class MockPermissionManager: ObservableObject {
@@ -376,6 +384,20 @@ class MockPermissionManager: ObservableObject {
     @Published var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
     @Published var allPermissionsGranted: Bool = false
     @Published var permissionError: String?
+    
+    // Mock location status for tests
+    var mockLocationStatus: CLAuthorizationStatus = .notDetermined
+    
+    // Aliases for test compatibility
+    var mockMicrophoneStatus: AVAudioSession.RecordPermission {
+        get { microphonePermissionStatus }
+        set { microphonePermissionStatus = newValue }
+    }
+    
+    var mockSpeechRecognitionStatus: SFSpeechRecognizerAuthorizationStatus {
+        get { speechRecognitionPermissionStatus }
+        set { speechRecognitionPermissionStatus = newValue }
+    }
     
     func requestAllPermissions() async {
         microphonePermissionStatus = .granted
@@ -399,6 +421,65 @@ class MockPermissionManager: ObservableObject {
             return microphonePermissionStatus == .granted
         case .speechRecognition:
             return speechRecognitionPermissionStatus == .authorized
+        }
+    }
+    
+    func requestLocationPermission() async {
+        mockLocationStatus = .authorizedWhenInUse
+        updateAllPermissionsStatus()
+    }
+    
+    func checkLocationPermission() -> CLAuthorizationStatus {
+        return mockLocationStatus
+    }
+    
+    // Computed properties for OnboardingPermissionsView
+    var isMicrophoneGranted: Bool {
+        microphonePermissionStatus == .granted
+    }
+    
+    var isSpeechRecognitionGranted: Bool {
+        speechRecognitionPermissionStatus == .authorized
+    }
+    
+    var hasLocationPermission: Bool {
+        mockLocationStatus == .authorizedWhenInUse || mockLocationStatus == .authorizedAlways
+    }
+    
+    var microphoneAuthorizationStatus: PermissionStatus {
+        switch microphonePermissionStatus {
+        case .granted: return .granted
+        case .denied: return .denied
+        default: return .notDetermined
+        }
+    }
+    
+    var speechRecognitionAuthorizationStatus: PermissionStatus {
+        switch speechRecognitionPermissionStatus {
+        case .authorized: return .granted
+        case .denied: return .denied
+        default: return .notDetermined
+        }
+    }
+    
+    var locationAuthorizationStatus: PermissionStatus {
+        switch mockLocationStatus {
+        case .authorizedAlways, .authorizedWhenInUse: return .granted
+        case .denied, .restricted: return .denied
+        default: return .notDetermined
+        }
+    }
+    
+    var microphoneStatusDescription: String {
+        switch microphonePermissionStatus {
+        case .granted:
+            return "Microphone access granted"
+        case .denied:
+            return "Microphone access denied. Please enable in Settings."
+        case .undetermined:
+            return "Microphone permission not yet requested"
+        @unknown default:
+            return "Unknown microphone permission status"
         }
     }
     

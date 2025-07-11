@@ -26,7 +26,7 @@ import Combine
 
 // MARK: - Mock TTS Service
 
-class MockTTSServiceForStateManager: TTSService {
+class MockTTSServiceForStateManager: NSObject, TTSService {
     var isSpeaking = false
     
     var isSpeakingPublisher: AnyPublisher<Bool, Never> {

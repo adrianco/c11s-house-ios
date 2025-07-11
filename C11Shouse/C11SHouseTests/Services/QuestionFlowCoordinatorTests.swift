@@ -26,11 +26,7 @@ import Combine
 
 // MARK: - Protocols for Testing
 
-protocol ConversationRecognizerProtocol {
-    func setQuestionThought(_ question: String) async
-    func setThankYouThought() async
-    func clearHouseThought() async
-}
+// ConversationRecognizerProtocol removed - duplicate definition
 
 // MARK: - Mock NotesService
 
@@ -225,7 +221,7 @@ class MockConversationStateManager: ConversationStateManager {
     }
 }
 
-class MockConversationRecognizer: ConversationRecognizerProtocol {
+class MockConversationRecognizer: NSObject {
     var clearHouseThoughtCallCount = 0
     var setQuestionThoughtCallCount = 0
     var setThankYouThoughtCallCount = 0

@@ -162,7 +162,7 @@ struct OnboardingContainerView_Previews: PreviewProvider {
                 permissionManager: PermissionManager.shared,
                 addressManager: AddressManager(
                     notesService: NotesServiceImpl(),
-                    locationService: LocationService()
+                    locationService: LocationServiceImpl()
                 )
             ))
             .environmentObject(ServiceContainer.shared)
