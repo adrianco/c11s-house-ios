@@ -103,6 +103,7 @@ class ServiceContainer: ObservableObject {
         WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationService: locationService)
     }()
     
+    @MainActor
     private(set) lazy var addressSuggestionService: AddressSuggestionService = {
         AddressSuggestionService(
             addressManager: addressManager,
