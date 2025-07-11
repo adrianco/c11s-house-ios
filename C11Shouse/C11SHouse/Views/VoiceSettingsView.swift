@@ -49,8 +49,7 @@ struct VoiceSettingsView: View {
     ]
     
     var body: some View {
-        NavigationView {
-            Form {
+        Form {
                 // Voice Selection Section
                 Section(header: Text("Voice Selection")) {
                     Picker("Language", selection: $selectedLanguage) {
@@ -152,22 +151,14 @@ struct VoiceSettingsView: View {
                     }
                 }
                 
-                // Reset Section
-                Section {
-                    Button(action: resetToDefaults) {
-                        Text("Reset to Defaults")
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
             }
-            .navigationTitle("Voice Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        // Dismiss or navigate back
-                    }
+        .navigationTitle("Voice Settings")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: resetToDefaults) {
+                    Text("Reset")
+                        .foregroundColor(.red)
                 }
             }
         }
