@@ -67,16 +67,32 @@ class LocationServiceImpl: NSObject, LocationServiceProtocol {
     }
     
     func requestLocationPermission() async {
-        guard locationManager.authorizationStatus == .notDetermined else { return }
+        guard locationManager.authorizationStatus == .notDetermined else { 
+            // If already authorized, start location updates
+            if locationManager.authorizationStatus == .authorizedWhenInUse || 
+               locationManager.authorizationStatus == .authorizedAlways {
+                startLocationUpdates()
+            }
+            return 
+        }
         
         locationManager.requestWhenInUseAuthorization()
         
         // Wait for authorization change
         for await status in authorizationStatusPublisher.values {
             if status != .notDetermined {
+                // Start location updates if authorized
+                if status == .authorizedWhenInUse || status == .authorizedAlways {
+                    startLocationUpdates()
+                }
                 break
             }
         }
+    }
+    
+    private func startLocationUpdates() {
+        // Request a single location update to pre-fetch location
+        locationManager.requestLocation()
     }
     
     func getCurrentLocation() async throws -> CLLocation {
@@ -175,6 +191,12 @@ extension LocationServiceImpl: CLLocationManagerDelegate {
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatusSubject.send(manager.authorizationStatus)
+        
+        // Start location updates if authorized
+        if manager.authorizationStatus == .authorizedWhenInUse || 
+           manager.authorizationStatus == .authorizedAlways {
+            startLocationUpdates()
+        }
     }
 }
 

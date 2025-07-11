@@ -338,6 +338,12 @@ struct ConversationView: View {
                 messageStore.addMessage(welcomeMessage)
             }
             
+            // Pre-fetch location in background if permissions are granted
+            Task.detached(priority: .background) {
+                let locationService = ServiceContainer.shared.locationService
+                await locationService.requestLocationPermission()
+            }
+            
             // Load any pending questions
             await questionFlow.loadNextQuestion()
         }
@@ -417,7 +423,7 @@ struct ConversationView: View {
                     try? await stateManager.speak(thought.thought, isMuted: isMuted)
                     
                     // Add a small pause after thank you for natural flow
-                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                    try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
                 }
                 
                 // Load next question after acknowledgment is complete
