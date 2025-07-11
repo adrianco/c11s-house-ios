@@ -354,6 +354,9 @@ struct ConversationView: View {
             }
             stateManager.stopSpeaking()
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ClearChatHistory"))) { _ in
+            messageStore.clearAllMessages()
+        }
     }
     
     private func setupView() {

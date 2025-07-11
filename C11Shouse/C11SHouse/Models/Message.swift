@@ -79,4 +79,9 @@ class MessageStore: ObservableObject {
         guard let encoded = try? JSONEncoder().encode(messages) else { return }
         UserDefaults.standard.set(encoded, forKey: storageKey)
     }
+    
+    func clearAllMessages() {
+        messages.removeAll()
+        UserDefaults.standard.removeObject(forKey: storageKey)
+    }
 }

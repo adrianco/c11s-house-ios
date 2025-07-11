@@ -82,7 +82,7 @@ struct NotesView: View {
                 clearAllNotes()
             }
         } message: {
-            Text("This will delete all notes and reset to default questions. Are you sure?")
+            Text("This will delete all notes, clear chat history, and reset to default questions. Are you sure?")
         }
     }
     
@@ -295,6 +295,9 @@ struct NotesView: View {
             do {
                 // Clear all notes data
                 try await serviceContainer.notesService.clearAllData()
+                
+                // Also clear chat history
+                NotificationCenter.default.post(name: Notification.Name("ClearChatHistory"), object: nil)
                 
                 // Reload to show empty state
                 loadNotes()
