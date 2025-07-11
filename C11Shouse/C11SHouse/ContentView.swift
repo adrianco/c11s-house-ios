@@ -15,8 +15,8 @@
  *   - Linear gradient on button and background for visual hierarchy
  *   - System colors used for automatic dark mode support
  * - 2025-07-04: Icon updates
- *   - Replaced static house.fill SF Symbol with dynamic AppIconCreator implementation
- *   - AppIconCreator generates gradient background with house + brain symbols
+ *   - Replaced static house.fill SF Symbol with dynamic AppIconCreatorLegacy implementation
+ *   - AppIconCreatorLegacy generates gradient background with house + brain symbols
  *   - Removed waveform.circle.fill icon to simplify UI and focus on core branding
  *   - Added corner radius and shadow to the dynamic app icon
  * - 2025-07-04: Added personality placeholders
@@ -47,6 +47,11 @@
  *   - Changed from ServiceContainer.shared.makeContentViewModel()
  *   - Now using ViewModelFactory.shared.makeContentViewModel()
  *   - Follows separation of concerns principle
+ * - 2025-07-11: Cleaned up UI with settings menu
+ *   - Moved secondary actions (Notes, Voice Settings, Test Voice) to settings menu
+ *   - Added gear icon button in top-right corner with dropdown menu
+ *   - Simplified main view to focus on primary "Start Conversation" action
+ *   - Improved visual hierarchy and reduced clutter
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -58,6 +63,7 @@ struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @StateObject private var viewModel: ContentViewModel
     @State private var showOnboardingInvitation = false
+    @State private var showSettings = false
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -65,10 +71,11 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // Header
-                VStack(spacing: 8) {
-                    Image(uiImage: AppIconCreator.createIcon(size: CGSize(width: 200, height: 200)))
+            ZStack {
+                VStack(spacing: 0) {
+                    // Header
+                    VStack(spacing: 8) {
+                    Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 200, height: 200)))
                         .resizable()
                         .frame(width: 100, height: 100)
                         .cornerRadius(20)
@@ -171,8 +178,8 @@ struct ContentView: View {
                     
                     NavigationLink(destination: ConversationView()) {
                         HStack {
-                            Image(systemName: "mic.fill")
-                            Text("Start Conversation")
+                            Image(systemName: "message.fill")
+                            Text("Chat with House")
                             Image(systemName: "chevron.right")
                         }
                         .font(.headline)
@@ -190,75 +197,12 @@ struct ContentView: View {
                         .shadow(radius: 5)
                     }
                     .padding(.top, 20)
-                    
-                    NavigationLink(destination: NotesView()) {
-                        HStack {
-                            Image(systemName: "note.text")
-                            Text("Manage Notes")
-                            Image(systemName: "chevron.right")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 15)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [.orange, .pink]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(25)
-                        .shadow(radius: 5)
-                    }
-                    
-                    HStack(spacing: 15) {
-                        NavigationLink(destination: VoiceSettingsView()) {
-                            HStack {
-                                Image(systemName: "speaker.wave.2.fill")
-                                Text("Voice Settings")
-                            }
-                            .font(.callout)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [.mint, .cyan]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(20)
-                            .shadow(radius: 3)
-                        }
-                        
-                        NavigationLink(destination: VoiceTestView()) {
-                            HStack {
-                                Image(systemName: "waveform")
-                                Text("Test Voice")
-                            }
-                            .font(.callout)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [.indigo, .purple]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(20)
-                            .shadow(radius: 3)
-                        }
-                    }
                 }
                 .frame(maxHeight: .infinity)
                 
-                Spacer()
-            }
-            .background(
+                    Spacer()
+                }
+                .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
                         Color(UIColor.systemBackground),
@@ -271,6 +215,40 @@ struct ContentView: View {
             )
             .navigationTitle("Conscious House")
             .navigationBarHidden(true)
+            
+            // Settings button overlay
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    Menu {
+                        NavigationLink(destination: NotesView()) {
+                            Label("Manage Notes", systemImage: "note.text")
+                        }
+                        
+                        NavigationLink(destination: VoiceSettingsView()) {
+                            Label("Voice Settings", systemImage: "speaker.wave.2.fill")
+                        }
+                        
+                        NavigationLink(destination: VoiceTestView()) {
+                            Label("Test Voice", systemImage: "waveform")
+                        }
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                            .frame(width: 44, height: 44)
+                            .background(Color(UIColor.secondarySystemBackground))
+                            .clipShape(Circle())
+                            .shadow(radius: 2)
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.top, 50)
+                }
+                
+                Spacer()
+            }
+            }  // End of ZStack
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {

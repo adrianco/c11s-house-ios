@@ -66,7 +66,7 @@ struct OnboardingWelcomeView: View {
                 }
                 
                 // Central house icon
-                Image(uiImage: AppIconCreator.createIcon(size: CGSize(width: 120, height: 120)))
+                Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 120, height: 120)))
                     .resizable()
                     .frame(width: 120, height: 120)
                     .cornerRadius(24)

@@ -44,6 +44,7 @@ protocol TTSService: AnyObject {
     func setRate(_ rate: Float)
     func setPitch(_ pitch: Float)
     func setVolume(_ volume: Float)
+    func setVoice(_ voiceIdentifier: String?)
 }
 
 /// Configuration for TTS parameters
@@ -53,6 +54,7 @@ struct TTSConfiguration {
     var volume: Float = 1.0  // 0.0 to 1.0
     var preUtteranceDelay: TimeInterval = 0.5
     var postUtteranceDelay: TimeInterval = 0.5
+    var voiceIdentifier: String? = nil
     
     static let `default` = TTSConfiguration()
 }
@@ -128,8 +130,13 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
         utterance.preUtteranceDelay = configuration.preUtteranceDelay
         utterance.postUtteranceDelay = configuration.postUtteranceDelay
         
-        // Set voice based on language
-        if let language = language {
+        // Set voice based on configuration or language
+        if let voiceIdentifier = configuration.voiceIdentifier,
+           let voice = AVSpeechSynthesisVoice.speechVoices().first(where: { $0.identifier == voiceIdentifier }) {
+            // Use the specifically configured voice
+            utterance.voice = voice
+        } else if let language = language {
+            // Fall back to language-based voice selection
             utterance.voice = AVSpeechSynthesisVoice(language: language)
         } else {
             // Auto-detect language or use default
@@ -197,6 +204,10 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
     
     func setVolume(_ volume: Float) {
         configuration.volume = max(0.0, min(1.0, volume))
+    }
+    
+    func setVoice(_ voiceIdentifier: String?) {
+        configuration.voiceIdentifier = voiceIdentifier
     }
     
     // MARK: - Private Methods

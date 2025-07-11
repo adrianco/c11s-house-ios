@@ -1,324 +1,492 @@
 /*
  * CONTEXT & PURPOSE:
- * ConversationView is the main interface for voice conversations with the house consciousness.
- * It provides real-time speech recognition, transcription display, and conversation state
- * management to enable natural voice interactions with the intelligent home system.
+ * ConversationView provides a chat-style interface for conversations between the user and house.
+ * It supports both voice and text input, with a scrolling message history and mute toggle.
  *
  * DECISION HISTORY:
- * - 2025-07-03: Initial implementation for testing fixed speech recognition
- *   - StateObject for ConversationRecognizer lifecycle management
- *   - Status display for recording state, availability, and authorization
- *   - Real-time transcript display with confidence percentage
- *   - Error display with red background for visibility
- *   - Toggle button changes between start/stop with color feedback
- *   - Reset button to clear transcript and state
- *   - Authorization status helper for readable text
- *   - Automatic cleanup on view dismissal to prevent orphaned recordings
- *   - Disabled state for button when not authorized
- *   - Gray backgrounds for content sections
- *   - Minimum height for transcript area to prevent layout shifts
- * - 2025-07-04: Renamed from FixedSpeechTestView to ConversationView
- *   - Updated to reflect production use as conversation interface
- *   - Changed recognizer from FixedSpeechRecognizer to ConversationRecognizer
- *   - Maintained all existing functionality while clarifying purpose
- * - 2025-07-04: Added persistent transcript and editing capabilities
- *   - Transcript persists in memory while app is running
- *   - Added Edit button to toggle between view and edit modes
- *   - TextEditor for transcript editing when in edit mode
- *   - New recordings append to existing transcript instead of replacing
- *   - Manual transcript management separate from recognizer
- *   - Updated onChange to iOS 17 syntax with oldValue, newValue parameters
- * - 2025-07-04: Fixed incremental speech recognition updates
- *   - Track session start position to handle incremental updates properly
- *   - Speech recognizer sends progressive updates (e.g., "One", "One two", "One two three")
- *   - Now correctly shows final result without duplication
- * - 2025-07-07: Added HouseThoughts component
- *   - Integrated HouseThoughtsView above transcript display
- *   - Provides interactive Q&A interface for house consciousness
- *   - First question: "What's your name?" for personalization
- * - 2025-01-09: Swift 6 concurrency fixes
- *   - Added @preconcurrency to Speech import to suppress Sendable warnings
- * - 2025-07-10: Updated to use ViewModelFactory
- *   - Changed ConversationStateManager creation to use ViewModelFactory
- *   - Maintains separation of concerns for dependency injection
+ * - 2025-07-11: Complete redesign as chat interface
+ *   - Chat bubble UI similar to messaging apps
+ *   - Scrolling message history with persistence
+ *   - Mute button for voice/text mode switching
+ *   - Voice recognition when unmuted
+ *   - Text input when muted
+ *   - Auto-scroll to latest message
+ *   - Message timestamps
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
 
-//
-//  ConversationView.swift
-//  C11SHouse
-//
-//  Main view for voice conversations with the house consciousness
-//
-
 import SwiftUI
 @preconcurrency import Speech
 
 struct ConversationView: View {
+    @StateObject private var messageStore = MessageStore()
     @StateObject private var recognizer = ConversationRecognizer()
     @StateObject private var stateManager: ConversationStateManager
     @StateObject private var questionFlow: QuestionFlowCoordinator
-    @StateObject private var addressManager: AddressManager
-    @AppStorage("conversationViewMuted") private var isMuted = false
-    @State private var hasLoadedInitialQuestion = false
-    @State private var isInitializing = true
     @EnvironmentObject private var serviceContainer: ServiceContainer
+    
+    @State private var inputText = ""
+    @State private var isMuted = false
+    @State private var isProcessing = false
+    @State private var scrollToBottom = false
+    @State private var pendingVoiceText = ""
+    @State private var showVoiceConfirmation = false
+    @FocusState private var isTextFieldFocused: Bool
     
     init() {
         let conversationStateManager = ViewModelFactory.shared.makeConversationStateManager()
         _stateManager = StateObject(wrappedValue: conversationStateManager)
         _questionFlow = StateObject(wrappedValue: ServiceContainer.shared.questionFlowCoordinator)
-        _addressManager = StateObject(wrappedValue: ServiceContainer.shared.addressManager)
         
-        // Set up dependencies for QuestionFlowCoordinator
+        // Set up dependencies
         ServiceContainer.shared.questionFlowCoordinator.conversationStateManager = conversationStateManager
         ServiceContainer.shared.questionFlowCoordinator.addressManager = ServiceContainer.shared.addressManager
         ServiceContainer.shared.questionFlowCoordinator.serviceContainer = ServiceContainer.shared
     }
     
-    // Default house thought when no question is active
-    private var defaultHouseThought: HouseThought? {
-        // Only show default thought after we've checked for questions
-        guard !isInitializing else { return nil }
-        
-        return HouseThought(
-            thought: "Hi!",
-            emotion: .happy,
-            category: .greeting,
-            confidence: 1.0,
-            context: nil,
-            suggestion: nil
-        )
-    }
-    
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // House Thoughts component - only visible when we have a thought
-                if let thought = recognizer.currentHouseThought ?? defaultHouseThought {
-                    HouseThoughtsView(
-                        thought: thought,
-                        isMuted: $isMuted,
-                        onToggleMute: toggleMute
-                    )
-                    .padding(.horizontal)
-                    .padding(.top)
-                }
+        VStack(spacing: 0) {
+            // Header with mute button
+            HStack {
+                Text("House Chat")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 
-                VStack(spacing: 10) {
-                HStack {
-                    Text("Status:")
-                        .font(.headline)
-                    Text(recognizer.isRecording ? "Recording" : "Ready")
-                        .foregroundColor(recognizer.isRecording ? .red : .green)
-                        .fontWeight(.semibold)
-                }
+                Spacer()
                 
+                // Mute/Unmute button
+                Button(action: {
+                    isMuted.toggle()
+                    if isMuted && recognizer.isRecording {
+                        recognizer.stopRecording()
+                    }
+                    if isMuted {
+                        stateManager.stopSpeaking()
+                    }
+                }) {
+                    Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                        .font(.title2)
+                        .foregroundColor(isMuted ? .gray : .blue)
+                        .frame(width: 44, height: 44)
+                        .background(Color(UIColor.secondarySystemBackground))
+                        .clipShape(Circle())
+                }
             }
             .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
+            .background(Color(UIColor.systemBackground))
+            .shadow(radius: 1)
             
-            if let error = recognizer.error {
-                Text("Error: \(error.localizedDescription)")
-                    .foregroundColor(.red)
+            // Messages list
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(spacing: 12) {
+                        ForEach(messageStore.messages) { message in
+                            MessageBubble(message: message)
+                                .id(message.id)
+                        }
+                        
+                        // Invisible anchor for scrolling
+                        Color.clear
+                            .frame(height: 1)
+                            .id("bottom")
+                    }
                     .padding()
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(10)
-                    .multilineTextAlignment(.center)
-            }
-            
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    Text(stateManager.getTranscriptHeader())
-                        .font(.headline)
-                    
-                    if recognizer.confidence > 0 {
-                        Spacer()
-                        Text("Confidence: \(Int(recognizer.confidence * 100))%")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                }
+                .onChange(of: messageStore.messages.count) { _, _ in
+                    withAnimation {
+                        proxy.scrollTo("bottom", anchor: .bottom)
                     }
                 }
+                .onChange(of: scrollToBottom) { _, shouldScroll in
+                    if shouldScroll {
+                        withAnimation {
+                            proxy.scrollTo("bottom", anchor: .bottom)
+                        }
+                        scrollToBottom = false
+                    }
+                }
+            }
+            
+            // Input area
+            VStack(spacing: 0) {
+                if let error = recognizer.error {
+                    Text(error.localizedDescription)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                }
                 
-                // Action buttons - always visible above text box
-                HStack(spacing: 8) {
-                    // Talk/Stop button
-                    Button(action: {
-                        if recognizer.isRecording {
-                            // Stop recording and finalize the current session
-                            recognizer.toggleRecording()
-                            stateManager.isNewSession = true
-                            
-                            // If we have a transcript and a current question, save the answer
-                            if !recognizer.transcript.isEmpty && questionFlow.currentQuestion != nil {
-                                Task {
-                                    await questionFlow.saveAnswer()
+                HStack(spacing: 12) {
+                    if isMuted {
+                        // Text input field
+                        TextField("Type a message...", text: $inputText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .focused($isTextFieldFocused)
+                            .onSubmit {
+                                sendTextMessage()
+                            }
+                        
+                        // Send button
+                        Button(action: sendTextMessage) {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(inputText.isEmpty ? .gray : .blue)
+                        }
+                        .disabled(inputText.isEmpty || isProcessing)
+                    } else {
+                        // Voice input
+                        if showVoiceConfirmation {
+                            // Show editable transcription with label
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Image(systemName: "mic.fill")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                    Text("Review and edit your message:")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
-                                // Don't generate a generic thought when we're answering questions
-                            } else if !recognizer.transcript.isEmpty {
-                                // Only generate house thought if not in question mode
-                                recognizer.generateHouseThought(from: recognizer.transcript)
+                                
+                                TextField("Edit your message...", text: $pendingVoiceText)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .focused($isTextFieldFocused)
+                                    .onSubmit {
+                                        confirmVoiceMessage()
+                                    }
+                            }
+                            
+                            HStack(spacing: 12) {
+                                Button(action: {
+                                    showVoiceConfirmation = false
+                                    pendingVoiceText = ""
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(.title2)
+                                        .foregroundColor(.gray)
+                                }
+                                
+                                Button(action: confirmVoiceMessage) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.title2)
+                                        .foregroundColor(pendingVoiceText.isEmpty ? .gray : .green)
+                                }
+                                .disabled(pendingVoiceText.isEmpty)
                             }
                         } else {
-                            // Stop any ongoing TTS before starting new recording
-                            stateManager.stopSpeaking()
+                            Spacer()
                             
-                            // Mark the start of a new recording session
-                            stateManager.startNewRecordingSession()
-                            recognizer.transcript = ""
-                            recognizer.toggleRecording()
-                        }
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                .imageScale(.medium)
-                            Text(recognizer.isRecording ? "Stop" : "Talk")
-                                .font(.caption)
-                        }
-                        .foregroundColor(recognizer.isRecording ? .red : .blue)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    .disabled(recognizer.authorizationStatus != .authorized || stateManager.isEditing)
-                    
-                    Spacer()
-                    
-                    // Save button - only visible when there's text and a question
-                    if !stateManager.persistentTranscript.isEmpty && questionFlow.currentQuestion != nil {
-                        Button(action: {
-                            Task {
-                                await questionFlow.saveAnswer()
+                            VStack(spacing: 4) {
+                                Button(action: toggleRecording) {
+                                    Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                        .font(.system(size: 60))
+                                        .foregroundColor(recognizer.isRecording ? .red : .blue)
+                                }
+                                .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
+                                
+                                Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                             }
-                        }) {
-                            Text("Save")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.blue)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 3)
+                            
+                            Spacer()
                         }
-                        .buttonStyle(BorderlessButtonStyle())
-                        
-                        Spacer()
                     }
-                    
-                    // Edit button
-                    Button(action: {
-                        stateManager.toggleEditing()
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "pencil.circle.fill")
-                                .imageScale(.medium)
-                            Text("Edit")
-                                .font(.caption)
-                        }
-                        .foregroundColor(.orange)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    
-                    Spacer()
-                    
-                    // Clear button
-                    Button(action: {
-                        recognizer.reset()
-                        stateManager.clearTranscript()
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "arrow.clockwise.circle.fill")
-                                .imageScale(.medium)
-                            Text("Clear")
-                                .font(.caption)
-                        }
-                        .foregroundColor(.gray)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
                 }
-                .padding(.horizontal, 4)
-                .padding(.bottom, 6)
-                
-                if stateManager.isEditing {
-                    TextEditor(text: $stateManager.persistentTranscript)
-                        .padding(8)
-                        .frame(minHeight: 150)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
-                } else {
-                    ScrollView {
-                        Text(stateManager.persistentTranscript.isEmpty ? "Say something..." : stateManager.persistentTranscript)
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .frame(minHeight: 150)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
-                }
-            }
-            } // End of main VStack
-        } // End of ScrollView
-        .navigationTitle("Conversations")
-        .onAppear {
-            // Set up recognizer reference
-            questionFlow.conversationRecognizer = recognizer
-            
-            // Only load the initial question once
-            if !hasLoadedInitialQuestion {
-                hasLoadedInitialQuestion = true
-                // Load question immediately without default thought
-                Task {
-                    await questionFlow.loadNextQuestion()
-                    await stateManager.loadUserName()
-                }
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
             }
         }
-        .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
-            // The HouseThoughtsView now handles auto-play internally
-            // This reduces duplication and ensures voice is handled consistently
+        .navigationBarHidden(true)
+        .onAppear {
+            setupView()
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
-            // Handle incremental speech recognition updates
-            if !newValue.isEmpty {
-                stateManager.updateTranscript(with: newValue)
+            // When recording completes with transcript
+            if !recognizer.isRecording && !newValue.isEmpty && oldValue != newValue {
+                // Show confirmation with editable text
+                pendingVoiceText = newValue
+                showVoiceConfirmation = true
+                isTextFieldFocused = true
             }
         }
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
-            // Handle question changes
-            Task {
-                let newInitializingState = await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: isInitializing)
-                await MainActor.run {
-                    isInitializing = newInitializingState
+            // When a new question appears, add it to the chat
+            if let question = newValue, oldValue != newValue {
+                let questionMessage = Message(
+                    content: question.text,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(questionMessage)
+                
+                // Speak the question if not muted
+                if !isMuted {
+                    let thought = HouseThought(
+                        thought: question.text,
+                        emotion: .curious,
+                        category: .question,
+                        confidence: 1.0
+                    )
+                    Task {
+                        try? await stateManager.speakThought(thought)
+                    }
                 }
             }
         }
         .onDisappear {
-            // Ensure recording stops when view is dismissed
             if recognizer.isRecording {
                 recognizer.stopRecording()
             }
-            // Stop any ongoing TTS
             stateManager.stopSpeaking()
         }
     }
     
-    
-    private func toggleMute() {
-        isMuted.toggle()
+    private func setupView() {
+        // Set up recognizer reference
+        questionFlow.conversationRecognizer = recognizer
         
-        if isMuted {
-            // Stop any current speech when muting
+        // Load initial state
+        Task {
+            await stateManager.loadUserName()
+            
+            // Add welcome message if no messages exist
+            if messageStore.messages.isEmpty {
+                let welcomeMessage = Message(
+                    content: "Hello! I'm your house consciousness. How can I help you today?",
+                    isFromUser: false,
+                    isVoice: false
+                )
+                messageStore.addMessage(welcomeMessage)
+            }
+            
+            // Load any pending questions
+            await questionFlow.loadNextQuestion()
+        }
+    }
+    
+    private func toggleRecording() {
+        if recognizer.isRecording {
+            recognizer.stopRecording()
+        } else {
             stateManager.stopSpeaking()
+            recognizer.transcript = ""
+            recognizer.toggleRecording()
+        }
+    }
+    
+    private func sendTextMessage() {
+        let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+        
+        // Add user message
+        let userMessage = Message(content: text, isFromUser: true, isVoice: false)
+        messageStore.addMessage(userMessage)
+        
+        // Clear input
+        inputText = ""
+        
+        // Process message
+        processUserInput(text)
+    }
+    
+    private func confirmVoiceMessage() {
+        let text = pendingVoiceText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+        
+        // Add user message
+        let userMessage = Message(content: text, isFromUser: true, isVoice: true)
+        messageStore.addMessage(userMessage)
+        
+        // Clear voice confirmation
+        pendingVoiceText = ""
+        showVoiceConfirmation = false
+        recognizer.transcript = ""
+        
+        // Process message
+        processUserInput(text)
+    }
+    
+    
+    private func processUserInput(_ input: String) {
+        isProcessing = true
+        
+        Task {
+            // Update state manager transcript
+            await MainActor.run {
+                stateManager.persistentTranscript = input
+            }
+            
+            // Check if this answers a current question
+            if questionFlow.currentQuestion != nil {
+                await questionFlow.saveAnswer()
+                
+                // Add acknowledgment message
+                let acknowledgment = Message(
+                    content: "Thank you! I've saved that information.",
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                await MainActor.run {
+                    messageStore.addMessage(acknowledgment)
+                }
+                
+                // Speak acknowledgment if not muted
+                if !isMuted {
+                    let thought = HouseThought(
+                        thought: "Thank you! I've saved that information.",
+                        emotion: .happy,
+                        category: .response,
+                        confidence: 1.0
+                    )
+                    try? await stateManager.speakThought(thought)
+                }
+                
+                // Load next question after a short delay
+                try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
+                await questionFlow.loadNextQuestion()
+            } else {
+                // Generate house response
+                await generateHouseResponse(for: input)
+            }
+            
+            await MainActor.run {
+                isProcessing = false
+                scrollToBottom = true
+            }
+        }
+    }
+    
+    private func generateHouseResponse(for input: String) async {
+        // Generate a house thought based on input
+        let thought = HouseThought.generateResponse(for: input)
+        
+        await MainActor.run {
+            // Add house message
+            let houseMessage = Message(
+                content: thought.thought,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(houseMessage)
+            
+            // Speak if not muted
+            if !isMuted {
+                Task {
+                    try? await stateManager.speakThought(thought)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Message Bubble View
+
+struct MessageBubble: View {
+    let message: Message
+    
+    var body: some View {
+        HStack {
+            if message.isFromUser {
+                Spacer()
+            }
+            
+            VStack(alignment: message.isFromUser ? .trailing : .leading, spacing: 4) {
+                Text(message.content)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(message.isFromUser ? Color.blue : Color(UIColor.secondarySystemBackground))
+                    .foregroundColor(message.isFromUser ? .white : .primary)
+                    .cornerRadius(20)
+                    .overlay(
+                        message.isVoice ?
+                        Image(systemName: "mic.fill")
+                            .font(.caption2)
+                            .foregroundColor(message.isFromUser ? .white.opacity(0.7) : .secondary)
+                            .offset(x: message.isFromUser ? -8 : 8, y: -8)
+                        : nil,
+                        alignment: message.isFromUser ? .topTrailing : .topLeading
+                    )
+                
+                Text(formatTimestamp(message.timestamp))
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: UIScreen.main.bounds.width * 0.75, alignment: message.isFromUser ? .trailing : .leading)
+            
+            if !message.isFromUser {
+                Spacer()
+            }
+        }
+    }
+    
+    private func formatTimestamp(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        let calendar = Calendar.current
+        
+        if calendar.isDateInToday(date) {
+            formatter.dateFormat = "h:mm a"
+        } else if calendar.isDateInYesterday(date) {
+            formatter.dateFormat = "'Yesterday' h:mm a"
+        } else {
+            formatter.dateFormat = "MMM d, h:mm a"
+        }
+        
+        return formatter.string(from: date)
+    }
+}
+
+// MARK: - HouseThought Extension
+
+extension HouseThought {
+    static func generateResponse(for input: String) -> HouseThought {
+        let lowercased = input.lowercased()
+        
+        // Simple response generation - this could be made much more sophisticated
+        if lowercased.contains("hello") || lowercased.contains("hi") {
+            return HouseThought(
+                thought: "Hello! How are you doing today?",
+                emotion: .happy,
+                category: .greeting,
+                confidence: 1.0
+            )
+        } else if lowercased.contains("weather") {
+            return HouseThought(
+                thought: "Let me check the weather for you. One moment...",
+                emotion: .thoughtful,
+                category: .observation,
+                confidence: 0.9
+            )
+        } else if lowercased.contains("temperature") || lowercased.contains("cold") || lowercased.contains("hot") {
+            return HouseThought(
+                thought: "I'll check the current temperature and adjust if needed.",
+                emotion: .helpful,
+                category: .observation,
+                confidence: 0.9
+            )
+        } else if lowercased.contains("thank") {
+            return HouseThought(
+                thought: "You're welcome! I'm always here to help.",
+                emotion: .happy,
+                category: .response,
+                confidence: 1.0
+            )
+        } else if lowercased.contains("help") {
+            return HouseThought(
+                thought: "I can help you with managing your home, checking weather, taking notes, and having conversations. What would you like to know?",
+                emotion: .helpful,
+                category: .suggestion,
+                confidence: 1.0
+            )
+        } else {
+            return HouseThought(
+                thought: "I understand. Let me think about that...",
+                emotion: .thoughtful,
+                category: .response,
+                confidence: 0.7
+            )
         }
     }
 }

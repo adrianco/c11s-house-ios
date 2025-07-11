@@ -22,8 +22,7 @@ import OSLog
 enum OnboardingPhase: Int, CaseIterable {
     case welcome = 0
     case permissions = 1
-    case personalization = 2
-    case completion = 3
+    case completion = 2
     
     var title: String {
         switch self {
@@ -31,8 +30,6 @@ enum OnboardingPhase: Int, CaseIterable {
             return "Welcome"
         case .permissions:
             return "Setup"
-        case .personalization:
-            return "Personalize"
         case .completion:
             return "Add Notes"
         }

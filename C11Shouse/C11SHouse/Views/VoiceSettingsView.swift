@@ -77,6 +77,9 @@ struct VoiceSettingsView: View {
                                 .tag(voice.identifier)
                             }
                         }
+                        .onChange(of: selectedVoiceIdentifier) { _, newValue in
+                            ttsService.setVoice(newValue.isEmpty ? nil : newValue)
+                        }
                     }
                 }
                 
@@ -216,11 +219,8 @@ struct VoiceSettingsView: View {
                 // Stop any current speech
                 ttsService.stopSpeaking()
                 
-                // Apply selected voice
-                if !selectedVoiceIdentifier.isEmpty {
-                    // Note: The actual voice selection would need to be implemented in TTSServiceImpl
-                    // For now, we'll use the language parameter
-                }
+                // Apply current settings including voice
+                applyCurrentSettings()
                 
                 // Speak the test text
                 try await ttsService.speak(text, language: selectedLanguage)
@@ -234,6 +234,7 @@ struct VoiceSettingsView: View {
         ttsService.setRate(Float(speechRate))
         ttsService.setPitch(Float(speechPitch))
         ttsService.setVolume(Float(speechVolume))
+        ttsService.setVoice(selectedVoiceIdentifier.isEmpty ? nil : selectedVoiceIdentifier)
     }
     
     private func resetToDefaults() {

@@ -75,6 +75,9 @@ class WeatherCoordinator: ObservableObject {
         } catch {
             weatherError = error
             print("Failed to fetch weather: \(error)")
+            
+            // Save error to notes for tracking
+            await saveWeatherError(error)
         }
     }
     
@@ -85,15 +88,25 @@ class WeatherCoordinator: ObservableObject {
         
         defer { isLoadingWeather = false }
         
-        let weather = try await weatherService.fetchWeather(for: address.coordinate)
-        
-        currentWeather = weather
-        weatherBasedEmotion = determineEmotion(for: weather)
-        
-        // Save weather summary to notes
-        await saveWeatherSummary(weather, for: address)
-        
-        return weather
+        do {
+            let weather = try await weatherService.fetchWeather(for: address.coordinate)
+            
+            currentWeather = weather
+            weatherBasedEmotion = determineEmotion(for: weather)
+            
+            // Save weather summary to notes
+            await saveWeatherSummary(weather, for: address)
+            
+            return weather
+        } catch {
+            weatherError = error
+            
+            // Save error to notes for tracking
+            await saveWeatherError(error, for: address)
+            
+            // Re-throw the error
+            throw error
+        }
     }
     
     /// Clear weather data
@@ -186,6 +199,72 @@ class WeatherCoordinator: ObservableObject {
             )
         } catch {
             print("Failed to save weather summary: \(error)")
+        }
+    }
+    
+    /// Save weather error as a note
+    private func saveWeatherError(_ error: Error, for address: Address? = nil) async {
+        let locationText = if let address = address {
+            "\(address.street), \(address.city)"
+        } else {
+            "current location"
+        }
+        
+        let errorDetails: String
+        let errorType: String
+        
+        // Check specific error types
+        if let weatherError = error as? WeatherError {
+            switch weatherError {
+            case .sandboxRestriction:
+                errorType = "Sandbox Restriction"
+                errorDetails = "WeatherKit is not available in the simulator. This works correctly on real devices."
+            case .invalidLocation:
+                errorType = "Invalid Location"
+                errorDetails = "The location coordinates are invalid for weather data."
+            case .networkError(let underlyingError):
+                errorType = "Network Error"
+                errorDetails = underlyingError.localizedDescription
+            }
+        } else if (error as NSError).domain.contains("weatherkit") {
+            errorType = "WeatherKit Error"
+            errorDetails = """
+            Domain: \((error as NSError).domain)
+            Code: \((error as NSError).code)
+            Description: \(error.localizedDescription)
+            """
+        } else {
+            errorType = "Unknown Error"
+            errorDetails = error.localizedDescription
+        }
+        
+        let errorSummary = """
+        Weather Error at \(locationText):
+        Type: \(errorType)
+        Details: \(errorDetails)
+        Time: \(Date().formatted())
+        
+        Note: This error has been logged. Weather features may be limited until this is resolved.
+        """
+        
+        do {
+            // Find or create weather error question
+            let notesStore = try await notesService.loadNotesStore()
+            let weatherErrorQuestion = notesStore.questions.first(where: { $0.text == "Weather Service Status" })
+            
+            try await notesService.saveOrUpdateNote(
+                for: weatherErrorQuestion?.id ?? UUID(),
+                answer: errorSummary,
+                metadata: [
+                    "error_type": errorType,
+                    "location": locationText,
+                    "timestamp": ISO8601DateFormatter().string(from: Date()),
+                    "error_code": "\((error as NSError).code)",
+                    "error_domain": (error as NSError).domain
+                ]
+            )
+        } catch {
+            print("Failed to save weather error: \(error)")
         }
     }
 }

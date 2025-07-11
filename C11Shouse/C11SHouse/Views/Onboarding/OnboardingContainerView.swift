@@ -76,20 +76,6 @@ struct OnboardingContainerView: View {
                             removal: .move(edge: .leading).combined(with: .opacity)
                         ))
                         
-                    case .personalization:
-                        OnboardingPersonalizationView(
-                            onComplete: {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    coordinator.nextPhase()
-                                }
-                            }
-                        )
-                        .environmentObject(serviceContainer)
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .trailing).combined(with: .opacity),
-                            removal: .move(edge: .leading).combined(with: .opacity)
-                        ))
-                        
                     case .completion:
                         Phase4TutorialView {
                             withAnimation(.easeInOut(duration: 0.3)) {

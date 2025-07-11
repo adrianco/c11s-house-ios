@@ -590,7 +590,8 @@ struct TutorialProgressBar: View {
     let totalSteps: Int
     
     private var progress: Double {
-        Double(currentStep) / Double(totalSteps - 1)
+        guard totalSteps > 1 else { return 1.0 }
+        return Double(currentStep) / Double(totalSteps - 1)
     }
     
     var body: some View {
@@ -611,7 +612,7 @@ struct TutorialProgressBar: View {
                                 endPoint: .trailing
                             )
                         )
-                        .frame(width: geometry.size.width * progress, height: 8)
+                        .frame(width: max(0, geometry.size.width * progress), height: 8)
                         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: progress)
                 }
             }

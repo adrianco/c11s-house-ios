@@ -2668,5 +2668,16 @@ update /plans/code-review.md to review the implementaton of  all four phases in 
 
 > since the code will be run on a device using xcode, add logging that documents the user flow, so that logs can be pasted here to show actual behavior agains the plan
 
+Code ran and mostly worked.
+
+Look at the results from running the app in C11SHouse/C11SHouse/Documentation there is OnboardingLoggingGuide.md and LoggigRecord.txt that shows what happened. In addition revert the icon generate code back to the one that has the brain on a circle superimposed on the house. Weather results should be logged into a note, including any errors if it fails
+Queen Type: strategic
+
+the contentview is messy, create a Settings icon button at the top of the view that pops up a menu with Manage Notes, Voice Settings and Test Voice, and remove those buttons from the view.
 
 
+The setup conversation view is not needed. There should be only one conversation view in the whole app, which behaves like a chat function between the house and the user. Change the conversation view 
+  to have a scrolling view that looks like two people chatting in a messaging app. There is a Mute button. If it is muted then chat is only via text, if unmuted then voice is used to say house output and
+   transcribe user input. Conversation history is saved so that users can scroll back to see what was said.
+
+   
