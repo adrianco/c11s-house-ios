@@ -146,16 +146,20 @@ class ContentViewModel: ObservableObject {
             return
         }
         
-        // First check if we already have a saved address
-        if currentAddress != nil {
-            // We have an address, fetch weather
-            await refreshWeather()
-            return
+        // If required questions are answered, we should have an address
+        // Load it from UserDefaults if not already loaded
+        if currentAddress == nil {
+            loadSavedData()
         }
         
-        // Required questions are answered but no address yet
-        // Show content/happy emotion since we know about the user
-        updateHouseEmotionForKnownUser()
+        // We have all required info including address, fetch weather
+        if currentAddress != nil {
+            await refreshWeather()
+        } else {
+            // This shouldn't happen if required questions are truly answered
+            // But show a friendly default state
+            updateHouseEmotionForKnownUser()
+        }
     }
     
     func refreshWeather() async {
@@ -332,8 +336,8 @@ class ContentViewModel: ObservableObject {
     
     private func updateHouseEmotionForKnownUser() {
         houseThought = HouseThought(
-            thought: "It's nice to know you! I'm here whenever you need help with your home.",
-            emotion: .content,
+            thought: "Welcome back! I'm here to help you manage your home.",
+            emotion: .happy,
             category: .greeting,
             confidence: 0.9,
             context: "User known"
