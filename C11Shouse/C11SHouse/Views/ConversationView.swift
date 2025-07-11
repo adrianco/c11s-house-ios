@@ -231,7 +231,7 @@ struct ConversationView: View {
                         confidence: 1.0
                     )
                     Task {
-                        try? await stateManager.speakThought(thought)
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
                     }
                 }
             }
@@ -338,10 +338,10 @@ struct ConversationView: View {
                     let thought = HouseThought(
                         thought: "Thank you! I've saved that information.",
                         emotion: .happy,
-                        category: .response,
+                        category: .greeting,
                         confidence: 1.0
                     )
-                    try? await stateManager.speakThought(thought)
+                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
                 
                 // Load next question after a short delay
@@ -375,7 +375,7 @@ struct ConversationView: View {
             // Speak if not muted
             if !isMuted {
                 Task {
-                    try? await stateManager.speakThought(thought)
+                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
             }
         }
@@ -462,7 +462,7 @@ extension HouseThought {
         } else if lowercased.contains("temperature") || lowercased.contains("cold") || lowercased.contains("hot") {
             return HouseThought(
                 thought: "I'll check the current temperature and adjust if needed.",
-                emotion: .helpful,
+                emotion: .thoughtful,
                 category: .observation,
                 confidence: 0.9
             )
@@ -470,13 +470,13 @@ extension HouseThought {
             return HouseThought(
                 thought: "You're welcome! I'm always here to help.",
                 emotion: .happy,
-                category: .response,
+                category: .greeting,
                 confidence: 1.0
             )
         } else if lowercased.contains("help") {
             return HouseThought(
                 thought: "I can help you with managing your home, checking weather, taking notes, and having conversations. What would you like to know?",
-                emotion: .helpful,
+                emotion: .thoughtful,
                 category: .suggestion,
                 confidence: 1.0
             )
@@ -484,7 +484,7 @@ extension HouseThought {
             return HouseThought(
                 thought: "I understand. Let me think about that...",
                 emotion: .thoughtful,
-                category: .response,
+                category: .observation,
                 confidence: 0.7
             )
         }
