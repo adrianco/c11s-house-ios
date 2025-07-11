@@ -350,7 +350,7 @@ struct ConversationView: View {
         
         // Set up address suggestion service if not already set
         if questionFlow.addressSuggestionService == nil {
-            questionFlow.addressSuggestionService = serviceContainer.addressSuggestionService
+            questionFlow.addressSuggestionService = ServiceContainer.shared.addressSuggestionService
         }
         
         // Load initial state

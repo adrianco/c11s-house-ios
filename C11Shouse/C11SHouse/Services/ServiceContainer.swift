@@ -103,6 +103,14 @@ class ServiceContainer: ObservableObject {
         WeatherCoordinator(weatherService: weatherService, notesService: notesService, locationService: locationService)
     }()
     
+    private(set) lazy var addressSuggestionService: AddressSuggestionService = {
+        AddressSuggestionService(
+            addressManager: addressManager,
+            locationService: locationService,
+            weatherCoordinator: weatherCoordinator
+        )
+    }()
+    
     // MARK: - ViewModel Factory
     
     /// Factory for creating ViewModels with proper dependency injection
