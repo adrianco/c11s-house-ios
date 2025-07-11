@@ -104,12 +104,30 @@ class AddressSuggestionService {
             }
         }
         
-        // Add some creative generic options
-        suggestions.append("My Smart Home")
-        suggestions.append("The Connected House")
+        // Ensure we have at least one suggestion
+        if suggestions.isEmpty {
+            suggestions.append("My Smart Home")
+        }
         
-        // Limit to top 3 unique suggestions
-        let uniqueSuggestions = Array(Set(suggestions))
+        // Remove duplicates while preserving order (street-based names first)
+        var seen = Set<String>()
+        var uniqueSuggestions: [String] = []
+        for suggestion in suggestions {
+            if !seen.contains(suggestion) {
+                seen.insert(suggestion)
+                uniqueSuggestions.append(suggestion)
+            }
+        }
+        
+        // Add generic options only if we have room
+        if uniqueSuggestions.count < 3 {
+            for generic in ["My Smart Home", "The Connected House"] {
+                if !seen.contains(generic) && uniqueSuggestions.count < 3 {
+                    uniqueSuggestions.append(generic)
+                }
+            }
+        }
+        
         return Array(uniqueSuggestions.prefix(3))
     }
     
