@@ -184,7 +184,7 @@ struct OnboardingCompletionView: View {
     private func loadCurrentWeather() async -> Weather? {
         // Try to load weather from notes
         let notesStore = try? await serviceContainer.notesService.loadNotesStore()
-        if let weatherNote = notesStore?.notes.values.first(where: { $0.title.lowercased().contains("weather") }) {
+        if let weatherNote = notesStore?.notes.values.first(where: { $0.answer.lowercased().contains("weather") }) {
             // Parse weather from note (simplified)
             return nil // Would parse actual weather data
         }

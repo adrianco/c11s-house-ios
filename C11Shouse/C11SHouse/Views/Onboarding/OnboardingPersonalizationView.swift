@@ -348,7 +348,7 @@ struct EmbeddedConversationView: View {
             OnboardingLogger.shared.logUserAction("recording_stopped", phase: "personalization")
         } else {
             conversationState.startNewRecordingSession()
-            recognizer.startRecording()
+            try? recognizer.startRecording()
             OnboardingLogger.shared.logUserAction("recording_started", phase: "personalization")
         }
     }
