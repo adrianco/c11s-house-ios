@@ -206,18 +206,8 @@ struct NotesStoreData: Codable {
     func questionsNeedingReview() -> [Question] {
         questions
             .filter { question in
-                // Skip status entries and other non-conversation items
-                if question.displayOrder >= 9999 {
-                    return false
-                }
-                
-                // Skip questions that are just status tracking
+                // Only include actual questions that need conversation review
                 let note = notes[question.id]
-                if let noteType = note?.metadata?["type"], noteType == "status" {
-                    return false
-                }
-                
-                // Only consider questions that need review
                 return note?.needsConversationReview ?? true
             }
             .sorted { q1, q2 in

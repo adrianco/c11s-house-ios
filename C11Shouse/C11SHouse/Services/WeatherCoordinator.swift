@@ -215,33 +215,43 @@ class WeatherCoordinator: ObservableObject {
         do {
             let notesStore = try await notesService.loadNotesStore()
             
-            // Look for existing weather status question/key
-            if let existingQuestion = notesStore.questions.first(where: { $0.text == "Weather Status" }) {
+            // Look for existing weather status entry
+            if let existingQuestion = notesStore.questions.first(where: { $0.text == "Weather" }) {
                 // Update existing note
                 try await notesService.saveOrUpdateNote(
                     for: existingQuestion.id,
                     answer: content,
-                    metadata: ["type": "status", "category": "Status", "lastUpdated": Date().ISO8601Format()]
+                    metadata: [
+                        "type": "houseInfo",
+                        "updated_via_conversation": "false", // This ensures it won't appear in conversation
+                        "lastUpdated": Date().ISO8601Format(),
+                        "automatic": "true"
+                    ]
                 )
             } else {
-                // Create new weather status entry (not a conversation question)
-                let weatherStatusKey = Question(
-                    text: "Weather Status",
-                    category: .other,
-                    displayOrder: 9999, // Very high so it's never shown in conversation
+                // Create new weather entry as house information
+                let weatherKey = Question(
+                    text: "Weather",
+                    category: .houseInfo,
+                    displayOrder: 500, // After main house questions but before preferences
                     isRequired: false,
-                    hint: "Automatic weather status tracking"
+                    hint: "Current weather conditions"
                 )
                 
-                try await notesService.addQuestion(weatherStatusKey)
+                try await notesService.addQuestion(weatherKey)
                 try await notesService.saveOrUpdateNote(
-                    for: weatherStatusKey.id,
+                    for: weatherKey.id,
                     answer: content,
-                    metadata: ["type": "status", "category": "Status", "lastUpdated": Date().ISO8601Format()]
+                    metadata: [
+                        "type": "houseInfo",
+                        "updated_via_conversation": "false", // This ensures it won't appear in conversation
+                        "lastUpdated": Date().ISO8601Format(),
+                        "automatic": "true"
+                    ]
                 )
             }
         } catch {
-            print("Failed to update weather status note: \(error)")
+            print("Failed to update weather note: \(error)")
         }
     }
 }
