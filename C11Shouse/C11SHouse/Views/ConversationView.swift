@@ -580,20 +580,6 @@ struct MessageBubble: View {
         
         return formatter.string(from: date)
     }
-    
-    private func saveEditedAddress() async {
-        isEditingAddress = false
-        
-        // Create a message showing the user's response
-        let userMessage = Message(
-            content: editedAddress,
-            isFromUser: true,
-            isVoice: false
-        )
-        
-        // This will be handled by the parent view's message store
-        // For now, we just update the UI
-    }
 }
 
 // MARK: - HouseThought Extension
