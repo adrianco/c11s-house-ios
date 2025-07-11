@@ -56,7 +56,7 @@ class OnboardingUITests: XCTestCase {
         XCTAssertTrue(welcomeElements.startButton.isEnabled)
         
         // Measure load time
-        measureMetrics([XCTApplicationLaunchMetric()], automaticallyStartMeasuring: false) {
+        measure(metrics: [XCTApplicationLaunchMetric()]) {
             app.launch()
         }
     }

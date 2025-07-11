@@ -136,12 +136,12 @@ class AddressSuggestionServiceTests: XCTestCase {
         let thought = sut.createAddressConfirmationResponse(detectedAddress)
         
         // Then
-        XCTAssertEqual(thought.thought, "I've detected your location. Is this the right address?")
+        XCTAssertEqual(thought.thought, "I've detected your location. Is this the right address?\n\n\(detectedAddress)")
         XCTAssertEqual(thought.emotion, .curious)
         XCTAssertEqual(thought.category, .question)
         XCTAssertEqual(thought.confidence, 0.9)
         XCTAssertEqual(thought.context, "Address Detection")
-        XCTAssertEqual(thought.suggestion, "You can edit the address if needed")
+        XCTAssertNil(thought.suggestion)
     }
 }
 
@@ -185,61 +185,23 @@ class MockWeatherCoordinator: WeatherCoordinator {
         )
     }
     
-    override func fetchWeather(for address: Address) async throws -> WeatherData {
+    override func fetchWeather(for address: Address) async throws -> Weather {
         fetchWeatherCalled = true
         lastFetchedAddress = address
         
-        return WeatherData(
+        return Weather(
             temperature: Temperature(value: 72, unit: .fahrenheit),
-            condition: .sunny,
-            humidity: 65,
+            condition: .clear,
+            humidity: 0.65,
             windSpeed: 10,
-            windDirection: "NW",
-            timestamp: Date()
-        )
-    }
-}
-
-class MockNotesService: NotesServiceProtocol {
-    func loadNotesStore() async throws -> NotesStore {
-        return NotesStore()
-    }
-    
-    func saveNotesStore(_ store: NotesStore) async throws {}
-    
-    func getNote(for questionId: UUID) async throws -> Note? {
-        return nil
-    }
-    
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]?) async throws {}
-    
-    func deleteNote(for questionId: UUID) async throws {}
-    
-    func areAllRequiredQuestionsAnswered() async -> Bool {
-        return false
-    }
-    
-    func saveCustomNote(title: String, content: String, category: String?) async {}
-    
-    func loadCustomNotes() async -> [CustomNote] {
-        return []
-    }
-    
-    func deleteCustomNote(id: UUID) async {}
-    
-    func saveHouseName(_ name: String) async {}
-}
-
-
-class MockWeatherService: WeatherServiceProtocol {
-    func getCurrentWeather(for location: CLLocation) async throws -> WeatherData {
-        return WeatherData(
-            temperature: Temperature(value: 72, unit: .fahrenheit),
-            condition: .sunny,
-            humidity: 65,
-            windSpeed: 10,
-            windDirection: "NW",
-            timestamp: Date()
+            feelsLike: Temperature(value: 70, unit: .fahrenheit),
+            uvIndex: 5,
+            pressure: 1013,
+            visibility: 10000,
+            dewPoint: 15,
+            forecast: [],
+            hourlyForecast: [],
+            lastUpdated: Date()
         )
     }
 }
