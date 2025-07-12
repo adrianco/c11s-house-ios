@@ -682,7 +682,7 @@ struct ConversationView: View {
             let notesStore = try await serviceContainer.notesService.loadNotesStore()
             // Check for non-required notes (room/device notes)
             return notesStore.notes.values.contains(where: { note in
-                if let noteQuestion = notesStore.questions.first(where: { $0.id == note.id }) {
+                if let noteQuestion = notesStore.questions.first(where: { $0.id == note.questionId }) {
                     return !noteQuestion.isRequired && note.isAnswered
                 }
                 return false
