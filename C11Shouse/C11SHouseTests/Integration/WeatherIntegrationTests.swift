@@ -73,11 +73,11 @@ class WeatherIntegrationTests: XCTestCase {
         
         // Step 2: Setup weather data
         let mockWeather = C11SHouse.Weather(
-            temperature: Temperature(value: 68.0, unit: .fahrenheit),
+            temperature: C11SHouse.Temperature(value: 68.0, unit: .fahrenheit),
             condition: .clear,
             humidity: 0.65,
             windSpeed: 8.0,
-            feelsLike: Temperature(value: 66.0, unit: .fahrenheit),
+            feelsLike: C11SHouse.Temperature(value: 66.0, unit: .fahrenheit),
             uvIndex: 5,
             pressure: 30.15,
             visibility: 10.0,
@@ -301,11 +301,11 @@ class WeatherIntegrationTests: XCTestCase {
         windSpeed: Double = 10
     ) -> C11SHouse.Weather {
         return C11SHouse.Weather(
-            temperature: Temperature(value: temp, unit: .fahrenheit),
+            temperature: C11SHouse.Temperature(value: temp, unit: .fahrenheit),
             condition: condition,
             humidity: humidity,
             windSpeed: windSpeed,
-            feelsLike: Temperature(value: temp - 2, unit: .fahrenheit),
+            feelsLike: C11SHouse.Temperature(value: temp - 2, unit: .fahrenheit),
             uvIndex: uvIndex,
             pressure: 30.0,
             visibility: 10.0,

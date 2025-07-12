@@ -368,6 +368,12 @@ struct ConversationView: View {
                 isVoice: false
             )
             messageStore.addMessage(welcomeMessage)
+            
+            // Reload questions after clearing data
+            Task {
+                print("[ConversationView] Reloading questions after clear")
+                await questionFlow.loadNextQuestion()
+            }
             print("[ConversationView] Chat cleared and welcome message added")
         }
     }

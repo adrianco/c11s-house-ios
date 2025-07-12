@@ -268,18 +268,18 @@ class SharedMockNotesService: NotesServiceProtocol {
 // MARK: - Weather Service Mocks
 
 class MockWeatherKitService: WeatherServiceProtocol {
-    var weatherUpdatePublisher: AnyPublisher<Weather, Never> {
+    var weatherUpdatePublisher: AnyPublisher<C11SHouse.Weather, Never> {
         weatherUpdateSubject.eraseToAnyPublisher()
     }
     
-    private let weatherUpdateSubject = PassthroughSubject<Weather, Never>()
+    private let weatherUpdateSubject = PassthroughSubject<C11SHouse.Weather, Never>()
     
     var fetchWeatherCalled = false
-    var mockWeather: Weather?
+    var mockWeather: C11SHouse.Weather?
     var shouldThrowError = false
     var responseDelay: TimeInterval = 0
     
-    func fetchWeather(for coordinate: Coordinate) async throws -> Weather {
+    func fetchWeather(for coordinate: Coordinate) async throws -> C11SHouse.Weather {
         fetchWeatherCalled = true
         
         // Simulate network delay if specified
@@ -291,12 +291,12 @@ class MockWeatherKitService: WeatherServiceProtocol {
             throw WeatherServiceError.networkError
         }
         
-        let weather = mockWeather ?? Weather(
-            temperature: Temperature(value: 20, unit: .celsius),
+        let weather = mockWeather ?? C11SHouse.Weather(
+            temperature: C11SHouse.Temperature(value: 20, unit: .celsius),
             condition: .clear,
             humidity: 0.5,
             windSpeed: 10,
-            feelsLike: Temperature(value: 18, unit: .celsius),
+            feelsLike: C11SHouse.Temperature(value: 18, unit: .celsius),
             uvIndex: 5,
             pressure: 1013,
             visibility: 10000,
@@ -310,12 +310,12 @@ class MockWeatherKitService: WeatherServiceProtocol {
         return weather
     }
     
-    func fetchWeatherForAddress(_ address: Address) async throws -> Weather {
+    func fetchWeatherForAddress(_ address: Address) async throws -> C11SHouse.Weather {
         return try await fetchWeather(for: address.coordinate ?? Coordinate(latitude: 0, longitude: 0))
     }
     
     // Additional method for compatibility with other tests
-    func fetchWeather(latitude: Double, longitude: Double) async throws -> Weather {
+    func fetchWeather(latitude: Double, longitude: Double) async throws -> C11SHouse.Weather {
         let coordinate = Coordinate(latitude: latitude, longitude: longitude)
         return try await fetchWeather(for: coordinate)
     }
