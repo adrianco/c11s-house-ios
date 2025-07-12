@@ -356,6 +356,7 @@ struct ConversationView: View {
             stateManager.stopSpeaking()
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ClearChatHistory"))) { _ in
+            print("[ConversationView] Received ClearChatHistory notification")
             messageStore.clearAllMessages()
             // Also add a welcome message after clearing
             let welcomeMessage = Message(
@@ -364,10 +365,13 @@ struct ConversationView: View {
                 isVoice: false
             )
             messageStore.addMessage(welcomeMessage)
+            print("[ConversationView] Chat cleared and welcome message added")
         }
     }
     
     private func setupView() {
+        print("[ConversationView] setupView() called")
+        
         // Set up recognizer reference
         questionFlow.conversationRecognizer = recognizer
         
@@ -378,22 +382,29 @@ struct ConversationView: View {
         
         // Load initial state
         Task {
+            print("[ConversationView] Loading initial state...")
             await stateManager.loadUserName()
             
             // Load house name
             if let savedHouseName = await serviceContainer.notesService.getHouseName(),
                !savedHouseName.isEmpty {
                 houseName = savedHouseName
+                print("[ConversationView] Loaded house name: \(houseName)")
+            } else {
+                print("[ConversationView] No saved house name found")
             }
             
             // Add welcome message if no messages exist
             if messageStore.messages.isEmpty {
+                print("[ConversationView] Adding welcome message")
                 let welcomeMessage = Message(
                     content: "Hello! I'm your house consciousness. How can I help you today?",
                     isFromUser: false,
                     isVoice: false
                 )
                 messageStore.addMessage(welcomeMessage)
+            } else {
+                print("[ConversationView] Found \(messageStore.messages.count) existing messages")
             }
             
             // Pre-fetch location in background if permissions are granted
@@ -403,11 +414,16 @@ struct ConversationView: View {
             }
             
             // Load any pending questions
+            print("[ConversationView] Loading next question...")
             await questionFlow.loadNextQuestion()
             
             // Check if all questions are complete and start Phase 4 tutorial
+            print("[ConversationView] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
             if questionFlow.hasCompletedAllQuestions {
+                print("[ConversationView] All questions complete, starting Phase 4 tutorial")
                 await startPhase4Tutorial()
+            } else {
+                print("[ConversationView] Questions still pending, current: \(questionFlow.currentQuestion?.text ?? "none")")
             }
             
             // Scroll to bottom after initial setup
@@ -464,6 +480,7 @@ struct ConversationView: View {
     
     
     private func processUserInput(_ input: String) {
+        print("[ConversationView] processUserInput: '\(input)'")
         isProcessing = true
         
         Task { @MainActor in
@@ -471,7 +488,8 @@ struct ConversationView: View {
             stateManager.persistentTranscript = input
             
             // Check if this answers a current question
-            if questionFlow.currentQuestion != nil {
+            if let currentQuestion = questionFlow.currentQuestion {
+                print("[ConversationView] Answering question: \(currentQuestion.text)")
                 await questionFlow.saveAnswer()
                 
                 // Add acknowledgment message immediately
@@ -498,10 +516,13 @@ struct ConversationView: View {
                 }
                 
                 // Load next question after acknowledgment is complete
+                print("[ConversationView] Loading next question...")
                 await questionFlow.loadNextQuestion()
                 
                 // Check if all questions are complete
+                print("[ConversationView] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
                 if questionFlow.hasCompletedAllQuestions {
+                    print("[ConversationView] All questions complete after answer, starting Phase 4")
                     await startPhase4Tutorial()
                 }
             } else {
@@ -634,10 +655,15 @@ struct ConversationView: View {
     // MARK: - Phase 4 Tutorial
     
     private func startPhase4Tutorial() async {
+        print("[ConversationView] startPhase4Tutorial() called")
+        
         // Check if user has already created any notes
         let hasNotes = await checkIfUserHasNotes()
+        print("[ConversationView] User has notes: \(hasNotes)")
         
         if !hasNotes {
+            print("[ConversationView] Starting Phase 4 tutorial sequence")
+            
             // Wait a moment for the thank you message to settle
             try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
             
@@ -662,6 +688,7 @@ struct ConversationView: View {
                     isVoice: !isMuted
                 )
                 messageStore.addMessage(message)
+                print("[ConversationView] Phase 4 tutorial message added to chat")
                 
                 if !isMuted {
                     Task {
@@ -673,6 +700,9 @@ struct ConversationView: View {
             // Store state to track we're in tutorial mode
             UserDefaults.standard.set(true, forKey: "isInPhase4Tutorial")
             UserDefaults.standard.set("awaitingRoomName", forKey: "phase4TutorialState")
+            print("[ConversationView] Phase 4 tutorial state saved")
+        } else {
+            print("[ConversationView] User already has notes, skipping Phase 4 tutorial")
         }
     }
     

@@ -206,11 +206,13 @@ class NotesServiceImpl: NotesServiceProtocol {
     }
     
     func clearAllData() async throws {
+        print("[NotesService] Clearing all data...")
         let emptyStore = NotesStoreData(
             questions: Question.predefinedQuestions,
             notes: [:],
             version: currentVersion
         )
+        print("[NotesService] Resetting to \(emptyStore.questions.count) predefined questions")
         try await save(emptyStore)
     }
     
@@ -314,6 +316,7 @@ enum NotesError: LocalizedError {
     case encodingFailed(Error)
     case decodingFailed(Error)
     case migrationFailed(String)
+    case noData
     
     var errorDescription: String? {
         switch self {
@@ -329,6 +332,8 @@ enum NotesError: LocalizedError {
             return "Failed to load data: \(error.localizedDescription)"
         case .migrationFailed(let reason):
             return "Data migration failed: \(reason)"
+        case .noData:
+            return "No saved data found"
         }
     }
 }

@@ -43,6 +43,7 @@ class QuestionFlowCoordinator: ObservableObject {
     
     init(notesService: NotesServiceProtocol) {
         self.notesService = notesService
+        print("[QuestionFlowCoordinator] Initialized")
         setupNotifications()
     }
     
@@ -50,7 +51,11 @@ class QuestionFlowCoordinator: ObservableObject {
     
     /// Load the next question that needs review
     func loadNextQuestion() async {
-        guard !isLoadingQuestion else { return }
+        print("[QuestionFlowCoordinator] loadNextQuestion() called")
+        guard !isLoadingQuestion else { 
+            print("[QuestionFlowCoordinator] Already loading question, skipping")
+            return 
+        }
         
         await MainActor.run {
             isLoadingQuestion = true
@@ -63,24 +68,30 @@ class QuestionFlowCoordinator: ObservableObject {
         
         do {
             let notesStore = try await notesService.loadNotesStore()
+            print("[QuestionFlowCoordinator] Loaded notes store with \(notesStore.questions.count) questions")
+            
             let questionsNeedingReview = notesStore.questionsNeedingReview()
+            print("[QuestionFlowCoordinator] Questions needing review: \(questionsNeedingReview.count)")
             
             if let nextQuestion = questionsNeedingReview.first {
+                print("[QuestionFlowCoordinator] Next question: '\(nextQuestion.text)' (required: \(nextQuestion.isRequired))")
                 await MainActor.run {
                     currentQuestion = nextQuestion
                     hasCompletedAllQuestions = false
                 }
             } else {
+                print("[QuestionFlowCoordinator] No more questions to ask")
                 await MainActor.run {
                     currentQuestion = nil
                     hasCompletedAllQuestions = true
                 }
                 
                 // Post notification that all questions are complete
+                print("[QuestionFlowCoordinator] Posting AllQuestionsComplete notification")
                 NotificationCenter.default.post(name: Notification.Name("AllQuestionsComplete"), object: nil)
             }
         } catch {
-            print("Error loading questions: \(error)")
+            print("[QuestionFlowCoordinator] Error loading questions: \(error)")
             await MainActor.run {
                 currentQuestion = nil
             }
@@ -100,31 +111,48 @@ class QuestionFlowCoordinator: ObservableObject {
     /// Save an answer for the current question with full integration
     @MainActor
     func saveAnswer() async {
-        guard let question = currentQuestion else { return }
-        guard let stateManager = conversationStateManager else { return }
-        guard let recognizer = conversationRecognizer else { return }
+        guard let question = currentQuestion else { 
+            print("[QuestionFlowCoordinator] No current question to save answer for")
+            return 
+        }
+        guard let stateManager = conversationStateManager else { 
+            print("[QuestionFlowCoordinator] No conversationStateManager")
+            return 
+        }
+        guard let recognizer = conversationRecognizer else { 
+            print("[QuestionFlowCoordinator] No conversationRecognizer")
+            return 
+        }
         
         // Prevent multiple saves
-        guard !stateManager.isSavingAnswer else { return }
+        guard !stateManager.isSavingAnswer else { 
+            print("[QuestionFlowCoordinator] Already saving answer, skipping")
+            return 
+        }
         
+        print("[QuestionFlowCoordinator] Saving answer for question: '\(question.text)'")
         stateManager.beginSavingAnswer()
         
         do {
             let trimmedAnswer = stateManager.persistentTranscript.trimmingCharacters(in: .whitespacesAndNewlines)
+            print("[QuestionFlowCoordinator] Answer: '\(trimmedAnswer)'")
             
             // Clear any existing house thought to prevent duplicate speech
             await recognizer.clearHouseThought()
             
             // Save the answer using the existing method
             try await saveAnswer(trimmedAnswer)
+            print("[QuestionFlowCoordinator] Answer saved successfully")
             
             // If this was the name question, update the userName
             if question.text == "What's your name?" {
+                print("[QuestionFlowCoordinator] Updating user name")
                 await stateManager.updateUserName(trimmedAnswer)
             }
             
             // If this was the address question, save it properly and fetch weather
             if question.text == "Is this the right address?" || question.text == "What's your home address?" {
+                print("[QuestionFlowCoordinator] Processing address answer")
                 if let manager = addressManager,
                    let address = manager.parseAddress(trimmedAnswer) {
                     try await manager.saveAddress(address)
@@ -138,6 +166,7 @@ class QuestionFlowCoordinator: ObservableObject {
             
             // If this was the house name question, save it to ContentViewModel
             if question.text == "What should I call this house?" {
+                print("[QuestionFlowCoordinator] Saving house name")
                 if let container = serviceContainer {
                     await container.notesService.saveHouseName(trimmedAnswer)
                 }
@@ -147,7 +176,7 @@ class QuestionFlowCoordinator: ObservableObject {
             stateManager.clearTranscript()
             
         } catch {
-            print("Error saving answer: \(error)")
+            print("[QuestionFlowCoordinator] Error saving answer: \(error)")
         }
         
         stateManager.endSavingAnswer()

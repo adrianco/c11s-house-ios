@@ -2681,3 +2681,7 @@ The setup conversation view is not needed. There should be only one conversation
    transcribe user input. Conversation history is saved so that users can scroll back to see what was said.
 
 Updated the UX plan to be clearer that a chat interfaces is needed
+
+start a hive-mind swarm to review the progress so far, look at the LoggingRecord.txt that contains a complete run of the UX flow from a cleared Notes start. The phase 4 questions did not start, the      │
+│   chat was not cleared. A new note was not created as requested. Add more logging to the app to help debug the flow from here.     
+

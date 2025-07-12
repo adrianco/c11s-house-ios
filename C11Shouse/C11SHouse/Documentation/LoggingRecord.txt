@@ -1,79 +1,61 @@
 Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: A8B4EAB0-75B7-43E9-9ECA-B71F4DFC99F5
+🚀 ONBOARDING SESSION STARTED - ID: 03DE0CFA-91D5-4F33-8307-BCF6EF71B798
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 PHASE TRANSITION: Start → welcome
 👆 USER ACTION: view_appeared in welcome
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Encountered an error when fetching weather data subset; location=<+36.55590352,-121.71800017> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 2:31:44 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-WeatherKit Error Details:
-Encountered an error when fetching weather data subset; location=<+36.55590352,-121.71800017> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 2:31:44 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-WeatherKit Error Details:
-Encountered an error when fetching weather data subset; location=<+36.55590352,-121.71800017> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 2:31:44 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-WeatherKit Error Details:
-- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-Encountered an error when fetching weather data subset; location=<+36.55590352,-121.71800017> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 2:31:44 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+Encountered an error when fetching weather data subset; location=<+36.55594000,-121.71804539> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:24:46 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
 WeatherKit Error Details:
 - Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
 - Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
 - Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
 - Code: 0
-- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
-- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
-- Code: 0
-- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
-- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
-- Code: 0
-- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
-- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
-- Code: 0
-Failed to save weather error: questionNotFound(0C438D69-6B5B-4AE4-9C1C-422263826959)
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Failed to save weather error: questionNotFound(7F92F72B-FB1E-4F4D-9966-0E3324CF4353)
-Failed to save weather error: questionNotFound(69D69AAB-9660-4151-8212-E0067F1B9FD8)
-Failed to save weather error: questionNotFound(A270E141-4533-4728-90FD-E023EC7E7C67)
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 👆 USER ACTION: button_tap in welcome
    Details: button: begin_setup
-Completed onboarding phase: Welcome in 4 seconds
+Completed onboarding phase: Welcome in 2 seconds
 Started onboarding phase: Setup
 📍 PHASE TRANSITION: Welcome → Setup
-Completed onboarding phase: Setup in 2 seconds
+Completed onboarding phase: Setup in 1 seconds
 Started onboarding phase: Complete Setup
-⏱️ Phase 'Setup' completed in 2.3s
+⏱️ Phase 'Setup' completed in 1.2s
 📍 PHASE TRANSITION: Setup → Complete Setup
 👆 USER ACTION: view_completion_screen in completion
-Completed onboarding phase: Complete Setup in 8 seconds
-Onboarding completed in 15 seconds
+Completed onboarding phase: Complete Setup in 0 seconds
+Onboarding completed in 4 seconds
 👆 USER ACTION: onboarding_complete in Complete Setup
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏁 ONBOARDING SESSION ENDED - ID: A8B4EAB0-75B7-43E9-9ECA-B71F4DFC99F5
+🏁 ONBOARDING SESSION ENDED - ID: 03DE0CFA-91D5-4F33-8307-BCF6EF71B798
 Status: ✅ COMPLETED
-Total Duration: 15.4s
+Total Duration: 4.6s
 
 ╔════════════════════════════════════════════════════════════════╗
 ║                    ONBOARDING SESSION SUMMARY                   ║
 ╠════════════════════════════════════════════════════════════════╣
-║ Session ID: A8B4EAB0-75B7-43E9-9ECA-B71F4DFC99F5
-║ Start Time: 7/11/25, 2:31:44 PM
-║ Total Duration: 15.4s
+║ Session ID: 03DE0CFA-91D5-4F33-8307-BCF6EF71B798
+║ Start Time: 7/11/25, 5:24:46 PM
+║ Total Duration: 4.6s
 ║ Phases Completed: 1
 ╠════════════════════════════════════════════════════════════════╣
 ║                         PHASE TIMINGS                           ║
 ╠════════════════════════════════════════════════════════════════╣
-║ Setup                │ 2.3s            ║
+║ Setup                │ 1.2s            ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                         USER ACTIONS                            ║
 ╠════════════════════════════════════════════════════════════════╣
 ║ phase_started                  │ 3     ║
-║ button_tap                     │ 1     ║
-║ view_appeared                  │ 1     ║
-║ view_completion_screen         │ 1     ║
 ║ onboarding_complete            │ 1     ║
+║ button_tap                     │ 1     ║
+║ view_completion_screen         │ 1     ║
+║ view_appeared                  │ 1     ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                        FEATURE USAGE                            ║
 ╠════════════════════════════════════════════════════════════════╣
@@ -82,28 +64,268 @@ Total Duration: 15.4s
 
 === COPYABLE ONBOARDING LOG ===
 
-ONBOARDING ACTION LOG - Session: A8B4EAB0-75B7-43E9-9ECA-B71F4DFC99F5
+ONBOARDING ACTION LOG - Session: 03DE0CFA-91D5-4F33-8307-BCF6EF71B798
 ============================================================
 
-[7/11/25, 2:31:44 PM] welcome - phase_started - previous_phase: none
-[7/11/25, 2:31:44 PM] welcome - view_appeared
-[7/11/25, 2:31:49 PM] welcome - button_tap - button: begin_setup
-[7/11/25, 2:31:49 PM] Setup - phase_started - previous_phase: Welcome
-[7/11/25, 2:31:51 PM] Complete Setup - phase_started - previous_phase: Setup
-[7/11/25, 2:31:51 PM] completion - view_completion_screen
-[7/11/25, 2:32:00 PM] Complete Setup - onboarding_complete
+[7/11/25, 5:24:46 PM] welcome - phase_started - previous_phase: none
+[7/11/25, 5:24:46 PM] welcome - view_appeared
+[7/11/25, 5:24:48 PM] welcome - button_tap - button: begin_setup
+[7/11/25, 5:24:48 PM] Setup - phase_started - previous_phase: Welcome
+[7/11/25, 5:24:50 PM] Complete Setup - phase_started - previous_phase: Setup
+[7/11/25, 5:24:50 PM] completion - view_completion_screen
+[7/11/25, 5:24:51 PM] Complete Setup - onboarding_complete
 
 
 === END OF LOG ===
 
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:01 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to fetch weather for address: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
 Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
 App is being debugged, do not track this hang
-Hang detected: 0.37s (debugger attached, not reporting)
-AVAudioSessionClient_Common.mm:597   Failed to set properties, error: '!pri'
-Failed to activate audio session for TTS: Error Domain=NSOSStatusErrorDomain Code=561017449 "(null)"
-Error speaking: Error Domain=NSOSStatusErrorDomain Code=561017449 "(null)"
-AVAudioSessionClient_Common.mm:597   Failed to set properties, error: '!pri'
-Failed to activate audio session for TTS: Error Domain=NSOSStatusErrorDomain Code=561017449 "(null)"
-Error speaking: Error Domain=NSOSStatusErrorDomain Code=561017449 "(null)"
+Hang detected: 0.66s (debugger attached, not reporting)
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+<0x101209540> Gesture: System gesture gate timed out.
 App is being debugged, do not track this hang
-Hang detected: 0.71s (debugger attached, not reporting)
+Hang detected: 1.18s (debugger attached, not reporting)
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+WeatherKit Error Details:
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+- Code: 0
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:23 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55590187,-121.71799798> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/11/25, 5:25:26 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+App is being debugged, do not track this hang
+Hang detected: 0.57s (debugger attached, not reporting)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Posted ClearChatHistory notification
+Successfully cleared all notes data
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+[C:3] Error received: Connection interrupted.
+[C:3-1] Error received: Connection interrupted.
+-[RTIInputSystemClient _configureConnection:withMachName:]_block_invoke  Client connection to service was interrupted: <NSXPCConnection: 0x1055e2f80> connection to service with pid -1 named (null)
+Snapshotting a view (0x10542bb80, UIKeyboardImpl) that is not in a visible window requires afterScreenUpdates:YES.
