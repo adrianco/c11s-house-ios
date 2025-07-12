@@ -30,7 +30,7 @@ class WeatherIntegrationTests: XCTestCase {
     private var weatherCoordinator: WeatherCoordinator!
     private var locationManagerMock: MockLocationManager!
     private var weatherServiceMock: MockWeatherKitService!
-    private var notesService: NotesService!
+    private var notesService: NotesServiceImpl!
     private var cancellables: Set<AnyCancellable>!
     
     // MARK: - Setup & Teardown
@@ -41,7 +41,7 @@ class WeatherIntegrationTests: XCTestCase {
         cancellables = Set<AnyCancellable>()
         
         // Create services
-        notesService = NotesService()
+        notesService = NotesServiceImpl()
         locationManagerMock = MockLocationManager()
         weatherServiceMock = MockWeatherKitService()
         
@@ -295,7 +295,7 @@ class WeatherIntegrationTests: XCTestCase {
     
     private func createWeather(
         temp: Double,
-        condition: WeatherCondition,
+        condition: C11SHouse.WeatherCondition,
         humidity: Double = 0.5,
         uvIndex: Int = 5,
         windSpeed: Double = 10
