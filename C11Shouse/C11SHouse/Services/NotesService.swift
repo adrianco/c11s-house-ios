@@ -299,6 +299,31 @@ class NotesServiceImpl: NotesServiceProtocol {
             migratedQuestions.remove(at: oldQuestionIndex)
         }
         
+        // Add Phase 4 question if it doesn't exist
+        let phase4Text = "Let's start by creating your first room note! What room would you like to add a note about?"
+        if !migratedQuestions.contains(where: { $0.text == phase4Text }) {
+            // Check if user has completed the first 3 questions
+            let requiredQuestions = ["Is this the right address?", "What should I call this house?", "What's your name?"]
+            let hasCompletedBasics = requiredQuestions.allSatisfy { questionText in
+                if let question = migratedQuestions.first(where: { $0.text == questionText }) {
+                    return migratedNotes[question.id]?.isAnswered ?? false
+                }
+                return false
+            }
+            
+            // Only add Phase 4 question if basics are complete and user hasn't completed phase 4
+            if hasCompletedBasics && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
+                let phase4Question = Question(
+                    text: phase4Text,
+                    category: .houseInfo,
+                    displayOrder: 3,
+                    isRequired: true,
+                    hint: "Tell me about a room in your house (e.g., 'living room', 'kitchen', 'bedroom')"
+                )
+                migratedQuestions.append(phase4Question)
+            }
+        }
+        
         return NotesStoreData(
             questions: migratedQuestions,
             notes: migratedNotes,

@@ -252,6 +252,9 @@ struct ConversationView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
+            print("[ConversationView] onAppear called")
+            print("[ConversationView] hasCompletedPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial"))")
+            print("[ConversationView] isInPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "isInPhase4Tutorial"))")
             setupView()
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
@@ -490,40 +493,65 @@ struct ConversationView: View {
             // Check if this answers a current question
             if let currentQuestion = questionFlow.currentQuestion {
                 print("[ConversationView] Answering question: \(currentQuestion.text)")
-                await questionFlow.saveAnswer()
                 
-                // Add acknowledgment message immediately
-                let acknowledgment = Message(
-                    content: "Thank you! I've saved that information.",
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(acknowledgment)
-                
-                // Speak acknowledgment and wait for completion
-                if !isMuted {
-                    let thought = HouseThought(
-                        thought: "Thank you! I've saved that information.",
-                        emotion: .happy,
-                        category: .greeting,
-                        confidence: 1.0
-                    )
-                    // Wait for speech to complete before loading next question
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                // Check if this is the Phase 4 introduction question
+                if currentQuestion.text.contains("Let's start by creating your first room note") {
+                    print("[ConversationView] This is the Phase 4 intro question, handling specially")
                     
-                    // Add a small pause after thank you for natural flow
-                    try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
-                }
-                
-                // Load next question after acknowledgment is complete
-                print("[ConversationView] Loading next question...")
-                await questionFlow.loadNextQuestion()
-                
-                // Check if all questions are complete
-                print("[ConversationView] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-                if questionFlow.hasCompletedAllQuestions {
-                    print("[ConversationView] All questions complete after answer, starting Phase 4")
-                    await startPhase4Tutorial()
+                    // Save the room name as the answer
+                    await questionFlow.saveAnswer()
+                    
+                    // Transition directly to room note details
+                    UserDefaults.standard.set(input, forKey: "pendingRoomName")
+                    UserDefaults.standard.set("awaitingRoomDetails", forKey: "noteCreationState")
+                    
+                    let detailsMessage = Message(
+                        content: "Great! Now tell me about your \(input). What would you like me to remember about this room?",
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(detailsMessage)
+                    
+                    if !isMuted {
+                        try? await stateManager.speak(detailsMessage.content, isMuted: isMuted)
+                    }
+                } else {
+                    // Normal question handling
+                    await questionFlow.saveAnswer()
+                    
+                    // Add acknowledgment message immediately
+                    let acknowledgment = Message(
+                        content: "Thank you! I've saved that information.",
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(acknowledgment)
+                    
+                    // Speak acknowledgment and wait for completion
+                    if !isMuted {
+                        let thought = HouseThought(
+                            thought: "Thank you! I've saved that information.",
+                            emotion: .happy,
+                            category: .greeting,
+                            confidence: 1.0
+                        )
+                        // Wait for speech to complete before loading next question
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        
+                        // Add a small pause after thank you for natural flow
+                        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+                    }
+                    
+                    // Load next question after acknowledgment is complete
+                    print("[ConversationView] Loading next question...")
+                    await questionFlow.loadNextQuestion()
+                    
+                    // Check if all questions are complete
+                    print("[ConversationView] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
+                    if questionFlow.hasCompletedAllQuestions {
+                        print("[ConversationView] All questions complete after answer, starting Phase 4")
+                        await startPhase4Tutorial()
+                    }
                 }
             } else {
                 // Check if we're in Phase 4 tutorial
@@ -655,55 +683,9 @@ struct ConversationView: View {
     // MARK: - Phase 4 Tutorial
     
     private func startPhase4Tutorial() async {
-        print("[ConversationView] startPhase4Tutorial() called")
-        
-        // Check if user has already created any notes
-        let hasNotes = await checkIfUserHasNotes()
-        print("[ConversationView] User has notes: \(hasNotes)")
-        
-        if !hasNotes {
-            print("[ConversationView] Starting Phase 4 tutorial sequence")
-            
-            // Wait a moment for the thank you message to settle
-            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-            
-            // Start the conversation tutorial
-            let tutorialMessage = """
-            Great! Now that we have the basics set up, let me show you how to save notes about your home.
-            
-            You can save notes about the rooms and things in the rooms around the house. What's the name of the room you are in now?
-            """
-            
-            let thought = HouseThought(
-                thought: tutorialMessage,
-                emotion: .curious,
-                category: .question,
-                confidence: 1.0
-            )
-            
-            await MainActor.run {
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                print("[ConversationView] Phase 4 tutorial message added to chat")
-                
-                if !isMuted {
-                    Task {
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                    }
-                }
-            }
-            
-            // Store state to track we're in tutorial mode
-            UserDefaults.standard.set(true, forKey: "isInPhase4Tutorial")
-            UserDefaults.standard.set("awaitingRoomName", forKey: "phase4TutorialState")
-            print("[ConversationView] Phase 4 tutorial state saved")
-        } else {
-            print("[ConversationView] User already has notes, skipping Phase 4 tutorial")
-        }
+        print("[ConversationView] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question")
+        // This method is kept for backward compatibility but doesn't do anything
+        // Phase 4 is now handled as the 4th required question
     }
     
     private func checkIfUserHasNotes() async -> Bool {
@@ -874,7 +856,8 @@ struct ConversationView: View {
     }
     
     private func handleRoomNoteDetailsProvided(_ details: String) async {
-        let roomName = UserDefaults.standard.string(forKey: "currentRoomName") ?? "Room"
+        let roomName = UserDefaults.standard.string(forKey: "pendingRoomName") ?? 
+                      UserDefaults.standard.string(forKey: "currentRoomName") ?? "Room"
         
         do {
             // Create a new question for this room
@@ -900,10 +883,52 @@ struct ConversationView: View {
             // Clear the note creation state
             UserDefaults.standard.removeObject(forKey: "noteCreationState")
             UserDefaults.standard.removeObject(forKey: "currentRoomName")
+            UserDefaults.standard.removeObject(forKey: "pendingRoomName")
             
-            let successMessage = "Perfect! I've saved that information about the \(roomName). You can view and edit this note anytime from the Notes screen."
-            
-            let thought = HouseThought(
+            // Mark Phase 4 as complete if this was the first room note
+            if !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
+                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
+                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
+                
+                let successMessage = """
+                Perfect! I've saved that information about the \(roomName). 
+                
+                🎉 Congratulations! You've completed the setup and created your first room note. 
+                
+                You can now:
+                • Create more room notes by saying "add room note"
+                • Create device notes by saying "add device note"
+                • View and edit all your notes from the Notes screen
+                • Ask me questions about your house
+                
+                I'm here to help whenever you need me!
+                """
+                
+                let thought = HouseThought(
+                    thought: successMessage,
+                    emotion: .happy,
+                    category: .celebration,
+                    confidence: 1.0
+                )
+                
+                await MainActor.run {
+                    let message = Message(
+                        content: successMessage,
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(message)
+                    
+                    if !isMuted {
+                        Task {
+                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        }
+                    }
+                }
+            } else {
+                let successMessage = "Perfect! I've saved that information about the \(roomName). You can view and edit this note anytime from the Notes screen."
+                
+                let thought = HouseThought(
                 thought: successMessage,
                 emotion: .happy,
                 category: .celebration,
