@@ -590,7 +590,12 @@ struct ConversationView: View {
     
     private func generateHouseResponse(for input: String) async {
         // Generate a house thought based on input
-        let thought = HouseThought.generateResponse(for: input)
+        let thought = HouseThought(
+            thought: "Let me think about that...",
+            emotion: .thoughtful,
+            category: .observation,
+            confidence: 0.8
+        )
         
         await MainActor.run {
             // Add house message
@@ -869,6 +874,9 @@ struct ConversationView: View {
                 isRequired: false
             )
             
+            // Add the question first
+            try await serviceContainer.notesService.addQuestion(roomQuestion)
+            
             // Save the note with room type metadata
             try await serviceContainer.notesService.saveOrUpdateNote(
                 for: roomQuestion.id,
@@ -929,23 +937,24 @@ struct ConversationView: View {
                 let successMessage = "Perfect! I've saved that information about the \(roomName). You can view and edit this note anytime from the Notes screen."
                 
                 let thought = HouseThought(
-                thought: successMessage,
-                emotion: .happy,
-                category: .celebration,
-                confidence: 1.0
-            )
-            
-            await MainActor.run {
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
+                    thought: successMessage,
+                    emotion: .happy,
+                    category: .celebration,
+                    confidence: 1.0
                 )
-                messageStore.addMessage(message)
                 
-                if !isMuted {
-                    Task {
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                await MainActor.run {
+                    let message = Message(
+                        content: thought.thought,
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(message)
+                    
+                    if !isMuted {
+                        Task {
+                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        }
                     }
                 }
             }
