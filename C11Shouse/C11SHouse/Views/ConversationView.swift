@@ -405,6 +405,11 @@ struct ConversationView: View {
             // Load any pending questions
             await questionFlow.loadNextQuestion()
             
+            // Check if all questions are complete and start Phase 4 tutorial
+            if questionFlow.hasCompletedAllQuestions {
+                await startPhase4Tutorial()
+            }
+            
             // Scroll to bottom after initial setup
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 scrollToBottom = true
@@ -504,15 +509,25 @@ struct ConversationView: View {
                 if UserDefaults.standard.bool(forKey: "isInPhase4Tutorial") {
                     await handlePhase4TutorialInput(input)
                 } else {
-                    // Check for note creation commands
-                    let lowercased = input.lowercased()
-                    if lowercased.contains("new room note") || lowercased.contains("add room note") {
-                        await handleRoomNoteCreation()
-                    } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
-                        await handleDeviceNoteCreation()
+                    // Check if we're in the middle of creating a note
+                    let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
+                    if noteCreationState == "creatingRoomNote" {
+                        // User provided room name, now ask for details
+                        await handleRoomNoteNameProvided(input)
+                    } else if noteCreationState == "awaitingRoomDetails" {
+                        // User provided room details, save the note
+                        await handleRoomNoteDetailsProvided(input)
                     } else {
-                        // Generate house response
-                        await generateHouseResponse(for: input)
+                        // Check for note creation commands
+                        let lowercased = input.lowercased()
+                        if lowercased.contains("new room note") || lowercased.contains("add room note") {
+                            await handleRoomNoteCreation()
+                        } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
+                            await handleDeviceNoteCreation()
+                        } else {
+                            // Generate house response
+                            await generateHouseResponse(for: input)
+                        }
                     }
                 }
             }
@@ -547,26 +562,35 @@ struct ConversationView: View {
     }
     
     private func handleRoomNoteCreation() async {
-        let thought = HouseThought(
-            thought: "I'll help you create a room note. What room would you like to add a note about?",
-            emotion: .curious,
-            category: .question,
-            confidence: 1.0
-        )
-        
-        await MainActor.run {
-            let message = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
+        // Check if Phase 4 tutorial should have run but didn't
+        if questionFlow.hasCompletedAllQuestions && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
+            // Start Phase 4 tutorial instead
+            await startPhase4Tutorial()
+        } else {
+            let thought = HouseThought(
+                thought: "I'll help you create a room note. What room would you like to add a note about?",
+                emotion: .curious,
+                category: .question,
+                confidence: 1.0
             )
-            messageStore.addMessage(message)
             
-            if !isMuted {
-                Task {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+            await MainActor.run {
+                let message = Message(
+                    content: thought.thought,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    Task {
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    }
                 }
             }
+            
+            // Mark that we're creating a room note
+            UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
         }
     }
     
@@ -740,6 +764,7 @@ struct ConversationView: View {
                 UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
                 UserDefaults.standard.removeObject(forKey: "phase4TutorialState")
                 UserDefaults.standard.removeObject(forKey: "currentRoomForTutorial")
+                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
                 
                 let completionMessage = """
                 Excellent! I've saved that information about the \(roomName).
@@ -781,6 +806,98 @@ struct ConversationView: View {
             // Shouldn't happen, but handle gracefully
             UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
             await generateHouseResponse(for: input)
+        }
+    }
+    
+    private func handleRoomNoteNameProvided(_ roomName: String) async {
+        // Save the room name temporarily
+        UserDefaults.standard.set(roomName, forKey: "currentRoomName")
+        UserDefaults.standard.set("awaitingRoomDetails", forKey: "noteCreationState")
+        
+        let response = """
+        Got it! I'll create a note for the \(roomName).
+        
+        What would you like me to remember about this room? You can include details about devices, furniture, or anything else that might be helpful.
+        """
+        
+        let thought = HouseThought(
+            thought: response,
+            emotion: .curious,
+            category: .question,
+            confidence: 1.0
+        )
+        
+        await MainActor.run {
+            let message = Message(
+                content: thought.thought,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                Task {
+                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                }
+            }
+        }
+    }
+    
+    private func handleRoomNoteDetailsProvided(_ details: String) async {
+        let roomName = UserDefaults.standard.string(forKey: "currentRoomName") ?? "Room"
+        
+        do {
+            // Create a new question for this room
+            let roomQuestion = Question(
+                id: UUID(),
+                text: roomName,
+                category: .other,
+                displayOrder: 1000,
+                isRequired: false
+            )
+            
+            // Save the note with room type metadata
+            try await serviceContainer.notesService.saveOrUpdateNote(
+                for: roomQuestion.id,
+                answer: details,
+                metadata: [
+                    "type": "room",
+                    "updated_via_conversation": "true",
+                    "createdDate": Date().ISO8601Format()
+                ]
+            )
+            
+            // Clear the note creation state
+            UserDefaults.standard.removeObject(forKey: "noteCreationState")
+            UserDefaults.standard.removeObject(forKey: "currentRoomName")
+            
+            let successMessage = "Perfect! I've saved that information about the \(roomName). You can view and edit this note anytime from the Notes screen."
+            
+            let thought = HouseThought(
+                thought: successMessage,
+                emotion: .happy,
+                category: .confirmation,
+                confidence: 1.0
+            )
+            
+            await MainActor.run {
+                let message = Message(
+                    content: thought.thought,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    Task {
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    }
+                }
+            }
+            
+        } catch {
+            print("Error saving room note: \(error)")
+            await generateHouseResponse(for: "I had trouble saving that note. Let me try again.")
         }
     }
 }
@@ -929,6 +1046,13 @@ extension HouseThought {
             return HouseThought(
                 thought: "I can help you with managing your home, checking weather, taking notes, and having conversations. What would you like to know?",
                 emotion: .thoughtful,
+                category: .suggestion,
+                confidence: 1.0
+            )
+        } else if lowercased.contains("note") || lowercased.contains("notes") {
+            return HouseThought(
+                thought: "I can help you create notes about your home. Try saying 'new room note' to add a note about a room, or 'new device note' to add a note about a device or appliance.",
+                emotion: .helpful,
                 category: .suggestion,
                 confidence: 1.0
             )
