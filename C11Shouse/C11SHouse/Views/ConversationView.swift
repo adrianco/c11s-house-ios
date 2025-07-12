@@ -681,12 +681,12 @@ struct ConversationView: View {
         do {
             let notesStore = try await serviceContainer.notesService.loadNotesStore()
             // Check for non-required notes (room/device notes)
-            return notesStore.notes.values.contains { note in
+            return notesStore.notes.values.contains(where: { note in
                 if let noteQuestion = notesStore.questions.first(where: { $0.id == note.id }) {
                     return !noteQuestion.isRequired && note.isAnswered
                 }
                 return false
-            }
+            })
         } catch {
             return false
         }
@@ -876,7 +876,7 @@ struct ConversationView: View {
             let thought = HouseThought(
                 thought: successMessage,
                 emotion: .happy,
-                category: .confirmation,
+                category: .celebration,
                 confidence: 1.0
             )
             
@@ -1052,7 +1052,7 @@ extension HouseThought {
         } else if lowercased.contains("note") || lowercased.contains("notes") {
             return HouseThought(
                 thought: "I can help you create notes about your home. Try saying 'new room note' to add a note about a room, or 'new device note' to add a note about a device or appliance.",
-                emotion: .helpful,
+                emotion: .thoughtful,
                 category: .suggestion,
                 confidence: 1.0
             )
