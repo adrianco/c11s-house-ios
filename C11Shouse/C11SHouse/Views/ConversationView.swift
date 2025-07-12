@@ -34,6 +34,7 @@ struct ConversationView: View {
     @State private var scrollToBottom = false
     @State private var pendingVoiceText = ""
     @State private var showVoiceConfirmation = false
+    @State private var houseName = "House Chat"
     @FocusState private var isTextFieldFocused: Bool
     
     init() {
@@ -74,7 +75,7 @@ struct ConversationView: View {
                 
                 Spacer()
                 
-                Text("House Chat")
+                Text(houseName)
                     .font(.title2)
                     .fontWeight(.bold)
                 
@@ -356,6 +357,13 @@ struct ConversationView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("ClearChatHistory"))) { _ in
             messageStore.clearAllMessages()
+            // Also add a welcome message after clearing
+            let welcomeMessage = Message(
+                content: "Hello! I'm your house consciousness. How can I help you today?",
+                isFromUser: false,
+                isVoice: false
+            )
+            messageStore.addMessage(welcomeMessage)
         }
     }
     
@@ -371,6 +379,12 @@ struct ConversationView: View {
         // Load initial state
         Task {
             await stateManager.loadUserName()
+            
+            // Load house name
+            if let savedHouseName = await serviceContainer.notesService.getHouseName(),
+               !savedHouseName.isEmpty {
+                houseName = savedHouseName
+            }
             
             // Add welcome message if no messages exist
             if messageStore.messages.isEmpty {
@@ -480,16 +494,26 @@ struct ConversationView: View {
                 
                 // Load next question after acknowledgment is complete
                 await questionFlow.loadNextQuestion()
+                
+                // Check if all questions are complete
+                if questionFlow.hasCompletedAllQuestions {
+                    await startPhase4Tutorial()
+                }
             } else {
-                // Check for note creation commands
-                let lowercased = input.lowercased()
-                if lowercased.contains("new room note") || lowercased.contains("add room note") {
-                    await handleRoomNoteCreation()
-                } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
-                    await handleDeviceNoteCreation()
+                // Check if we're in Phase 4 tutorial
+                if UserDefaults.standard.bool(forKey: "isInPhase4Tutorial") {
+                    await handlePhase4TutorialInput(input)
                 } else {
-                    // Generate house response
-                    await generateHouseResponse(for: input)
+                    // Check for note creation commands
+                    let lowercased = input.lowercased()
+                    if lowercased.contains("new room note") || lowercased.contains("add room note") {
+                        await handleRoomNoteCreation()
+                    } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
+                        await handleDeviceNoteCreation()
+                    } else {
+                        // Generate house response
+                        await generateHouseResponse(for: input)
+                    }
                 }
             }
             
@@ -581,6 +605,183 @@ struct ConversationView: View {
         
         // Process as regular input
         processUserInput(address)
+    }
+    
+    // MARK: - Phase 4 Tutorial
+    
+    private func startPhase4Tutorial() async {
+        // Check if user has already created any notes
+        let hasNotes = await checkIfUserHasNotes()
+        
+        if !hasNotes {
+            // Wait a moment for the thank you message to settle
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            
+            // Start the conversation tutorial
+            let tutorialMessage = """
+            Great! Now that we have the basics set up, let me show you how to save notes about your home.
+            
+            You can save notes about the rooms and things in the rooms around the house. What's the name of the room you are in now?
+            """
+            
+            let thought = HouseThought(
+                thought: tutorialMessage,
+                emotion: .curious,
+                category: .question,
+                confidence: 1.0
+            )
+            
+            await MainActor.run {
+                let message = Message(
+                    content: thought.thought,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    Task {
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    }
+                }
+            }
+            
+            // Store state to track we're in tutorial mode
+            UserDefaults.standard.set(true, forKey: "isInPhase4Tutorial")
+            UserDefaults.standard.set("awaitingRoomName", forKey: "phase4TutorialState")
+        }
+    }
+    
+    private func checkIfUserHasNotes() async -> Bool {
+        // Check if user has created any room or device notes
+        do {
+            let notesStore = try await serviceContainer.notesService.loadNotesStore()
+            // Check for non-required notes (room/device notes)
+            return notesStore.notes.values.contains { note in
+                if let noteQuestion = notesStore.questions.first(where: { $0.id == note.id }) {
+                    return !noteQuestion.isRequired && note.isAnswered
+                }
+                return false
+            }
+        } catch {
+            return false
+        }
+    }
+    
+    private func handlePhase4TutorialInput(_ input: String) async {
+        let tutorialState = UserDefaults.standard.string(forKey: "phase4TutorialState") ?? ""
+        
+        switch tutorialState {
+        case "awaitingRoomName":
+            // User provided room name
+            let roomName = input.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            // Save this as the current room for context
+            UserDefaults.standard.set(roomName, forKey: "currentRoomForTutorial")
+            
+            // Ask about the room details
+            let response = """
+            Great! I'll remember that you're in the \(roomName).
+            
+            Tell me about this room, and things that are in it, that you might want to know about in the future. Are there any connected devices here, or things that you sometimes forget how to operate?
+            """
+            
+            let thought = HouseThought(
+                thought: response,
+                emotion: .curious,
+                category: .question,
+                confidence: 1.0
+            )
+            
+            await MainActor.run {
+                let message = Message(
+                    content: thought.thought,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    Task {
+                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    }
+                }
+            }
+            
+            UserDefaults.standard.set("awaitingRoomDetails", forKey: "phase4TutorialState")
+            
+        case "awaitingRoomDetails":
+            // User provided room details
+            let roomName = UserDefaults.standard.string(forKey: "currentRoomForTutorial") ?? "Room"
+            
+            // Create a room note
+            do {
+                // Create a new question for this room
+                let roomQuestion = Question(
+                    id: UUID(),
+                    text: roomName,
+                    category: .other,
+                    displayOrder: 1000,
+                    isRequired: false
+                )
+                
+                // Save the note with room type metadata
+                try await serviceContainer.notesService.saveOrUpdateNote(
+                    for: roomQuestion.id,
+                    answer: input,
+                    metadata: [
+                        "type": "room",
+                        "updated_via_conversation": "true",
+                        "createdDate": Date().ISO8601Format()
+                    ]
+                )
+                
+                // Complete tutorial
+                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
+                UserDefaults.standard.removeObject(forKey: "phase4TutorialState")
+                UserDefaults.standard.removeObject(forKey: "currentRoomForTutorial")
+                
+                let completionMessage = """
+                Excellent! I've saved that information about the \(roomName).
+                
+                You can see and edit all your notes from the main screen. To add more notes in the future, just say something like 'new room note' or 'new device note' and I'll help you create them.
+                
+                Is there anything else you'd like to know about your home?
+                """
+                
+                let thought = HouseThought(
+                    thought: completionMessage,
+                    emotion: .happy,
+                    category: .suggestion,
+                    confidence: 1.0
+                )
+                
+                await MainActor.run {
+                    let message = Message(
+                        content: thought.thought,
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(message)
+                    
+                    if !isMuted {
+                        Task {
+                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        }
+                    }
+                }
+                
+            } catch {
+                print("Error saving room note: \(error)")
+                // Handle error gracefully
+                await generateHouseResponse(for: "I had trouble saving that note. Let me try again.")
+            }
+            
+        default:
+            // Shouldn't happen, but handle gracefully
+            UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
+            await generateHouseResponse(for: input)
+        }
     }
 }
 

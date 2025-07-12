@@ -296,8 +296,11 @@ struct NotesView: View {
                 // Clear all notes data
                 try await serviceContainer.notesService.clearAllData()
                 
-                // Also clear chat history
-                NotificationCenter.default.post(name: Notification.Name("ClearChatHistory"), object: nil)
+                // Post notification on main thread to clear chat history
+                await MainActor.run {
+                    NotificationCenter.default.post(name: Notification.Name("ClearChatHistory"), object: nil)
+                    print("Posted ClearChatHistory notification")
+                }
                 
                 // Reload to show empty state
                 loadNotes()
