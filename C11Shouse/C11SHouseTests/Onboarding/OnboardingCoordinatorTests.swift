@@ -38,7 +38,7 @@ class OnboardingCoordinatorTests: XCTestCase {
         cancellables = Set<AnyCancellable>()
         
         // Setup services
-        notesService = NotesService()
+        notesService = NotesServiceImpl()
         permissionManager = MockPermissionManager()
         let locationService = MockLocationService()
         addressManager = AddressManager(
