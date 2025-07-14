@@ -999,10 +999,6 @@ struct MessageBubble: View {
             message.content.contains(pattern) && message.content.contains("\n")
         })
         
-        if result {
-            print("[ConversationView] Question with suggestion detected: \(message.content.prefix(50))...")
-        }
-        
         return result
     }
     
@@ -1029,7 +1025,6 @@ struct MessageBubble: View {
                 if !message.isFromUser && isQuestionWithSuggestion, 
                    let (question, answer) = questionAndAnswer {
                     // Use generic suggested answer view
-                    let _ = print("[ConversationView] Using SuggestedAnswerQuestionView - Question: \(question), Answer: \(answer)")
                     SuggestedAnswerQuestionView(
                         question: question,
                         suggestedAnswer: answer,

@@ -158,6 +158,12 @@ class AddressSuggestionService {
             print("[WeatherKit] Temperature: \(weather.temperature.value)°\(weather.temperature.unit)")
         } catch {
             print("[WeatherKit] Weather fetch failed: \(error)")
+            
+            // Check if this is a simulator sandbox error
+            if let weatherError = error as? WeatherError, weatherError == .sandboxRestriction {
+                print("[WeatherKit] Note: WeatherKit doesn't work on simulator due to sandbox restrictions")
+                print("[WeatherKit] Weather features will work properly on a physical device")
+            }
         }
     }
     
