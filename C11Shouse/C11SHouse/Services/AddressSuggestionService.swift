@@ -154,8 +154,8 @@ class AddressSuggestionService {
         print("[WeatherKit] Weather fetch started at: \(Date())")
         do {
             let weather = try await weatherCoordinator.fetchWeather(for: address)
-            print("[WeatherKit] Weather fetch result: Success - \(weather.currentConditions.condition)")
-            print("[WeatherKit] Temperature: \(weather.currentConditions.temperature.value)°\(weather.currentConditions.temperature.unit)")
+            print("[WeatherKit] Weather fetch result: Success - \(weather.condition)")
+            print("[WeatherKit] Temperature: \(weather.temperature.value)°\(weather.temperature.unit)")
         } catch {
             print("[WeatherKit] Weather fetch failed: \(error)")
         }
