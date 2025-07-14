@@ -52,6 +52,7 @@ class QuestionFlowCoordinator: ObservableObject {
     /// Load the next question that needs review
     func loadNextQuestion() async {
         print("[QuestionFlowCoordinator] loadNextQuestion() called")
+        print("[QuestionFlowCoordinator] Current state - isLoadingQuestion: \(isLoadingQuestion), hasCompletedAllQuestions: \(hasCompletedAllQuestions)")
         guard !isLoadingQuestion else { 
             print("[QuestionFlowCoordinator] Already loading question, skipping")
             return 
@@ -88,6 +89,7 @@ class QuestionFlowCoordinator: ObservableObject {
                 
                 // Post notification that all questions are complete
                 print("[QuestionFlowCoordinator] Posting AllQuestionsComplete notification")
+                print("[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)")
                 NotificationCenter.default.post(name: Notification.Name("AllQuestionsComplete"), object: nil)
             }
         } catch {
@@ -152,13 +154,15 @@ class QuestionFlowCoordinator: ObservableObject {
             
             // If this was the address question, save it properly and fetch weather
             if question.text == "Is this the right address?" || question.text == "What's your home address?" {
-                print("[QuestionFlowCoordinator] Processing address answer")
+                print("[QuestionFlowCoordinator] Processing address answer: \(trimmedAnswer)")
                 if let manager = addressManager,
                    let address = manager.parseAddress(trimmedAnswer) {
+                    print("[QuestionFlowCoordinator] User confirmed address, now saving as answered")
                     try await manager.saveAddress(address)
                     
                     // Trigger weather fetch after address confirmation
                     if let suggestionService = addressSuggestionService {
+                        print("[QuestionFlowCoordinator] Triggering weather fetch for confirmed address")
                         await suggestionService.fetchWeatherForConfirmedAddress(address)
                     }
                 }
@@ -263,21 +267,47 @@ class QuestionFlowCoordinator: ObservableObject {
         // Handle different question types
         if question.text == "Is this the right address?" || question.text == "What's your home address?" {
             if currentAnswer.isEmpty {
-                // Try to detect the address
-                do {
-                    if let suggestionService = addressSuggestionService {
-                        let detectedAddress = try await suggestionService.suggestCurrentAddress()
-                        stateManager.persistentTranscript = detectedAddress
-                        
-                        // Set house thought with address confirmation
-                        let thought = suggestionService.createAddressConfirmationResponse(detectedAddress)
-                        recognizer.currentHouseThought = thought
-                    } else if let manager = addressManager {
-                        let detected = try await manager.detectCurrentAddress()
-                        stateManager.persistentTranscript = detected.fullAddress
-                        await recognizer.setQuestionThought(question.text)
+                // Check for detected address first
+                var detectedAddress: Address? = nil
+                
+                // Try to get stored detected address
+                if let manager = addressManager {
+                    detectedAddress = manager.loadDetectedAddress()
+                    if detectedAddress != nil {
+                        print("[QuestionFlowCoordinator] Found stored detected address: \(detectedAddress!.fullAddress)")
                     }
-                } catch {
+                }
+                
+                // If no stored address, try to detect now
+                if detectedAddress == nil {
+                    do {
+                        if let manager = addressManager {
+                            detectedAddress = try await manager.detectCurrentAddress()
+                            await manager.storeDetectedAddress(detectedAddress!)
+                        }
+                    } catch {
+                        print("[QuestionFlowCoordinator] Failed to detect address: \(error)")
+                    }
+                }
+                
+                // Format question with detected address for SuggestedAnswerQuestionView
+                if let address = detectedAddress {
+                    stateManager.persistentTranscript = address.fullAddress
+                    
+                    // Create house thought with proper format: Question?\n\nAnswer
+                    let thought = HouseThought(
+                        thought: "\(question.text)\n\n\(address.fullAddress)",
+                        emotion: .curious,
+                        category: .question,
+                        confidence: 0.9,
+                        context: "Address confirmation",
+                        suggestion: nil
+                    )
+                    recognizer.currentHouseThought = thought
+                    
+                    print("[QuestionFlowCoordinator] Formatted address question with detected address")
+                } else {
+                    // No address available, just ask the question
                     await recognizer.setQuestionThought(question.text)
                 }
             } else {
@@ -307,7 +337,17 @@ class QuestionFlowCoordinator: ObservableObject {
                     } else if let manager = addressManager {
                         let suggestedName = manager.generateHouseName(from: addressAnswer)
                         stateManager.persistentTranscript = suggestedName
-                        await recognizer.setQuestionThought(question.text)
+                        
+                        // Format with suggested answer for SuggestedAnswerQuestionView
+                        let thought = HouseThought(
+                            thought: "\(question.text)\n\n\(suggestedName)",
+                            emotion: .curious,
+                            category: .question,
+                            confidence: 0.9,
+                            context: "House naming suggestion",
+                            suggestion: nil
+                        )
+                        recognizer.currentHouseThought = thought
                     }
                 } else {
                     await recognizer.setQuestionThought(question.text)
@@ -341,15 +381,9 @@ class QuestionFlowCoordinator: ObservableObject {
     // MARK: - Private Methods
     
     private func setupNotifications() {
-        // Listen for all questions complete notification to reload
-        NotificationCenter.default.publisher(for: Notification.Name("AllQuestionsComplete"))
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                Task {
-                    await self?.loadNextQuestion()
-                }
-            }
-            .store(in: &cancellables)
+        // NOTE: Removed AllQuestionsComplete listener to prevent infinite loop
+        // The notification is posted when all questions are complete, but we don't need to reload
+        print("[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)")
     }
 }
 

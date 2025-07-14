@@ -84,6 +84,21 @@ class AddressManager: ObservableObject {
         return AddressParser.generateHouseName(from: street)
     }
     
+    /// Store detected address without marking question as answered
+    func storeDetectedAddress(_ address: Address) async {
+        // Save to UserDefaults for quick access
+        if let encoded = try? JSONEncoder().encode(address) {
+            UserDefaults.standard.set(encoded, forKey: "detectedHomeAddress")
+        }
+        
+        // Store in detectedAddress property
+        await MainActor.run {
+            detectedAddress = address
+        }
+        
+        print("[AddressManager] Stored detected address (not marked as answered): \(address.fullAddress)")
+    }
+    
     /// Save address to persistent storage
     func saveAddress(_ address: Address) async throws {
         // Save to UserDefaults for quick access
@@ -96,6 +111,8 @@ class AddressManager: ObservableObject {
         
         // Save to NotesService
         await saveAddressToNotes(address)
+        
+        print("[AddressManager] User confirmed address, now saving as answered: \(address.fullAddress)")
     }
     
     /// Save address as a note answer
@@ -140,6 +157,15 @@ class AddressManager: ObservableObject {
     /// Load saved address from storage
     func loadSavedAddress() -> Address? {
         guard let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
+              let address = try? JSONDecoder().decode(Address.self, from: addressData) else {
+            return nil
+        }
+        return address
+    }
+    
+    /// Load detected but unconfirmed address from storage
+    func loadDetectedAddress() -> Address? {
+        guard let addressData = UserDefaults.standard.data(forKey: "detectedHomeAddress"),
               let address = try? JSONDecoder().decode(Address.self, from: addressData) else {
             return nil
         }

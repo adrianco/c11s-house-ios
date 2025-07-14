@@ -150,10 +150,14 @@ class AddressSuggestionService {
     
     /// Trigger weather fetch after address confirmation
     func fetchWeatherForConfirmedAddress(_ address: Address) async {
+        print("[WeatherKit] Initializing weather service for address: \(address.fullAddress)")
+        print("[WeatherKit] Weather fetch started at: \(Date())")
         do {
-            _ = try await weatherCoordinator.fetchWeather(for: address)
+            let weather = try await weatherCoordinator.fetchWeather(for: address)
+            print("[WeatherKit] Weather fetch result: Success - \(weather.currentConditions.condition)")
+            print("[WeatherKit] Temperature: \(weather.currentConditions.temperature.value)°\(weather.currentConditions.temperature.unit)")
         } catch {
-            print("Failed to fetch weather for address: \(error)")
+            print("[WeatherKit] Weather fetch failed: \(error)")
         }
     }
     

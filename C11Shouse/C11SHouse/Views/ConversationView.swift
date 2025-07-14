@@ -995,9 +995,15 @@ struct MessageBubble: View {
             "What's your email?"
         ]
         
-        return questionPatterns.contains(where: { pattern in
+        let result = questionPatterns.contains(where: { pattern in
             message.content.contains(pattern) && message.content.contains("\n")
         })
+        
+        if result {
+            print("[ConversationView] Question with suggestion detected: \(message.content.prefix(50))...")
+        }
+        
+        return result
     }
     
     // Extract question and suggested answer
@@ -1023,6 +1029,7 @@ struct MessageBubble: View {
                 if !message.isFromUser && isQuestionWithSuggestion, 
                    let (question, answer) = questionAndAnswer {
                     // Use generic suggested answer view
+                    let _ = print("[ConversationView] Using SuggestedAnswerQuestionView - Question: \(question), Answer: \(answer)")
                     SuggestedAnswerQuestionView(
                         question: question,
                         suggestedAnswer: answer,

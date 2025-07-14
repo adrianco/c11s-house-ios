@@ -186,8 +186,8 @@ struct OnboardingPermissionsView: View {
                         // Use the captured address manager
                         let address = try await addressManager.detectCurrentAddress()
                         
-                        // Save to notes for later use in conversation
-                        await addressManager.saveAddressToNotes(address)
+                        // Store detected address for later confirmation in conversation
+                        await addressManager.storeDetectedAddress(address)
                         
                         let duration = Date().timeIntervalSince(startTime)
                         OnboardingLogger.shared.logServiceCall("address_detection", phase: "permissions", success: true, duration: duration)
