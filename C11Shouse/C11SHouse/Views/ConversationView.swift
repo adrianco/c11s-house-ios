@@ -278,9 +278,6 @@ struct ConversationView: View {
                     // First, let handleQuestionChange process the question
                     _ = await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: false)
                     
-                    // Give a moment for any state updates to settle
-                    try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 second
-                    
                     var messageContent = question.text
                     var spokenContent = question.text
                     
@@ -527,7 +524,7 @@ struct ConversationView: View {
                     
                     // Add acknowledgment message immediately
                     let acknowledgment = Message(
-                        content: "Thank you! I've saved that information.",
+                        content: "Got it!",
                         isFromUser: false,
                         isVoice: !isMuted
                     )
@@ -536,19 +533,19 @@ struct ConversationView: View {
                     // Speak acknowledgment and wait for completion
                     if !isMuted {
                         let thought = HouseThought(
-                            thought: "Thank you! I've saved that information.",
+                            thought: "Got it!",
                             emotion: .happy,
                             category: .greeting,
                             confidence: 1.0
                         )
                         // Wait for speech to complete before loading next question
                         try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                        
-                        // Add a small pause after thank you for natural flow
-                        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
                     }
                     
-                    // Load next question after acknowledgment is complete
+                    // Add a brief pause to let user see the acknowledgment
+                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                    
+                    // Load next question after acknowledgment is visible
                     print("[ConversationView] Loading next question...")
                     await questionFlow.loadNextQuestion()
                     
@@ -789,13 +786,7 @@ struct ConversationView: View {
                 UserDefaults.standard.removeObject(forKey: "currentRoomForTutorial")
                 UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
                 
-                let completionMessage = """
-                Excellent! I've saved that information about the \(roomName).
-                
-                You can see and edit all your notes from the main screen. To add more notes in the future, just say something like 'new room note' or 'new device note' and I'll help you create them.
-                
-                Is there anything else you'd like to know about your home?
-                """
+                let completionMessage = "Excellent! I've saved that information about the \(roomName). You can add more notes anytime by saying 'new room note' or 'new device note'."
                 
                 let thought = HouseThought(
                     thought: completionMessage,
@@ -904,19 +895,7 @@ struct ConversationView: View {
                 UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
                 UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
                 
-                let successMessage = """
-                Perfect! I've saved that information about the \(roomName). 
-                
-                🎉 Congratulations! You've completed the setup and created your first room note. 
-                
-                You can now:
-                • Create more room notes by saying "add room note"
-                • Create device notes by saying "add device note"
-                • View and edit all your notes from the Notes screen
-                • Ask me questions about your house
-                
-                I'm here to help whenever you need me!
-                """
+                let successMessage = "Perfect! I've saved that information about the \(roomName). 🎉 Setup complete! You can now create more notes or ask me questions about your house."
                 
                 let thought = HouseThought(
                     thought: successMessage,
@@ -940,7 +919,7 @@ struct ConversationView: View {
                     }
                 }
             } else {
-                let successMessage = "Perfect! I've saved that information about the \(roomName). You can view and edit this note anytime from the Notes screen."
+                let successMessage = "Perfect! I've saved that about the \(roomName)."
                 
                 let thought = HouseThought(
                     thought: successMessage,
