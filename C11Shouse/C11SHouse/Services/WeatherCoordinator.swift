@@ -177,7 +177,7 @@ class WeatherCoordinator: ObservableObject {
             switch weatherError {
             case .sandboxRestriction:
                 errorType = "Sandbox Restriction"
-                errorDetails = "WeatherKit is not available in the simulator. This works correctly on real devices."
+                errorDetails = "WeatherKit authorization failed. Check app configuration and provisioning profile."
             case .invalidLocation:
                 errorType = "Invalid Location"
                 errorDetails = "The location coordinates are invalid for weather data."

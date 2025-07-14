@@ -258,7 +258,9 @@ class QuestionFlowCoordinator: ObservableObject {
             context: "Answer acknowledgment"
         )
         
-        await recognizer.setHouseThought(acknowledgment)
+        await MainActor.run {
+            recognizer.currentHouseThought = acknowledgment
+        }
     }
     
     /// Handle question change events

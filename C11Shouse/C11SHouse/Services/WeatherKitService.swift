@@ -33,7 +33,7 @@ enum WeatherError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .sandboxRestriction:
-            return "Weather service is not available in the simulator. Please run on a real device."
+            return "Weather service authorization failed. Check WeatherKit configuration in App ID."
         case .invalidLocation:
             return "Invalid location for weather data"
         case .networkError(let error):
@@ -104,15 +104,15 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
             print("- Domain: \((error as NSError).domain)")
             print("- Code: \((error as NSError).code)")
             
-            // Check if this is a sandbox restriction error
+            // Check if this is an authorization error
             if error.localizedDescription.contains("Sandbox restriction") || 
                error.localizedDescription.contains("com.apple.weatherkit.authservice") {
-                // This shouldn't happen on physical devices
-                print("WARNING: WeatherKit sandbox error on physical device!")
-                print("This usually indicates:")
+                print("ERROR: WeatherKit authorization failed!")
+                print("This indicates:")
                 print("1. Bundle ID mismatch with provisioning profile")
                 print("2. WeatherKit not properly configured in App ID")
                 print("3. Provisioning profile needs regeneration")
+                print("4. WeatherKit capability not enabled")
                 throw WeatherError.sandboxRestriction
             } else {
                 // Re-throw other errors
