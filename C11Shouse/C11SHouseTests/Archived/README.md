@@ -16,7 +16,7 @@ These tests were moved here because:
 - **InitialSetupFlowTests.swift** - Tests for initial app setup flow
 - **OnboardingCoordinatorTests.swift** - Tests for onboarding coordination (requires concrete PermissionManager)
 - **OnboardingFlowTests.swift** - Tests for complete onboarding flow
-- **QuestionFlowCoordinatorTests.swift** - Older version of question flow coordinator tests
+- **QuestionFlowCoordinatorTests_OLD.swift** - Older version of question flow coordinator tests (renamed to avoid filename conflict)
 
 ## Exclusion from Compilation
 
