@@ -211,6 +211,9 @@ class QuestionFlowCoordinator: ObservableObject {
             currentQuestion = nil
         }
         
+        // Send acknowledgment
+        await sendAcknowledgment()
+        
         // Load the next question
         await loadNextQuestion()
     }
@@ -241,6 +244,21 @@ class QuestionFlowCoordinator: ObservableObject {
             print("Error getting answer: \(error)")
         }
         return nil
+    }
+    
+    /// Send acknowledgment after saving an answer
+    private func sendAcknowledgment() async {
+        guard let recognizer = conversationRecognizer else { return }
+        
+        let acknowledgment = HouseThought(
+            thought: "Got it!",
+            emotion: .happy,
+            category: .greeting,
+            confidence: 1.0,
+            context: "Answer acknowledgment"
+        )
+        
+        await recognizer.setHouseThought(acknowledgment)
     }
     
     /// Handle question change events

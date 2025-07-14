@@ -271,6 +271,27 @@ struct ConversationView: View {
                 isTextFieldFocused = true
             }
         }
+        .onChange(of: recognizer.currentHouseThought) { oldValue, newValue in
+            // When house has a thought (like acknowledgment), display it
+            if let thought = newValue, oldValue != newValue {
+                // Don't add if it's already part of a question
+                if questionFlow.currentQuestion == nil {
+                    let message = Message(
+                        content: thought.thought,
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(message)
+                    
+                    // Speak if not muted
+                    if !isMuted {
+                        Task {
+                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                        }
+                    }
+                }
+            }
+        }
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
             // When a new question appears, add it to the chat
             if let question = newValue, oldValue != newValue {
@@ -522,31 +543,7 @@ struct ConversationView: View {
                     // Normal question handling
                     await questionFlow.saveAnswer()
                     
-                    // Add acknowledgment message immediately
-                    let acknowledgment = Message(
-                        content: "Got it!",
-                        isFromUser: false,
-                        isVoice: !isMuted
-                    )
-                    messageStore.addMessage(acknowledgment)
-                    
-                    // Speak acknowledgment and wait for completion
-                    if !isMuted {
-                        let thought = HouseThought(
-                            thought: "Got it!",
-                            emotion: .happy,
-                            category: .greeting,
-                            confidence: 1.0
-                        )
-                        // Wait for speech to complete before loading next question
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                    }
-                    
-                    // Add a brief pause to let user see the acknowledgment
-                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-                    
-                    // Load next question after acknowledgment is visible
-                    print("[ConversationView] Loading next question...")
+                    // Let the coordinator handle the entire flow
                     await questionFlow.loadNextQuestion()
                     
                     // Check if all questions are complete
