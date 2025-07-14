@@ -2685,3 +2685,14 @@ Updated the UX plan to be clearer that a chat interfaces is needed
 start a hive-mind swarm to review the progress so far, look at the LoggingRecord.txt that contains a complete run of the UX flow from a cleared Notes start. The phase 4 questions did not start, the      │
 │   chat was not cleared. A new note was not created as requested. Add more logging to the app to help debug the flow from here.     
 
+spawn a hive-mind to investigate the test code, there are far too many tests, they don't compile, and they probably don't match the current code base. Clean up the test code. Current compile errors 
+  are:
+
+"current bugs in the app: from a fresh install, see LoggingRecord.txt, Address is not being confirmed, weatherkit is not starting, SuggestedAnswerQuestionView is not being used when 
+  questions are asked. Investigate and write a plan to fix code and add logging, but don't change the code yet."
+
+  > the Address Confirmation issue needs a deeper fix, it was not confirmed at all, the background update should set the note but not mark it as an answered question. This used to work fine in a previous 
+  version. Investigate and update the plan.
+
+  > implement the bug-fix-plan.md and push updates
+  

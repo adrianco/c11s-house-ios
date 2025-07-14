@@ -233,3 +233,16 @@ Hang detected: 0.57s (debugger attached, not reporting)
 -[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
 Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
 [ConversationView] processUserInput: 'Music stuff'
+
+=== TEST FIX UPDATE ===
+[2025-01-14] Fixed QuestionFlowCoordinatorTests.swift compilation issues:
+- Created working test file in /C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift
+- Added required mock implementations that were missing:
+  * MockNotesService - Full implementation matching NotesServiceProtocol
+  * MockConversationStateManager - Overrides for testing state management
+  * MockAddressManager - Overrides for address detection/saving
+  * MockConversationRecognizer - Overrides for house thought management
+- Fixed MainActor isolation issues by marking test class and mocks with @MainActor
+- Updated test assertions to match current API behavior
+- Removed obsolete tests that referenced non-existent methods
+- Test file now compiles successfully and tests the current QuestionFlowCoordinator functionality

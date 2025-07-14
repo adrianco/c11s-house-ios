@@ -1,0 +1,8 @@
+# Exclude Archived folder from test compilation
+# This file tells Xcode to exclude these files from the test target
+$(SRCROOT)/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift
+$(SRCROOT)/C11SHouseTests/Archived/ConversationStateManagerTests.swift
+$(SRCROOT)/C11SHouseTests/Archived/InitialSetupFlowTests.swift
+$(SRCROOT)/C11SHouseTests/Archived/OnboardingCoordinatorTests.swift
+$(SRCROOT)/C11SHouseTests/Archived/OnboardingFlowTests.swift
+$(SRCROOT)/C11SHouseTests/Archived/QuestionFlowCoordinatorTests.swift
