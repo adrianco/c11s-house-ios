@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		279D00B22E259852009EAB42 /* C11SHouse.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = C11SHouse.xctestplan; sourceTree = "<group>"; };
 		279E6BDB2E15D6A50068863B /* C11SHouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = C11SHouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		279E6BE82E15D6A60068863B /* C11SHouseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C11SHouseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		279E6BF22E15D6A60068863B /* C11SHouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C11SHouseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +89,7 @@
 		279E6BD22E15D6A50068863B = {
 			isa = PBXGroup;
 			children = (
+				279D00B22E259852009EAB42 /* C11SHouse.xctestplan */,
 				279E6BDD2E15D6A50068863B /* C11SHouse */,
 				279E6BEB2E15D6A60068863B /* C11SHouseTests */,
 				279E6BF52E15D6A60068863B /* C11SHouseUITests */,

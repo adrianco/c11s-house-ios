@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "892B0709-6002-4916-B17D-F5B565970E40",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:C11SHouse.xcodeproj",
+      "identifier" : "279E6BDA2E15D6A50068863B",
+      "name" : "C11SHouse"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:C11SHouse.xcodeproj",
+        "identifier" : "279E6BE72E15D6A60068863B",
+        "name" : "C11SHouseTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:C11SHouse.xcodeproj",
+        "identifier" : "279E6BF12E15D6A60068863B",
+        "name" : "C11SHouseUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
