@@ -45,6 +45,15 @@ class WeatherCoordinator: ObservableObject {
         self.weatherService = weatherService
         self.notesService = notesService
         self.locationService = locationService
+        print("[WeatherCoordinator] 🌤️ Initialized with services")
+        print("[WeatherCoordinator] Weather service: \(type(of: weatherService))")
+        print("[WeatherCoordinator] Notes service: \(type(of: notesService))")
+        print("[WeatherCoordinator] Location service: \(type(of: locationService))")
+        
+        // Ensure weather question exists on initialization
+        Task {
+            await ensureWeatherQuestionExists()
+        }
     }
     
     // MARK: - Public Methods
@@ -210,8 +219,39 @@ class WeatherCoordinator: ObservableObject {
         await updateWeatherStatusNote(errorSummary)
     }
     
+    /// Ensure weather question exists in notes store
+    func ensureWeatherQuestionExists() async {
+        do {
+            let notesStore = try await notesService.loadNotesStore()
+            
+            // Check if weather question already exists
+            if notesStore.questions.contains(where: { $0.text == "Weather" }) {
+                print("[WeatherCoordinator] Weather question already exists")
+                return
+            }
+            
+            // Create weather question
+            let weatherKey = Question(
+                text: "Weather",
+                category: .houseInfo,
+                displayOrder: 500, // After main house questions but before preferences
+                isRequired: false,
+                hint: "Current weather conditions"
+            )
+            
+            try await notesService.addQuestion(weatherKey)
+            print("[WeatherCoordinator] Created Weather question in notes store")
+            
+        } catch {
+            print("[WeatherCoordinator] Failed to ensure weather question exists: \(error)")
+        }
+    }
+    
     /// Update or create a single weather status note
     private func updateWeatherStatusNote(_ content: String) async {
+        // First ensure the weather question exists
+        await ensureWeatherQuestionExists()
+        
         do {
             let notesStore = try await notesService.loadNotesStore()
             
@@ -228,30 +268,12 @@ class WeatherCoordinator: ObservableObject {
                         "automatic": "true"
                     ]
                 )
+                print("[WeatherCoordinator] Updated weather note successfully")
             } else {
-                // Create new weather entry as house information
-                let weatherKey = Question(
-                    text: "Weather",
-                    category: .houseInfo,
-                    displayOrder: 500, // After main house questions but before preferences
-                    isRequired: false,
-                    hint: "Current weather conditions"
-                )
-                
-                try await notesService.addQuestion(weatherKey)
-                try await notesService.saveOrUpdateNote(
-                    for: weatherKey.id,
-                    answer: content,
-                    metadata: [
-                        "type": "houseInfo",
-                        "updated_via_conversation": "true", // Mark as valid, no user confirmation needed
-                        "lastUpdated": Date().ISO8601Format(),
-                        "automatic": "true"
-                    ]
-                )
+                print("[WeatherCoordinator] Warning: Weather question not found after ensuring it exists")
             }
         } catch {
-            print("Failed to update weather note: \(error)")
+            print("[WeatherCoordinator] Failed to update weather note: \(error)")
         }
     }
 }

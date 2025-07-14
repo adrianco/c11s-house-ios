@@ -162,8 +162,12 @@ class QuestionFlowCoordinator: ObservableObject {
                     
                     // Trigger weather fetch after address confirmation
                     if let suggestionService = addressSuggestionService {
-                        print("[QuestionFlowCoordinator] Triggering weather fetch for confirmed address")
+                        print("[QuestionFlowCoordinator] 🌤️ Triggering weather fetch for confirmed address")
+                        print("[QuestionFlowCoordinator] Address details: \(address.fullAddress)")
                         await suggestionService.fetchWeatherForConfirmedAddress(address)
+                        print("[QuestionFlowCoordinator] Weather fetch initiated")
+                    } else {
+                        print("[QuestionFlowCoordinator] ⚠️ No addressSuggestionService available for weather fetch")
                     }
                 }
             }

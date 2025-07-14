@@ -60,6 +60,25 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
         weatherUpdateSubject.eraseToAnyPublisher()
     }
     
+    init() {
+        print("[WeatherKitService] 🌦️ Initializing WeatherKit service")
+        print("[WeatherKitService] Bundle ID: \(Bundle.main.bundleIdentifier ?? "Unknown")")
+        
+        // Check if we're running on a real device
+        #if targetEnvironment(simulator)
+        print("[WeatherKitService] ⚠️ Running in Simulator - WeatherKit may have limitations")
+        #else
+        print("[WeatherKitService] ✅ Running on real device")
+        #endif
+        
+        // Log entitlements
+        if let path = Bundle.main.path(forResource: "C11SHouse", ofType: "entitlements") {
+            print("[WeatherKitService] Entitlements file found at: \(path)")
+        } else {
+            print("[WeatherKitService] ⚠️ Entitlements file not found in bundle")
+        }
+    }
+    
     func fetchWeather(for coordinate: Coordinate) async throws -> Weather {
         let location = CLLocation(
             latitude: coordinate.latitude,
@@ -98,21 +117,34 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
             return weatherData
         } catch {
             // Log the full error for debugging
-            print("WeatherKit Error Details:")
-            print("- Error: \(error)")
-            print("- Localized: \(error.localizedDescription)")
-            print("- Domain: \((error as NSError).domain)")
-            print("- Code: \((error as NSError).code)")
+            print("🌦️ WeatherKit Error Details:")
+            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            print("📍 Location: \(coordinate.latitude), \(coordinate.longitude)")
+            print("❌ Error: \(error)")
+            print("📝 Localized: \(error.localizedDescription)")
+            print("🏷️ Domain: \((error as NSError).domain)")
+            print("🔢 Code: \((error as NSError).code)")
+            print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             
             // Check if this is an authorization error
             if error.localizedDescription.contains("Sandbox restriction") || 
                error.localizedDescription.contains("com.apple.weatherkit.authservice") {
-                print("ERROR: WeatherKit authorization failed!")
-                print("This indicates:")
-                print("1. Bundle ID mismatch with provisioning profile")
-                print("2. WeatherKit not properly configured in App ID")
-                print("3. Provisioning profile needs regeneration")
-                print("4. WeatherKit capability not enabled")
+                print("⚠️ WeatherKit Configuration Issue Detected!")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                print("This error indicates WeatherKit is not properly configured.")
+                print("")
+                print("To fix this issue:")
+                print("1. Verify Bundle ID matches: \(Bundle.main.bundleIdentifier ?? "Unknown")")
+                print("2. Check WeatherKit is enabled in your App ID configuration")
+                print("3. Ensure provisioning profile includes WeatherKit capability")
+                print("4. Regenerate provisioning profile if needed")
+                print("")
+                print("Note: WeatherKit requires:")
+                print("- Active Apple Developer account")
+                print("- WeatherKit capability enabled in App ID")
+                print("- Valid provisioning profile with WeatherKit")
+                print("- Proper entitlements in the app")
+                print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
                 throw WeatherError.sandboxRestriction
             } else {
                 // Re-throw other errors

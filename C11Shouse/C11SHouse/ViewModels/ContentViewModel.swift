@@ -174,15 +174,25 @@ class ContentViewModel: ObservableObject {
     }
     
     func refreshWeather() async {
-        guard let address = currentAddress else { return }
+        print("[ContentViewModel] 🌤️ refreshWeather() called")
+        guard let address = currentAddress else { 
+            print("[ContentViewModel] ⚠️ No current address available for weather fetch")
+            return 
+        }
         
+        print("[ContentViewModel] Fetching weather for: \(address.fullAddress)")
         do {
-            _ = try await weatherCoordinator.fetchWeather(for: address)
+            let weather = try await weatherCoordinator.fetchWeather(for: address)
+            print("[ContentViewModel] ✅ Weather fetch successful: \(weather.condition)")
         } catch {
+            print("[ContentViewModel] ❌ Weather fetch failed: \(error)")
             // Only update emotion for error if all required questions are answered
             let requiredComplete = await notesService.areAllRequiredQuestionsAnswered()
             if requiredComplete {
+                print("[ContentViewModel] All questions complete, updating emotion for error")
                 updateHouseEmotionForError()
+            } else {
+                print("[ContentViewModel] Questions incomplete, keeping curious emotion")
             }
             // Otherwise keep the curious emotion for setup
         }
@@ -362,19 +372,27 @@ class ContentViewModel: ObservableObject {
     
     
     private func checkForAddressUpdate() {
+        print("[ContentViewModel] 📍 Checking for address update")
         // Check if we have a new address that we haven't loaded yet
         if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
            let address = try? JSONDecoder().decode(Address.self, from: addressData) {
             
+            print("[ContentViewModel] Found saved address: \(address.fullAddress)")
             // Only update if the address is different
             if currentAddress?.fullAddress != address.fullAddress {
+                print("[ContentViewModel] ✅ New address detected, updating")
                 currentAddress = address
                 
                 // Fetch weather for the new address
                 Task {
+                    print("[ContentViewModel] 🌤️ Triggering weather refresh for new address")
                     await refreshWeather()
                 }
+            } else {
+                print("[ContentViewModel] Address unchanged, no update needed")
             }
+        } else {
+            print("[ContentViewModel] No saved address found")
         }
     }
 }

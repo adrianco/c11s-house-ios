@@ -150,15 +150,45 @@ class AddressSuggestionService {
     
     /// Trigger weather fetch after address confirmation
     func fetchWeatherForConfirmedAddress(_ address: Address) async {
-        print("[WeatherKit] Initializing weather service for address: \(address.fullAddress)")
-        print("[WeatherKit] Weather fetch started at: \(Date())")
+        print("[AddressSuggestionService] Starting weather fetch for confirmed address")
+        print("[AddressSuggestionService] Address: \(address.fullAddress)")
+        print("[AddressSuggestionService] Coordinates: \(address.coordinate.latitude), \(address.coordinate.longitude)")
+        print("[AddressSuggestionService] Timestamp: \(Date())")
+        
+        // Ensure weather question exists before fetching
+        print("[AddressSuggestionService] Ensuring weather question exists in notes store")
+        await weatherCoordinator.ensureWeatherQuestionExists()
+        
+        // Add a small delay to ensure notes are saved
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        
+        print("[AddressSuggestionService] Initiating weather fetch")
         do {
             let weather = try await weatherCoordinator.fetchWeather(for: address)
-            print("[WeatherKit] Weather fetch result: Success - \(weather.condition)")
-            print("[WeatherKit] Temperature: \(weather.temperature.value)°\(weather.temperature.unit)")
+            print("[AddressSuggestionService] ✅ Weather fetch successful")
+            print("[AddressSuggestionService] Condition: \(weather.condition)")
+            print("[AddressSuggestionService] Temperature: \(weather.temperature.value)°\(weather.temperature.unit)")
+            print("[AddressSuggestionService] Humidity: \(Int(weather.humidity * 100))%")
+            print("[AddressSuggestionService] Wind: \(Int(weather.windSpeed)) km/h")
         } catch {
-            print("[WeatherKit] Weather fetch failed: \(error)")
+            print("[AddressSuggestionService] ❌ Weather fetch failed")
+            print("[AddressSuggestionService] Error type: \(type(of: error))")
+            print("[AddressSuggestionService] Error: \(error)")
             
+            // Log specific error details
+            if let weatherError = error as? WeatherError {
+                switch weatherError {
+                case .sandboxRestriction:
+                    print("[AddressSuggestionService] ⚠️ WeatherKit configuration issue detected")
+                    print("[AddressSuggestionService] Check: 1) Bundle ID matches provisioning profile")
+                    print("[AddressSuggestionService] Check: 2) WeatherKit capability is enabled in App ID")
+                    print("[AddressSuggestionService] Check: 3) Provisioning profile includes WeatherKit")
+                case .invalidLocation:
+                    print("[AddressSuggestionService] ⚠️ Invalid location coordinates")
+                case .networkError(let underlyingError):
+                    print("[AddressSuggestionService] ⚠️ Network error: \(underlyingError)")
+                }
+            }
         }
     }
     

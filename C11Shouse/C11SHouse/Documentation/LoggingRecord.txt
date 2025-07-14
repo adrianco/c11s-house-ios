@@ -1,62 +1,58 @@
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
 Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: ECCAA2E0-1F0D-46D8-B76C-B9E9435E7273
+🚀 ONBOARDING SESSION STARTED - ID: F0BDC929-7BBD-4C65-B4D0-32742B091ECE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 PHASE TRANSITION: Start → welcome
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 👆 USER ACTION: view_appeared in welcome
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 👆 USER ACTION: button_tap in welcome
    Details: button: begin_setup
-Completed onboarding phase: Welcome in 5 seconds
+Completed onboarding phase: Welcome in 7 seconds
 Started onboarding phase: Setup
 📍 PHASE TRANSITION: Welcome → Setup
+Completed onboarding phase: Setup in 6 seconds
+Started onboarding phase: Complete Setup
+⏱️ Phase 'Setup' completed in 6.7s
+📍 PHASE TRANSITION: Setup → Complete Setup
+👆 USER ACTION: view_completion_screen in completion
 [AddressManager] Stored detected address (not marked as answered): 14450 Roland Canyon Rd, Salinas, CA 93908
 🔄 SERVICE CALL: address_detection - ✅ SUCCESS
 ✨ FEATURE USED: auto_address_detection in permissions
-   Details: address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55591740761794, longitude: -121.71797759244805))
-Completed onboarding phase: Setup in 8 seconds
-Started onboarding phase: Complete Setup
-⏱️ Phase 'Setup' completed in 8.8s
-📍 PHASE TRANSITION: Setup → Complete Setup
-👆 USER ACTION: view_completion_screen in completion
-Completed onboarding phase: Complete Setup in 11 seconds
-Onboarding completed in 25 seconds
+   Details: address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55587504257951, longitude: -121.717915417171))
+Completed onboarding phase: Complete Setup in 6 seconds
+Onboarding completed in 20 seconds
 👆 USER ACTION: onboarding_complete in Complete Setup
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏁 ONBOARDING SESSION ENDED - ID: ECCAA2E0-1F0D-46D8-B76C-B9E9435E7273
+🏁 ONBOARDING SESSION ENDED - ID: F0BDC929-7BBD-4C65-B4D0-32742B091ECE
 Status: ✅ COMPLETED
-Total Duration: 25.2s
+Total Duration: 21.0s
 
 ╔════════════════════════════════════════════════════════════════╗
 ║                    ONBOARDING SESSION SUMMARY                   ║
 ╠════════════════════════════════════════════════════════════════╣
-║ Session ID: ECCAA2E0-1F0D-46D8-B76C-B9E9435E7273
-║ Start Time: 7/14/25, 12:24:26 PM
-║ Total Duration: 25.2s
+║ Session ID: F0BDC929-7BBD-4C65-B4D0-32742B091ECE
+║ Start Time: 7/14/25, 1:06:49 PM
+║ Total Duration: 21.0s
 ║ Phases Completed: 1
 ╠════════════════════════════════════════════════════════════════╣
 ║                         PHASE TIMINGS                           ║
 ╠════════════════════════════════════════════════════════════════╣
-║ Setup                │ 8.8s            ║
+║ Setup                │ 6.7s            ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                         USER ACTIONS                            ║
 ╠════════════════════════════════════════════════════════════════╣
 ║ phase_started                  │ 3     ║
+║ view_appeared                  │ 1     ║
+║ onboarding_complete            │ 1     ║
+║ view_completion_screen         │ 1     ║
 ║ button_tap                     │ 1     ║
 ║ service_call                   │ 1     ║
 ║ feature_auto_address_detection │ 1     ║
-║ view_completion_screen         │ 1     ║
-║ view_appeared                  │ 1     ║
-║ onboarding_complete            │ 1     ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                        FEATURE USAGE                            ║
 ╠════════════════════════════════════════════════════════════════╣
@@ -65,18 +61,18 @@ Total Duration: 25.2s
 
 === COPYABLE ONBOARDING LOG ===
 
-ONBOARDING ACTION LOG - Session: ECCAA2E0-1F0D-46D8-B76C-B9E9435E7273
+ONBOARDING ACTION LOG - Session: F0BDC929-7BBD-4C65-B4D0-32742B091ECE
 ============================================================
 
-[7/14/25, 12:24:26 PM] welcome - phase_started - previous_phase: none
-[7/14/25, 12:24:26 PM] welcome - view_appeared
-[7/14/25, 12:24:31 PM] welcome - button_tap - button: begin_setup
-[7/14/25, 12:24:31 PM] Setup - phase_started - previous_phase: Welcome
-[7/14/25, 12:24:38 PM] permissions - service_call - service: address_detection, success: true, duration: 272.03ms
-[7/14/25, 12:24:39 PM] permissions - feature_auto_address_detection - address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55591740761794, longitude: -121.71797759244805))
-[7/14/25, 12:24:40 PM] Complete Setup - phase_started - previous_phase: Setup
-[7/14/25, 12:24:40 PM] completion - view_completion_screen
-[7/14/25, 12:24:51 PM] Complete Setup - onboarding_complete
+[7/14/25, 1:06:49 PM] welcome - phase_started - previous_phase: none
+[7/14/25, 1:06:49 PM] welcome - view_appeared
+[7/14/25, 1:06:57 PM] welcome - button_tap - button: begin_setup
+[7/14/25, 1:06:57 PM] Setup - phase_started - previous_phase: Welcome
+[7/14/25, 1:07:04 PM] Complete Setup - phase_started - previous_phase: Setup
+[7/14/25, 1:07:04 PM] completion - view_completion_screen
+[7/14/25, 1:07:05 PM] permissions - service_call - success: true, service: address_detection, duration: 3.5s
+[7/14/25, 1:07:05 PM] permissions - feature_auto_address_detection - address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55587504257951, longitude: -121.717915417171))
+[7/14/25, 1:07:10 PM] Complete Setup - onboarding_complete
 
 
 === END OF LOG ===
@@ -98,663 +94,124 @@ ONBOARDING ACTION LOG - Session: ECCAA2E0-1F0D-46D8-B76C-B9E9435E7273
 [ConversationView] Questions still pending, current: Is this the right address?
 [QuestionFlowCoordinator] Found stored detected address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] Formatted address question with detected address
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
           IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
 [ConversationView] processUserInput: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ConversationView] Answering question: Is this the right address?
 [QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
 [QuestionFlowCoordinator] Answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] Loaded notes store with 4 questions
 [QuestionFlowCoordinator] Questions needing review: 3
 [QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] Answer saved successfully
 [QuestionFlowCoordinator] Processing address answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] User confirmed address, now saving as answered
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
 [AddressManager] User confirmed address, now saving as answered: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] Triggering weather fetch for confirmed address
 [WeatherKit] Initializing weather service for address: 14450 Roland Canyon Rd, Salinas, CA 93908
-[WeatherKit] Weather fetch started at: 2025-07-14 19:25:11 +0000
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
+[WeatherKit] Weather fetch started at: 2025-07-14 20:07:20 +0000
 Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
-Encountered an error when fetching weather data subset; location=<+36.55591741,-121.71797759> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/14/25, 12:25:11 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+Encountered an error when fetching weather data subset; location=<+36.55587504,-121.71791542> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/14/25, 1:07:20 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
 WeatherKit Error Details:
 - Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-Encountered an error when fetching weather data subset; location=<+36.55591741,-121.71797759> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/14/25, 12:25:11 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+Encountered an error when fetching weather data subset; location=<+36.55587504,-121.71791542> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/14/25, 1:07:20 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
 WeatherKit Error Details:
 - Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
 - Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
-- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
-- Code: 0
 - Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
 - Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
 - Code: 0
-Failed to update weather note: questionNotFound(CB0FB32B-2F40-403F-8F8C-AA0B7B4120B1)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+Failed to update weather note: questionNotFound(1B934056-7A4F-4655-9136-6CBC8F4D2067)
 [WeatherKit] Weather fetch failed: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Loading next question...
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 3
 [QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [ConversationView] After loading, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [ConversationView] processUserInput: 'Roland House'
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [ConversationView] Answering question: What should I call this house?
 [QuestionFlowCoordinator] Saving answer for question: 'What should I call this house?'
 [QuestionFlowCoordinator] Answer: 'Roland House'
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 2
 [QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Answer saved successfully
 [QuestionFlowCoordinator] Saving house name
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Loading next question...
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 2
 [QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [ConversationView] After loading, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Question with suggestion detected: Is this the right address?
-
-14450 Roland Canyon Rd...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: Is this the right address?, Answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 fopen failed for data file: errno = 2 (No such file or directory)
 Errors found! Invalidating cache...
 Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
-App is being debugged, do not track this hang
-Hang detected: 0.37s (debugger attached, not reporting)
 fopen failed for data file: errno = 2 (No such file or directory)
 Errors found! Invalidating cache...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
+App is being debugged, do not track this hang
+Hang detected: 0.32s (debugger attached, not reporting)
 Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
-<0x103619680> Gesture: System gesture gate timed out.
+<0x101e6d680> Gesture: System gesture gate timed out.
 App is being debugged, do not track this hang
-Hang detected: 1.34s (debugger attached, not reporting)
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-App is being debugged, do not track this hang
-Hang detected: 0.77s (debugger attached, not reporting)
+Hang detected: 0.71s (debugger attached, not reporting)
 [ConversationView] processUserInput: 'Adrian'
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [ConversationView] Answering question: What's your name?
 [QuestionFlowCoordinator] Saving answer for question: 'What's your name?'
 [QuestionFlowCoordinator] Answer: 'Adrian'
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 1
 [QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Answer saved successfully
 [QuestionFlowCoordinator] Updating user name
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Loading next question...
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 1
 [QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
 [ConversationView] After loading, hasCompletedAllQuestions: false
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Question with suggestion detected: What should I call this house?
-
-Roland House...
-[ConversationView] Using SuggestedAnswerQuestionView - Question: What should I call this house?, Answer: Roland House
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationView] processUserInput: 'Studio'
+[ConversationView] Answering question: Let's start by creating your first room note! What room would you like to add a note about?
+[ConversationView] This is the Phase 4 intro question, handling specially
+[QuestionFlowCoordinator] Saving answer for question: 'Let's start by creating your first room note! What room would you like to add a note about?'
+[QuestionFlowCoordinator] Answer: 'Studio'
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 0
+[QuestionFlowCoordinator] No more questions to ask
+[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
+[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
+[QuestionFlowCoordinator] Answer saved successfully
+Failed to get remote object proxy for: com.apple.weatherkit.authservice with error: Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.}
+Encountered an error when fetching weather data subset; location=<+36.55587504,-121.71791542> +/- 0.00m (speed -1.00 mps / course -1.00) @ 7/14/25, 1:07:51 PM Pacific Daylight Time, error=WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors 0 WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors.xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+WeatherKit Error Details:
+- Error: xpcConnectionFailed(Error Domain=NSCocoaErrorDomain Code=4099 "The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction." UserInfo={NSDebugDescription=The connection to service named com.apple.weatherkit.authservice was invalidated: failed at lookup with error 159 - Sandbox restriction.})
+- Localized: The operation couldn’t be completed. (WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors error 0.)
+- Domain: WeatherDaemon.WDSJWTAuthenticatorServiceProxy.Errors
+- Code: 0
+App is being debugged, do not track this hang
+Hang detected: 0.26s (debugger attached, not reporting)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationView] processUserInput: 'It's where the music stuff is'
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationView] processUserInput: 'Room note'
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationView] processUserInput: 'Create a note about the room'
 Message from debugger: killed
