@@ -176,7 +176,6 @@ class ConversationViewUITests: XCTestCase {
         XCTAssertTrue(micButton.exists, "Microphone button should exist")
         
         // The live transcript area should be ready
-        let transcriptArea = app.otherElements.matching(identifier: "voice-transcript-area")
         // This would show the live transcript during recording
     }
     
