@@ -187,6 +187,8 @@ class AddressSuggestionService {
                     print("[AddressSuggestionService] ⚠️ Invalid location coordinates")
                 case .networkError(let underlyingError):
                     print("[AddressSuggestionService] ⚠️ Network error: \(underlyingError)")
+                case .weatherKitUnavailable:
+                    print("[AddressSuggestionService] ⚠️ WeatherKit service is currently unavailable")
                 }
             }
         }
