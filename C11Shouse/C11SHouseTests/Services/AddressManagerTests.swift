@@ -67,7 +67,7 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCallCount += 1
         if shouldThrowLocationError {
-            throw LocationError.locationServicesDisabled
+            throw LocationError.notAuthorized
         }
         return mockLocation ?? CLLocation(latitude: 37.7749, longitude: -122.4194)
     }
@@ -75,7 +75,7 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     func lookupAddress(for location: CLLocation) async throws -> Address {
         lookupAddressCallCount += 1
         if shouldThrowLookupError {
-            throw LocationError.geocodingFailed(NSError(domain: "test", code: 1))
+            throw LocationError.geocodingFailed
         }
         return mockAddress ?? Address(
             street: "1 Market Street",
@@ -132,7 +132,7 @@ class AddressManagerTests: XCTestCase {
             state: "NY",
             postalCode: "10007",
             country: "USA",
-            coordinate: expectedLocation.coordinate
+            coordinate: Coordinate(latitude: expectedLocation.coordinate.latitude, longitude: expectedLocation.coordinate.longitude)
         )
         
         // When: Detecting current address
@@ -256,7 +256,7 @@ class AddressManagerTests: XCTestCase {
             state: "OR",
             postalCode: "97201",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
+            coordinate: Coordinate(latitude: 45.5152, longitude: -122.6784)
         )
         
         // When: Parsing new address text
@@ -268,8 +268,8 @@ class AddressManagerTests: XCTestCase {
         XCTAssertEqual(parsed?.city, "Seattle")
         XCTAssertEqual(parsed?.state, "WA")
         XCTAssertEqual(parsed?.postalCode, "98101")
-        XCTAssertEqual(parsed?.coordinate.latitude, 45.5152, accuracy: 0.0001)
-        XCTAssertEqual(parsed?.coordinate.longitude, -122.6784, accuracy: 0.0001)
+        XCTAssertEqual(parsed?.coordinate.latitude ?? 0, 45.5152, accuracy: 0.0001)
+        XCTAssertEqual(parsed?.coordinate.longitude ?? 0, -122.6784, accuracy: 0.0001)
     }
     
     func testParseAddressWithoutDetectedCoordinates() {
@@ -333,7 +333,7 @@ class AddressManagerTests: XCTestCase {
             state: "IL",
             postalCode: "60601",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 41.8781, longitude: -87.6298)
+            coordinate: Coordinate(latitude: 41.8781, longitude: -87.6298)
         )
         
         // When: Saving address
@@ -370,7 +370,7 @@ class AddressManagerTests: XCTestCase {
             state: "OR",
             postalCode: "97201",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
+            coordinate: Coordinate(latitude: 45.5152, longitude: -122.6784)
         )
         
         // When: Saving address
@@ -405,7 +405,7 @@ class AddressManagerTests: XCTestCase {
             state: "WA",
             postalCode: "98101",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
+            coordinate: Coordinate(latitude: 47.6062, longitude: -122.3321)
         )
         
         // When: Saving address
@@ -430,7 +430,7 @@ class AddressManagerTests: XCTestCase {
             state: "MA",
             postalCode: "02101",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589)
+            coordinate: Coordinate(latitude: 42.3601, longitude: -71.0589)
         )
         let encodedData = try! JSONEncoder().encode(savedAddress)
         UserDefaults.standard.set(encodedData, forKey: "confirmedHomeAddress")
@@ -442,7 +442,7 @@ class AddressManagerTests: XCTestCase {
         XCTAssertNotNil(loaded)
         XCTAssertEqual(loaded?.street, "321 Saved Street")
         XCTAssertEqual(loaded?.city, "Boston")
-        XCTAssertEqual(loaded?.coordinate.latitude, 42.3601, accuracy: 0.0001)
+        XCTAssertEqual(loaded?.coordinate.latitude ?? 0, 42.3601, accuracy: 0.0001)
     }
     
     func testLoadSavedAddressWhenNotExists() {
@@ -478,7 +478,7 @@ class AddressManagerTests: XCTestCase {
             state: "ER",
             postalCode: "00000",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            coordinate: Coordinate(latitude: 0, longitude: 0)
         )
         
         // When: Saving address to notes
