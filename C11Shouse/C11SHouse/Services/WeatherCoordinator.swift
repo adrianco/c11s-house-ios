@@ -193,6 +193,9 @@ class WeatherCoordinator: ObservableObject {
             case .networkError(let underlyingError):
                 errorType = "Network Error"
                 errorDetails = underlyingError.localizedDescription
+            case .weatherKitUnavailable:
+                errorType = "WeatherKit Unavailable"
+                errorDetails = "The weather service is temporarily unavailable. Please try again later."
             }
         } else if (error as NSError).domain.contains("weatherkit") {
             errorType = "WeatherKit Error"

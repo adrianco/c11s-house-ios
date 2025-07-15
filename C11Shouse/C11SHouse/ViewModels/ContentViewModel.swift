@@ -331,14 +331,14 @@ class ContentViewModel: ObservableObject {
             }
         }
         
-        let thought = HouseThought(
+        let houseThought = HouseThought(
             thought: finalThought,
             emotion: emotion,
             category: .observation,
             confidence: 1.0 - intensity, // Higher intensity = lower confidence
             context: "Weather observation"
         )
-        appState.updateHouseEmotion(thought)
+        appState.updateHouseEmotion(houseThought)
     }
     
     private func updateHouseEmotionForError() {
