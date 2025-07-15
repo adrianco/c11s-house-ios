@@ -17,7 +17,7 @@
 
 import XCTest
 import SwiftUI
-import ViewInspector
+// import ViewInspector // TODO: Add ViewInspector dependency to project
 @testable import C11SHouse
 
 class ErrorViewTests: XCTestCase {
