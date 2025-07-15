@@ -49,6 +49,9 @@ class ConversationFlowIntegrationTests: XCTestCase {
         locationServiceMock = MockLocationService()
         weatherServiceMock = MockWeatherKitService()
         
+        // Set up MockLocationService with proper authorization
+        locationServiceMock.authorizationStatus = .authorizedWhenInUse
+        
         // Wait for NotesService to fully initialize with predefined questions
         // This ensures that the service has loaded/created the predefined questions
         _ = try await notesService.loadNotesStore()

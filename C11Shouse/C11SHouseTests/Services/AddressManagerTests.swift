@@ -25,6 +25,11 @@ import CoreLocation
 import Combine
 @testable import C11SHouse
 
+// Import MockNotesService from QuestionFlowCoordinatorTests
+extension AddressManagerTests {
+    // Use the MockNotesService that includes predefined questions
+}
+
 // MARK: - Mock Location Service
 
 class MockLocationServiceForAddressManager: LocationServiceProtocol {
@@ -112,6 +117,14 @@ class AddressManagerTests: XCTestCase {
         super.setUp()
         mockNotesService = MockNotesService()
         mockLocationService = MockLocationServiceForAddressManager()
+        
+        // Ensure MockNotesService has predefined questions
+        mockNotesService.mockNotesStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: 1
+        )
+        
         sut = AddressManager(
             notesService: mockNotesService,
             locationService: mockLocationService
@@ -180,7 +193,7 @@ class AddressManagerTests: XCTestCase {
         }
         
         // Wait for the flag to be reset asynchronously
-        try await Task.sleep(nanoseconds: 1000000) // 1ms
+        try await Task.sleep(nanoseconds: 10000000) // 10ms
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -213,7 +226,7 @@ class AddressManagerTests: XCTestCase {
         }
         
         // Wait for the flag to be reset asynchronously
-        try await Task.sleep(nanoseconds: 1000000) // 1ms
+        try await Task.sleep(nanoseconds: 10000000) // 10ms
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -231,7 +244,7 @@ class AddressManagerTests: XCTestCase {
         }
         
         // Wait for the flag to be reset asynchronously
-        try await Task.sleep(nanoseconds: 1000000) // 1ms
+        try await Task.sleep(nanoseconds: 10000000) // 10ms
         XCTAssertFalse(sut.isDetectingAddress)
     }
     

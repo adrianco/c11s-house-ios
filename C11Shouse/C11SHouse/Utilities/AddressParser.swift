@@ -136,7 +136,7 @@ enum AddressParser {
         
         // Remove street suffixes from the end only (greedy match from right to left)
         // This handles cases like "Court Street" -> "Court" and "Park Place" -> "Park"
-        let suffixPattern = #"\s+(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy|Plaza)\.?\s*$"#
+        let suffixPattern = #"\s*\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy|Plaza)\.?\s*$"#
         cleanedStreet = cleanedStreet.replacingOccurrences(of: suffixPattern, with: "", options: [.regularExpression, .caseInsensitive])
         
         return cleanedStreet.trimmingCharacters(in: .whitespacesAndNewlines)
