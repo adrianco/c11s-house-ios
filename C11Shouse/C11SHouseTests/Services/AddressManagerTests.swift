@@ -128,7 +128,6 @@ class AddressManagerTests: XCTestCase {
         // Explicitly reset error flags and call counts to ensure clean state
         mockNotesService.shouldThrowError = false
         mockNotesService.errorToThrow = nil
-        mockNotesService.saveOrUpdateNoteCallCount = 0
         mockNotesService.saveNoteCallCount = 0
         
         sut = AddressManager(
@@ -524,6 +523,32 @@ class AddressManagerTests: XCTestCase {
     
     // MARK: - saveAddressToNotes Tests
     
+    func testSaveAddressToNotesBasicFunctionality() async {
+        // Given: A valid address
+        let address = Address(
+            street: "123 Test Street",
+            city: "Test City",
+            state: "TC",
+            postalCode: "12345",
+            country: "USA",
+            coordinate: Coordinate(latitude: 40.7128, longitude: -74.0060)
+        )
+        
+        // When: Saving address to notes
+        await sut.saveAddressToNotes(address)
+        
+        // Then: Should call saveNote for both address and house name
+        print("Debug test: saveNoteCallCount = \(mockNotesService.saveNoteCallCount)")
+        print("Debug test: mockNotesService instance = \(ObjectIdentifier(mockNotesService))")
+        
+        // Check that notes were actually saved
+        let notesStore = try await mockNotesService.loadNotesStore()
+        print("Debug test: notes count = \(notesStore.notes.count)")
+        
+        // Expected: 2 calls (address + house name) - both should be new notes, so saveNote should be called
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote")
+    }
+    
     func testSaveAddressToNotesHandlesError() async {
         // Given: NotesService will fail
         mockNotesService.shouldThrowError = true
@@ -597,7 +622,9 @@ class AddressManagerTests: XCTestCase {
         XCTAssertEqual(houseName, "Universal City House")
         
         // 5. Save the address
+        print("Debug: saveOrUpdateNoteCallCount before saveAddress = \(mockNotesService.saveOrUpdateNoteCallCount)")
         try await sut.saveAddress(parsedAddress!)
+        print("Debug: saveOrUpdateNoteCallCount after saveAddress = \(mockNotesService.saveOrUpdateNoteCallCount)")
         
         // 6. Verify all storage locations updated
         XCTAssertNotNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"))
@@ -616,14 +643,14 @@ class AddressManagerTests: XCTestCase {
         XCTAssertNotNil(houseNameQuestion, "House name question should exist")
         
         // Debug: Print the state of the mock service
-        print("Debug: saveOrUpdateNoteCallCount = \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("Debug: saveNoteCallCount = \(mockNotesService.saveNoteCallCount)")
         print("Debug: shouldThrowError = \(mockNotesService.shouldThrowError)")
         print("Debug: questions count = \(notesStore.questions.count)")
         print("Debug: notes count = \(notesStore.notes.count)")
         
         // We expect 2 calls: one for address, one for house name (if house name not already answered)
-        // But since the house name question starts with no answer, it should be saved
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2, "Expected 2 calls to saveOrUpdateNote (address + house name)") // Address + house name
+        // Since the house name question starts with no answer, both should be saved using saveNote
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote (address + house name)")
         
         // 7. Load saved address
         let loadedAddress = sut.loadSavedAddress()

@@ -44,7 +44,6 @@ class MockNotesService: NotesServiceProtocol {
     
     var mockNotesStore: NotesStoreData
     var saveNoteCallCount = 0
-    var saveOrUpdateNoteCallCount = 0
     var shouldThrowError = false
     var errorToThrow: Error?
     
@@ -64,15 +63,18 @@ class MockNotesService: NotesServiceProtocol {
     }
     
     func saveNote(_ note: Note) async throws {
+        print("[MockNotesService] saveNote called with questionId: \(note.questionId), answer: \(note.answer)")
         if shouldThrowError {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         saveNoteCallCount += 1
+        print("[MockNotesService] Incremented saveNoteCallCount to: \(saveNoteCallCount)")
         mockNotesStore.notes[note.questionId] = note
         notesStoreSubject.send(mockNotesStore)
     }
     
     func updateNote(_ note: Note) async throws {
+        print("[MockNotesService] updateNote called with questionId: \(note.questionId), answer: \(note.answer)")
         guard mockNotesStore.notes[note.questionId] != nil else {
             throw NotesError.noteNotFound(note.questionId)
         }
@@ -85,15 +87,9 @@ class MockNotesService: NotesServiceProtocol {
         notesStoreSubject.send(mockNotesStore)
     }
     
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]?) async throws {
-        if shouldThrowError {
-            throw errorToThrow ?? NSError(domain: "test", code: 1)
-        }
-        saveOrUpdateNoteCallCount += 1
-        let note = Note(questionId: questionId, answer: answer, metadata: metadata)
-        mockNotesStore.notes[questionId] = note
-        notesStoreSubject.send(mockNotesStore)
-    }
+    // Note: saveOrUpdateNote is implemented as an extension method on NotesServiceProtocol
+    // It will call our saveNote or updateNote methods based on whether the note exists
+    // So we don't need to override it here - the default implementation will work correctly
     
     func getNote(for questionId: UUID) async throws -> Note? {
         return mockNotesStore.notes[questionId]
