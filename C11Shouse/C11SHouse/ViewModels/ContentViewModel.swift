@@ -136,10 +136,10 @@ class ContentViewModel: ObservableObject {
             .sink { [weak self] weather in
                 guard let self = self else { return }
                 
-                // Update weather in AppState
-                if weather != nil {
-                    self.appState.updateWeatherState(weather: weather, isLoading: false)
-                }
+                print("[ContentViewModel] Weather update received: \(weather?.condition.rawValue ?? "nil")")
+                
+                // Update weather in AppState (always update, even if nil)
+                self.appState.updateWeatherState(weather: weather, isLoading: false)
                 
                 // Only update weather-based emotions if setup is complete
                 Task {

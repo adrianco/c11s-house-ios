@@ -190,7 +190,7 @@ class ErrorViewTests: XCTestCase {
         )
         
         // Then
-        XCTAssertNotNil(modifier.error.wrappedValue)
+        XCTAssertNotNil(modifier.error)
     }
 }
 

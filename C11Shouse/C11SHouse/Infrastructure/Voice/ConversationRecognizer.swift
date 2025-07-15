@@ -44,7 +44,7 @@ import AVFoundation
 
 /// Speech recognizer optimized for conversational interactions
 @MainActor
-final class ConversationRecognizer: ObservableObject {
+class ConversationRecognizer: ObservableObject {
     
     // MARK: - Published Properties
     @Published var isRecording = false
