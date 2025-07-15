@@ -388,7 +388,7 @@ enum PermissionStatus {
 // MARK: - Permission Manager Mock
 
 class MockPermissionManager: ObservableObject {
-    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = AVAudioSession.RecordPermission.undetermined
     @Published var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
     @Published var allPermissionsGranted: Bool = false
     @Published var permissionError: String?

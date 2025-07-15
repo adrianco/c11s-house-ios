@@ -288,6 +288,7 @@ class MessageFactory {
 class MockViewModelFactory: ViewModelFactory {
     let mockStateManager: ConversationStateManager
     
+    @MainActor
     override init(serviceContainer: ServiceContainer = .shared, appState: AppState = .shared) {
         let mockNotes = SharedMockNotesService()
         let mockTTS = MockTTSService()
@@ -298,6 +299,7 @@ class MockViewModelFactory: ViewModelFactory {
         super.init(serviceContainer: serviceContainer, appState: appState)
     }
     
+    @MainActor
     override func makeConversationStateManager() -> ConversationStateManager {
         return mockStateManager
     }

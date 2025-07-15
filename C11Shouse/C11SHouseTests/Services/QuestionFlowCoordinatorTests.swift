@@ -249,6 +249,7 @@ class MockAddressManager: AddressManager {
         )
     }
     
+    @MainActor
     override func parseAddress(_ addressText: String) -> Address? {
         parseAddressCallCount += 1
         return AddressParser.parseAddress(addressText)
@@ -261,11 +262,13 @@ class MockAddressManager: AddressManager {
         }
     }
     
+    @MainActor
     override func generateHouseName(from addressText: String) -> String {
         generateHouseNameCallCount += 1
         return "Generated House Name"
     }
     
+    @MainActor
     override func loadDetectedAddress() -> Address? {
         return mockDetectedAddress
     }
