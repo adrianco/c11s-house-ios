@@ -315,7 +315,7 @@ class ConversationRecognizer: ObservableObject {
                 
                 if !speechError.isIgnorable {
                     DispatchQueue.main.async {
-                        self.error = SpeechRecognitionError.recognitionError(speechError.localizedDescription ?? error.localizedDescription)
+                        self.error = SpeechRecognitionError.recognitionError(speechError.localizedDescription)
                         if self.isRecording && !self.isTerminating {
                             self.stopRecording()
                         }
