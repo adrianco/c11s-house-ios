@@ -2695,4 +2695,7 @@ spawn a hive-mind to investigate the test code, there are far too many tests, th
   version. Investigate and update the plan.
 
   > implement the bug-fix-plan.md and push updates
-  
+
+> API errors on this message, stopping work for a while
+  look at the latest LoggingRecord.txt and fix the error 1101 message that filled up the log. Check that the questionflowcoordinator is working right, as it wasn't saying some messages 
+  and the sequence needs to wait until its finished speaking before interrupting with a new message.
