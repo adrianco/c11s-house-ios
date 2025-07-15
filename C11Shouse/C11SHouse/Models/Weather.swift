@@ -41,7 +41,7 @@ struct Weather: Codable {
 
 struct Temperature: Codable {
     let value: Double
-    let unit: WeatherKit.UnitTemperature
+    let unit: Foundation.UnitTemperature
     
     var formatted: String {
         let measurement = Measurement(value: value, unit: unit)
@@ -50,7 +50,7 @@ struct Temperature: Codable {
         return formatter.string(from: measurement)
     }
     
-    init(value: Double, unit: WeatherKit.UnitTemperature) {
+    init(value: Double, unit: Foundation.UnitTemperature) {
         self.value = value
         self.unit = unit
     }
