@@ -193,7 +193,14 @@ class AddressManagerTests: XCTestCase {
         }
         
         // Wait for the flag to be reset asynchronously
-        try await Task.sleep(nanoseconds: 10000000) // 10ms
+        let expectation = XCTestExpectation(description: "isDetectingAddress should be false")
+        let cancellable = sut.$isDetectingAddress.sink { isDetecting in
+            if !isDetecting {
+                expectation.fulfill()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+        cancellable.cancel()
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -226,7 +233,14 @@ class AddressManagerTests: XCTestCase {
         }
         
         // Wait for the flag to be reset asynchronously
-        try await Task.sleep(nanoseconds: 10000000) // 10ms
+        let expectation = XCTestExpectation(description: "isDetectingAddress should be false")
+        let cancellable = sut.$isDetectingAddress.sink { isDetecting in
+            if !isDetecting {
+                expectation.fulfill()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+        cancellable.cancel()
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -244,7 +258,14 @@ class AddressManagerTests: XCTestCase {
         }
         
         // Wait for the flag to be reset asynchronously
-        try await Task.sleep(nanoseconds: 10000000) // 10ms
+        let expectation = XCTestExpectation(description: "isDetectingAddress should be false")
+        let cancellable = sut.$isDetectingAddress.sink { isDetecting in
+            if !isDetecting {
+                expectation.fulfill()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+        cancellable.cancel()
         XCTAssertFalse(sut.isDetectingAddress)
     }
     

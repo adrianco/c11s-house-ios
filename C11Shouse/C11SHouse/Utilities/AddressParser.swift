@@ -134,10 +134,23 @@ enum AddressParser {
             // Clean up whitespace
             .trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Remove street suffixes from the end only (greedy match from right to left)
-        // This handles cases like "Court Street" -> "Court" and "Park Place" -> "Park"
-        let suffixPattern = #"\s*\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy|Plaza)\.?\s*$"#
-        cleanedStreet = cleanedStreet.replacingOccurrences(of: suffixPattern, with: "", options: [.regularExpression, .caseInsensitive])
+        // Define all street suffixes
+        let suffixes = ["Street", "St", "Avenue", "Ave", "Road", "Rd", "Boulevard", "Blvd", 
+                       "Lane", "Ln", "Drive", "Dr", "Court", "Ct", "Place", "Pl", "Way", 
+                       "Circle", "Cir", "Terrace", "Ter", "Parkway", "Pkwy", "Plaza"]
+        
+        // Remove suffixes from the end of the string only
+        // We iterate through suffixes to handle cases like "Court Street" -> "Court"
+        for suffix in suffixes {
+            let patterns = [
+                #"\s+"# + NSRegularExpression.escapedPattern(for: suffix) + #"\.?\s*$"#, // " Street." or " Street"
+                #"\s+"# + NSRegularExpression.escapedPattern(for: suffix) + #"\s*$"#      // " Street"
+            ]
+            
+            for pattern in patterns {
+                cleanedStreet = cleanedStreet.replacingOccurrences(of: pattern, with: "", options: [.regularExpression, .caseInsensitive])
+            }
+        }
         
         return cleanedStreet.trimmingCharacters(in: .whitespacesAndNewlines)
     }

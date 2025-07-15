@@ -49,7 +49,7 @@ class InitialSetupFlowTests: XCTestCase {
         ttsMock = MockTTSService()
         
         // Set up MockLocationService with proper authorization
-        locationServiceMock.authorizationStatus = .authorizedWhenInUse
+        locationServiceMock.setAuthorizationStatus(.authorizedWhenInUse)
         
         // Wait for NotesService to fully initialize with predefined questions
         _ = try await notesService.loadNotesStore()
