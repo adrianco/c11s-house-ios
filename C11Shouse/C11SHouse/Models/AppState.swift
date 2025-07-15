@@ -186,10 +186,17 @@ class AppState: ObservableObject {
     // MARK: - State Updates
     
     /// Update weather-related state
-    func updateWeatherState(weather: Weather? = nil, isLoading: Bool = false, error: Error? = nil) {
-        currentWeather = weather
-        isLoadingWeather = isLoading
-        weatherError = error
+    func updateWeatherState(weather: Weather? = nil, isLoading: Bool? = nil, error: Error? = nil) {
+        // Only update non-nil values to avoid clearing existing state
+        if weather != nil {
+            currentWeather = weather
+        }
+        if let isLoading = isLoading {
+            isLoadingWeather = isLoading
+        }
+        if error != nil {
+            weatherError = error
+        }
     }
     
     /// Update house emotion based on current conditions
