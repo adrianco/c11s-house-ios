@@ -44,7 +44,7 @@ class NotesServiceTests: XCTestCase {
     override func tearDown() {
         cancellables = nil
         sut = nil
-        mockUserDefaults.removePersistentDomain(forName: mockUserDefaults.suiteName!)
+        mockUserDefaults.removePersistentDomain(forName: "test")
         mockUserDefaults = nil
         super.tearDown()
     }
@@ -500,23 +500,25 @@ class NotesServiceTests: XCTestCase {
     func testSaveWeatherSummary() async throws {
         // Given: Weather data
         let weather = Weather(
-            temperature: Measurement(value: 72, unit: .fahrenheit),
-            feelsLike: Measurement(value: 70, unit: .fahrenheit),
+            temperature: Temperature(value: 72, unit: .fahrenheit),
             condition: .clear,
             humidity: 0.65,
             windSpeed: 5.5,
+            feelsLike: Temperature(value: 70, unit: .fahrenheit),
             uvIndex: 7,
             pressure: 1013.25,
             visibility: 10000,
+            dewPoint: 65.0,
             forecast: [
                 DailyForecast(
                     date: Date(),
-                    highTemperature: Measurement(value: 75, unit: .fahrenheit),
-                    lowTemperature: Measurement(value: 60, unit: .fahrenheit),
+                    highTemperature: Temperature(value: 75, unit: .fahrenheit),
+                    lowTemperature: Temperature(value: 60, unit: .fahrenheit),
                     precipitationChance: 0.1,
                     condition: .clear
                 )
             ],
+            hourlyForecast: [],
             lastUpdated: Date()
         )
         
@@ -664,14 +666,14 @@ class NotesServiceTests: XCTestCase {
         try await sut.saveNote(note)
         
         // When: Getting by question text
-        let retrievedNote = await sut.getNote(forQuestionText: question.text)
+        let retrievedNote = await sut.getNote(for: question.id)
         
         // Then: Should find the note
         XCTAssertNotNil(retrievedNote)
         XCTAssertEqual(retrievedNote?.answer, "Test answer")
         
         // When: Non-existent question text
-        let nonExistent = await sut.getNote(forQuestionText: "Non-existent question")
+        let nonExistent = await sut.getNote(for: "Non-existent question")
         XCTAssertNil(nonExistent)
     }
     
