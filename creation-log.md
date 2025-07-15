@@ -2699,3 +2699,30 @@ spawn a hive-mind to investigate the test code, there are far too many tests, th
 > API errors on this message, stopping work for a while
   look at the latest LoggingRecord.txt and fix the error 1101 message that filled up the log. Check that the questionflowcoordinator is working right, as it wasn't saying some messages 
   and the sequence needs to wait until its finished speaking before interrupting with a new message.
+
+ npx claude-flow@alpha hive-mind spawn "code is functional but messy, log of latest code running is in C11SHouse/Documentation/LoggingRecord.txt, do a detailed code review and cleanup, along the lines of the previous work recorded in plans/code-review.md, update that file with the current state, findings and work needed as you go. Us
+e plans/user-interface/OnboardingUXPlan.md as the master guide to how this is supposed to work, and don't change current view layout yet. We will add more functionality once the code is clean
+ed up" --claude
+
+ The updated plan now focuses on:
+
+  Priority 1: Code Quality Improvements
+
+  1. Refactoring ConversationView - Breaking down the 700+ line file into smaller, manageable components
+  2. Consolidating Question Management - Ensuring clean separation between chat and Q&A
+  3. Improving Error Handling - Creating consistent error handling throughout the app
+  4. Removing Unused Code - Deciding on Phase4TutorialView (700 lines of unused code)
+
+  Priority 2: Architectural Enhancements
+
+  1. State Management - Creating centralized state management
+  2. Configuration Management - Extracting magic numbers and strings
+  3. Performance Optimizations - Lazy loading and reducing re-renders
+  4. Testing Infrastructure - Adding comprehensive tests
+
+  The implementation strategy suggests this will take about 4-6 days, with the ConversationView refactoring being the highest priority as it will have the biggest impact on
+  maintainability.
+
+  Would you like me to start implementing any of these improvements, beginning with breaking down ConversationView into smaller components?
+
+> spawn 5 agents to implement these improvements

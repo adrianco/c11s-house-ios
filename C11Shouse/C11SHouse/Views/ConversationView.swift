@@ -12,6 +12,11 @@
  *   - Text input when muted
  *   - Auto-scroll to latest message
  *   - Message timestamps
+ * - 2025-07-15: Refactored into smaller components
+ *   - Extracted MessageListView for message display
+ *   - Extracted ChatInputView for input handling
+ *   - Extracted MessageBubbleView for individual messages
+ *   - Created ConversationViewModel for business logic
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -25,16 +30,15 @@ struct ConversationView: View {
     @StateObject private var recognizer = ConversationRecognizer()
     @StateObject private var stateManager: ConversationStateManager
     @StateObject private var questionFlow: QuestionFlowCoordinator
+    @StateObject private var viewModel: ConversationViewModel
     @EnvironmentObject private var serviceContainer: ServiceContainer
     @Environment(\.presentationMode) var presentationMode
     
     @State private var inputText = ""
     @State private var isMuted = false
-    @State private var isProcessing = false
     @State private var scrollToBottom = false
     @State private var pendingVoiceText = ""
     @State private var showVoiceConfirmation = false
-    @State private var houseName = "House Chat"
     @FocusState private var isTextFieldFocused: Bool
     
     init() {
@@ -46,6 +50,21 @@ struct ConversationView: View {
         ServiceContainer.shared.questionFlowCoordinator.conversationStateManager = conversationStateManager
         ServiceContainer.shared.questionFlowCoordinator.addressManager = ServiceContainer.shared.addressManager
         ServiceContainer.shared.questionFlowCoordinator.serviceContainer = ServiceContainer.shared
+        
+        // Create view model
+        let messageStore = MessageStore()
+        let recognizer = ConversationRecognizer()
+        _messageStore = StateObject(wrappedValue: messageStore)
+        _recognizer = StateObject(wrappedValue: recognizer)
+        
+        let viewModel = ConversationViewModel(
+            messageStore: messageStore,
+            stateManager: conversationStateManager,
+            questionFlow: ServiceContainer.shared.questionFlowCoordinator,
+            recognizer: recognizer,
+            serviceContainer: ServiceContainer.shared
+        )
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -75,7 +94,7 @@ struct ConversationView: View {
                 
                 Spacer()
                 
-                Text(houseName)
+                Text(viewModel.houseName)
                     .font(.title2)
                     .fontWeight(.bold)
                 
@@ -104,158 +123,38 @@ struct ConversationView: View {
             .shadow(radius: 1)
             
             // Messages list
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 12) {
-                        ForEach(messageStore.messages) { message in
-                            MessageBubble(message: message) { editedAddress in
-                                // Handle address submission
-                                handleAddressSubmission(editedAddress)
-                            }
-                            .id(message.id)
-                        }
-                        
-                        // Invisible anchor for scrolling with extra padding
-                        Color.clear
-                            .frame(height: 60) // Increased height to ensure messages clear the input area
-                            .id("bottom")
-                    }
-                    .padding()
-                    .padding(.bottom, 20) // Extra bottom padding
-                }
-                .onChange(of: messageStore.messages.count) { _, _ in
-                    // Delay slightly to ensure message is rendered
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
-                    }
-                }
-                .onChange(of: scrollToBottom) { _, shouldScroll in
-                    if shouldScroll {
-                        withAnimation {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
-                        scrollToBottom = false
-                    }
-                }
-            }
+            MessageListView(
+                messageStore: messageStore,
+                scrollToBottom: $scrollToBottom,
+                onAddressSubmit: handleAddressSubmission
+            )
             
             // Input area
-            VStack(spacing: 0) {
-                if let error = recognizer.error {
-                    Text(error.localizedDescription)
-                        .font(.caption)
-                        .foregroundColor(.red)
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                }
-                
-                HStack(spacing: 12) {
-                    if isMuted {
-                        // Text input field
-                        TextField("Type a message...", text: $inputText)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .focused($isTextFieldFocused)
-                            .onSubmit {
-                                sendTextMessage()
-                            }
-                        
-                        // Send button
-                        Button(action: sendTextMessage) {
-                            Image(systemName: "arrow.up.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(inputText.isEmpty ? .gray : .blue)
-                        }
-                        .disabled(inputText.isEmpty || isProcessing)
-                    } else {
-                        // Voice input
-                        if showVoiceConfirmation {
-                            // Show editable transcription with label
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Image(systemName: "mic.fill")
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                    Text("Review and edit your message:")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                TextField("Edit your message...", text: $pendingVoiceText)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .focused($isTextFieldFocused)
-                                    .onSubmit {
-                                        confirmVoiceMessage()
-                                    }
-                            }
-                            
-                            HStack(spacing: 12) {
-                                Button(action: {
-                                    showVoiceConfirmation = false
-                                    pendingVoiceText = ""
-                                    recognizer.transcript = ""
-                                    isTextFieldFocused = false
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .font(.title2)
-                                        .foregroundColor(.gray)
-                                }
-                                
-                                Button(action: confirmVoiceMessage) {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .font(.title2)
-                                        .foregroundColor(pendingVoiceText.isEmpty ? .gray : .green)
-                                }
-                                .disabled(pendingVoiceText.isEmpty)
-                            }
-                        } else {
-                            HStack {
-                                // Show live transcript while recording
-                                if recognizer.isRecording && !recognizer.transcript.isEmpty {
-                                    Text(recognizer.transcript)
-                                        .font(.body)
-                                        .foregroundColor(.primary)
-                                        .padding(.horizontal)
-                                        .padding(.vertical, 8)
-                                        .background(Color(UIColor.secondarySystemFill))
-                                        .cornerRadius(12)
-                                        .transition(.opacity)
-                                        .frame(maxWidth: .infinity)
-                                } else {
-                                    Spacer()
-                                }
-                                
-                                VStack(spacing: 4) {
-                                    Button(action: toggleRecording) {
-                                        Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(recognizer.isRecording ? .red : .blue)
-                                    }
-                                    .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
-                                    
-                                    Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                if !recognizer.isRecording || recognizer.transcript.isEmpty {
-                                    Spacer()
-                                }
-                            }
-                        }
-                    }
-                }
-                .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-            }
+            ChatInputView(
+                recognizer: recognizer,
+                inputText: $inputText,
+                isMuted: $isMuted,
+                isProcessing: .constant(viewModel.isProcessing),
+                pendingVoiceText: $pendingVoiceText,
+                showVoiceConfirmation: $showVoiceConfirmation,
+                isTextFieldFocused: _isTextFieldFocused,
+                onSendText: sendTextMessage,
+                onToggleRecording: toggleRecording,
+                onConfirmVoice: confirmVoiceMessage
+            )
         }
         .navigationBarHidden(true)
         .onAppear {
             print("[ConversationView] onAppear called")
             print("[ConversationView] hasCompletedPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial"))")
             print("[ConversationView] isInPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "isInPhase4Tutorial"))")
-            setupView()
+            Task {
+                await viewModel.setupView()
+                // Scroll to bottom after initial setup
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    scrollToBottom = true
+                }
+            }
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
             // Update pending voice text while recording
@@ -396,70 +295,6 @@ struct ConversationView: View {
         }
     }
     
-    private func setupView() {
-        print("[ConversationView] setupView() called")
-        
-        // Set up recognizer reference
-        questionFlow.conversationRecognizer = recognizer
-        
-        // Set up address suggestion service if not already set
-        if questionFlow.addressSuggestionService == nil {
-            questionFlow.addressSuggestionService = ServiceContainer.shared.addressSuggestionService
-        }
-        
-        // Load initial state
-        Task {
-            print("[ConversationView] Loading initial state...")
-            await stateManager.loadUserName()
-            
-            // Load house name
-            if let savedHouseName = await serviceContainer.notesService.getHouseName(),
-               !savedHouseName.isEmpty {
-                houseName = savedHouseName
-                print("[ConversationView] Loaded house name: \(houseName)")
-            } else {
-                print("[ConversationView] No saved house name found")
-            }
-            
-            // Add welcome message if no messages exist
-            if messageStore.messages.isEmpty {
-                print("[ConversationView] Adding welcome message")
-                let welcomeMessage = Message(
-                    content: "Hello! I'm your house consciousness. How can I help you today?",
-                    isFromUser: false,
-                    isVoice: false
-                )
-                messageStore.addMessage(welcomeMessage)
-            } else {
-                print("[ConversationView] Found \(messageStore.messages.count) existing messages")
-            }
-            
-            // Pre-fetch location in background if permissions are granted
-            Task.detached(priority: .background) {
-                let locationService = ServiceContainer.shared.locationService
-                await locationService.requestLocationPermission()
-            }
-            
-            // Load any pending questions
-            print("[ConversationView] Loading next question...")
-            await questionFlow.loadNextQuestion()
-            
-            // Check if all questions are complete and start Phase 4 tutorial
-            print("[ConversationView] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-            if questionFlow.hasCompletedAllQuestions {
-                print("[ConversationView] All questions complete, starting Phase 4 tutorial")
-                await startPhase4Tutorial()
-            } else {
-                print("[ConversationView] Questions still pending, current: \(questionFlow.currentQuestion?.text ?? "none")")
-            }
-            
-            // Scroll to bottom after initial setup
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                scrollToBottom = true
-            }
-        }
-    }
-    
     private func toggleRecording() {
         if recognizer.isRecording {
             recognizer.stopRecording()
@@ -484,7 +319,10 @@ struct ConversationView: View {
         inputText = ""
         
         // Process message
-        processUserInput(text)
+        Task {
+            await viewModel.processUserInput(text, isMuted: isMuted)
+            scrollToBottom = true
+        }
     }
     
     private func confirmVoiceMessage() {
@@ -502,173 +340,9 @@ struct ConversationView: View {
         isTextFieldFocused = false
         
         // Process message
-        processUserInput(text)
-    }
-    
-    
-    private func processUserInput(_ input: String) {
-        print("[ConversationView] processUserInput: '\(input)'")
-        isProcessing = true
-        
-        Task { @MainActor in
-            // Update state manager transcript
-            stateManager.persistentTranscript = input
-            
-            // Check if this answers a current question
-            if let currentQuestion = questionFlow.currentQuestion {
-                print("[ConversationView] Answering question: \(currentQuestion.text)")
-                
-                // Check if this is the Phase 4 introduction question
-                if currentQuestion.text.contains("Let's start by creating your first room note") {
-                    print("[ConversationView] This is the Phase 4 intro question, handling specially")
-                    
-                    // Save the room name as the answer
-                    await questionFlow.saveAnswer()
-                    
-                    // Transition directly to room note details
-                    UserDefaults.standard.set(input, forKey: "pendingRoomName")
-                    UserDefaults.standard.set("awaitingRoomDetails", forKey: "noteCreationState")
-                    
-                    let detailsMessage = Message(
-                        content: "Great! Now tell me about your \(input). What would you like me to remember about this room?",
-                        isFromUser: false,
-                        isVoice: !isMuted
-                    )
-                    messageStore.addMessage(detailsMessage)
-                    
-                    if !isMuted {
-                        try? await stateManager.speak(detailsMessage.content, isMuted: isMuted)
-                    }
-                } else {
-                    // Normal question handling
-                    await questionFlow.saveAnswer()
-                    
-                    // Let the coordinator handle the entire flow
-                    await questionFlow.loadNextQuestion()
-                    
-                    // Check if all questions are complete
-                    print("[ConversationView] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-                    if questionFlow.hasCompletedAllQuestions {
-                        print("[ConversationView] All questions complete after answer, starting Phase 4")
-                        await startPhase4Tutorial()
-                    }
-                }
-            } else {
-                // Check if we're in Phase 4 tutorial
-                if UserDefaults.standard.bool(forKey: "isInPhase4Tutorial") {
-                    await handlePhase4TutorialInput(input)
-                } else {
-                    // Check if we're in the middle of creating a note
-                    let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
-                    if noteCreationState == "creatingRoomNote" {
-                        // User provided room name, now ask for details
-                        await handleRoomNoteNameProvided(input)
-                    } else if noteCreationState == "awaitingRoomDetails" {
-                        // User provided room details, save the note
-                        await handleRoomNoteDetailsProvided(input)
-                    } else {
-                        // Check for note creation commands
-                        let lowercased = input.lowercased()
-                        if lowercased.contains("new room note") || lowercased.contains("add room note") {
-                            await handleRoomNoteCreation()
-                        } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
-                            await handleDeviceNoteCreation()
-                        } else {
-                            // Generate house response
-                            await generateHouseResponse(for: input)
-                        }
-                    }
-                }
-            }
-            
-            await MainActor.run {
-                isProcessing = false
-                scrollToBottom = true
-            }
-        }
-    }
-    
-    private func generateHouseResponse(for input: String) async {
-        // Generate a house thought based on input
-        let thought = HouseThought(
-            thought: "Let me think about that...",
-            emotion: .thoughtful,
-            category: .observation,
-            confidence: 0.8
-        )
-        
-        await MainActor.run {
-            // Add house message
-            let houseMessage = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
-            )
-            messageStore.addMessage(houseMessage)
-            
-            // Speak if not muted
-            if !isMuted {
-                Task {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
-            }
-        }
-    }
-    
-    private func handleRoomNoteCreation() async {
-        // Check if Phase 4 tutorial should have run but didn't
-        if questionFlow.hasCompletedAllQuestions && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-            // Start Phase 4 tutorial instead
-            await startPhase4Tutorial()
-        } else {
-            let thought = HouseThought(
-                thought: "I'll help you create a room note. What room would you like to add a note about?",
-                emotion: .curious,
-                category: .question,
-                confidence: 1.0
-            )
-            
-            await MainActor.run {
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    Task {
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                    }
-                }
-            }
-            
-            // Mark that we're creating a room note
-            UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
-        }
-    }
-    
-    private func handleDeviceNoteCreation() async {
-        let thought = HouseThought(
-            thought: "I'll help you create a device note. What device or appliance would you like to add a note about?",
-            emotion: .curious,
-            category: .question,
-            confidence: 1.0
-        )
-        
-        await MainActor.run {
-            let message = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
-            )
-            messageStore.addMessage(message)
-            
-            if !isMuted {
-                Task {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
-            }
+        Task {
+            await viewModel.processUserInput(text, isMuted: isMuted)
+            scrollToBottom = true
         }
     }
     
@@ -682,435 +356,9 @@ struct ConversationView: View {
         messageStore.addMessage(userMessage)
         
         // Process as regular input
-        processUserInput(address)
-    }
-    
-    // MARK: - Phase 4 Tutorial
-    
-    private func startPhase4Tutorial() async {
-        print("[ConversationView] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question")
-        // This method is kept for backward compatibility but doesn't do anything
-        // Phase 4 is now handled as the 4th required question
-    }
-    
-    private func checkIfUserHasNotes() async -> Bool {
-        // Check if user has created any room or device notes
-        do {
-            let notesStore = try await serviceContainer.notesService.loadNotesStore()
-            // Check for non-required notes (room/device notes)
-            return notesStore.notes.values.contains(where: { note in
-                if let noteQuestion = notesStore.questions.first(where: { $0.id == note.questionId }) {
-                    return !noteQuestion.isRequired && note.isAnswered
-                }
-                return false
-            })
-        } catch {
-            return false
-        }
-    }
-    
-    private func handlePhase4TutorialInput(_ input: String) async {
-        let tutorialState = UserDefaults.standard.string(forKey: "phase4TutorialState") ?? ""
-        
-        switch tutorialState {
-        case "awaitingRoomName":
-            // User provided room name
-            let roomName = input.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            // Save this as the current room for context
-            UserDefaults.standard.set(roomName, forKey: "currentRoomForTutorial")
-            
-            // Ask about the room details
-            let response = """
-            Great! I'll remember that you're in the \(roomName).
-            
-            Tell me about this room, and things that are in it, that you might want to know about in the future. Are there any connected devices here, or things that you sometimes forget how to operate?
-            """
-            
-            let thought = HouseThought(
-                thought: response,
-                emotion: .curious,
-                category: .question,
-                confidence: 1.0
-            )
-            
-            await MainActor.run {
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    Task {
-                        try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                    }
-                }
-            }
-            
-            UserDefaults.standard.set("awaitingRoomDetails", forKey: "phase4TutorialState")
-            
-        case "awaitingRoomDetails":
-            // User provided room details
-            let roomName = UserDefaults.standard.string(forKey: "currentRoomForTutorial") ?? "Room"
-            
-            // Create a room note
-            do {
-                // Create a new question for this room
-                let roomQuestion = Question(
-                    id: UUID(),
-                    text: roomName,
-                    category: .other,
-                    displayOrder: 1000,
-                    isRequired: false
-                )
-                
-                // Save the note with room type metadata
-                try await serviceContainer.notesService.saveOrUpdateNote(
-                    for: roomQuestion.id,
-                    answer: input,
-                    metadata: [
-                        "type": "room",
-                        "updated_via_conversation": "true",
-                        "createdDate": Date().ISO8601Format()
-                    ]
-                )
-                
-                // Complete tutorial
-                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-                UserDefaults.standard.removeObject(forKey: "phase4TutorialState")
-                UserDefaults.standard.removeObject(forKey: "currentRoomForTutorial")
-                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
-                
-                let completionMessage = "Excellent! I've saved that information about the \(roomName). You can add more notes anytime by saying 'new room note' or 'new device note'."
-                
-                let thought = HouseThought(
-                    thought: completionMessage,
-                    emotion: .happy,
-                    category: .suggestion,
-                    confidence: 1.0
-                )
-                
-                await MainActor.run {
-                    let message = Message(
-                        content: thought.thought,
-                        isFromUser: false,
-                        isVoice: !isMuted
-                    )
-                    messageStore.addMessage(message)
-                    
-                    if !isMuted {
-                        Task {
-                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                        }
-                    }
-                }
-                
-            } catch {
-                print("Error saving room note: \(error)")
-                // Handle error gracefully
-                await generateHouseResponse(for: "I had trouble saving that note. Let me try again.")
-            }
-            
-        default:
-            // Shouldn't happen, but handle gracefully
-            UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-            await generateHouseResponse(for: input)
-        }
-    }
-    
-    private func handleRoomNoteNameProvided(_ roomName: String) async {
-        // Save the room name temporarily
-        UserDefaults.standard.set(roomName, forKey: "currentRoomName")
-        UserDefaults.standard.set("awaitingRoomDetails", forKey: "noteCreationState")
-        
-        let response = """
-        Got it! I'll create a note for the \(roomName).
-        
-        What would you like me to remember about this room? You can include details about devices, furniture, or anything else that might be helpful.
-        """
-        
-        let thought = HouseThought(
-            thought: response,
-            emotion: .curious,
-            category: .question,
-            confidence: 1.0
-        )
-        
-        await MainActor.run {
-            let message = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
-            )
-            messageStore.addMessage(message)
-            
-            if !isMuted {
-                Task {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
-            }
-        }
-    }
-    
-    private func handleRoomNoteDetailsProvided(_ details: String) async {
-        let roomName = UserDefaults.standard.string(forKey: "pendingRoomName") ?? 
-                      UserDefaults.standard.string(forKey: "currentRoomName") ?? "Room"
-        
-        do {
-            // Create a new question for this room
-            let roomQuestion = Question(
-                id: UUID(),
-                text: roomName,
-                category: .other,
-                displayOrder: 1000,
-                isRequired: false
-            )
-            
-            // Add the question first
-            try await serviceContainer.notesService.addQuestion(roomQuestion)
-            
-            // Save the note with room type metadata
-            try await serviceContainer.notesService.saveOrUpdateNote(
-                for: roomQuestion.id,
-                answer: details,
-                metadata: [
-                    "type": "room",
-                    "updated_via_conversation": "true",
-                    "createdDate": Date().ISO8601Format()
-                ]
-            )
-            
-            // Clear the note creation state
-            UserDefaults.standard.removeObject(forKey: "noteCreationState")
-            UserDefaults.standard.removeObject(forKey: "currentRoomName")
-            UserDefaults.standard.removeObject(forKey: "pendingRoomName")
-            
-            // Mark Phase 4 as complete if this was the first room note
-            if !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
-                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-                
-                let successMessage = "Perfect! I've saved that information about the \(roomName). 🎉 Setup complete! You can now create more notes or ask me questions about your house."
-                
-                let thought = HouseThought(
-                    thought: successMessage,
-                    emotion: .happy,
-                    category: .celebration,
-                    confidence: 1.0
-                )
-                
-                await MainActor.run {
-                    let message = Message(
-                        content: successMessage,
-                        isFromUser: false,
-                        isVoice: !isMuted
-                    )
-                    messageStore.addMessage(message)
-                    
-                    if !isMuted {
-                        Task {
-                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                        }
-                    }
-                }
-            } else {
-                let successMessage = "Perfect! I've saved that about the \(roomName)."
-                
-                let thought = HouseThought(
-                    thought: successMessage,
-                    emotion: .happy,
-                    category: .celebration,
-                    confidence: 1.0
-                )
-                
-                await MainActor.run {
-                    let message = Message(
-                        content: thought.thought,
-                        isFromUser: false,
-                        isVoice: !isMuted
-                    )
-                    messageStore.addMessage(message)
-                    
-                    if !isMuted {
-                        Task {
-                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
-                        }
-                    }
-                }
-            }
-            
-        } catch {
-            print("Error saving room note: \(error)")
-            await generateHouseResponse(for: "I had trouble saving that note. Let me try again.")
-        }
-    }
-}
-
-// MARK: - Message Bubble View
-
-struct MessageBubble: View {
-    let message: Message
-    let onAddressSubmit: ((String) -> Void)?
-    
-    init(message: Message, onAddressSubmit: ((String) -> Void)? = nil) {
-        self.message = message
-        self.onAddressSubmit = onAddressSubmit
-    }
-    
-    // Check if this is a question with a suggested answer
-    private var isQuestionWithSuggestion: Bool {
-        // Check for common question patterns with newlines indicating suggested answers
-        let questionPatterns = [
-            "Is this the right address?",
-            "What's your home address?",
-            "What should I call this house?",
-            "What's your name?",
-            "What's your phone number?",
-            "What's your email?"
-        ]
-        
-        let result = questionPatterns.contains(where: { pattern in
-            message.content.contains(pattern) && message.content.contains("\n")
-        })
-        
-        return result
-    }
-    
-    // Extract question and suggested answer
-    private var questionAndAnswer: (question: String, answer: String)? {
-        if isQuestionWithSuggestion {
-            let components = message.content.components(separatedBy: "\n\n")
-            if components.count >= 2 {
-                let question = components[0].trimmingCharacters(in: .whitespacesAndNewlines)
-                let answer = components[1...].joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
-                return (question, answer)
-            }
-        }
-        return nil
-    }
-    
-    var body: some View {
-        HStack {
-            if message.isFromUser {
-                Spacer()
-            }
-            
-            VStack(alignment: message.isFromUser ? .trailing : .leading, spacing: 4) {
-                if !message.isFromUser && isQuestionWithSuggestion, 
-                   let (question, answer) = questionAndAnswer {
-                    // Use generic suggested answer view
-                    SuggestedAnswerQuestionView(
-                        question: question,
-                        suggestedAnswer: answer,
-                        icon: SuggestedAnswerQuestionView.icon(for: question)
-                    ) { editedAnswer in
-                        onAddressSubmit?(editedAnswer)
-                    }
-                } else {
-                    // Regular message bubble
-                    Text(message.content)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(message.isFromUser ? Color.blue : Color(UIColor.secondarySystemBackground))
-                    .foregroundColor(message.isFromUser ? .white : .primary)
-                        .cornerRadius(20)
-                        .overlay(
-                            message.isVoice ?
-                            Image(systemName: "mic.fill")
-                                .font(.caption2)
-                                .foregroundColor(message.isFromUser ? .white.opacity(0.7) : .secondary)
-                                .offset(x: message.isFromUser ? -8 : 8, y: -8)
-                            : nil,
-                            alignment: message.isFromUser ? .topTrailing : .topLeading
-                        )
-                }
-                
-                Text(formatTimestamp(message.timestamp))
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-            .frame(maxWidth: UIScreen.main.bounds.width * 0.75, alignment: message.isFromUser ? .trailing : .leading)
-            
-            if !message.isFromUser {
-                Spacer()
-            }
-        }
-    }
-    
-    private func formatTimestamp(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        let calendar = Calendar.current
-        
-        if calendar.isDateInToday(date) {
-            formatter.dateFormat = "h:mm a"
-        } else if calendar.isDateInYesterday(date) {
-            formatter.dateFormat = "'Yesterday' h:mm a"
-        } else {
-            formatter.dateFormat = "MMM d, h:mm a"
-        }
-        
-        return formatter.string(from: date)
-    }
-}
-
-// MARK: - HouseThought Extension
-
-extension HouseThought {
-    static func generateResponse(for input: String) -> HouseThought {
-        let lowercased = input.lowercased()
-        
-        // Simple response generation - this could be made much more sophisticated
-        if lowercased.contains("hello") || lowercased.contains("hi") {
-            return HouseThought(
-                thought: "Hello! How are you doing today?",
-                emotion: .happy,
-                category: .greeting,
-                confidence: 1.0
-            )
-        } else if lowercased.contains("weather") {
-            return HouseThought(
-                thought: "Let me check the weather for you. One moment...",
-                emotion: .thoughtful,
-                category: .observation,
-                confidence: 0.9
-            )
-        } else if lowercased.contains("temperature") || lowercased.contains("cold") || lowercased.contains("hot") {
-            return HouseThought(
-                thought: "I'll check the current temperature and adjust if needed.",
-                emotion: .thoughtful,
-                category: .observation,
-                confidence: 0.9
-            )
-        } else if lowercased.contains("thank") {
-            return HouseThought(
-                thought: "You're welcome! I'm always here to help.",
-                emotion: .happy,
-                category: .greeting,
-                confidence: 1.0
-            )
-        } else if lowercased.contains("help") {
-            return HouseThought(
-                thought: "I can help you with managing your home, checking weather, taking notes, and having conversations. What would you like to know?",
-                emotion: .thoughtful,
-                category: .suggestion,
-                confidence: 1.0
-            )
-        } else if lowercased.contains("note") || lowercased.contains("notes") {
-            return HouseThought(
-                thought: "I can help you create notes about your home. Try saying 'new room note' to add a note about a room, or 'new device note' to add a note about a device or appliance.",
-                emotion: .thoughtful,
-                category: .suggestion,
-                confidence: 1.0
-            )
-        } else {
-            return HouseThought(
-                thought: "I understand. Let me think about that...",
-                emotion: .thoughtful,
-                category: .observation,
-                confidence: 0.7
-            )
+        Task {
+            await viewModel.processUserInput(address, isMuted: isMuted)
+            scrollToBottom = true
         }
     }
 }

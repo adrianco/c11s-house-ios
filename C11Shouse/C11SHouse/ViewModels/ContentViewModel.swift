@@ -20,6 +20,12 @@
  *   - Removed direct weather service dependency
  *   - Weather state now accessed through coordinator
  *
+ * - 2025-07-15: Refactored to use centralized AppState
+ *   - Removed local state properties in favor of AppState
+ *   - State changes now propagate through AppState
+ *   - Simplified state management and reduced duplication
+ *   - Weather and house emotions updated in AppState
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -30,16 +36,19 @@ import CoreLocation
 
 @MainActor
 class ContentViewModel: ObservableObject {
-    // Published properties for UI binding
-    @Published var houseName: String = "Your House"
-    @Published var houseThought: HouseThought?
-    @Published var currentAddress: Address?
-    @Published var hasLocationPermission = false
+    // Reference to centralized app state
+    private let appState: AppState
     
-    // Weather state (delegated to coordinator)
-    var currentWeather: Weather? { weatherCoordinator.currentWeather }
-    var isLoadingWeather: Bool { weatherCoordinator.isLoadingWeather }
-    var weatherError: Error? { weatherCoordinator.weatherError }
+    // Published properties that mirror AppState for UI binding
+    var houseName: String { appState.houseName }
+    var houseThought: HouseThought? { appState.currentHouseThought }
+    var currentAddress: Address? { appState.homeAddress }
+    var hasLocationPermission: Bool { appState.hasLocationPermission }
+    
+    // Weather state from AppState
+    var currentWeather: Weather? { appState.currentWeather }
+    var isLoadingWeather: Bool { appState.isLoadingWeather }
+    var weatherError: Error? { appState.weatherError }
     
     // Services and Coordinators
     private let locationService: LocationServiceProtocol
@@ -52,11 +61,13 @@ class ContentViewModel: ObservableObject {
     private var weatherTimer: Timer?
     
     init(
+        appState: AppState,
         locationService: LocationServiceProtocol,
         weatherCoordinator: WeatherCoordinator,
         notesService: NotesServiceProtocol,
         addressManager: AddressManager
     ) {
+        self.appState = appState
         self.locationService = locationService
         self.weatherCoordinator = weatherCoordinator
         self.notesService = notesService
@@ -71,8 +82,9 @@ class ContentViewModel: ObservableObject {
         locationService.authorizationStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
-                self?.hasLocationPermission = status == .authorizedWhenInUse || status == .authorizedAlways
-                if self?.hasLocationPermission == true {
+                let hasPermission = status == .authorizedWhenInUse || status == .authorizedAlways
+                self?.appState.updatePermissions(location: hasPermission)
+                if hasPermission {
                     Task { await self?.loadAddressAndWeather() }
                 }
             }
@@ -81,20 +93,38 @@ class ContentViewModel: ObservableObject {
         // Subscribe to weather updates from coordinator
         weatherCoordinator.$currentWeather
             .receive(on: DispatchQueue.main)
-            .compactMap { $0 }
             .sink { [weak self] weather in
                 guard let self = self else { return }
+                
+                // Update weather in AppState
+                self.appState.updateWeatherState(weather: weather, isLoading: false)
                 
                 // Only update weather-based emotions if setup is complete
                 Task {
                     let requiredComplete = await self.notesService.areAllRequiredQuestionsAnswered()
-                    if requiredComplete {
+                    if requiredComplete, let weather = weather {
                         await MainActor.run {
                             self.updateHouseEmotionForWeather(weather)
                         }
                     }
                     // Otherwise keep the curious emotion for setup
                 }
+            }
+            .store(in: &cancellables)
+            
+        // Subscribe to weather loading state
+        weatherCoordinator.$isLoadingWeather
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.appState.updateWeatherState(isLoading: isLoading)
+            }
+            .store(in: &cancellables)
+            
+        // Subscribe to weather errors
+        weatherCoordinator.$weatherError
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] error in
+                self?.appState.updateWeatherState(error: error)
             }
             .store(in: &cancellables)
         
@@ -124,21 +154,11 @@ class ContentViewModel: ObservableObject {
     }
     
     private func loadSavedData() {
-        // Load saved address
-        if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
-           let address = try? JSONDecoder().decode(Address.self, from: addressData) {
-            currentAddress = address
-            
-            // If we have an address, fetch weather
+        // AppState already loads saved data in its init
+        // Just trigger weather refresh if we have an address
+        if appState.homeAddress != nil {
             Task {
                 await refreshWeather()
-            }
-        }
-        
-        // Load saved house name from notes
-        Task {
-            if let savedName = await notesService.getHouseName() {
-                houseName = savedName
             }
         }
     }
@@ -175,7 +195,7 @@ class ContentViewModel: ObservableObject {
     
     func refreshWeather() async {
         print("[ContentViewModel] 🌤️ refreshWeather() called")
-        guard let address = currentAddress else { 
+        guard let address = appState.homeAddress else { 
             print("[ContentViewModel] ⚠️ No current address available for weather fetch")
             return 
         }
@@ -201,7 +221,7 @@ class ContentViewModel: ObservableObject {
     func confirmAddress(_ address: Address) async {
         do {
             try await locationService.confirmAddress(address)
-            currentAddress = address
+            appState.homeAddress = address
             await refreshWeather()
         } catch {
             print("Failed to confirm address: \(error)")
@@ -209,12 +229,13 @@ class ContentViewModel: ObservableObject {
     }
     
     private func generateHouseNameFromAddress(_ address: Address) {
-        houseName = AddressParser.generateHouseName(from: address.street)
+        let name = AddressParser.generateHouseName(from: address.street)
+        appState.houseName = name
         
-        if houseName != "My House" {
+        if name != "My House" {
             // Save to notes
             Task {
-                await notesService.saveHouseName(houseName)
+                await notesService.saveHouseName(name)
             }
         }
     }
@@ -310,19 +331,21 @@ class ContentViewModel: ObservableObject {
             }
         }
         
-        houseThought = HouseThought(
+        let thought = HouseThought(
             thought: finalThought,
             emotion: emotion,
             category: .observation,
             confidence: 1.0 - intensity, // Higher intensity = lower confidence
             context: "Weather observation"
         )
+        appState.updateHouseEmotion(thought)
     }
     
     private func updateHouseEmotionForError() {
         // Check if this is a sandbox error
-        if let error = weatherError as? WeatherError, case .sandboxRestriction = error {
-            houseThought = HouseThought(
+        let thought: HouseThought
+        if let error = appState.weatherError as? WeatherError, case .sandboxRestriction = error {
+            thought = HouseThought(
                 thought: "Weather service isn't available in the simulator. It works great on real devices!",
                 emotion: .neutral,
                 category: .observation,
@@ -330,7 +353,7 @@ class ContentViewModel: ObservableObject {
                 context: "Simulator limitation"
             )
         } else {
-            houseThought = HouseThought(
+            thought = HouseThought(
                 thought: "I'm having trouble checking the weather right now. I'll try again soon.",
                 emotion: .confused,
                 category: .observation,
@@ -338,36 +361,40 @@ class ContentViewModel: ObservableObject {
                 context: "Weather service error"
             )
         }
+        appState.updateHouseEmotion(thought)
     }
     
     private func updateHouseEmotionForNoAddress() {
-        houseThought = HouseThought(
+        let thought = HouseThought(
             thought: "Hi! Let's have a conversation so I can learn about your home and help you better.",
             emotion: .curious,
             category: .suggestion,
             confidence: 0.9,
             context: "Setup needed"
         )
+        appState.updateHouseEmotion(thought)
     }
     
     private func updateHouseEmotionForUnansweredQuestions() {
-        houseThought = HouseThought(
+        let thought = HouseThought(
             thought: "I'm curious to learn more about you and your home. Let's chat!",
             emotion: .curious,
             category: .question,
             confidence: 0.9,
             context: "Questions pending"
         )
+        appState.updateHouseEmotion(thought)
     }
     
     private func updateHouseEmotionForKnownUser() {
-        houseThought = HouseThought(
+        let thought = HouseThought(
             thought: "Welcome back! I'm here to help you manage your home.",
             emotion: .happy,
             category: .greeting,
             confidence: 0.9,
             context: "User known"
         )
+        appState.updateHouseEmotion(thought)
     }
     
     
@@ -379,9 +406,9 @@ class ContentViewModel: ObservableObject {
             
             print("[ContentViewModel] Found saved address: \(address.fullAddress)")
             // Only update if the address is different
-            if currentAddress?.fullAddress != address.fullAddress {
+            if appState.homeAddress?.fullAddress != address.fullAddress {
                 print("[ContentViewModel] ✅ New address detected, updating")
-                currentAddress = address
+                appState.homeAddress = address
                 
                 // Fetch weather for the new address
                 Task {

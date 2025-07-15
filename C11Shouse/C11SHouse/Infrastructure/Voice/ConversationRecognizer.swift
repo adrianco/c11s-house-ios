@@ -52,7 +52,7 @@ final class ConversationRecognizer: ObservableObject {
     @Published var confidence: Float = 0.0
     @Published var isAvailable = false
     @Published var authorizationStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
-    @Published var error: SpeechRecognitionError?
+    @Published var error: UserFriendlyError?
     @Published var currentHouseThought: HouseThought?
     
     // MARK: - Private Properties
@@ -70,26 +70,107 @@ final class ConversationRecognizer: ObservableObject {
     private let audioEngineQueue = DispatchQueue(label: "com.c11s.audioEngine")
     
     // MARK: - Error Types
-    enum SpeechRecognitionError: LocalizedError {
+    enum SpeechRecognitionError: UserFriendlyError {
         case notAuthorized
         case notAvailable
         case audioEngineError
         case recognitionError(String)
         case microphoneAccessDenied
         
-        var errorDescription: String? {
+        var userFriendlyTitle: String {
             switch self {
             case .notAuthorized:
-                return "Speech recognition not authorized"
+                return "Speech Recognition Not Authorized"
             case .notAvailable:
-                return "Speech recognition not available"
+                return "Speech Recognition Unavailable"
             case .audioEngineError:
-                return "Audio engine error"
-            case .recognitionError(let message):
-                return "Recognition error: \(message)"
+                return "Audio System Error"
+            case .recognitionError:
+                return "Recognition Error"
             case .microphoneAccessDenied:
-                return "Microphone access denied"
+                return "Microphone Access Required"
             }
+        }
+        
+        var userFriendlyMessage: String {
+            switch self {
+            case .notAuthorized:
+                return "This app needs permission to use speech recognition."
+            case .notAvailable:
+                return "Speech recognition is not available on this device."
+            case .audioEngineError:
+                return "There was a problem with the audio system."
+            case .recognitionError(let message):
+                return message.isEmpty ? "Could not recognize your speech." : message
+            case .microphoneAccessDenied:
+                return "This app needs access to your microphone for voice commands."
+            }
+        }
+        
+        var recoverySuggestions: [String] {
+            switch self {
+            case .notAuthorized:
+                return [
+                    "Open Settings > Privacy > Speech Recognition",
+                    "Enable speech recognition for this app",
+                    "Restart the app after granting permission"
+                ]
+            case .notAvailable:
+                return [
+                    "Check if your device supports speech recognition",
+                    "Ensure your device has an internet connection",
+                    "Try restarting your device"
+                ]
+            case .audioEngineError:
+                return [
+                    "Try restarting the app",
+                    "Check if other apps are using the microphone",
+                    "Restart your device if the problem persists"
+                ]
+            case .recognitionError:
+                return [
+                    "Speak clearly and try again",
+                    "Reduce background noise",
+                    "Make sure you're speaking in English"
+                ]
+            case .microphoneAccessDenied:
+                return [
+                    "Open Settings > Privacy > Microphone",
+                    "Enable microphone access for this app",
+                    "Restart the app after granting permission"
+                ]
+            }
+        }
+        
+        var severity: ErrorSeverity {
+            switch self {
+            case .notAuthorized, .microphoneAccessDenied:
+                return .error
+            case .notAvailable, .audioEngineError:
+                return .critical
+            case .recognitionError:
+                return .warning
+            }
+        }
+        
+        var errorCode: String? {
+            switch self {
+            case .notAuthorized:
+                return "SPR-001"
+            case .notAvailable:
+                return "SPR-002"
+            case .audioEngineError:
+                return "SPR-003"
+            case .recognitionError:
+                return "SPR-004"
+            case .microphoneAccessDenied:
+                return "SPR-005"
+            }
+        }
+        
+        // Keep LocalizedError conformance for compatibility
+        var errorDescription: String? {
+            return userFriendlyMessage
         }
     }
     
@@ -113,7 +194,7 @@ final class ConversationRecognizer: ObservableObject {
                 // Authorization status updated
                 
                 if status != .authorized {
-                    self?.error = .notAuthorized
+                    self?.error = SpeechRecognitionError.notAuthorized
                 }
             }
         }
@@ -122,7 +203,7 @@ final class ConversationRecognizer: ObservableObject {
             DispatchQueue.main.async {
                 // Microphone permission updated
                 if !granted {
-                    self?.error = .microphoneAccessDenied
+                    self?.error = SpeechRecognitionError.microphoneAccessDenied
                 }
             }
         }
@@ -234,7 +315,7 @@ final class ConversationRecognizer: ObservableObject {
                 
                 if !speechError.isIgnorable {
                     DispatchQueue.main.async {
-                        self.error = .recognitionError(speechError.localizedDescription ?? error.localizedDescription)
+                        self.error = SpeechRecognitionError.recognitionError(speechError.localizedDescription ?? error.localizedDescription)
                         if self.isRecording && !self.isTerminating {
                             self.stopRecording()
                         }
@@ -322,7 +403,7 @@ final class ConversationRecognizer: ObservableObject {
             do {
                 try startRecording()
             } catch {
-                self.error = error as? SpeechRecognitionError ?? .audioEngineError
+                self.error = (error as? SpeechRecognitionError) ?? SpeechRecognitionError.audioEngineError
             }
         }
     }

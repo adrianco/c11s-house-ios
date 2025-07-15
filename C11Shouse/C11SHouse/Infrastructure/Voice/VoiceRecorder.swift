@@ -61,8 +61,8 @@ final class VoiceRecorder: ObservableObject {
     /// Recording duration in seconds
     @Published private(set) var recordingDuration: TimeInterval = 0.0
     
-    /// Error message if any
-    @Published var errorMessage: String?
+    /// Current error if any
+    @Published var error: UserFriendlyError?
     
     /// Whether microphone permission is granted
     @Published private(set) var hasPermission: Bool = false
@@ -108,7 +108,7 @@ final class VoiceRecorder: ObservableObject {
         
         do {
             // Clear any previous error
-            errorMessage = nil
+            error = nil
             
             // Update state
             recordingState = .preparing
@@ -190,7 +190,7 @@ final class VoiceRecorder: ObservableObject {
         hasPermission = await sessionManager.requestRecordingPermission()
         
         if !hasPermission {
-            errorMessage = "Microphone permission is required to record audio"
+            error = AppError.microphoneAccessDenied
         }
     }
     
@@ -302,12 +302,31 @@ final class VoiceRecorder: ObservableObject {
     private func handleError(_ error: Error) {
         recordingState = .idle
         
-        if let audioError = error as? AudioEngineError {
-            errorMessage = audioError.localizedDescription
+        // Convert to user-friendly error
+        if let userFriendlyError = error as? UserFriendlyError {
+            self.error = userFriendlyError
+        } else if let audioError = error as? AudioEngineError {
+            // Map AudioEngineError to AppError
+            switch audioError {
+            case .recordingInProgress, .notRecording:
+                self.error = AppError.unknown(audioError)
+            case .sessionNotConfigured:
+                self.error = AppError.microphoneAccessDenied
+            case .engineStartFailure, .recordingFailure:
+                self.error = AppError.unknown(audioError)
+            case .exportFailure:
+                self.error = AppError.dataCorrupted
+            }
         } else if let sessionError = error as? AudioSessionError {
-            errorMessage = sessionError.localizedDescription
+            // Map AudioSessionError to AppError
+            switch sessionError {
+            case .configurationFailed, .activationFailed, .deactivationFailed:
+                self.error = AppError.unknown(sessionError)
+            case .categoryNotSupported, .audioRouteChangeWhileRecording:
+                self.error = AppError.unknown(sessionError)
+            }
         } else {
-            errorMessage = error.localizedDescription
+            self.error = AppError.unknown(error)
         }
         
         print("Voice Recorder Error: \(error)")
@@ -345,16 +364,75 @@ extension VoiceRecorder: AudioEngineDelegate {
     func audioEngineWasInterrupted(_ engine: AudioEngine) async {
         if recordingState == .recording {
             recordingState = .paused
-            errorMessage = "Recording was interrupted"
+            error = VoiceRecorderError.recordingInterrupted
         }
     }
     
     func audioEngineDidResetMediaServices(_ engine: AudioEngine) async {
-        errorMessage = "Audio services were reset. Please try recording again."
+        error = VoiceRecorderError.audioServicesReset
     }
 }
 
 // MARK: - Supporting Types
+
+/// Voice recorder specific errors
+enum VoiceRecorderError: UserFriendlyError {
+    case recordingInterrupted
+    case audioServicesReset
+    
+    var userFriendlyTitle: String {
+        switch self {
+        case .recordingInterrupted:
+            return "Recording Interrupted"
+        case .audioServicesReset:
+            return "Audio System Reset"
+        }
+    }
+    
+    var userFriendlyMessage: String {
+        switch self {
+        case .recordingInterrupted:
+            return "Your recording was interrupted by another app or system event."
+        case .audioServicesReset:
+            return "The audio system was reset. Please try recording again."
+        }
+    }
+    
+    var recoverySuggestions: [String] {
+        switch self {
+        case .recordingInterrupted:
+            return [
+                "Close other apps that might be using audio",
+                "Disable notifications during recording",
+                "Try recording again"
+            ]
+        case .audioServicesReset:
+            return [
+                "Wait a moment for the system to stabilize",
+                "Restart the app if needed",
+                "Try recording again"
+            ]
+        }
+    }
+    
+    var severity: ErrorSeverity {
+        switch self {
+        case .recordingInterrupted:
+            return .warning
+        case .audioServicesReset:
+            return .error
+        }
+    }
+    
+    var errorCode: String? {
+        switch self {
+        case .recordingInterrupted:
+            return "VRC-001"
+        case .audioServicesReset:
+            return "VRC-002"
+        }
+    }
+}
 
 /// Recording state enum
 enum RecordingState: Equatable {

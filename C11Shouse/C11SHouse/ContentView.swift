@@ -66,6 +66,7 @@ struct ContentView: View {
     @State private var showNotesView = false
     @State private var showVoiceSettings = false
     @State private var showVoiceTest = false
+    @State private var currentError: UserFriendlyError?
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -124,11 +125,11 @@ struct ContentView: View {
                         if viewModel.isLoadingWeather {
                             ProgressView()
                                 .padding(.top, 4)
-                        } else if viewModel.weatherError != nil {
+                        } else if let weatherError = viewModel.weatherError {
                             Button(action: {
-                                Task { await viewModel.refreshWeather() }
+                                currentError = weatherError.asUserFriendlyError
                             }) {
-                                Label("Retry Weather", systemImage: "arrow.clockwise")
+                                Label("Weather Error", systemImage: "exclamationmark.triangle")
                                     .font(.caption)
                                     .foregroundColor(.orange)
                             }
@@ -254,6 +255,9 @@ struct ContentView: View {
         .onAppear {
             checkLocationPermission()
             checkOnboardingStatus()
+        }
+        .errorOverlay($currentError) {
+            Task { await viewModel.refreshWeather() }
         }
     }
     
