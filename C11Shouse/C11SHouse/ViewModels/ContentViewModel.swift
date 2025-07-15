@@ -83,6 +83,11 @@ class ContentViewModel: ObservableObject {
         
         setupBindings()
         loadSavedData()
+        
+        // Log initial state
+        print("[ContentViewModel] Init complete - currentWeather: \(currentWeather != nil ? "exists" : "nil")")
+        print("[ContentViewModel] Init complete - houseName: \(houseName)")
+        print("[ContentViewModel] Init complete - address: \(currentAddress?.fullAddress ?? "nil")")
     }
     
     private func setupBindings() {
@@ -132,7 +137,9 @@ class ContentViewModel: ObservableObject {
                 guard let self = self else { return }
                 
                 // Update weather in AppState
-                self.appState.updateWeatherState(weather: weather, isLoading: false)
+                if weather != nil {
+                    self.appState.updateWeatherState(weather: weather, isLoading: false)
+                }
                 
                 // Only update weather-based emotions if setup is complete
                 Task {
@@ -237,9 +244,12 @@ class ContentViewModel: ObservableObject {
         }
         
         print("[ContentViewModel] Fetching weather for: \(address.fullAddress)")
+        print("[ContentViewModel] Current weather before fetch: \(currentWeather != nil ? "exists" : "nil")")
         do {
             let weather = try await weatherCoordinator.fetchWeather(for: address)
             print("[ContentViewModel] ✅ Weather fetch successful: \(weather.condition)")
+            print("[ContentViewModel] Temperature: \(weather.temperature.formatted)")
+            print("[ContentViewModel] Current weather after fetch: \(currentWeather != nil ? "exists" : "nil")")
         } catch {
             print("[ContentViewModel] ❌ Weather fetch failed: \(error)")
             // Only update emotion for error if all required questions are answered
