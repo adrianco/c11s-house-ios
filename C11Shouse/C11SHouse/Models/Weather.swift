@@ -249,6 +249,14 @@ struct DailyForecast: Codable {
     let condition: WeatherCondition
     let precipitationChance: Double
     
+    init(date: Date, highTemperature: Temperature, lowTemperature: Temperature, condition: WeatherCondition, precipitationChance: Double) {
+        self.date = date
+        self.highTemperature = highTemperature
+        self.lowTemperature = lowTemperature
+        self.condition = condition
+        self.precipitationChance = precipitationChance
+    }
+    
     init(from dayWeather: DayWeather) {
         self.date = dayWeather.date
         self.highTemperature = Temperature(from: dayWeather.highTemperature)

@@ -514,7 +514,7 @@ class NotesServiceTests: XCTestCase {
                     date: Date(),
                     highTemperature: Temperature(value: 75, unit: .fahrenheit),
                     lowTemperature: Temperature(value: 60, unit: .fahrenheit),
-                    condition: .clear,
+                    condition: WeatherCondition.clear,
                     precipitationChance: 0.1
                 )
             ],
