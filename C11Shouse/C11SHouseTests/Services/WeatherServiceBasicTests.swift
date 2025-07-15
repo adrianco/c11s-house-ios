@@ -39,7 +39,9 @@ class WeatherServiceBasicTests: XCTestCase {
             uvIndex: 5,
             pressure: 30.0,
             visibility: 10.0,
+            dewPoint: 65.0,
             forecast: [],
+            hourlyForecast: [],
             lastUpdated: Date()
         )
         weatherService.mockWeather = expectedWeather
@@ -88,7 +90,9 @@ class WeatherServiceBasicTests: XCTestCase {
                 uvIndex: 5,
                 pressure: 30.0,
                 visibility: 10.0,
+                dewPoint: testCase.temp - 10,
                 forecast: [],
+                hourlyForecast: [],
                 lastUpdated: Date()
             )
             
