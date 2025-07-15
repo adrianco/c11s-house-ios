@@ -60,12 +60,6 @@ class MockLocationService: LocationServiceProtocol {
         authorizationStatusSubject.send(.authorizedWhenInUse)
     }
     
-    func requestLocationPermission() async -> CLAuthorizationStatus {
-        requestLocationPermissionCalled = true
-        authorizationStatusSubject.send(.authorizedWhenInUse)
-        return .authorizedWhenInUse
-    }
-    
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCalled = true
         switch getCurrentLocationResult {
