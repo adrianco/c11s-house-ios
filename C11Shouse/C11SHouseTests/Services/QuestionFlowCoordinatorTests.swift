@@ -306,7 +306,7 @@ class MockConversationRecognizerForFlow: ConversationRecognizer {
         currentHouseThought = HouseThought(
             thought: "Thank you for answering all my questions!",
             emotion: .happy,
-            category: .gratitude,
+            category: .celebration,
             confidence: 1.0,
             context: "All questions complete",
             suggestion: nil
@@ -522,9 +522,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut.currentQuestion = houseQuestion
         mockStateManager.persistentTranscriptValue = "Maple House"
         
-        // Create mock service container
-        let mockContainer = ServiceContainer()
-        sut.serviceContainer = mockContainer
+        // Use shared service container
+        sut.serviceContainer = ServiceContainer.shared
         
         // When: Saving answer
         await sut.saveAnswer()
