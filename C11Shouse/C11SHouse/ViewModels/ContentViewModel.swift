@@ -226,9 +226,10 @@ class ContentViewModel: ObservableObject {
             loadSavedData()
         }
         
-        // We have all required info including address, fetch weather
+        // Set appropriate house emotion based on setup status
+        // Weather will be fetched by loadSavedData() or address update detection
         if currentAddress != nil {
-            await refreshWeather()
+            updateHouseEmotionForKnownUser()
         } else {
             // This shouldn't happen if required questions are truly answered
             // But show a friendly default state
@@ -238,6 +239,7 @@ class ContentViewModel: ObservableObject {
     
     func refreshWeather() async {
         print("[ContentViewModel] 🌤️ refreshWeather() called")
+        print("[ContentViewModel] Call stack: \(Thread.callStackSymbols.prefix(3))")
         guard let address = appState.homeAddress else { 
             print("[ContentViewModel] ⚠️ No current address available for weather fetch")
             return 
