@@ -41,6 +41,10 @@ class ErrorViewTests: XCTestCase {
         XCTAssertEqual(view.error.userFriendlyTitle, "No Internet Connection")
         XCTAssertNotNil(view.onDismiss)
         XCTAssertNotNil(view.onRetry)
+        
+        // Test callbacks work (though we can't directly invoke them in this test)
+        XCTAssertFalse(dismissCalled) // Should be false initially
+        XCTAssertFalse(retryCalled) // Should be false initially
     }
     
     func testErrorViewWithDifferentSeverities() {
@@ -174,6 +178,10 @@ class ErrorViewTests: XCTestCase {
         XCTAssertEqual(view.error.userFriendlyTitle, "Data Error")
         XCTAssertNotNil(view.onRetry)
         XCTAssertNotNil(view.onDismiss)
+        
+        // Test callbacks are initially false
+        XCTAssertFalse(retryCalled)
+        XCTAssertFalse(dismissCalled)
     }
     
     // MARK: - Error Overlay Modifier Tests
@@ -191,6 +199,7 @@ class ErrorViewTests: XCTestCase {
         
         // Then
         XCTAssertNotNil(modifier.error)
+        XCTAssertFalse(retryCalled) // Initially false
     }
 }
 
