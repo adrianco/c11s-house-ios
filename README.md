@@ -19,19 +19,38 @@ Log of the output as it did this work is saved in the repo.
 
 ## Status
 
+### 2025-07-15 Update
+The C11S House iOS app has evolved significantly with a refined user experience and enhanced features:
+
+- **Onboarding & Setup**: New welcome flow with clear feature explanations (Natural Conversations, Intelligent Memory, Privacy First)
+- **Enhanced Home Screen**: Displays house personality with current emotion state and weather context
+- **Voice Interaction**: Improved conversation interface with message history and speech-to-text capabilities
+- **Notes & Questions System**: Interactive setup flow to capture house information and personal preferences
+- **Voice Settings**: Customizable voice parameters including language, voice type, rate, pitch, and volume with preview functionality
+- **UI Polish**: Consistent gradient branding, improved navigation, and modern SwiftUI components throughout
 
 ## Screenshots
 
 <div align="center">
-  <img src="misc/home.PNG" alt="Home Screen" width="250" />
-  <img src="misc/conversations.PNG" alt="Conversations View" width="250" />
-  <img src="misc/edit.PNG" alt="Edit Mode" width="250" />
+  <img src="misc/SetupView.PNG" alt="Setup Screen" width="250" />
+  <img src="misc/ContentViewHappy.PNG" alt="Home Screen" width="250" />
+  <img src="misc/ConversationView.PNG" alt="Conversation View" width="250" />
 </div>
 
 <div align="center">
+  <b>Welcome & Setup</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <b>Home Screen</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <b>Conversations View</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <b>Edit Mode</b>
+  <b>Conversation View</b>
+</div>
+
+<div align="center">
+  <img src="misc/NotesView.PNG" alt="Notes & Questions" width="250" />
+  <img src="misc/VoiceSettings.PNG" alt="Voice Settings" width="250" />
+</div>
+
+<div align="center">
+  <b>Notes & Questions</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b>Voice Settings</b>
 </div>
 
 ### 2025-07-04 Update
