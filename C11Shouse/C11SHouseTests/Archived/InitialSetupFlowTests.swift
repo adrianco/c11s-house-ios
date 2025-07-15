@@ -323,7 +323,7 @@ class InitialSetupFlowTests: XCTestCase {
         )
         
         // Verify all data persisted
-        let persistedAddress = try await newAddressManager.getSavedAddress()
+        let persistedAddress = newAddressManager.loadSavedAddress()
         XCTAssertNotNil(persistedAddress)
         XCTAssertEqual(persistedAddress?.city, "Los Angeles")
         
