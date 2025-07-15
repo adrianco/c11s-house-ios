@@ -187,29 +187,27 @@ class MockQuestionFlowCoordinator: ObservableObject {
 
 // MARK: - Service Container Mock
 
-class MockConversationServiceContainer: ServiceContainer {
+class MockConversationServiceContainer: ObservableObject {
     let mockNotesService: SharedMockNotesService
     let mockTTSService: MockTTSService
     let mockLocationService: MockLocationService
     let mockAddressManager: SharedMockAddressManager
     let mockQuestionFlow: MockQuestionFlowCoordinator
     
-    override init() {
+    init() {
         self.mockNotesService = SharedMockNotesService()
         self.mockTTSService = MockTTSService()
         self.mockLocationService = MockLocationService()
         self.mockAddressManager = SharedMockAddressManager()
         self.mockQuestionFlow = MockQuestionFlowCoordinator()
-        
-        super.init()
-        
-        // Override with mocks
-        self.notesService = mockNotesService
-        self.ttsService = mockTTSService
-        self.locationService = mockLocationService
-        self.addressManager = mockAddressManager
-        self.questionFlowCoordinator = mockQuestionFlow
     }
+    
+    // Mock service access methods
+    var notesService: NotesServiceProtocol { mockNotesService }
+    var ttsService: TTSService { mockTTSService }
+    var locationService: LocationServiceProtocol { mockLocationService }
+    var addressManager: AddressManager { mockAddressManager }
+    var questionFlowCoordinator: QuestionFlowCoordinator { mockQuestionFlow }
 }
 
 // MARK: - House Thought Generator Mock
@@ -290,14 +288,14 @@ class MessageFactory {
 class MockViewModelFactory: ViewModelFactory {
     let mockStateManager: ConversationStateManager
     
-    override init() {
+    override init(serviceContainer: ServiceContainer = .shared, appState: AppState = .shared) {
         let mockNotes = SharedMockNotesService()
         let mockTTS = MockTTSService()
         self.mockStateManager = ConversationStateManager(
             notesService: mockNotes,
             ttsService: mockTTS
         )
-        super.init()
+        super.init(serviceContainer: serviceContainer, appState: appState)
     }
     
     override func makeConversationStateManager() -> ConversationStateManager {

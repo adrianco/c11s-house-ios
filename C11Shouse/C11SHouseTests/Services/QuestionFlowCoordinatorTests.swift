@@ -283,12 +283,12 @@ class MockConversationRecognizerForFlow: ConversationRecognizer {
     var setThankYouThoughtCallCount = 0
     var lastQuestionThought: String?
     
-    override func clearHouseThought() async {
+    override func clearHouseThought() {
         clearHouseThoughtCallCount += 1
         currentHouseThought = nil
     }
     
-    override func setQuestionThought(_ question: String) async {
+    override func setQuestionThought(_ question: String) {
         setQuestionThoughtCallCount += 1
         lastQuestionThought = question
         currentHouseThought = HouseThought(
@@ -301,7 +301,7 @@ class MockConversationRecognizerForFlow: ConversationRecognizer {
         )
     }
     
-    override func setThankYouThought() async {
+    override func setThankYouThought() {
         setThankYouThoughtCallCount += 1
         currentHouseThought = HouseThought(
             thought: "Thank you for answering all my questions!",
