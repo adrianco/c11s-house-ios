@@ -75,121 +75,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                VStack(spacing: 0) {
-                    // Header
-                    VStack(spacing: 8) {
-                    Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 200, height: 200)))
-                        .resizable()
-                        .frame(width: 100, height: 100)
-                        .cornerRadius(20)
-                        .shadow(radius: 5)
-                    
-                    Text(viewModel.houseName)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                    
-                    if let thought = viewModel.houseThought {
-                        HStack(spacing: 4) {
-                            Text(thought.emotion.emoji)
-                            Text("Feeling \(thought.emotion.displayName.lowercased())")
-                        }
-                        .font(.headline)
-                        .foregroundStyle(.tint)
-                        .padding(.bottom, 4)
-                    }
-                    
-                    // Weather display or address prompt
-                    if viewModel.currentAddress != nil {
-                        // Weather display
-                        if let weather = viewModel.currentWeather {
-                            HStack(spacing: 12) {
-                                Image(systemName: weather.condition.icon)
-                                    .font(.title2)
-                                    .foregroundColor(.blue)
-                                
-                                Text(weather.temperature.formatted)
-                                    .font(.title3)
-                                    .fontWeight(.medium)
-                                
-                                Text(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 8)
-                            .background(Color.secondary.opacity(0.1))
-                            .cornerRadius(20)
-                        }
-                        
-                        // Weather loading/error states
-                        if viewModel.isLoadingWeather {
-                            ProgressView()
-                                .padding(.top, 4)
-                        } else if let weatherError = viewModel.weatherError {
-                            Button(action: {
-                                currentError = weatherError.asUserFriendlyError
-                            }) {
-                                Label("Weather Error", systemImage: "exclamationmark.triangle")
-                                    .font(.caption)
-                                    .foregroundColor(.orange)
-                            }
-                        }
-                    }
-                    
-                    Text("Conversations to help manage your house")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.top, 40)
-                .padding(.bottom, 20)
-                
-                // Main content area with navigation to voice transcription
-                VStack(spacing: 20) {
-                    // House thought display
-                    if let thought = viewModel.houseThought {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(thought.thought)
-                                .font(.subheadline)
-                                .foregroundColor(.primary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                                .padding(.vertical, 12)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.secondary.opacity(0.1))
-                                )
-                        }
-                        .padding(.horizontal)
-                        .padding(.bottom, 10)
-                    }
-                    
-                    NavigationLink(destination: ConversationView()) {
-                        HStack {
-                            Image(systemName: "message.fill")
-                            Text("Start Conversation")
-                            Image(systemName: "chevron.right")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 30)
-                        .padding(.vertical, 15)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(colors: [.blue, .purple]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .cornerRadius(25)
-                        .shadow(radius: 5)
-                    }
-                    .padding(.top, 20)
-                }
-                .frame(maxHeight: .infinity)
-                
-                    Spacer()
-                }
-                .background(
+                // Background gradient
                 LinearGradient(
                     gradient: Gradient(colors: [
                         Color(UIColor.systemBackground),
@@ -199,43 +85,155 @@ struct ContentView: View {
                     endPoint: .bottom
                 )
                 .ignoresSafeArea()
-            )
-            .navigationTitle("Conscious House")
-            .navigationBarHidden(true)
-            
-            // Settings button overlay
-            VStack {
-                HStack {
+                
+                // Main content
+                VStack(spacing: 30) {
+                    // App icon and title
+                    VStack(spacing: 16) {
+                        Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 200, height: 200)))
+                            .resizable()
+                            .frame(width: 120, height: 120)
+                            .cornerRadius(24)
+                            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+                        
+                        Text(viewModel.houseName)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        
+                        if let thought = viewModel.houseThought {
+                            HStack(spacing: 4) {
+                                Text(thought.emotion.emoji)
+                                    .font(.title2)
+                                Text("Feeling \(thought.emotion.displayName.lowercased())")
+                                    .font(.headline)
+                            }
+                            .foregroundStyle(.tint)
+                        }
+                        
+                        Text("Conversations to help manage your house")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.top, 60)
+                    
+                    // Weather and thought section
+                    VStack(spacing: 16) {
+                        // Weather display
+                        if viewModel.currentAddress != nil {
+                            if let weather = viewModel.currentWeather {
+                                HStack(spacing: 12) {
+                                    Image(systemName: weather.condition.icon)
+                                        .font(.title2)
+                                        .foregroundColor(.blue)
+                                    
+                                    Text(weather.temperature.formatted)
+                                        .font(.title3)
+                                        .fontWeight(.medium)
+                                    
+                                    Text(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 10)
+                                .background(Color.secondary.opacity(0.1))
+                                .cornerRadius(20)
+                            }
+                            
+                            if viewModel.isLoadingWeather {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                            } else if let weatherError = viewModel.weatherError {
+                                Button(action: {
+                                    currentError = weatherError.asUserFriendlyError
+                                }) {
+                                    Label("Weather Error", systemImage: "exclamationmark.triangle")
+                                        .font(.caption)
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                        }
+                        
+                        // House thought
+                        if let thought = viewModel.houseThought {
+                            Text(thought.thought)
+                                .font(.body)
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 16)
+                                .frame(maxWidth: 340)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(Color.secondary.opacity(0.1))
+                                )
+                        }
+                    }
+                    
                     Spacer()
                     
-                    Menu {
-                        Button(action: { showNotesView = true }) {
-                            Label("Manage Notes", systemImage: "note.text")
+                    // Start conversation button
+                    NavigationLink(destination: ConversationView()) {
+                        HStack {
+                            Image(systemName: "message.fill")
+                            Text("Start Conversation")
+                            Image(systemName: "chevron.right")
                         }
-                        
-                        Button(action: { showVoiceSettings = true }) {
-                            Label("Voice Settings", systemImage: "speaker.wave.2.fill")
-                        }
-                        
-                        Button(action: { showVoiceTest = true }) {
-                            Label("Test Voice", systemImage: "waveform")
-                        }
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                            .frame(width: 44, height: 44)
-                            .background(Color(UIColor.secondarySystemBackground))
-                            .clipShape(Circle())
-                            .shadow(radius: 2)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 16)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [.blue, .purple]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .cornerRadius(25)
+                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                     }
-                    .padding(.trailing, 20)
-                    .padding(.top, 50)
+                    
+                    Spacer()
+                        .frame(height: 100)
                 }
                 
-                Spacer()
+                // Settings button overlay
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        Menu {
+                            Button(action: { showNotesView = true }) {
+                                Label("Manage Notes", systemImage: "note.text")
+                            }
+                            
+                            Button(action: { showVoiceSettings = true }) {
+                                Label("Voice Settings", systemImage: "speaker.wave.2.fill")
+                            }
+                            
+                            Button(action: { showVoiceTest = true }) {
+                                Label("Test Voice", systemImage: "waveform")
+                            }
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                                .font(.title2)
+                                .foregroundColor(.blue)
+                                .frame(width: 44, height: 44)
+                                .background(Color(UIColor.secondarySystemBackground))
+                                .clipShape(Circle())
+                                .shadow(radius: 2)
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.top, 50)
+                    }
+                    
+                    Spacer()
+                }
             }
-            // Hidden navigation links inside ZStack
+            .navigationTitle("Conscious House")
+            .navigationBarHidden(true)
             .background(
                 Group {
                     NavigationLink(destination: NotesView(), isActive: $showNotesView) {
@@ -249,7 +247,6 @@ struct ContentView: View {
                     }
                 }
             )
-            }  // End of ZStack
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {

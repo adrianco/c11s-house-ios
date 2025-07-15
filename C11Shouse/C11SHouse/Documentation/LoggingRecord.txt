@@ -9,97 +9,104 @@
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
 Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: 7774A959-3F92-4BC6-9AF8-8A60311D7DAB
+🚀 ONBOARDING SESSION STARTED - ID: DFB3FD6F-B5DD-4620-BA85-13611E88F36B
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 PHASE TRANSITION: Start → welcome
+👆 USER ACTION: view_appeared in welcome
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] No saved address found
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] No saved address found
 [WeatherCoordinator] Created Weather question in notes store
-👆 USER ACTION: view_appeared in welcome
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 👆 USER ACTION: button_tap in welcome
    Details: button: begin_setup
-Completed onboarding phase: Welcome in 17 seconds
+Completed onboarding phase: Welcome in 11 seconds
 Started onboarding phase: Setup
 📍 PHASE TRANSITION: Welcome → Setup
-[ContentViewModel] 📍 Checking for address update
-[ContentViewModel] No saved address found
-[AddressManager] Stored detected address (not marked as answered): 14450 Roland Canyon Rd, Salinas, CA 93908
-🔄 SERVICE CALL: address_detection - ✅ SUCCESS
-✨ FEATURE USED: auto_address_detection in permissions
-   Details: address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55589023223638, longitude: -121.71800982134336))
-Completed onboarding phase: Setup in 6 seconds
+Completed onboarding phase: Setup in 5 seconds
 Started onboarding phase: Complete Setup
-⏱️ Phase 'Setup' completed in 6.1s
+⏱️ Phase 'Setup' completed in 5.2s
 📍 PHASE TRANSITION: Setup → Complete Setup
 👆 USER ACTION: view_completion_screen in completion
-Completed onboarding phase: Complete Setup in 2 seconds
-Onboarding completed in 25 seconds
+Completed onboarding phase: Complete Setup in 6 seconds
+Onboarding completed in 23 seconds
 👆 USER ACTION: onboarding_complete in Complete Setup
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏁 ONBOARDING SESSION ENDED - ID: 7774A959-3F92-4BC6-9AF8-8A60311D7DAB
+🏁 ONBOARDING SESSION ENDED - ID: DFB3FD6F-B5DD-4620-BA85-13611E88F36B
 Status: ✅ COMPLETED
-Total Duration: 25.6s
+Total Duration: 23.8s
 
 ╔════════════════════════════════════════════════════════════════╗
 ║                    ONBOARDING SESSION SUMMARY                   ║
 ╠════════════════════════════════════════════════════════════════╣
-║ Session ID: 7774A959-3F92-4BC6-9AF8-8A60311D7DAB
-║ Start Time: 7/14/25, 4:09:51 PM
-║ Total Duration: 25.6s
+║ Session ID: DFB3FD6F-B5DD-4620-BA85-13611E88F36B
+║ Start Time: 7/15/25, 1:18:30 PM
+║ Total Duration: 23.8s
 ║ Phases Completed: 1
 ╠════════════════════════════════════════════════════════════════╣
 ║                         PHASE TIMINGS                           ║
 ╠════════════════════════════════════════════════════════════════╣
-║ Setup                │ 6.1s            ║
+║ Setup                │ 5.2s            ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                         USER ACTIONS                            ║
 ╠════════════════════════════════════════════════════════════════╣
 ║ phase_started                  │ 3     ║
-║ service_call                   │ 1     ║
 ║ view_completion_screen         │ 1     ║
 ║ onboarding_complete            │ 1     ║
 ║ view_appeared                  │ 1     ║
-║ feature_auto_address_detection │ 1     ║
 ║ button_tap                     │ 1     ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                        FEATURE USAGE                            ║
 ╠════════════════════════════════════════════════════════════════╣
-║ auto_address_detection         │ 1     ║
+
 ╚════════════════════════════════════════════════════════════════╝
 
 === COPYABLE ONBOARDING LOG ===
 
-ONBOARDING ACTION LOG - Session: 7774A959-3F92-4BC6-9AF8-8A60311D7DAB
+ONBOARDING ACTION LOG - Session: DFB3FD6F-B5DD-4620-BA85-13611E88F36B
 ============================================================
 
-[7/14/25, 4:09:51 PM] welcome - phase_started - previous_phase: none
-[7/14/25, 4:09:51 PM] welcome - view_appeared
-[7/14/25, 4:10:09 PM] welcome - button_tap - button: begin_setup
-[7/14/25, 4:10:09 PM] Setup - phase_started - previous_phase: Welcome
-[7/14/25, 4:10:14 PM] permissions - service_call - success: true, service: address_detection, duration: 463.21ms
-[7/14/25, 4:10:14 PM] permissions - feature_auto_address_detection - address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55589023223638, longitude: -121.71800982134336))
-[7/14/25, 4:10:15 PM] Complete Setup - phase_started - previous_phase: Setup
-[7/14/25, 4:10:15 PM] completion - view_completion_screen
-[7/14/25, 4:10:17 PM] Complete Setup - onboarding_complete
+[7/15/25, 1:18:30 PM] welcome - phase_started - previous_phase: none
+[7/15/25, 1:18:30 PM] welcome - view_appeared
+[7/15/25, 1:18:42 PM] welcome - button_tap - button: begin_setup
+[7/15/25, 1:18:42 PM] Setup - phase_started - previous_phase: Welcome
+[7/15/25, 1:18:47 PM] Complete Setup - phase_started - previous_phase: Setup
+[7/15/25, 1:18:47 PM] completion - view_completion_screen
+[7/15/25, 1:18:54 PM] Complete Setup - onboarding_complete
 
 
 === END OF LOG ===
 
+App is being debugged, do not track this hang
+Hang detected: 0.27s (debugger attached, not reporting)
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] No saved address found
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] No saved address found
 [ConversationView] onAppear called
 [ConversationView] hasCompletedPhase4Tutorial: false
 [ConversationView] isInPhase4Tutorial: false
-[ConversationView] setupView() called
-[ConversationView] Loading initial state...
-[ConversationView] No saved house name found
-[ConversationView] Adding welcome message
-[ConversationView] Loading next question...
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Adding welcome message
+[ConversationViewModel] Loading next question...
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
 [ContentViewModel] 📍 Checking for address update
@@ -107,21 +114,35 @@ ONBOARDING ACTION LOG - Session: 7774A959-3F92-4BC6-9AF8-8A60311D7DAB
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 5
 [QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[ConversationView] hasCompletedAllQuestions: false
-[ConversationView] Questions still pending, current: Is this the right address?
-[QuestionFlowCoordinator] Found stored detected address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions still pending, current: Is this the right address?
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] No saved address found
+[AddressManager] Stored detected address (not marked as answered): 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] Formatted address question with detected address
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] No saved address found
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
           IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
-[ConversationView] processUserInput: '14450 Roland Canyon Rd, Salinas, CA 93908'
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] No saved address found
-[ConversationView] Answering question: Is this the right address?
+[ConversationView] onAppear called
+[ConversationView] hasCompletedPhase4Tutorial: false
+[ConversationView] isInPhase4Tutorial: false
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Found 2 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions still pending, current: Is this the right address?
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] No saved address found
+[ConversationViewModel] processUserInput: '14450 Roland Canyon Rd, Salinas, CA 93908'
+[ConversationViewModel] Answering question: Is this the right address?
 [QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
 [QuestionFlowCoordinator] Answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
 [ContentViewModel] 📍 Checking for address update
@@ -154,13 +175,16 @@ Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
 [AddressManager] User confirmed address, now saving as answered: 14450 Roland Canyon Rd, Salinas, CA 93908
 [QuestionFlowCoordinator] 🌤️ Triggering weather fetch for confirmed address
 [QuestionFlowCoordinator] Address details: 14450 Roland Canyon Rd, Salinas, CA 93908
 [AddressSuggestionService] Starting weather fetch for confirmed address
 [AddressSuggestionService] Address: 14450 Roland Canyon Rd, Salinas, CA 93908
-[AddressSuggestionService] Coordinates: 36.55589023223638, -121.71800982134336
-[AddressSuggestionService] Timestamp: 2025-07-14 23:10:24 +0000
+[AddressSuggestionService] Coordinates: 36.55577206432049, -121.7179374741336
+[AddressSuggestionService] Timestamp: 2025-07-15 20:19:55 +0000
 [AddressSuggestionService] Ensuring weather question exists in notes store
 [WeatherCoordinator] Weather question already exists
 [AddressSuggestionService] Initiating weather fetch
@@ -176,12 +200,12 @@ Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
 [WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: clear
+[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
 [WeatherCoordinator] Updated weather note successfully
 [AddressSuggestionService] ✅ Weather fetch successful
-[AddressSuggestionService] Condition: clear
-[AddressSuggestionService] Temperature: 22.740449905395508°celsius
-[AddressSuggestionService] Humidity: 56%
+[AddressSuggestionService] Condition: partlyCloudy
+[AddressSuggestionService] Temperature: 20.06578826904297°<_NSStatic_NSUnitTemperature: 0x20f382a48> °C
+[AddressSuggestionService] Humidity: 66%
 [AddressSuggestionService] Wind: 12 km/h
 [QuestionFlowCoordinator] Weather fetch initiated
 [QuestionFlowCoordinator] loadNextQuestion() called
@@ -189,12 +213,12 @@ Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 3
 [QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[ConversationView] After loading, hasCompletedAllQuestions: false
-[ConversationView] processUserInput: 'Roland House'
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
-[ConversationView] Answering question: What should I call this house?
+[ConversationViewModel] processUserInput: 'Roland House'
+[ConversationViewModel] Answering question: What should I call this house?
 [QuestionFlowCoordinator] Saving answer for question: 'What should I call this house?'
 [QuestionFlowCoordinator] Answer: 'Roland House'
 [ContentViewModel] 📍 Checking for address update
@@ -221,26 +245,24 @@ Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 2
 [QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[ConversationView] After loading, hasCompletedAllQuestions: false
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
+Error in destroying pipe Error Domain=NSCocoaErrorDomain Code=4099 "The connection from pid 23235 on anonymousListener or serviceListener was invalidated from this process." UserInfo={NSDebugDescription=The connection from pid 23235 on anonymousListener or serviceListener was invalidated from this process.}
 fopen failed for data file: errno = 2 (No such file or directory)
 Errors found! Invalidating cache...
 Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
 fopen failed for data file: errno = 2 (No such file or directory)
 Errors found! Invalidating cache...
 App is being debugged, do not track this hang
-Hang detected: 0.35s (debugger attached, not reporting)
-[ContentViewModel] 📍 Checking for address update
-[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Address unchanged, no update needed
+Hang detected: 0.57s (debugger attached, not reporting)
 Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
-<0x14a251180> Gesture: System gesture gate timed out.
+<0x122241400> Gesture: System gesture gate timed out.
 App is being debugged, do not track this hang
-Hang detected: 0.89s (debugger attached, not reporting)
-[ConversationView] processUserInput: 'Adrian'
+Hang detected: 1.40s (debugger attached, not reporting)
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
-[ConversationView] Answering question: What's your name?
+[ConversationViewModel] processUserInput: 'Adrian'
+[ConversationViewModel] Answering question: What's your name?
 [QuestionFlowCoordinator] Saving answer for question: 'What's your name?'
 [QuestionFlowCoordinator] Answer: 'Adrian'
 [ContentViewModel] 📍 Checking for address update
@@ -267,17 +289,17 @@ Hang detected: 0.89s (debugger attached, not reporting)
 [QuestionFlowCoordinator] Loaded notes store with 5 questions
 [QuestionFlowCoordinator] Questions needing review: 1
 [QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[ConversationView] After loading, hasCompletedAllQuestions: false
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
 App is being debugged, do not track this hang
-Hang detected: 0.58s (debugger attached, not reporting)
+Hang detected: 0.50s (debugger attached, not reporting)
 -[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
 Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
-[ConversationView] processUserInput: 'Studio'
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
-[ConversationView] Answering question: Let's start by creating your first room note! What room would you like to add a note about?
-[ConversationView] This is the Phase 4 intro question, handling specially
+[ConversationViewModel] processUserInput: 'Studio'
+[ConversationViewModel] Answering question: Let's start by creating your first room note! What room would you like to add a note about?
+[ConversationViewModel] This is the Phase 4 intro question, handling specially
 [QuestionFlowCoordinator] Saving answer for question: 'Let's start by creating your first room note! What room would you like to add a note about?'
 [QuestionFlowCoordinator] Answer: 'Studio'
 [ContentViewModel] 📍 Checking for address update
@@ -294,6 +316,9 @@ Received an error while accessing com.apple.speech.localspeechrecognition servic
 [QuestionFlowCoordinator] Posting AllQuestionsComplete notification
 [QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
 [QuestionFlowCoordinator] Answer saved successfully
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] 📍 Checking for address update
@@ -310,13 +335,16 @@ Received an error while accessing com.apple.speech.localspeechrecognition servic
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
 [WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: clear
+[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
+tcp_input [C1.1.1.1:3] flags=[R.] seq=492675368, ack=730045582, win=524 state=CLOSED rcv_nxt=492675344, snd_una=730045557
 App is being debugged, do not track this hang
-Hang detected: 0.55s (debugger attached, not reporting)
-tcp_input [C1.1.1.1:3] flags=[R.] seq=4132146937, ack=409127323, win=524 state=CLOSED rcv_nxt=4132146913, snd_una=409127323
+Hang detected: 0.57s (debugger attached, not reporting)
 -[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
 Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
-[ConversationView] processUserInput: 'Music'
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ConversationViewModel] processUserInput: 'It's where the music stuff is'
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
@@ -341,22 +369,218 @@ Received an error while accessing com.apple.speech.localspeechrecognition servic
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+
+[lots of similar lines removed]
+
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[SFSpeechRecognitionTask localSpeechRecognitionClient:speechRecordingDidFail:]_block_invoke Ignoring subsequent local speech recording error: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
 [ContentViewModel] 📍 Checking for address update
 [ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Address unchanged, no update needed
-        CHHapticEngine.mm:627   -[CHHapticEngine createHapticPlayerWithOptions:]: ERROR: Server failure: Error Domain=com.apple.CoreHaptics Code=-4810 "(null)"
-failed initializing core haptics engine for <_UIFeedbackCoreHapticsEngine: 0x14c5ac480>: Error Domain=com.apple.CoreHaptics Code=-4810 "(null)"
-        AVHapticClient.mm:1232  -[AVHapticClient getAsyncDelegateForMethod:errorHandler:]_block_invoke: ERROR: Async XPC call for 'setupConnectionWithOptions:error:' (client ID 0x0) failed: Couldn’t communicate with a helper application.
-        AVHapticClient.mm:1232  -[AVHapticClient getAsyncDelegateForMethod:errorHandler:]_block_invoke: ERROR: Async XPC call for 'setupConnectionWithOptions:error:' (client ID 0x0) failed: Couldn’t communicate with a helper application.
-        AVHapticClient.mm:1232  -[AVHapticClient getAsyncDelegateForMethod:errorHandler:]_block_invoke: ERROR: Async XPC call for 'setupConnectionWithOptions:error:' (client ID 0x0) failed: Couldn’t communicate with a helper application.
-        AVHapticClient.mm:1232  -[AVHapticClient getAsyncDelegateForMethod:errorHandler:]_block_invoke: ERROR: Async XPC call for 'setupConnectionWithOptions:error:' (client ID 0x0) failed: Couldn’t communicate with a helper application.
-        AVHapticClient.mm:1232  -[AVHapticClient getAsyncDelegateForMethod:errorHandler:]_block_invoke: ERROR: Async XPC call for 'setupConnectionWithOptions:error:' (client ID 0x0) failed: Couldn’t communicate with a helper application.
-        AVHapticClient.mm:1232  -[AVHapticClient getAsyncDelegateForMethod:errorHandler:]_block_invoke: ERROR: Async XPC call for 'setupConnectionWithOptions:error:' (client ID 0x0) failed: Couldn’t communicate with a helper application.
+[ConversationViewModel] processUserInput: 'Tell me about the studio'
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ConversationViewModel] processUserInput: 'Add a room note'
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ConversationViewModel] processUserInput: 'New room note'
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ConversationViewModel] processUserInput: 'Workshop'
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+App is being debugged, do not track this hang
+Hang detected: 0.58s (debugger attached, not reporting)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ConversationViewModel] processUserInput: 'It got cars and a TV'
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
+[ContentViewModel] 📍 Checking for address update
+[ContentViewModel] Found saved address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Address unchanged, no update needed
 -[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
 -[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
 -[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
--[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
-[C:3] Error received: Connection interrupted.
-[C:3-1] Error received: Connection interrupted.
--[RTIInputSystemClient _configureConnection:withMachName:]_block_invoke  Client connection to service was interrupted: <NSXPCConnection: 0x14a3db020> connection to service with pid -1 named (null)
-Snapshotting a view (0x14ac13480, UIKeyboardImpl) that is not in a visible window requires afterScreenUpdates:YES.
+Snapshotting a view (0x122c23800, UIKeyboardImpl) that is not in a visible window requires afterScreenUpdates:YES.
+Message from debugger: killed

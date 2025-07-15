@@ -60,6 +60,10 @@ class ContentViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var weatherTimer: Timer?
     
+    // Debounce for UserDefaults changes
+    private var addressUpdateWorkItem: DispatchWorkItem?
+    private var lastCheckedAddressHash: String?
+    
     init(
         appState: AppState,
         locationService: LocationServiceProtocol,
@@ -128,11 +132,11 @@ class ContentViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        // Monitor for address changes in UserDefaults
+        // Monitor for address changes in UserDefaults with debouncing
         NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.checkForAddressUpdate()
+                self?.scheduleAddressUpdateCheck()
             }
             .store(in: &cancellables)
         
@@ -140,8 +144,15 @@ class ContentViewModel: ObservableObject {
         NotificationCenter.default.publisher(for: Notification.Name("AllQuestionsComplete"))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                // Reload everything when questions are complete
-                self?.loadSavedData()
+                guard let self = self else { return }
+                
+                // Only refresh weather if we have an address
+                // Don't call loadSavedData() as it can create loops
+                if self.appState.homeAddress != nil {
+                    Task {
+                        await self.refreshWeather()
+                    }
+                }
             }
             .store(in: &cancellables)
         
@@ -398,28 +409,49 @@ class ContentViewModel: ObservableObject {
     }
     
     
+    private func scheduleAddressUpdateCheck() {
+        // Cancel any existing work item
+        addressUpdateWorkItem?.cancel()
+        
+        // Create a new work item with a delay
+        addressUpdateWorkItem = DispatchWorkItem { [weak self] in
+            self?.checkForAddressUpdate()
+        }
+        
+        // Schedule it with a 0.5 second delay to debounce rapid changes
+        if let workItem = addressUpdateWorkItem {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        }
+    }
+    
     private func checkForAddressUpdate() {
-        print("[ContentViewModel] 📍 Checking for address update")
         // Check if we have a new address that we haven't loaded yet
         if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
            let address = try? JSONDecoder().decode(Address.self, from: addressData) {
             
-            print("[ContentViewModel] Found saved address: \(address.fullAddress)")
-            // Only update if the address is different
-            if appState.homeAddress?.fullAddress != address.fullAddress {
-                print("[ContentViewModel] ✅ New address detected, updating")
-                appState.homeAddress = address
+            // Create a hash of the address to check if it's truly different
+            let addressHash = "\(address.fullAddress)-\(address.coordinate.latitude)-\(address.coordinate.longitude)"
+            
+            // Only update if the address hash is different from last check
+            if lastCheckedAddressHash != addressHash {
+                print("[ContentViewModel] 📍 Address update detected: \(address.fullAddress)")
+                lastCheckedAddressHash = addressHash
                 
-                // Fetch weather for the new address
-                Task {
-                    print("[ContentViewModel] 🌤️ Triggering weather refresh for new address")
-                    await refreshWeather()
+                // Only update if the address is different from current state
+                if appState.homeAddress?.fullAddress != address.fullAddress {
+                    print("[ContentViewModel] ✅ New address, updating state and fetching weather")
+                    appState.homeAddress = address
+                    
+                    // Fetch weather for the new address
+                    Task {
+                        await refreshWeather()
+                    }
                 }
-            } else {
-                print("[ContentViewModel] Address unchanged, no update needed")
             }
-        } else {
-            print("[ContentViewModel] No saved address found")
+        } else if lastCheckedAddressHash != nil {
+            // Address was removed
+            print("[ContentViewModel] Address removed from UserDefaults")
+            lastCheckedAddressHash = nil
         }
     }
 }

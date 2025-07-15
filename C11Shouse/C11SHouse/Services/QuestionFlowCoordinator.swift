@@ -160,15 +160,9 @@ class QuestionFlowCoordinator: ObservableObject {
                     print("[QuestionFlowCoordinator] User confirmed address, now saving as answered")
                     try await manager.saveAddress(address)
                     
-                    // Trigger weather fetch after address confirmation
-                    if let suggestionService = addressSuggestionService {
-                        print("[QuestionFlowCoordinator] 🌤️ Triggering weather fetch for confirmed address")
-                        print("[QuestionFlowCoordinator] Address details: \(address.fullAddress)")
-                        await suggestionService.fetchWeatherForConfirmedAddress(address)
-                        print("[QuestionFlowCoordinator] Weather fetch initiated")
-                    } else {
-                        print("[QuestionFlowCoordinator] ⚠️ No addressSuggestionService available for weather fetch")
-                    }
+                    // Weather fetch is handled by ContentViewModel when it detects the address update
+                    // This prevents duplicate weather fetches
+                    print("[QuestionFlowCoordinator] Address saved - ContentViewModel will fetch weather")
                 }
             }
             
