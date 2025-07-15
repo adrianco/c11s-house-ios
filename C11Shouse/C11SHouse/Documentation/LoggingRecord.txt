@@ -11,38 +11,25 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[ContentViewModel] Weather update received: nil
 [ContentViewModel] 🌤️ refreshWeather() called
+[ContentViewModel] Call stack: ["0   C11SHouse.debug.dylib               0x000000010374efcc $s9C11SHouse16ContentViewModelC14refreshWeatheryyYaFTY0_ + 384", "1   C11SHouse.debug.dylib               0x000000010374e501 $s9C11SHouse16ContentViewModelC13loadSavedData33_841AF88798EBE382265FA5418557A0F7LLyyFyyYacfU_TQ1_ + 1", "2   C11SHouse.debug.dylib               0x000000010374e68d $s9C11SHouse16ContentViewModelC13loadSavedData33_841AF88798EBE382265FA5418557A0F7LLyyFyyYacfU_TATQ0_ + 1"]
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
-[WeatherCoordinator] Weather question already exists
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Weather question already exists
+[ContentViewModel] Weather update received: mostlyClear
 [WeatherCoordinator] Weather question already exists
 [WeatherCoordinator] Updated weather note successfully
 [ContentViewModel] ✅ Weather fetch successful: mostlyClear
 [ContentViewModel] Temperature: 69°F
 [ContentViewModel] Current weather after fetch: exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: mostlyClear
-[ContentViewModel] Temperature: 69°F
-[ContentViewModel] Current weather after fetch: nil
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: mostlyClear
-[ContentViewModel] Temperature: 69°F
-[ContentViewModel] Current weather after fetch: nil
 [ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
-tcp_input [C1.1.1:3] flags=[R.] seq=2395624680, ack=2600192774, win=524 state=CLOSED rcv_nxt=2395624656, snd_una=2600192773
+tcp_input [C1.1.1:3] flags=[R.] seq=4237364786, ack=2674348046, win=524 state=CLOSED rcv_nxt=4237364762, snd_una=2674348021
 [ConversationView] onAppear called
 [ConversationView] hasCompletedPhase4Tutorial: true
 [ConversationView] isInPhase4Tutorial: false
@@ -60,10 +47,20 @@ tcp_input [C1.1.1:3] flags=[R.] seq=2395624680, ack=2600192774, win=524 state=CL
 [ConversationViewModel] hasCompletedAllQuestions: true
 [ConversationViewModel] All questions complete, starting Phase 4 tutorial
 [ConversationViewModel] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question
+Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
+App is being debugged, do not track this hang
+Hang detected: 0.49s (debugger attached, not reporting)
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+<0x103245040> Gesture: System gesture gate timed out.
+App is being debugged, do not track this hang
+Hang detected: 0.86s (debugger attached, not reporting)
+[ConversationViewModel] processUserInput: 'Add device note'
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-App is being debugged, do not track this hang
-Hang detected: 0.30s (debugger attached, not reporting)
+          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationViewModel] processUserInput: 'Weather station'
 Message from debugger: killed

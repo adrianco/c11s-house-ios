@@ -19,6 +19,7 @@
 
 import Foundation
 import WeatherKit
+import SwiftUI
 
 // MARK: - Main Weather Model
 
@@ -204,6 +205,37 @@ enum WeatherCondition: String, Codable {
             return "hurricane"
         case .blowingDust: 
             return "sun.dust.fill"
+        }
+    }
+    
+    var iconColor: Color {
+        switch self {
+        case .clear, .mostlyClear:
+            return .yellow
+        case .cloudy, .mostlyCloudy, .partlyCloudy:
+            return .gray
+        case .rain, .drizzle, .heavyRain, .sunShowers:
+            return .blue
+        case .snow, .flurries, .heavySnow, .blizzard, .blowingSnow:
+            return .white
+        case .thunderstorms, .isolatedThunderstorms, .scatteredThunderstorms, .strongStorms:
+            return .purple
+        case .foggy, .haze, .smoky:
+            return .gray
+        case .windy, .breezy:
+            return .mint
+        case .sleet, .freezingRain, .freezingDrizzle, .wintryMix:
+            return .cyan
+        case .hail:
+            return .white
+        case .hot:
+            return .red
+        case .frigid:
+            return .blue
+        case .tropicalStorm, .hurricane:
+            return .red
+        case .blowingDust:
+            return .brown
         }
     }
 }

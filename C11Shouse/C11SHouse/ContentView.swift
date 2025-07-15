@@ -125,14 +125,14 @@ struct ContentView: View {
                                 HStack(spacing: 12) {
                                     Image(systemName: weather.condition.icon)
                                         .font(.title2)
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(weather.condition.iconColor)
                                     
                                     Text(weather.temperature.formatted)
-                                        .font(.title3)
+                                        .font(.title2)
                                         .fontWeight(.medium)
                                     
                                     Text(weather.condition.rawValue.replacingOccurrences(of: "_", with: " ").capitalized)
-                                        .font(.caption)
+                                        .font(.body)
                                         .foregroundColor(.secondary)
                                 }
                                 .padding(.horizontal, 20)
