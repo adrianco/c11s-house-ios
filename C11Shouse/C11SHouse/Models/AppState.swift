@@ -248,11 +248,3 @@ enum TemperatureUnit: String, CaseIterable {
     }
 }
 
-/// Onboarding phase tracking
-enum OnboardingPhase: String {
-    case welcome = "welcome"
-    case permissions = "permissions"
-    case questions = "questions"
-    case tutorial = "tutorial"
-    case complete = "complete"
-}

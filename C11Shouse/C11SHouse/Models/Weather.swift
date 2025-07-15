@@ -41,33 +41,51 @@ struct Weather: Codable {
 
 struct Temperature: Codable {
     let value: Double
-    let unit: TemperatureUnit
+    let unit: WeatherKit.UnitTemperature
     
     var formatted: String {
-        switch unit {
-        case .celsius:
-            return String(format: "%.0f°C", value)
-        case .fahrenheit:
-            return String(format: "%.0f°F", value)
-        @unknown default:
-            return String(format: "%.0f°", value)
+        let measurement = Measurement(value: value, unit: unit)
+        let formatter = MeasurementFormatter()
+        formatter.numberFormatter.maximumFractionDigits = 0
+        return formatter.string(from: measurement)
+    }
+    
+    init(value: Double, unit: WeatherKit.UnitTemperature) {
+        self.value = value
+        self.unit = unit
+    }
+    
+    // Codable conformance
+    enum CodingKeys: String, CodingKey {
+        case value
+        case unit
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        value = try container.decode(Double.self, forKey: .value)
+        let unitString = try container.decode(String.self, forKey: .unit)
+        switch unitString {
+        case "celsius":
+            unit = .celsius
+        case "fahrenheit":
+            unit = .fahrenheit
+        default:
+            unit = .celsius
         }
     }
     
-    init(value: Double, unit: TemperatureUnit) {
-        self.value = value
-        self.unit = unit
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(value, forKey: .value)
+        let unitString = unit == .celsius ? "celsius" : "fahrenheit"
+        try container.encode(unitString, forKey: .unit)
     }
     
     init(from measurement: Measurement<UnitTemperature>) {
         self.value = measurement.value
         self.unit = measurement.unit == .celsius ? .celsius : .fahrenheit
     }
-}
-
-enum TemperatureUnit: String, Codable {
-    case celsius
-    case fahrenheit
 }
 
 // MARK: - Weather Conditions
