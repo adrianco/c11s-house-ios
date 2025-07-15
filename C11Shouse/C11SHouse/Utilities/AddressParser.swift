@@ -39,7 +39,7 @@ enum AddressParser {
             let city = components[1]
             
             // Parse state and postal code from third component
-            let stateZipComponents = components[2].components(separatedBy: " ")
+            let stateZipComponents = components[2].components(separatedBy: " ").filter { !$0.isEmpty }
             let state = stateZipComponents.first ?? ""
             let postalCode = stateZipComponents.count > 1 ? stateZipComponents[1] : ""
             
@@ -128,17 +128,18 @@ enum AddressParser {
     /// - Parameter street: The full street address (e.g., "123 Main Street")
     /// - Returns: The cleaned street name without numbers or suffixes
     static func extractStreetName(from street: String) -> String {
-        let cleanedStreet = street
+        var cleanedStreet = street
             // Remove house numbers
             .replacingOccurrences(of: #"\d+"#, with: "", options: .regularExpression)
-            // Remove street suffixes
-            .replacingOccurrences(of: streetSuffixPattern,
-                                with: "",
-                                options: [.regularExpression, .caseInsensitive])
             // Clean up whitespace
             .trimmingCharacters(in: .whitespacesAndNewlines)
         
-        return cleanedStreet
+        // Remove street suffixes from the end only (greedy match from right to left)
+        // This handles cases like "Court Street" -> "Court" and "Park Place" -> "Park"
+        let suffixPattern = #"\s+(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy|Plaza)\.?\s*$"#
+        cleanedStreet = cleanedStreet.replacingOccurrences(of: suffixPattern, with: "", options: [.regularExpression, .caseInsensitive])
+        
+        return cleanedStreet.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     /// Extract just the street component from a full address string

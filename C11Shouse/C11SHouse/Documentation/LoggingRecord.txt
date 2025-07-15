@@ -13,48 +13,48 @@
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
 [ContentViewModel] Weather update received: nil
 [ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Fetching weather for: 123 Test Street, Test City, TS 12345
 [ContentViewModel] Current weather before fetch: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[WeatherCoordinator] Weather question already exists
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-App is being debugged, do not track this hang
-Hang detected: 0.35s (debugger attached, not reporting)
-Test Suite 'All tests' started at 2025-07-15 15:07:35.532.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-15 15:07:35.532.
-Test Suite 'AddressManagerTests' started at 2025-07-15 15:07:35.532.
+[WeatherCoordinator] Weather question creation already in progress
+Test Suite 'All tests' started at 2025-07-15 15:27:20.536.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-15 15:27:20.536.
+Test Suite 'AddressManagerTests' started at 2025-07-15 15:27:20.536.
 Test Case '-[C11SHouseTests.AddressManagerTests testAddressErrorDescriptions]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testAddressErrorDescriptions]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:220: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError] : XCTAssertFalse failed
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError]' failed (0.136 seconds).
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' started.
-[ContentViewModel] Weather update received: partlyCloudy
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:204: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError] : XCTAssertFalse failed
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' failed (0.010 seconds).
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' started.
+[ContentViewModel] Weather update received: windy
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: 57380E57-10D6-4B3F-A1AE-A8F1F127A5E3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
 [WeatherCoordinator] Weather question already exists
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' passed (0.006 seconds).
+👆 USER ACTION: view_appeared in welcome
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:229: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError] : XCTAssertFalse failed
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError]' failed (0.239 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' started.
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:213: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError] : XCTAssertFalse failed
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' failed (0.012 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' started.
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' passed (0.008 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' started.
 [WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
-[ContentViewModel] Temperature: 68°F
+[ContentViewModel] ✅ Weather fetch successful: windy
+[ContentViewModel] Temperature: 63°F
 [ContentViewModel] Current weather after fetch: exists
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:183: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission] : failed - Expected error to be thrown
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' failed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:166: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission] : failed - Expected error to be thrown
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:173: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission] : XCTAssertFalse failed
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' failed (0.005 seconds).
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:182: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission] : XCTAssertFalse failed
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' failed (0.006 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithPermission]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithPermission]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration]' started.
 [AddressManager] User confirmed address, now saving as answered: 100 Universal City Plaza, Universal City, CA 91608
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:542: error: -[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration] : XCTAssertEqual failed: ("Universal City Plaza House") is not equal to ("Universal City House")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:550: error: -[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration] : XCTAssertEqual failed: ("0") is not equal to ("2")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:574: error: -[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration] : XCTAssertEqual failed: ("0") is not equal to ("2")
 Test Case '-[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration]' failed (0.002 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromFullAddress]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromFullAddress]' passed (0.000 seconds).
@@ -67,7 +67,7 @@ Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenExists]'
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenNotExists]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenNotExists]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWithCorruptData]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWithCorruptData]' passed (0.000 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWithCorruptData]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithDetectedCoordinates]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithDetectedCoordinates]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithInvalidFormat]' started.
@@ -86,13 +86,11 @@ Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToAllStorageLocat
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesHandlesError]' started.
 Error saving address to notes: decodingFailed(Error Domain=test Code=1 "(null)")
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesHandlesError]' passed (0.000 seconds).
-Test Suite 'AddressManagerTests' failed at 2025-07-15 15:07:35.702.
-	 Executed 21 tests, with 7 failures (0 unexpected) in 0.168 (0.170) seconds
-Test Suite 'AddressParserTests' started at 2025-07-15 15:07:35.702.
+Test Suite 'AddressManagerTests' failed at 2025-07-15 15:27:20.816.
+	 Executed 21 tests, with 4 failures (0 unexpected) in 0.277 (0.279) seconds
+Test Suite 'AddressParserTests' started at 2025-07-15 15:27:20.816.
 Test Case '-[C11SHouseTests.AddressParserTests testAddressWithLineBreaks]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Utilities/AddressParserTests.swift:350: error: -[C11SHouseTests.AddressParserTests testAddressWithLineBreaks] : XCTAssertEqual failed: ("Optional("123 Main Street\n")") is not equal to ("Optional("123 Main Street")")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Utilities/AddressParserTests.swift:351: error: -[C11SHouseTests.AddressParserTests testAddressWithLineBreaks] : XCTAssertEqual failed: ("Optional("New York\n")") is not equal to ("Optional("New York")")
-Test Case '-[C11SHouseTests.AddressParserTests testAddressWithLineBreaks]' failed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressParserTests testAddressWithLineBreaks]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testAllStreetSuffixVariations]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testAllStreetSuffixVariations]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetComponent_EmptyString]' started.
@@ -186,22 +184,22 @@ Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_SpecialCharac
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_StateWithoutPostalCode]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_StateWithoutPostalCode]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_TwoComponents]' started.
-Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_TwoComponents]' passed (0.000 seconds).
+Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_TwoComponents]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_ValidAddressWithCountry]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_ValidAddressWithCountry]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_ValidUSAddress]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_ValidUSAddress]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testUnicodeCharacters]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testUnicodeCharacters]' passed (0.000 seconds).
-Test Suite 'AddressParserTests' failed at 2025-07-15 15:07:35.724.
-	 Executed 48 tests, with 8 failures (0 unexpected) in 0.018 (0.022) seconds
-Test Suite 'AddressSuggestionServiceTests' started at 2025-07-15 15:07:35.724.
+Test Suite 'AddressParserTests' failed at 2025-07-15 15:27:20.837.
+	 Executed 48 tests, with 6 failures (0 unexpected) in 0.018 (0.022) seconds
+Test Suite 'AddressSuggestionServiceTests' started at 2025-07-15 15:27:20.838.
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testCreateAddressConfirmationResponse]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testCreateAddressConfirmationResponse]' passed (0.000 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testCreateAddressConfirmationResponse]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForConfirmedAddress]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
@@ -211,29 +209,29 @@ Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForCon
 [AddressSuggestionService] Address: 123 Main Street, San Francisco, CA 94105
 [WeatherCoordinator] Created Weather question in notes store
 [AddressSuggestionService] Coordinates: 37.7749, -122.4194
-[AddressSuggestionService] Timestamp: 2025-07-15 22:07:35 +0000
-[AddressSuggestionService] Ensuring weather question exists in notes store
-[WeatherCoordinator] Weather question creation already in progress
 [WeatherCoordinator] Created Weather question in notes store
+[AddressSuggestionService] Timestamp: 2025-07-15 22:27:20 +0000
+[AddressSuggestionService] Ensuring weather question exists in notes store
+[WeatherCoordinator] Weather question already exists
 [AddressSuggestionService] Initiating weather fetch
 [AddressSuggestionService] ✅ Weather fetch successful
 [AddressSuggestionService] Condition: clear
 [AddressSuggestionService] Temperature: 72.0°<_NSStatic_NSUnitTemperature: 0x20f382eb0> °F
 [AddressSuggestionService] Humidity: 65%
 [AddressSuggestionService] Wind: 10 km/h
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForConfirmedAddress]' passed (0.503 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForConfirmedAddress]' passed (0.510 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_NoStreetType]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_NoStreetType]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_NoStreetType]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_StreetType]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_StreetType]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_StreetType]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddress_Success]' started.
 [WeatherCoordinator] Created Weather question in notes store
 [WeatherCoordinator] 🌤️ Initialized with services
@@ -241,99 +239,150 @@ Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddr
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
 [WeatherCoordinator] Created Weather question in notes store
-[WeatherCoordinator] Created Weather question in notes store
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddress_Success]' passed (0.002 seconds).
-Test Suite 'AddressSuggestionServiceTests' passed at 2025-07-15 15:07:36.235.
-	 Executed 5 tests, with 0 failures (0 unexpected) in 0.510 (0.511) seconds
-Test Suite 'C11SHouseTests' started at 2025-07-15 15:07:36.236.
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddress_Success]' passed (0.001 seconds).
+Test Suite 'AddressSuggestionServiceTests' passed at 2025-07-15 15:27:21.351.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.513 (0.513) seconds
+Test Suite 'C11SHouseTests' started at 2025-07-15 15:27:21.351.
 Test Case '-[C11SHouseTests.C11SHouseTests testExample]' started.
 Test Case '-[C11SHouseTests.C11SHouseTests testExample]' passed (0.001 seconds).
-Test Suite 'C11SHouseTests' passed at 2025-07-15 15:07:36.237.
-	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
-Test Suite 'ConversationFlowIntegrationTests' started at 2025-07-15 15:07:36.238.
+Test Suite 'C11SHouseTests' passed at 2025-07-15 15:27:21.352.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ConversationFlowIntegrationTests' started at 2025-07-15 15:27:21.352.
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' started.
+[WeatherCoordinator] Created Weather question in notes store
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:232: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow] : failed - Expected address question
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' failed (0.020 seconds).
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:258: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow] : failed: caught error: "locationPermissionDenied"
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' failed (0.004 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
 [QuestionFlowCoordinator] Questions needing review: 0
 [QuestionFlowCoordinator] No more questions to ask
 [QuestionFlowCoordinator] Posting AllQuestionsComplete notification
 [QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:311: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories] : XCTAssertGreaterThanOrEqual failed: ("0") is less than ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:312: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories] : XCTAssertTrue failed
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' failed (0.014 seconds).
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:332: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories] : XCTAssertGreaterThanOrEqual failed: ("2") is less than ("3")
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' failed (0.017 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:94: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:95: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : XCTAssertEqual failed: ("nil") is not equal to ("Optional(C11SHouse.QuestionCategory.houseInfo)")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:127: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:128: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("What should I call this house?")")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:133: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : failed: caught error: "noCurrentQuestion"
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' failed (0.013 seconds).
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:135: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : failed: caught error: "locationPermissionDenied"
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' failed (0.007 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:280: error: -[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement] : failed: caught error: "noCurrentQuestion"
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' failed (0.008 seconds).
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:332: error: -[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:335: error: -[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery] : failed: caught error: "noCurrentQuestion"
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' failed (0.007 seconds).
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:201: error: -[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers] : XCTAssertNotNil failed
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' failed (0.007 seconds).
-Test Suite 'ConversationFlowIntegrationTests' failed at 2025-07-15 15:07:36.308.
-	 Executed 6 tests, with 12 failures (3 unexpected) in 0.069 (0.071) seconds
-Test Suite 'ConversationStateManagerTests' started at 2025-07-15 15:07:36.308.
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:225: error: -[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers] : XCTAssertNotEqual failed: ("Optional("Is this the right address?")") is equal to ("Optional("Is this the right address?")")
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' failed (0.002 seconds).
+Test Suite 'ConversationFlowIntegrationTests' failed at 2025-07-15 15:27:21.387.
+	 Executed 6 tests, with 4 failures (2 unexpected) in 0.034 (0.035) seconds
+Test Suite 'ConversationStateManagerTests' started at 2025-07-15 15:27:21.387.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testBeginAndEndSavingAnswer]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testBeginAndEndSavingAnswer]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testBeginAndEndSavingAnswer]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testClearTranscript]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testClearTranscript]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testCurrentSessionStartIndex]' started.
@@ -347,11 +396,11 @@ Test Case '-[C11SHouseTests.ConversationStateManagerTests testInitialState]' pas
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testIsSpeaking]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testIsSpeaking]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testLoadUserName_WithNoSavedName]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testLoadUserName_WithNoSavedName]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testLoadUserName_WithNoSavedName]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testLoadUserName_WithSavedName]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testLoadUserName_WithSavedName]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testLoadUserName_WithSavedName]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testPublishedPropertiesUpdate]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testPublishedPropertiesUpdate]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testPublishedPropertiesUpdate]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testResetSession]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testResetSession]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenAlreadySpeaking]' started.
@@ -361,38 +410,38 @@ Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenMuted]' 
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenNotMuted]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenNotMuted]' passed (0.212 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenSavingAnswer]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenSavingAnswer]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenSavingAnswer]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WithError]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WithError]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WithError]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WhenMuted]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WhenMuted]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithNil]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithNil]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithNil]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithSuggestion]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithSuggestion]' passed (0.413 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithSuggestion]' passed (0.418 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithThoughtOnly]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithThoughtOnly]' passed (0.205 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithThoughtOnly]' passed (0.216 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testStartNewRecordingSession]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testStartNewRecordingSession]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testStartNewRecordingSession]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testStopSpeaking]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testStopSpeaking]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testStopSpeaking]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testToggleEditing]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testToggleEditing]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testToggleEditing]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_EmptySessionStart]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_EmptySessionStart]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_FirstUpdate]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_FirstUpdate]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_FirstUpdate]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_SubsequentUpdate]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_SubsequentUpdate]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_SubsequentUpdate]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscriptFromSession_DifferentSession]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscriptFromSession_DifferentSession]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscriptFromSession_MatchingSession]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscriptFromSession_MatchingSession]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateUserName]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateUserName]' passed (0.002 seconds).
-Test Suite 'ConversationStateManagerTests' passed at 2025-07-15 15:07:37.170.
-	 Executed 29 tests, with 0 failures (0 unexpected) in 0.855 (0.861) seconds
-Test Suite 'ErrorViewTests' started at 2025-07-15 15:07:37.170.
+Test Suite 'ConversationStateManagerTests' passed at 2025-07-15 15:27:22.267.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 0.873 (0.880) seconds
+Test Suite 'ErrorViewTests' started at 2025-07-15 15:27:22.268.
 Test Case '-[C11SHouseTests.ErrorViewTests testAppErrorUserFriendlyMessages]' started.
 Test Case '-[C11SHouseTests.ErrorViewTests testAppErrorUserFriendlyMessages]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testAutoDissmissProperty]' started.
@@ -405,7 +454,7 @@ Test Case '-[C11SHouseTests.ErrorViewTests testErrorSeverityProperties]' started
 Test Case '-[C11SHouseTests.ErrorViewTests testErrorSeverityProperties]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testErrorToUserFriendlyConversion]' started.
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ErrorHandling/ErrorViewTests.swift:158: error: -[C11SHouseTests.ErrorViewTests testErrorToUserFriendlyConversion] : failed - Expected AppError.unknown
-Test Case '-[C11SHouseTests.ErrorViewTests testErrorToUserFriendlyConversion]' failed (0.003 seconds).
+Test Case '-[C11SHouseTests.ErrorViewTests testErrorToUserFriendlyConversion]' failed (0.002 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testErrorViewInitialization]' started.
 Test Case '-[C11SHouseTests.ErrorViewTests testErrorViewInitialization]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testErrorViewWithDifferentSeverities]' started.
@@ -414,169 +463,176 @@ Test Case '-[C11SHouseTests.ErrorViewTests testFullScreenErrorViewInitialization
 Test Case '-[C11SHouseTests.ErrorViewTests testFullScreenErrorViewInitialization]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testRecoverySuggestions]' started.
 Test Case '-[C11SHouseTests.ErrorViewTests testRecoverySuggestions]' passed (0.001 seconds).
-Test Suite 'ErrorViewTests' failed at 2025-07-15 15:07:37.185.
-	 Executed 10 tests, with 1 failure (0 unexpected) in 0.012 (0.015) seconds
-Test Suite 'InitialSetupFlowTests' started at 2025-07-15 15:07:37.185.
+Test Suite 'ErrorViewTests' failed at 2025-07-15 15:27:22.280.
+	 Executed 10 tests, with 1 failure (0 unexpected) in 0.010 (0.012) seconds
+Test Suite 'InitialSetupFlowTests' started at 2025-07-15 15:27:22.280.
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[AddressManager] User confirmed address, now saving as answered: 123 Main St, San Francisco, CA 94105
-[AddressManager] User confirmed address, now saving as answered: 456 Oak Avenue, Los Angeles, California 90001
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:350: error: -[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations] : XCTAssertNotNil failed - Failed to parse: 789 Elm Street Apt 2B New York NY 10001
-[AddressManager] User confirmed address, now saving as answered: 321 Pine Rd., Seattle, WA 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:350: error: -[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations] : XCTAssertNotNil failed - Failed to parse: 100 Market Street Suite 500 San Diego CA 92101
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]' failed (0.008 seconds).
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:87: error: -[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow] : XCTAssertNil failed: "Address(street: "321 Pine Rd.", city: "Seattle", state: "WA", postalCode: "", country: "98101", coordinate: C11SHouse.Coordinate(latitude: 0.0, longitude: 0.0))"
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:125: error: -[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow] : failed - Expected address question
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow]' failed (0.012 seconds).
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:153: error: -[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:154: error: -[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("1 Apple Park Way, Cupertino, CA 95014")")
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:193: error: -[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:194: error: -[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("1 Apple Park Way, Cupertino, CA 95014")")
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow]' failed (0.009 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testDataPersistenceAcrossSetup]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:284: error: -[C11SHouseTests.InitialSetupFlowTests testDataPersistenceAcrossSetup] : failed: caught error: "locationPermissionDenied"
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testDataPersistenceAcrossSetup]' failed (0.002 seconds).
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:302: error: -[C11SHouseTests.InitialSetupFlowTests testDataPersistenceAcrossSetup] : failed: caught error: "locationPermissionDenied"
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testDataPersistenceAcrossSetup]' failed (0.003 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testHouseNameGeneration]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:380: error: -[C11SHouseTests.InitialSetupFlowTests testHouseNameGeneration] : XCTAssertTrue failed - Generated 'My House' doesn't contain 'Home' for address: 555 
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testHouseNameGeneration]' failed (0.002 seconds).
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testHouseNameGeneration]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:197: error: -[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied] : XCTAssertTrue failed
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:215: error: -[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied] : XCTAssertTrue failed
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:204: error: -[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied] : failed - Expected question
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' failed (0.008 seconds).
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[AddressManager] User confirmed address, now saving as answered: 123 Manual Entry St, Test City, CA 94000
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' failed (0.005 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithNetworkErrors]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 7 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithNetworkErrors]' passed (0.006 seconds).
-Test Suite 'InitialSetupFlowTests' failed at 2025-07-15 15:07:37.226.
-	 Executed 6 tests, with 8 failures (1 unexpected) in 0.040 (0.041) seconds
-Test Suite 'LocationServiceTests' started at 2025-07-15 15:07:37.226.
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithNetworkErrors]' passed (0.003 seconds).
+Test Suite 'InitialSetupFlowTests' failed at 2025-07-15 15:27:22.306.
+	 Executed 6 tests, with 6 failures (1 unexpected) in 0.025 (0.026) seconds
+Test Suite 'LocationServiceTests' started at 2025-07-15 15:27:22.307.
 Test Case '-[C11SHouseTests.LocationServiceTests testAuthorizationStatusPublisher]' started.
-Test Case '-[C11SHouseTests.LocationServiceTests testAuthorizationStatusPublisher]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.LocationServiceTests testAuthorizationStatusPublisher]' passed (0.010 seconds).
 Test Case '-[C11SHouseTests.LocationServiceTests testConfirmAddressSavesToUserDefaults]' started.
-Test Case '-[C11SHouseTests.LocationServiceTests testConfirmAddressSavesToUserDefaults]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.LocationServiceTests testConfirmAddressSavesToUserDefaults]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.LocationServiceTests testLocationErrorTypes]' started.
-Test Case '-[C11SHouseTests.LocationServiceTests testLocationErrorTypes]' passed (0.001 seconds).
-Test Suite 'LocationServiceTests' passed at 2025-07-15 15:07:37.233.
-	 Executed 3 tests, with 0 failures (0 unexpected) in 0.007 (0.007) seconds
-Test Suite 'NotesServiceQuestionsTests' started at 2025-07-15 15:07:37.233.
+Test Case '-[C11SHouseTests.LocationServiceTests testLocationErrorTypes]' passed (0.002 seconds).
+Test Suite 'LocationServiceTests' passed at 2025-07-15 15:27:22.322.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.015 (0.015) seconds
+Test Suite 'NotesServiceQuestionsTests' started at 2025-07-15 15:27:22.322.
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testAreAllRequiredQuestionsAnswered]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:234: error: -[C11SHouseTests.NotesServiceQuestionsTests testAreAllRequiredQuestionsAnswered] : XCTAssertTrue failed
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testAreAllRequiredQuestionsAnswered]' failed (0.003 seconds).
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testAreAllRequiredQuestionsAnswered]' passed (0.004 seconds).
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:53: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion] : XCTAssertEqual failed: ("Optional(0)") is not equal to ("Optional(1)")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:68: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion] : XCTAssertNil failed: "Question(id: 67C54D59-74F4-4E49-B1F7-31AAD4DB78C6, text: "Is this the right address?", category: C11SHouse.QuestionCategory.houseInfo, displayOrder: 0, isRequired: true, hint: Optional("Confirm or edit your detected address"), createdAt: 2025-07-15 22:27:20 +0000)"
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:64: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion] : XCTAssertEqual failed: ("Optional(0)") is not equal to ("Optional(1)")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:74: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion] : XCTAssertEqual failed: ("Optional(2303C479-1D28-4673-901E-FF1780B3CB93)") is not equal to ("Optional(27A5797B-6384-482A-945A-57D2EB9C3B1C)")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:84: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion] : XCTAssertNil failed: "Question(id: 2303C479-1D28-4673-901E-FF1780B3CB93, text: "Is this the right address?", category: C11SHouse.QuestionCategory.houseInfo, displayOrder: 0, isRequired: true, hint: Optional("Confirm or edit your detected address"), createdAt: 2025-07-15 22:07:35 +0000)"
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion]' failed (0.003 seconds).
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetCurrentQuestion]' failed (0.004 seconds).
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetNextUnansweredQuestion]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:121: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetNextUnansweredQuestion] : XCTAssertEqual failed: ("Optional(2303C479-1D28-4673-901E-FF1780B3CB93)") is not equal to ("Optional(2FB9B1BE-E0CB-4A8E-A69C-26F0F38FAA76)")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:131: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetNextUnansweredQuestion] : XCTAssertEqual failed: ("Optional(2303C479-1D28-4673-901E-FF1780B3CB93)") is not equal to ("Optional(8B79CB48-CC0A-4C26-B16A-DE355621AAB3)")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:141: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetNextUnansweredQuestion] : XCTAssertNil failed: "Question(id: 2303C479-1D28-4673-901E-FF1780B3CB93, text: "Is this the right address?", category: C11SHouse.QuestionCategory.houseInfo, displayOrder: 0, isRequired: true, hint: Optional("Confirm or edit your detected address"), createdAt: 2025-07-15 22:07:35 +0000)"
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetNextUnansweredQuestion]' failed (0.003 seconds).
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetNextUnansweredQuestion]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:254: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress] : XCTAssertEqual failed: ("7") is not equal to ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:265: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress] : XCTAssertEqual failed: ("7") is not equal to ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:276: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress] : XCTAssertEqual failed: ("7") is not equal to ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:277: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:287: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress] : XCTAssertEqual failed: ("7") is not equal to ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:288: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress] : XCTAssertTrue failed
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress]' failed (0.004 seconds).
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionProgress]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionsInCategory]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:168: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionsInCategory] : XCTAssertEqual failed: ("3") is not equal to ("2")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:172: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionsInCategory] : XCTAssertEqual failed: ("5") is not equal to ("2")
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionsInCategory]' failed (0.003 seconds).
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetQuestionsInCategory]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:307: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions] : XCTAssertEqual failed: ("7") is not equal to ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:310: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions] : XCTAssertEqual failed: ("0") is not equal to ("1")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:311: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions] : XCTAssertEqual failed: ("1") is not equal to ("2")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:312: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions] : XCTAssertEqual failed: ("1") is not equal to ("3")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:321: error: -[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions] : XCTAssertEqual failed: ("6") is not equal to ("2")
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions]' failed (0.003 seconds).
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testGetUnansweredQuestions]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testIsQuestionAnswered]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceQuestionsTests.swift:296: error: -[C11SHouseTests.NotesServiceQuestionsTests testIsQuestionAnswered] : XCTAssertFalse failed
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testIsQuestionAnswered]' passed (0.001 seconds).
-Test Suite 'NotesServiceQuestionsTests' failed at 2025-07-15 15:07:37.255.
-	 Executed 7 tests, with 20 failures (0 unexpected) in 0.022 (0.022) seconds
-Test Suite 'NotesServiceTests' started at 2025-07-15 15:07:37.255.
+Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testIsQuestionAnswered]' failed (0.002 seconds).
+Test Suite 'NotesServiceQuestionsTests' failed at 2025-07-15 15:27:22.343.
+	 Executed 7 tests, with 3 failures (0 unexpected) in 0.020 (0.021) seconds
+Test Suite 'NotesServiceTests' started at 2025-07-15 15:27:22.343.
 Test Case '-[C11SHouseTests.NotesServiceTests testAddDuplicateQuestionThrows]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testAddDuplicateQuestionThrows]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testAddQuestion]' started.
-Test Case '-[C11SHouseTests.NotesServiceTests testAddQuestion]' passed (0.007 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testAddQuestion]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testClearAllData]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.NotesServiceTests testClearAllData]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testClearAllData]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentReadWriteOperations]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentReadWriteOperations]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations]' started.
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceTests.swift:387: error: -[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("Concurrent answer 0")")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceTests.swift:387: error: -[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("Concurrent answer 2")")
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations]' failed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testCorruptDataHandling]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testCorruptDataHandling]' passed (0.001 seconds).
@@ -591,11 +647,11 @@ Test Case '-[C11SHouseTests.NotesServiceTests testErrorDescriptions]' passed (0.
 Test Case '-[C11SHouseTests.NotesServiceTests testGetCurrentQuestion]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testGetCurrentQuestion]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testGetHouseNameWhenEmpty]' started.
-Test Case '-[C11SHouseTests.NotesServiceTests testGetHouseNameWhenEmpty]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testGetHouseNameWhenEmpty]' passed (0.051 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testGetNextUnansweredQuestion]' started.
-Test Case '-[C11SHouseTests.NotesServiceTests testGetNextUnansweredQuestion]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testGetNextUnansweredQuestion]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testGetNoteByQuestionText]' started.
-Test Case '-[C11SHouseTests.NotesServiceTests testGetNoteByQuestionText]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testGetNoteByQuestionText]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testGetNote]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testGetNote]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testGetUnansweredQuestions]' started.

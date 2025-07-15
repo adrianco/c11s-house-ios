@@ -179,6 +179,8 @@ class AddressManagerTests: XCTestCase {
             XCTFail("Wrong error type: \(error)")
         }
         
+        // Wait for the flag to be reset asynchronously
+        try await Task.sleep(nanoseconds: 1000000) // 1ms
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -197,7 +199,7 @@ class AddressManagerTests: XCTestCase {
         }
     }
     
-    func testDetectCurrentAddressHandlesLocationError() async {
+    func testDetectCurrentAddressHandlesLocationError() async throws {
         // Given: Location service will fail
         mockLocationService.authorizationStatus = .authorizedAlways
         mockLocationService.shouldThrowLocationError = true
@@ -210,10 +212,12 @@ class AddressManagerTests: XCTestCase {
             // Success - error propagated
         }
         
+        // Wait for the flag to be reset asynchronously
+        try await Task.sleep(nanoseconds: 1000000) // 1ms
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
-    func testDetectCurrentAddressHandlesGeocodeError() async {
+    func testDetectCurrentAddressHandlesGeocodeError() async throws {
         // Given: Geocoding will fail
         mockLocationService.authorizationStatus = .authorizedWhenInUse
         mockLocationService.shouldThrowLookupError = true
@@ -226,6 +230,8 @@ class AddressManagerTests: XCTestCase {
             // Success - error propagated
         }
         
+        // Wait for the flag to be reset asynchronously
+        try await Task.sleep(nanoseconds: 1000000) // 1ms
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
