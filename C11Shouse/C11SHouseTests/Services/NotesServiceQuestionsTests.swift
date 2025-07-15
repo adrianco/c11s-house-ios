@@ -27,13 +27,11 @@ class NotesServiceQuestionsTests: XCTestCase {
         notesService = NotesServiceImpl()
         
         // Clear any existing data
-        let emptyStore = NotesStoreData(questions: [], notes: [:])
-        try await notesService.importData( JSONEncoder().encode(emptyStore))
+        try await notesService.clearAllData()
     }
     
     override func tearDown() async throws {
-        let emptyStore = NotesStoreData(questions: [], notes: [:])
-        try await notesService.importData( JSONEncoder().encode(emptyStore))
+        try await notesService.clearAllData()
         try await super.tearDown()
     }
     
@@ -51,16 +49,14 @@ class NotesServiceQuestionsTests: XCTestCase {
             id: UUID(),
             text: "What's your address?",
             category: .houseInfo,
-            displayOrder: 1,
+            displayOrder: 2,
             isRequired: true
         )
         
-        let testStore = NotesStoreData(
-            questions: [question1, question2],
-            notes: [:]
-        )
-        
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test questions
+        try await notesService.clearAllData()
+        try await notesService.addQuestion(question1)
+        try await notesService.addQuestion(question2)
         
         // Test getting current question
         let current = await notesService.getCurrentQuestion()
@@ -114,12 +110,11 @@ class NotesServiceQuestionsTests: XCTestCase {
             isRequired: false
         )
         
-        let testStore = NotesStoreData(
-            questions: [mediumQuestion, highQuestion, optionalQuestion],
-            notes: [:]
-        )
-        
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test questions
+        try await notesService.clearAllData()
+        try await notesService.addQuestion(highQuestion)
+        try await notesService.addQuestion(mediumQuestion)
+        try await notesService.addQuestion(optionalQuestion)
         
         // Should get high priority required question first
         let next = await notesService.getNextUnansweredQuestion()
@@ -149,36 +144,37 @@ class NotesServiceQuestionsTests: XCTestCase {
     func testGetQuestionsInCategory() async throws {
         // Setup questions in different categories
         let personalQuestions = [
-            Question(id: UUID(), text: "Name?", category: .personal, priority: .high),
-            Question(id: UUID(), text: "Age?", category: .personal, priority: .medium)
+            Question(id: UUID(), text: "Name?", category: .personal, displayOrder: 1),
+            Question(id: UUID(), text: "Age?", category: .personal, displayOrder: 2)
         ]
         
         let locationQuestions = [
-            Question(id: UUID(), text: "Address?", category: .houseInfo, priority: .high),
-            Question(id: UUID(), text: "City?", category: .houseInfo, priority: .medium)
+            Question(id: UUID(), text: "Address?", category: .houseInfo, displayOrder: 3),
+            Question(id: UUID(), text: "City?", category: .houseInfo, displayOrder: 4)
         ]
         
         let lifestyleQuestions = [
-            Question(id: UUID(), text: "Hobbies?", category: .preferences, priority: .low)
+            Question(id: UUID(), text: "Hobbies?", category: .preferences, displayOrder: 5)
         ]
         
-        let allQuestions = personalQuestions + locationQuestions + lifestyleQuestions
-        let testStore = NotesStoreData(questions: allQuestions, notes: [:])
-        
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test questions
+        try await notesService.clearAllData()
+        for question in personalQuestions + locationQuestions + lifestyleQuestions {
+            try await notesService.addQuestion(question)
+        }
         
         // Test category filtering
         let personal = await notesService.getQuestions(in: .personal)
         XCTAssertEqual(personal.count, 2)
         XCTAssertTrue(personal.allSatisfy { $0.category == .personal })
         
-        let location = await notesService.getQuestions(in: .location)
-        XCTAssertEqual(location.count, 2)
-        XCTAssertTrue(location.allSatisfy { $0.category == .houseInfo })
+        let houseInfo = await notesService.getQuestions(in: .houseInfo)
+        XCTAssertEqual(houseInfo.count, 2)
+        XCTAssertTrue(houseInfo.allSatisfy { $0.category == .houseInfo })
         
-        let lifestyle = await notesService.getQuestions(in: .lifestyle)
-        XCTAssertEqual(lifestyle.count, 1)
-        XCTAssertEqual(lifestyle.first?.text, "Hobbies?")
+        let preferences = await notesService.getQuestions(in: .preferences)
+        XCTAssertEqual(preferences.count, 1)
+        XCTAssertEqual(preferences.first?.text, "Hobbies?")
     }
     
     func testAreAllRequiredQuestionsAnswered() async throws {
@@ -207,12 +203,11 @@ class NotesServiceQuestionsTests: XCTestCase {
             isRequired: false
         )
         
-        let testStore = NotesStoreData(
-            questions: [required1, required2, optional],
-            notes: [:]
-        )
-        
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test questions
+        try await notesService.clearAllData()
+        try await notesService.addQuestion(required1)
+        try await notesService.addQuestion(required2)
+        try await notesService.addQuestion(optional)
         
         // Initially should be false
         let allAnswered1 = await notesService.areAllRequiredQuestionsAnswered()
@@ -242,13 +237,16 @@ class NotesServiceQuestionsTests: XCTestCase {
     func testGetQuestionProgress() async throws {
         // Setup test questions
         let questions = [
-            Question(id: UUID(), text: "Q1", category: .personal, priority: .high, isRequired: true),
-            Question(id: UUID(), text: "Q2", category: .personal, priority: .high, isRequired: true),
-            Question(id: UUID(), text: "Q3", category: .personal, priority: .low, isRequired: false)
+            Question(id: UUID(), text: "Q1", category: .personal, displayOrder: 1, isRequired: true),
+            Question(id: UUID(), text: "Q2", category: .personal, displayOrder: 2, isRequired: true),
+            Question(id: UUID(), text: "Q3", category: .personal, displayOrder: 3, isRequired: false)
         ]
         
-        let testStore = NotesStoreData(questions: questions, notes: [:])
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test questions
+        try await notesService.clearAllData()
+        for question in questions {
+            try await notesService.addQuestion(question)
+        }
         
         // Initial progress
         let progress1 = await notesService.getQuestionProgress()
@@ -293,13 +291,16 @@ class NotesServiceQuestionsTests: XCTestCase {
     func testGetUnansweredQuestions() async throws {
         // Setup questions with different priorities
         let questions = [
-            Question(id: UUID(), text: "Low", category: .personal, priority: .low),
-            Question(id: UUID(), text: "High", category: .personal, priority: .high),
-            Question(id: UUID(), text: "Medium", category: .personal, priority: .medium)
+            Question(id: UUID(), text: "Low", category: .personal, displayOrder: 3),
+            Question(id: UUID(), text: "High", category: .personal, displayOrder: 1),
+            Question(id: UUID(), text: "Medium", category: .personal, displayOrder: 2)
         ]
         
-        let testStore = NotesStoreData(questions: questions, notes: [:])
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test questions
+        try await notesService.clearAllData()
+        for question in questions {
+            try await notesService.addQuestion(question)
+        }
         
         // All should be unanswered initially
         let unanswered1 = try await notesService.getUnansweredQuestions()
@@ -326,11 +327,12 @@ class NotesServiceQuestionsTests: XCTestCase {
             id: UUID(),
             text: "Test question",
             category: .personal,
-            priority: .high
+            displayOrder: 1
         )
         
-        let testStore = NotesStoreData(questions: [question], notes: [:])
-        try await notesService.importData( JSONEncoder().encode(testStore))
+        // Clear existing data and add test question
+        try await notesService.clearAllData()
+        try await notesService.addQuestion(question)
         
         // Initially not answered
         let answered1 = await notesService.isQuestionAnswered(question.id)
