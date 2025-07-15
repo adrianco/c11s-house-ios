@@ -28,7 +28,11 @@ import Combine
 // MARK: - Mock Location Service
 
 class MockLocationServiceForAddressManager: LocationServiceProtocol {
-    var authorizationStatus: CLAuthorizationStatus = .authorizedWhenInUse
+    var authorizationStatus: CLAuthorizationStatus = .authorizedWhenInUse {
+        didSet {
+            authorizationStatusSubject.send(authorizationStatus)
+        }
+    }
     var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
@@ -52,6 +56,11 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     var shouldThrowLookupError = false
     var mockLocation: CLLocation?
     var mockAddress: Address?
+    
+    init() {
+        // Initialize with the default authorization status
+        authorizationStatusSubject.send(authorizationStatus)
+    }
     
     func requestLocationPermission() async {
         requestLocationPermissionCallCount += 1
@@ -547,6 +556,21 @@ class AddressManagerTests: XCTestCase {
         // 6. Verify all storage locations updated
         XCTAssertNotNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"))
         XCTAssertEqual(mockLocationService.confirmAddressCallCount, 1)
+        
+        // Check if the questions exist in the mock service
+        let notesStore = try await mockNotesService.loadNotesStore()
+        let addressQuestion = notesStore.questions.first(where: { 
+            $0.text == "Is this the right address?" || $0.text == "What's your home address?" 
+        })
+        let houseNameQuestion = notesStore.questions.first(where: { 
+            $0.text == "What should I call this house?" 
+        })
+        
+        XCTAssertNotNil(addressQuestion, "Address question should exist")
+        XCTAssertNotNil(houseNameQuestion, "House name question should exist")
+        
+        // We expect 2 calls: one for address, one for house name (if house name not already answered)
+        // But since the house name question starts with no answer, it should be saved
         XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2) // Address + house name
         
         // 7. Load saved address

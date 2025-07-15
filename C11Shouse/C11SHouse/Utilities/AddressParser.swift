@@ -23,7 +23,7 @@ enum AddressParser {
     // MARK: - Constants
     
     /// Common street suffixes and their abbreviations
-    private static let streetSuffixPattern = #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy)\.?\b"#
+    private static let streetSuffixPattern = #"\b(Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Place|Pl|Way|Circle|Cir|Terrace|Ter|Parkway|Pkwy|Plaza)\.?\b"#
     
     // MARK: - Address Parsing
     
