@@ -125,6 +125,12 @@ class AddressManagerTests: XCTestCase {
             version: 1
         )
         
+        // Explicitly reset error flags and call counts to ensure clean state
+        mockNotesService.shouldThrowError = false
+        mockNotesService.errorToThrow = nil
+        mockNotesService.saveOrUpdateNoteCallCount = 0
+        mockNotesService.saveNoteCallCount = 0
+        
         sut = AddressManager(
             notesService: mockNotesService,
             locationService: mockLocationService
@@ -609,9 +615,15 @@ class AddressManagerTests: XCTestCase {
         XCTAssertNotNil(addressQuestion, "Address question should exist")
         XCTAssertNotNil(houseNameQuestion, "House name question should exist")
         
+        // Debug: Print the state of the mock service
+        print("Debug: saveOrUpdateNoteCallCount = \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("Debug: shouldThrowError = \(mockNotesService.shouldThrowError)")
+        print("Debug: questions count = \(notesStore.questions.count)")
+        print("Debug: notes count = \(notesStore.notes.count)")
+        
         // We expect 2 calls: one for address, one for house name (if house name not already answered)
         // But since the house name question starts with no answer, it should be saved
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2) // Address + house name
+        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2, "Expected 2 calls to saveOrUpdateNote (address + house name)") // Address + house name
         
         // 7. Load saved address
         let loadedAddress = sut.loadSavedAddress()

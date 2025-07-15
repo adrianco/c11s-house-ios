@@ -117,13 +117,16 @@ class AddressManager: ObservableObject {
     
     /// Save address as a note answer
     func saveAddressToNotes(_ address: Address) async {
+        print("[AddressManager] saveAddressToNotes called with address: \(address.fullAddress)")
         do {
             let notesStore = try await notesService.loadNotesStore()
+            print("[AddressManager] Loaded notes store with \(notesStore.questions.count) questions")
             
             // Find the address question (supporting both old and new text)
             if let addressQuestion = notesStore.questions.first(where: { 
                 $0.text == "Is this the right address?" || $0.text == "What's your home address?" 
             }) {
+                print("[AddressManager] Found address question: \(addressQuestion.text)")
                 try await notesService.saveOrUpdateNote(
                     for: addressQuestion.id,
                     answer: address.fullAddress,
@@ -133,21 +136,31 @@ class AddressManager: ObservableObject {
                         "longitude": "\(address.coordinate.longitude)"
                     ]
                 )
+                print("[AddressManager] Saved address note")
+            } else {
+                print("[AddressManager] Address question not found")
             }
             
             // Also save the house name if we can generate it
             if let houseNameQuestion = notesStore.questions.first(where: { 
                 $0.text == "What should I call this house?" 
             }) {
+                print("[AddressManager] Found house name question: \(houseNameQuestion.text)")
                 // Only save if not already answered
                 if notesStore.notes[houseNameQuestion.id] == nil {
                     let houseName = generateHouseNameFromStreet(address.street)
+                    print("[AddressManager] Generated house name: \(houseName)")
                     try await notesService.saveOrUpdateNote(
                         for: houseNameQuestion.id,
                         answer: houseName,
                         metadata: ["generated_from_address": "true"]
                     )
+                    print("[AddressManager] Saved house name note")
+                } else {
+                    print("[AddressManager] House name question already answered")
                 }
+            } else {
+                print("[AddressManager] House name question not found")
             }
         } catch {
             print("Error saving address to notes: \(error)")
