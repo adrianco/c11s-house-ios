@@ -106,7 +106,7 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         currentHouseThought = HouseThought(
             thought: "Thank you!",
             emotion: .happy,
-            category: .acknowledgment,
+            category: .celebration,
             confidence: 1.0
         )
     }
@@ -167,7 +167,7 @@ class MockQuestionFlowCoordinator: ObservableObject {
         saveAnswerCalled = true
         
         if let question = currentQuestion,
-           let transcript = conversationStateManager?.persistentTranscript {
+           let transcript = await conversationStateManager?.persistentTranscript {
             savedAnswers[question.id] = transcript
         }
     }
@@ -198,7 +198,7 @@ class MockConversationServiceContainer: ObservableObject {
         self.mockNotesService = SharedMockNotesService()
         self.mockTTSService = MockTTSService()
         self.mockLocationService = MockLocationService()
-        self.mockAddressManager = SharedMockAddressManager()
+        self.mockAddressManager = SharedMockAddressManager(notesService: mockNotesService, locationService: mockLocationService)
         self.mockQuestionFlow = MockQuestionFlowCoordinator()
     }
     
@@ -207,7 +207,7 @@ class MockConversationServiceContainer: ObservableObject {
     var ttsService: TTSService { mockTTSService }
     var locationService: LocationServiceProtocol { mockLocationService }
     var addressManager: AddressManager { mockAddressManager }
-    var questionFlowCoordinator: QuestionFlowCoordinator { mockQuestionFlow }
+    var questionFlowCoordinator: MockQuestionFlowCoordinator { mockQuestionFlow }
 }
 
 // MARK: - House Thought Generator Mock
@@ -235,7 +235,7 @@ class MockHouseThoughtGenerator {
             return HouseThought(
                 thought: "You're very welcome!",
                 emotion: .happy,
-                category: .acknowledgment,
+                category: .celebration,
                 confidence: 1.0
             )
         } else {

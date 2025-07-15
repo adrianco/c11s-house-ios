@@ -514,8 +514,8 @@ class NotesServiceTests: XCTestCase {
                     date: Date(),
                     highTemperature: Temperature(value: 75, unit: .fahrenheit),
                     lowTemperature: Temperature(value: 60, unit: .fahrenheit),
-                    precipitationChance: 0.1,
-                    condition: .clear
+                    condition: .clear,
+                    precipitationChance: 0.1
                 )
             ],
             hourlyForecast: [],
@@ -666,14 +666,14 @@ class NotesServiceTests: XCTestCase {
         try await sut.saveNote(note)
         
         // When: Getting by question text
-        let retrievedNote = await sut.getNote(for: question.id)
+        let retrievedNote = try await sut.getNote(for: question.id)
         
         // Then: Should find the note
         XCTAssertNotNil(retrievedNote)
         XCTAssertEqual(retrievedNote?.answer, "Test answer")
         
         // When: Non-existent question text
-        let nonExistent = await sut.getNote(for: "Non-existent question")
+        let nonExistent = try await sut.getNote(for: UUID())
         XCTAssertNil(nonExistent)
     }
     
