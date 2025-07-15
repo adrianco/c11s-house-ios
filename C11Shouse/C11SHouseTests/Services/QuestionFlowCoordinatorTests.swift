@@ -275,20 +275,20 @@ class MockAddressManager: AddressManager {
     }
 }
 
-// MARK: - Mock ConversationRecognizer
+// MARK: - Mock ConversationRecognizer for this test
 @MainActor
-class MockConversationRecognizer: ConversationRecognizer {
+class MockConversationRecognizerForFlow: ConversationRecognizer {
     var clearHouseThoughtCallCount = 0
     var setQuestionThoughtCallCount = 0
     var setThankYouThoughtCallCount = 0
     var lastQuestionThought: String?
     
-    override func clearHouseThought() {
+    override func clearHouseThought() async {
         clearHouseThoughtCallCount += 1
         currentHouseThought = nil
     }
     
-    override func setQuestionThought(_ question: String) {
+    override func setQuestionThought(_ question: String) async {
         setQuestionThoughtCallCount += 1
         lastQuestionThought = question
         currentHouseThought = HouseThought(
@@ -301,7 +301,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    override func setThankYouThought() {
+    override func setThankYouThought() async {
         setThankYouThoughtCallCount += 1
         currentHouseThought = HouseThought(
             thought: "Thank you for answering all my questions!",
@@ -320,7 +320,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     var sut: QuestionFlowCoordinator!
     var mockNotesService: MockNotesService!
     var mockStateManager: MockConversationStateManager!
-    var mockRecognizer: MockConversationRecognizer!
+    var mockRecognizer: MockConversationRecognizerForFlow!
     var mockAddressManager: MockAddressManager!
     var cancellables: Set<AnyCancellable>!
     
@@ -334,7 +334,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
             notesService: mockNotesService,
             ttsService: MockTTSService()
         )
-        mockRecognizer = MockConversationRecognizer()
+        mockRecognizer = MockConversationRecognizerForFlow()
         mockAddressManager = MockAddressManager(
             notesService: mockNotesService,
             locationService: MockLocationService()
