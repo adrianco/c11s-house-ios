@@ -180,8 +180,8 @@ struct ErrorRecoveryModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay(recoveryOverlay)
-            .onChange(of: error) { _, newError in
-                if newError != nil {
+            .onChange(of: error != nil) { _, hasError in
+                if hasError {
                     attemptRecovery()
                 }
             }

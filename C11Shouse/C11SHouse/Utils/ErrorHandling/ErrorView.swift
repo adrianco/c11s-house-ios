@@ -93,7 +93,7 @@ struct ErrorView: View {
                 if let errorCode = error.errorCode {
                     Text("Error Code: \(errorCode)")
                         .font(.caption2)
-                        .foregroundColor(.tertiary)
+                        .foregroundStyle(.tertiary)
                 }
                 
                 Spacer()
@@ -251,7 +251,7 @@ struct FullScreenErrorView: View {
                 if let errorCode = error.errorCode {
                     Text("Error Code: \(errorCode)")
                         .font(.caption)
-                        .foregroundColor(.tertiary)
+                        .foregroundStyle(.tertiary)
                 }
             }
             .padding(.horizontal)

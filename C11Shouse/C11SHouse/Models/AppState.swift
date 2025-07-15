@@ -151,8 +151,8 @@ class AppState: ObservableObject {
         // Load onboarding state
         hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
         
-        if let phaseRawValue = UserDefaults.standard.string(forKey: "currentOnboardingPhase"),
-           let phase = OnboardingPhase(rawValue: phaseRawValue) {
+        let phaseRawValue = UserDefaults.standard.integer(forKey: "currentOnboardingPhase")
+        if let phase = OnboardingPhase(rawValue: phaseRawValue) {
             currentOnboardingPhase = phase
         }
     }
@@ -217,7 +217,7 @@ class AppState: ObservableObject {
     func completeOnboarding() {
         hasCompletedOnboarding = true
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-        currentOnboardingPhase = .complete
+        currentOnboardingPhase = .completion
     }
     
     // MARK: - Convenience Methods
