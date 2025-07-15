@@ -49,7 +49,7 @@ class ViewModelFactory: ObservableObject {
     /// - Parameters:
     ///   - serviceContainer: The service container to use for dependency injection
     ///   - appState: The centralized app state
-    init(serviceContainer: ServiceContainer = .shared, appState: AppState = .shared) {
+    init(serviceContainer: ServiceContainer, appState: AppState) {
         self.serviceContainer = serviceContainer
         self.appState = appState
     }
@@ -88,14 +88,14 @@ class ViewModelFactory: ObservableObject {
     // MARK: - Convenience Static Factory
     
     /// Shared factory instance using the default service container
-    static let shared = ViewModelFactory()
+    @MainActor static let shared = ViewModelFactory(serviceContainer: .shared, appState: .shared)
 }
 
 // MARK: - Environment Key
 
 /// Environment key for injecting ViewModel factory
 struct ViewModelFactoryKey: EnvironmentKey {
-    static let defaultValue = ViewModelFactory.shared
+    @MainActor static let defaultValue = ViewModelFactory.shared
 }
 
 extension EnvironmentValues {
@@ -109,7 +109,7 @@ extension EnvironmentValues {
 
 extension View {
     /// Inject ViewModel factory into environment
-    func withViewModelFactory(_ factory: ViewModelFactory = .shared) -> some View {
+    @MainActor func withViewModelFactory(_ factory: ViewModelFactory = ViewModelFactory.shared) -> some View {
         self.environment(\.viewModelFactory, factory)
     }
 }

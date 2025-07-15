@@ -140,7 +140,7 @@ class QuestionFlowCoordinator: ObservableObject {
             print("[QuestionFlowCoordinator] Answer: '\(trimmedAnswer)'")
             
             // Clear any existing house thought to prevent duplicate speech
-            await recognizer.clearHouseThought()
+            recognizer.clearHouseThought()
             
             // Save the answer using the existing method
             try await saveAnswer(trimmedAnswer)
@@ -268,7 +268,7 @@ class QuestionFlowCoordinator: ObservableObject {
         guard let question = newQuestion else {
             // No more questions
             if hasCompletedAllQuestions {
-                await conversationRecognizer?.setThankYouThought()
+                conversationRecognizer?.setThankYouThought()
             }
             return isInitializing
         }
@@ -326,12 +326,12 @@ class QuestionFlowCoordinator: ObservableObject {
                     print("[QuestionFlowCoordinator] Formatted address question with detected address")
                 } else {
                     // No address available, just ask the question
-                    await recognizer.setQuestionThought(question.text)
+                    recognizer.setQuestionThought(question.text)
                 }
             } else {
                 // Pre-populate with existing answer
                 stateManager.persistentTranscript = currentAnswer
-                await recognizer.setQuestionThought(question.text)
+                recognizer.setQuestionThought(question.text)
             }
         } else if question.text == "What should I call this house?" {
             if currentAnswer.isEmpty {
@@ -368,15 +368,15 @@ class QuestionFlowCoordinator: ObservableObject {
                         recognizer.currentHouseThought = thought
                     }
                 } else {
-                    await recognizer.setQuestionThought(question.text)
+                    recognizer.setQuestionThought(question.text)
                 }
             } else {
                 stateManager.persistentTranscript = currentAnswer
-                await recognizer.setQuestionThought(question.text)
+                recognizer.setQuestionThought(question.text)
             }
         } else if currentAnswer.isEmpty {
             // No answer yet, just ask the question
-            await recognizer.setQuestionThought(question.text)
+            recognizer.setQuestionThought(question.text)
         } else {
             // Pre-populate and ask for confirmation with consistent format
             stateManager.persistentTranscript = currentAnswer

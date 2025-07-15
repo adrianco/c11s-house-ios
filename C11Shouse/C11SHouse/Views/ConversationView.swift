@@ -185,7 +185,7 @@ struct ConversationView: View {
                     // Speak if not muted
                     if !isMuted {
                         Task {
-                            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                            await stateManager.speak(thought.thought, isMuted: isMuted)
                         }
                     }
                 }
@@ -263,7 +263,7 @@ struct ConversationView: View {
                             // Add a small pause for natural conversation flow
                             try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
                             // Now speak the question
-                            try? await stateManager.speak(spokenContent, isMuted: isMuted)
+                            await stateManager.speak(spokenContent, isMuted: isMuted)
                         }
                     }
                 }

@@ -280,7 +280,9 @@ class VoiceTranscriptionViewModel: ObservableObject {
         
         // Audio level monitoring timer
         audioLevelTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
-            self?.audioRecorder.updateAudioLevel()
+            Task { @MainActor in
+                self?.audioRecorder.updateAudioLevel()
+            }
         }
         
         // Silence detection timer

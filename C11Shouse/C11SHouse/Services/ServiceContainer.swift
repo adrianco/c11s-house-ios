@@ -61,6 +61,7 @@ class ServiceContainer: ObservableObject {
         TranscriptionServiceImpl()
     }()
     
+    @MainActor
     private(set) lazy var permissionManager = PermissionManager.shared
     
     private(set) lazy var notesService: NotesService = {

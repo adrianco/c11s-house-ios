@@ -132,7 +132,7 @@ class ConversationViewModel: ObservableObject {
                 messageStore.addMessage(detailsMessage)
                 
                 if !isMuted {
-                    try? await stateManager.speak(detailsMessage.content, isMuted: isMuted)
+                    await stateManager.speak(detailsMessage.content, isMuted: isMuted)
                 }
             } else {
                 // Normal question handling
@@ -191,7 +191,7 @@ class ConversationViewModel: ObservableObject {
         
         // Speak if not muted
         if !isMuted {
-            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+            await stateManager.speak(thought.thought, isMuted: isMuted)
         }
     }
     
@@ -216,7 +216,7 @@ class ConversationViewModel: ObservableObject {
             messageStore.addMessage(message)
             
             if !isMuted {
-                try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                await stateManager.speak(thought.thought, isMuted: isMuted)
             }
             
             // Mark that we're creating a room note
@@ -240,7 +240,7 @@ class ConversationViewModel: ObservableObject {
         messageStore.addMessage(message)
         
         if !isMuted {
-            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+            await stateManager.speak(thought.thought, isMuted: isMuted)
         }
     }
     
@@ -285,7 +285,7 @@ class ConversationViewModel: ObservableObject {
             messageStore.addMessage(message)
             
             if !isMuted {
-                try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                await stateManager.speak(thought.thought, isMuted: isMuted)
             }
             
             UserDefaults.standard.set("awaitingRoomDetails", forKey: "phase4TutorialState")
@@ -339,7 +339,7 @@ class ConversationViewModel: ObservableObject {
                 messageStore.addMessage(message)
                 
                 if !isMuted {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
                 
             } catch {
@@ -381,7 +381,7 @@ class ConversationViewModel: ObservableObject {
         messageStore.addMessage(message)
         
         if !isMuted {
-            try? await stateManager.speak(thought.thought, isMuted: isMuted)
+            await stateManager.speak(thought.thought, isMuted: isMuted)
         }
     }
     
@@ -440,7 +440,7 @@ class ConversationViewModel: ObservableObject {
                 messageStore.addMessage(message)
                 
                 if !isMuted {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
             } else {
                 let successMessage = "Perfect! I've saved that about the \(roomName)."
@@ -460,7 +460,7 @@ class ConversationViewModel: ObservableObject {
                 messageStore.addMessage(message)
                 
                 if !isMuted {
-                    try? await stateManager.speak(thought.thought, isMuted: isMuted)
+                    await stateManager.speak(thought.thought, isMuted: isMuted)
                 }
             }
             
