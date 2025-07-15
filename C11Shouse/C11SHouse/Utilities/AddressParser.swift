@@ -31,7 +31,7 @@ enum AddressParser {
     /// - Parameter addressText: The full address string (e.g., "123 Main St, City, State 12345")
     /// - Returns: A tuple containing parsed components, or nil if parsing fails
     static func parseComponents(from addressText: String) -> (street: String, city: String, state: String, postalCode: String, country: String)? {
-        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        let components = addressText.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
         
         guard components.count >= 3 else { return nil }
         
@@ -93,7 +93,7 @@ enum AddressParser {
         return addressText
             .components(separatedBy: ",")
             .first?
-            .trimmingCharacters(in: .whitespaces) ?? addressText
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? addressText
     }
     
     // MARK: - House Name Generation

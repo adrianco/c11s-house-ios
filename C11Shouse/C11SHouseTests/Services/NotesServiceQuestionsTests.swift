@@ -36,225 +36,161 @@ class NotesServiceQuestionsTests: XCTestCase {
     }
     
     func testGetCurrentQuestion() async throws {
-        // Setup test data
-        let question1 = Question(
-            id: UUID(),
-            text: "What's your name?",
-            category: .personal,
-            displayOrder: 1,
-            isRequired: true
-        )
-        
-        let question2 = Question(
-            id: UUID(),
-            text: "What's your address?",
-            category: .houseInfo,
-            displayOrder: 2,
-            isRequired: true
-        )
-        
-        // Clear existing data and add test questions
-        try await notesService.clearAllData()
-        try await notesService.addQuestion(question1)
-        try await notesService.addQuestion(question2)
-        
-        // Test getting current question
+        // Test getting current question from predefined questions
         let current = await notesService.getCurrentQuestion()
         XCTAssertNotNil(current)
-        XCTAssertEqual(current?.displayOrder, 1) // Should get first question
+        XCTAssertEqual(current?.displayOrder, 0) // Should get first question (address)
         
         // Answer the first question
         try await notesService.saveOrUpdateNote(
-            for: question1.id,
-            answer: "Test User"
+            for: current!.id,
+            answer: "123 Test St"
         )
         
         // Now should get the second question
         let nextCurrent = await notesService.getCurrentQuestion()
-        XCTAssertEqual(nextCurrent?.id, question2.id)
+        XCTAssertNotNil(nextCurrent)
+        XCTAssertEqual(nextCurrent?.displayOrder, 1) // Should get second question (house name)
         
-        // Answer all questions
-        try await notesService.saveOrUpdateNote(
-            for: question2.id,
-            answer: "123 Test St"
-        )
+        // Answer all required questions
+        let store = try await notesService.loadNotesStore()
+        let requiredQuestions = store.questions.filter { $0.isRequired }
         
-        // Should return nil when all answered
+        for question in requiredQuestions {
+            try await notesService.saveOrUpdateNote(
+                for: question.id,
+                answer: "Test Answer"
+            )
+        }
+        
+        // Should return nil when all required questions answered
         let noCurrent = await notesService.getCurrentQuestion()
         XCTAssertNil(noCurrent)
     }
     
     func testGetNextUnansweredQuestion() async throws {
-        // Setup test data with mixed priorities
-        let highQuestion = Question(
-            id: UUID(),
-            text: "High priority",
-            category: .personal,
-            displayOrder: 1,
-            isRequired: true
-        )
-        
-        let mediumQuestion = Question(
-            id: UUID(),
-            text: "Medium priority",
-            category: .personal,
-            displayOrder: 2,
-            isRequired: true
-        )
-        
-        let optionalQuestion = Question(
-            id: UUID(),
-            text: "Optional question",
-            category: .personal,
-            displayOrder: 3,
-            isRequired: false
-        )
-        
-        // Clear existing data and add test questions
-        try await notesService.clearAllData()
-        try await notesService.addQuestion(highQuestion)
-        try await notesService.addQuestion(mediumQuestion)
-        try await notesService.addQuestion(optionalQuestion)
-        
-        // Should get high priority required question first
+        // Test with predefined questions - should get first required question
         let next = await notesService.getNextUnansweredQuestion()
-        XCTAssertEqual(next?.id, highQuestion.id)
+        XCTAssertNotNil(next)
+        XCTAssertTrue(next!.isRequired)
+        XCTAssertEqual(next?.displayOrder, 0) // Should be the address question
         
-        // Answer high priority
+        // Answer the first required question
         try await notesService.saveOrUpdateNote(
-            for: highQuestion.id,
-            answer: "Answer"
+            for: next!.id,
+            answer: "123 Test St"
         )
         
-        // Should get medium priority next
+        // Should get the next required question
         let next2 = await notesService.getNextUnansweredQuestion()
-        XCTAssertEqual(next2?.id, mediumQuestion.id)
+        XCTAssertNotNil(next2)
+        XCTAssertTrue(next2!.isRequired)
+        XCTAssertEqual(next2?.displayOrder, 1) // Should be the house name question
         
-        // Answer medium priority
-        try await notesService.saveOrUpdateNote(
-            for: mediumQuestion.id,
-            answer: "Answer"
-        )
+        // Answer all required questions
+        let store = try await notesService.loadNotesStore()
+        let requiredQuestions = store.questions.filter { $0.isRequired }
         
-        // Should return nil (optional question is not required)
+        for question in requiredQuestions {
+            try await notesService.saveOrUpdateNote(
+                for: question.id,
+                answer: "Test Answer"
+            )
+        }
+        
+        // Should return nil when all required questions are answered
         let next3 = await notesService.getNextUnansweredQuestion()
         XCTAssertNil(next3)
     }
     
     func testGetQuestionsInCategory() async throws {
-        // Setup questions in different categories
-        let personalQuestions = [
-            Question(id: UUID(), text: "Name?", category: .personal, displayOrder: 1),
-            Question(id: UUID(), text: "Age?", category: .personal, displayOrder: 2)
-        ]
-        
-        let locationQuestions = [
-            Question(id: UUID(), text: "Address?", category: .houseInfo, displayOrder: 3),
-            Question(id: UUID(), text: "City?", category: .houseInfo, displayOrder: 4)
-        ]
-        
-        let lifestyleQuestions = [
-            Question(id: UUID(), text: "Hobbies?", category: .preferences, displayOrder: 5)
-        ]
-        
-        // Clear existing data and add test questions
-        try await notesService.clearAllData()
-        for question in personalQuestions + locationQuestions + lifestyleQuestions {
-            try await notesService.addQuestion(question)
-        }
-        
-        // Test category filtering
+        // Test with predefined questions first
         let personal = await notesService.getQuestions(in: .personal)
-        XCTAssertEqual(personal.count, 2)
+        XCTAssertEqual(personal.count, 1) // "What's your name?"
         XCTAssertTrue(personal.allSatisfy { $0.category == .personal })
         
         let houseInfo = await notesService.getQuestions(in: .houseInfo)
-        XCTAssertEqual(houseInfo.count, 2)
+        XCTAssertEqual(houseInfo.count, 3) // Address, house name, and room note questions
         XCTAssertTrue(houseInfo.allSatisfy { $0.category == .houseInfo })
+        
+        // Add a custom question to test category filtering
+        let customQuestion = Question(
+            id: UUID(),
+            text: "What are your hobbies?",
+            category: .preferences,
+            displayOrder: 100
+        )
+        try await notesService.addQuestion(customQuestion)
         
         let preferences = await notesService.getQuestions(in: .preferences)
         XCTAssertEqual(preferences.count, 1)
-        XCTAssertEqual(preferences.first?.text, "Hobbies?")
+        XCTAssertEqual(preferences.first?.text, "What are your hobbies?")
+        
+        // Test empty category
+        let maintenance = await notesService.getQuestions(in: .maintenance)
+        XCTAssertEqual(maintenance.count, 0)
     }
     
     func testAreAllRequiredQuestionsAnswered() async throws {
-        // Setup mix of required and optional questions
-        let required1 = Question(
-            id: UUID(),
-            text: "Required 1",
-            category: .personal,
-            displayOrder: 1,
-            isRequired: true
-        )
-        
-        let required2 = Question(
-            id: UUID(),
-            text: "Required 2",
-            category: .personal,
-            displayOrder: 1,
-            isRequired: true
-        )
-        
-        let optional = Question(
-            id: UUID(),
-            text: "Optional",
-            category: .personal,
-            displayOrder: 3,
-            isRequired: false
-        )
-        
-        // Clear existing data and add test questions
-        try await notesService.clearAllData()
-        try await notesService.addQuestion(required1)
-        try await notesService.addQuestion(required2)
-        try await notesService.addQuestion(optional)
-        
-        // Initially should be false
+        // Initially should be false - predefined questions are required
         let allAnswered1 = await notesService.areAllRequiredQuestionsAnswered()
         XCTAssertFalse(allAnswered1)
         
-        // Answer one required question
-        try await notesService.saveOrUpdateNote(
-            for: required1.id,
-            answer: "Answer 1"
-        )
+        // Get all required questions and answer them
+        let store = try await notesService.loadNotesStore()
+        let requiredQuestions = store.questions.filter { $0.isRequired }
         
-        // Still false
+        // Answer all but one required question
+        for (index, question) in requiredQuestions.enumerated() {
+            if index < requiredQuestions.count - 1 {
+                try await notesService.saveOrUpdateNote(
+                    for: question.id,
+                    answer: "Answer \(index + 1)"
+                )
+            }
+        }
+        
+        // Should still be false
         let allAnswered2 = await notesService.areAllRequiredQuestionsAnswered()
         XCTAssertFalse(allAnswered2)
         
-        // Answer second required question
-        try await notesService.saveOrUpdateNote(
-            for: required2.id,
-            answer: "Answer 2"
-        )
+        // Answer the last required question
+        if let lastQuestion = requiredQuestions.last {
+            try await notesService.saveOrUpdateNote(
+                for: lastQuestion.id,
+                answer: "Final Answer"
+            )
+        }
         
-        // Now should be true (optional doesn't matter)
+        // Now should be true
         let allAnswered3 = await notesService.areAllRequiredQuestionsAnswered()
         XCTAssertTrue(allAnswered3)
+        
+        // Add an optional question - should still be true
+        let optionalQuestion = Question(
+            id: UUID(),
+            text: "Optional question",
+            category: .other,
+            displayOrder: 100,
+            isRequired: false
+        )
+        try await notesService.addQuestion(optionalQuestion)
+        
+        let allAnswered4 = await notesService.areAllRequiredQuestionsAnswered()
+        XCTAssertTrue(allAnswered4) // Optional questions don't affect this
     }
     
     func testGetQuestionProgress() async throws {
-        // Setup test questions
-        let questions = [
-            Question(id: UUID(), text: "Q1", category: .personal, displayOrder: 1, isRequired: true),
-            Question(id: UUID(), text: "Q2", category: .personal, displayOrder: 2, isRequired: true),
-            Question(id: UUID(), text: "Q3", category: .personal, displayOrder: 3, isRequired: false)
-        ]
-        
-        // Clear existing data and add test questions
-        try await notesService.clearAllData()
-        for question in questions {
-            try await notesService.addQuestion(question)
-        }
-        
-        // Initial progress
+        // Test with predefined questions (4 total, all required)
         let progress1 = await notesService.getQuestionProgress()
         XCTAssertEqual(progress1.answered, 0)
-        XCTAssertEqual(progress1.total, 3)
+        XCTAssertEqual(progress1.total, 4) // 4 predefined questions
         XCTAssertFalse(progress1.requiredComplete)
         
-        // Answer one required question
+        // Get predefined questions and answer one
+        let store = try await notesService.loadNotesStore()
+        let questions = store.questions.sorted { $0.displayOrder < $1.displayOrder }
+        
         try await notesService.saveOrUpdateNote(
             for: questions[0].id,
             answer: "Answer"
@@ -262,95 +198,101 @@ class NotesServiceQuestionsTests: XCTestCase {
         
         let progress2 = await notesService.getQuestionProgress()
         XCTAssertEqual(progress2.answered, 1)
-        XCTAssertEqual(progress2.total, 3)
+        XCTAssertEqual(progress2.total, 4)
         XCTAssertFalse(progress2.requiredComplete)
         
-        // Answer second required question
-        try await notesService.saveOrUpdateNote(
-            for: questions[1].id,
-            answer: "Answer"
-        )
+        // Answer all required questions
+        for question in questions.filter({ $0.isRequired }) {
+            try await notesService.saveOrUpdateNote(
+                for: question.id,
+                answer: "Answer"
+            )
+        }
         
         let progress3 = await notesService.getQuestionProgress()
-        XCTAssertEqual(progress3.answered, 2)
-        XCTAssertEqual(progress3.total, 3)
+        XCTAssertEqual(progress3.answered, 4) // All questions answered
+        XCTAssertEqual(progress3.total, 4)
         XCTAssertTrue(progress3.requiredComplete) // All required answered
         
-        // Answer optional question
-        try await notesService.saveOrUpdateNote(
-            for: questions[2].id,
-            answer: "Answer"
+        // Add an optional question
+        let optionalQuestion = Question(
+            id: UUID(),
+            text: "Optional question",
+            category: .other,
+            displayOrder: 100,
+            isRequired: false
         )
+        try await notesService.addQuestion(optionalQuestion)
         
         let progress4 = await notesService.getQuestionProgress()
-        XCTAssertEqual(progress4.answered, 3)
-        XCTAssertEqual(progress4.total, 3)
-        XCTAssertTrue(progress4.requiredComplete)
+        XCTAssertEqual(progress4.answered, 4) // Still 4 answered
+        XCTAssertEqual(progress4.total, 5) // Now 5 total
+        XCTAssertTrue(progress4.requiredComplete) // Required still complete
     }
     
     func testGetUnansweredQuestions() async throws {
-        // Setup questions with different priorities
-        let questions = [
-            Question(id: UUID(), text: "Low", category: .personal, displayOrder: 3),
-            Question(id: UUID(), text: "High", category: .personal, displayOrder: 1),
-            Question(id: UUID(), text: "Medium", category: .personal, displayOrder: 2)
-        ]
-        
-        // Clear existing data and add test questions
-        try await notesService.clearAllData()
-        for question in questions {
-            try await notesService.addQuestion(question)
-        }
-        
-        // All should be unanswered initially
+        // Test with predefined questions - all should be unanswered initially
         let unanswered1 = try await notesService.getUnansweredQuestions()
-        XCTAssertEqual(unanswered1.count, 3)
+        XCTAssertEqual(unanswered1.count, 4) // 4 predefined questions
         
         // Should be sorted by displayOrder
-        XCTAssertEqual(unanswered1[0].displayOrder, 1)
-        XCTAssertEqual(unanswered1[1].displayOrder, 2)
-        XCTAssertEqual(unanswered1[2].displayOrder, 3)
+        XCTAssertEqual(unanswered1[0].displayOrder, 0) // Address question
+        XCTAssertEqual(unanswered1[1].displayOrder, 1) // House name question
+        XCTAssertEqual(unanswered1[2].displayOrder, 2) // User name question
+        XCTAssertEqual(unanswered1[3].displayOrder, 3) // Room note question
         
-        // Answer one question
+        // Answer the first question
         try await notesService.saveOrUpdateNote(
-            for: questions[1].id, // High priority
-            answer: "Answer"
+            for: unanswered1[0].id,
+            answer: "123 Test St"
         )
         
         let unanswered2 = try await notesService.getUnansweredQuestions()
-        XCTAssertEqual(unanswered2.count, 2)
-        XCTAssertFalse(unanswered2.contains { $0.text == "High" })
+        XCTAssertEqual(unanswered2.count, 3)
+        XCTAssertFalse(unanswered2.contains { $0.displayOrder == 0 })
+        
+        // Answer all questions
+        for question in unanswered1 {
+            try await notesService.saveOrUpdateNote(
+                for: question.id,
+                answer: "Test Answer"
+            )
+        }
+        
+        let unanswered3 = try await notesService.getUnansweredQuestions()
+        XCTAssertEqual(unanswered3.count, 0)
     }
     
     func testIsQuestionAnswered() async throws {
-        let question = Question(
-            id: UUID(),
-            text: "Test question",
-            category: .personal,
-            displayOrder: 1
-        )
+        // Test with predefined questions - should be unanswered initially
+        let store = try await notesService.loadNotesStore()
+        let firstQuestion = store.questions.first!
         
-        // Clear existing data and add test question
-        try await notesService.clearAllData()
-        try await notesService.addQuestion(question)
-        
-        // Initially not answered
-        let answered1 = await notesService.isQuestionAnswered(question.id)
+        let answered1 = await notesService.isQuestionAnswered(firstQuestion.id)
         XCTAssertFalse(answered1)
         
         // Answer the question
         try await notesService.saveOrUpdateNote(
-            for: question.id,
+            for: firstQuestion.id,
             answer: "Test answer"
         )
         
         // Now should be answered
-        let answered2 = await notesService.isQuestionAnswered(question.id)
+        let answered2 = await notesService.isQuestionAnswered(firstQuestion.id)
         XCTAssertTrue(answered2)
         
         // Test with non-existent question ID
         let randomId = UUID()
         let answered3 = await notesService.isQuestionAnswered(randomId)
         XCTAssertFalse(answered3)
+        
+        // Test with empty answer
+        try await notesService.saveOrUpdateNote(
+            for: firstQuestion.id,
+            answer: ""
+        )
+        
+        let answered4 = await notesService.isQuestionAnswered(firstQuestion.id)
+        XCTAssertFalse(answered4) // Empty answer should be false
     }
 }
