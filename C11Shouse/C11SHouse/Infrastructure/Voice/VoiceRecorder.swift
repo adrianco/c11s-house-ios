@@ -305,27 +305,8 @@ final class VoiceRecorder: ObservableObject {
         // Convert to user-friendly error
         if let userFriendlyError = error as? UserFriendlyError {
             self.error = userFriendlyError
-        } else if let audioError = error as? AudioEngineError {
-            // Map AudioEngineError to AppError
-            switch audioError {
-            case .recordingInProgress, .notRecording:
-                self.error = AppError.unknown(audioError)
-            case .sessionNotConfigured:
-                self.error = AppError.microphoneAccessDenied
-            case .engineStartFailure, .recordingFailure:
-                self.error = AppError.unknown(audioError)
-            case .exportFailure:
-                self.error = AppError.dataCorrupted
-            }
-        } else if let sessionError = error as? AudioSessionError {
-            // Map AudioSessionError to AppError
-            switch sessionError {
-            case .configurationFailed, .activationFailed, .deactivationFailed:
-                self.error = AppError.unknown(sessionError)
-            case .categoryNotSupported, .audioRouteChangeWhileRecording:
-                self.error = AppError.unknown(sessionError)
-            }
         } else {
+            // For any other error, wrap it as unknown
             self.error = AppError.unknown(error)
         }
         
