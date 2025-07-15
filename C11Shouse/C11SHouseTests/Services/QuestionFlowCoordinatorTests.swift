@@ -44,6 +44,7 @@ class MockNotesService: NotesServiceProtocol {
     
     var mockNotesStore: NotesStoreData
     var saveNoteCallCount = 0
+    var saveOrUpdateNoteCallCount = 0
     var shouldThrowError = false
     var errorToThrow: Error?
     
@@ -87,9 +88,35 @@ class MockNotesService: NotesServiceProtocol {
         notesStoreSubject.send(mockNotesStore)
     }
     
-    // Note: saveOrUpdateNote is implemented as an extension method on NotesServiceProtocol
-    // It will call our saveNote or updateNote methods based on whether the note exists
-    // So we don't need to override it here - the default implementation will work correctly
+    // Override saveOrUpdateNote to track calls properly
+    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+        print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
+        saveOrUpdateNoteCallCount += 1
+        print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
+        
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
+        }
+        
+        if var existingNote = mockNotesStore.notes[questionId] {
+            // Update existing note
+            existingNote.updateAnswer(answer)
+            if let metadata = metadata {
+                for (key, value) in metadata {
+                    existingNote.setMetadata(key: key, value: value)
+                }
+            }
+            try await updateNote(existingNote)
+        } else {
+            // Create new note
+            let newNote = Note(
+                questionId: questionId,
+                answer: answer,
+                metadata: metadata
+            )
+            try await saveNote(newNote)
+        }
+    }
     
     func getNote(for questionId: UUID) async throws -> Note? {
         return mockNotesStore.notes[questionId]

@@ -25,9 +25,180 @@ import CoreLocation
 import Combine
 @testable import C11SHouse
 
-// Import MockNotesService from QuestionFlowCoordinatorTests
-extension AddressManagerTests {
-    // Use the MockNotesService that includes predefined questions
+// MARK: - Mock NotesService
+
+// Use the same MockNotesService from QuestionFlowCoordinatorTests
+class MockNotesService: NotesServiceProtocol {
+    var notesStorePublisher: AnyPublisher<NotesStoreData, Never> {
+        notesStoreSubject.eraseToAnyPublisher()
+    }
+    
+    private let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
+        questions: Question.predefinedQuestions,
+        notes: [:],
+        version: 1
+    ))
+    
+    var mockNotesStore: NotesStoreData
+    var saveNoteCallCount = 0
+    var saveOrUpdateNoteCallCount = 0
+    var shouldThrowError = false
+    var errorToThrow: Error?
+    
+    init() {
+        self.mockNotesStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: 1
+        )
+    }
+    
+    func loadNotesStore() async throws -> NotesStoreData {
+        if shouldThrowError {
+            throw errorToThrow ?? NotesError.decodingFailed(NSError(domain: "test", code: 1))
+        }
+        return mockNotesStore
+    }
+    
+    func saveNote(_ note: Note) async throws {
+        print("[MockNotesService] saveNote called with questionId: \(note.questionId), answer: \(note.answer)")
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
+        }
+        saveNoteCallCount += 1
+        print("[MockNotesService] Incremented saveNoteCallCount to: \(saveNoteCallCount)")
+        mockNotesStore.notes[note.questionId] = note
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func updateNote(_ note: Note) async throws {
+        print("[MockNotesService] updateNote called with questionId: \(note.questionId), answer: \(note.answer)")
+        guard mockNotesStore.notes[note.questionId] != nil else {
+            throw NotesError.noteNotFound(note.questionId)
+        }
+        mockNotesStore.notes[note.questionId] = note
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func deleteNote(for questionId: UUID) async throws {
+        mockNotesStore.notes.removeValue(forKey: questionId)
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    // Override saveOrUpdateNote to track calls properly
+    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+        print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
+        saveOrUpdateNoteCallCount += 1
+        print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
+        
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
+        }
+        
+        if var existingNote = mockNotesStore.notes[questionId] {
+            // Update existing note
+            existingNote.updateAnswer(answer)
+            if let metadata = metadata {
+                for (key, value) in metadata {
+                    existingNote.setMetadata(key: key, value: value)
+                }
+            }
+            try await updateNote(existingNote)
+        } else {
+            // Create new note
+            let newNote = Note(
+                questionId: questionId,
+                answer: answer,
+                metadata: metadata
+            )
+            try await saveNote(newNote)
+        }
+    }
+    
+    func getNote(for questionId: UUID) async throws -> Note? {
+        return mockNotesStore.notes[questionId]
+    }
+    
+    func getNote(forQuestionText questionText: String) async -> Note? {
+        if let question = mockNotesStore.questions.first(where: { $0.text == questionText }) {
+            return mockNotesStore.notes[question.id]
+        }
+        return nil
+    }
+    
+    func addQuestion(_ question: Question) async throws {
+        mockNotesStore.questions.append(question)
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func deleteQuestion(_ questionId: UUID) async throws {
+        mockNotesStore.questions.removeAll(where: { $0.id == questionId })
+        mockNotesStore.notes.removeValue(forKey: questionId)
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func getUnansweredQuestions() async throws -> [Question] {
+        return mockNotesStore.questions.filter { question in
+            mockNotesStore.notes[question.id] == nil
+        }
+    }
+    
+    func resetToDefaults() async throws {
+        mockNotesStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: 1
+        )
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func clearAllData() async throws {
+        mockNotesStore.notes.removeAll()
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func exportData() async throws -> Data {
+        return try JSONEncoder().encode(mockNotesStore)
+    }
+    
+    func importData(_ data: Data) async throws {
+        mockNotesStore = try JSONDecoder().decode(NotesStoreData.self, from: data)
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func getCurrentQuestion() async -> Question? {
+        return mockNotesStore.questionsNeedingReview().first
+    }
+    
+    func getNextUnansweredQuestion() async -> Question? {
+        return mockNotesStore.questions.first { question in
+            mockNotesStore.notes[question.id] == nil
+        }
+    }
+    
+    func saveHouseName(_ name: String) async {
+        if let question = mockNotesStore.questions.first(where: { $0.text == "What should I call this house?" }) {
+            let note = Note(
+                questionId: question.id,
+                answer: name,
+                metadata: ["type": "house_name", "updated_via_conversation": "true"]
+            )
+            mockNotesStore.notes[question.id] = note
+            notesStoreSubject.send(mockNotesStore)
+        }
+    }
+    
+    func getHouseName() async -> String? {
+        if let question = mockNotesStore.questions.first(where: { $0.text == "What should I call this house?" }),
+           let note = mockNotesStore.notes[question.id] {
+            return note.answer
+        }
+        return nil
+    }
+    
+    func saveWeatherSummary(_ weather: Weather) async {
+        // Not implemented for tests
+    }
 }
 
 // MARK: - Mock Location Service
@@ -129,6 +300,7 @@ class AddressManagerTests: XCTestCase {
         mockNotesService.shouldThrowError = false
         mockNotesService.errorToThrow = nil
         mockNotesService.saveNoteCallCount = 0
+        mockNotesService.saveOrUpdateNoteCallCount = 0
         
         sut = AddressManager(
             notesService: mockNotesService,
@@ -622,9 +794,9 @@ class AddressManagerTests: XCTestCase {
         XCTAssertEqual(houseName, "Universal City House")
         
         // 5. Save the address
-        print("Debug: saveOrUpdateNoteCallCount before saveAddress = \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("Debug: saveNoteCallCount before saveAddress = \(mockNotesService.saveNoteCallCount)")
         try await sut.saveAddress(parsedAddress!)
-        print("Debug: saveOrUpdateNoteCallCount after saveAddress = \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("Debug: saveNoteCallCount after saveAddress = \(mockNotesService.saveNoteCallCount)")
         
         // 6. Verify all storage locations updated
         XCTAssertNotNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"))
@@ -644,12 +816,13 @@ class AddressManagerTests: XCTestCase {
         
         // Debug: Print the state of the mock service
         print("Debug: saveNoteCallCount = \(mockNotesService.saveNoteCallCount)")
+        print("Debug: saveOrUpdateNoteCallCount = \(mockNotesService.saveOrUpdateNoteCallCount)")
         print("Debug: shouldThrowError = \(mockNotesService.shouldThrowError)")
         print("Debug: questions count = \(notesStore.questions.count)")
         print("Debug: notes count = \(notesStore.notes.count)")
         
         // We expect 2 calls: one for address, one for house name (if house name not already answered)
-        // Since the house name question starts with no answer, both should be saved using saveNote
+        // Since the house name question starts with no answer, both should be saved using saveNote (called by protocol extension)
         XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote (address + house name)")
         
         // 7. Load saved address
