@@ -40,15 +40,15 @@ class ContentViewModel: ObservableObject {
     private let appState: AppState
     
     // Published properties that mirror AppState for UI binding
-    var houseName: String { appState.houseName }
-    var houseThought: HouseThought? { appState.currentHouseThought }
-    var currentAddress: Address? { appState.homeAddress }
-    var hasLocationPermission: Bool { appState.hasLocationPermission }
+    @Published var houseName: String = "Your House"
+    @Published var houseThought: HouseThought?
+    @Published var currentAddress: Address?
+    @Published var hasLocationPermission: Bool = false
     
     // Weather state from AppState
-    var currentWeather: Weather? { appState.currentWeather }
-    var isLoadingWeather: Bool { appState.isLoadingWeather }
-    var weatherError: Error? { appState.weatherError }
+    @Published var currentWeather: Weather?
+    @Published var isLoadingWeather: Bool = false
+    @Published var weatherError: Error?
     
     // Services and Coordinators
     private let locationService: LocationServiceProtocol
@@ -63,6 +63,10 @@ class ContentViewModel: ObservableObject {
     // Debounce for UserDefaults changes
     private var addressUpdateWorkItem: DispatchWorkItem?
     private var lastCheckedAddressHash: String?
+    
+    // Prevent duplicate weather fetches
+    private var isCurrentlyFetchingWeather = false
+    private var lastWeatherFetchTime: Date?
     
     init(
         appState: AppState,
@@ -82,15 +86,42 @@ class ContentViewModel: ObservableObject {
     }
     
     private func setupBindings() {
+        // Sync with AppState
+        appState.$houseName
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$houseName)
+            
+        appState.$currentHouseThought
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$houseThought)
+            
+        appState.$homeAddress
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentAddress)
+            
+        appState.$hasLocationPermission
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$hasLocationPermission)
+            
+        appState.$currentWeather
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentWeather)
+            
+        appState.$isLoadingWeather
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoadingWeather)
+            
+        appState.$weatherError
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$weatherError)
+        
         // Monitor location authorization
         locationService.authorizationStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
                 let hasPermission = status == .authorizedWhenInUse || status == .authorizedAlways
                 self?.appState.updatePermissions(location: hasPermission)
-                if hasPermission {
-                    Task { await self?.loadAddressAndWeather() }
-                }
+                // Weather will be fetched when address is updated or by timer
             }
             .store(in: &cancellables)
         
@@ -144,15 +175,9 @@ class ContentViewModel: ObservableObject {
         NotificationCenter.default.publisher(for: Notification.Name("AllQuestionsComplete"))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                guard let self = self else { return }
-                
-                // Only refresh weather if we have an address
-                // Don't call loadSavedData() as it can create loops
-                if self.appState.homeAddress != nil {
-                    Task {
-                        await self.refreshWeather()
-                    }
-                }
+                // Weather will be fetched when address is updated or by timer
+                // Just update the house emotion to reflect completion
+                self?.updateHouseEmotionForKnownUser()
             }
             .store(in: &cancellables)
         
@@ -166,7 +191,7 @@ class ContentViewModel: ObservableObject {
     
     private func loadSavedData() {
         // AppState already loads saved data in its init
-        // Just trigger weather refresh if we have an address
+        // If we have an address on startup (already setup), fetch weather immediately
         if appState.homeAddress != nil {
             Task {
                 await refreshWeather()
