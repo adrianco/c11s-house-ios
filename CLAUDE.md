@@ -21,6 +21,35 @@ This helps maintain a clean project structure and makes documentation easy to fi
 
 Use `git push` after committing your changes.
 
+## 🧪 Test Maintenance Policy
+
+**CRITICAL:** Always check and update tests when making code changes:
+
+### 📋 Test Review Checklist
+When modifying any code file, you MUST:
+1. **Check for existing tests** - Search for test files related to the modified code
+2. **Review test validity** - Ensure tests still match the current API/implementation
+3. **Update test mocks** - Fix any mock objects that no longer match real interfaces
+4. **Fix compilation errors** - Resolve any test compilation issues immediately
+5. **Update test data** - Ensure test data matches current model structures
+6. **Run affected tests** - Verify tests pass with your changes
+
+### 🔍 Common Test Issues to Address
+- **Method signature changes** - Update test calls to match new method signatures
+- **Enum value changes** - Fix tests using outdated enum cases
+- **Model structure changes** - Update test data to match new model properties
+- **API changes** - Replace deprecated method calls with current APIs
+- **Mock mismatches** - Ensure mocks implement current protocol methods
+
+### 💡 Test Maintenance Best Practices
+- **Don't ignore test failures** - Fix broken tests immediately, don't skip them
+- **Keep tests current** - Tests should reflect the current codebase, not outdated APIs
+- **Update test documentation** - Ensure test comments accurately describe what's being tested
+- **Remove obsolete tests** - Delete tests for removed functionality
+- **Add missing tests** - Consider adding tests for new functionality
+
+**Remember:** Tests are documentation of how your code works. Keep them accurate and up-to-date!
+
 ## 🏗️ Build Environment Note
 
 **Note:** Xcode is not available in this Claude Code environment. Changes must be saved and pushed to GitHub to be built elsewhere. When making iOS/Swift changes:
