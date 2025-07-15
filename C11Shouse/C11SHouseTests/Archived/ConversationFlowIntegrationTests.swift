@@ -49,6 +49,10 @@ class ConversationFlowIntegrationTests: XCTestCase {
         locationServiceMock = MockLocationService()
         weatherServiceMock = MockWeatherKitService()
         
+        // Wait for NotesService to fully initialize with predefined questions
+        // This ensures that the service has loaded/created the predefined questions
+        _ = try await notesService.loadNotesStore()
+        
         // Create coordinators with real dependencies
         conversationStateManager = ConversationStateManager(
             notesService: notesService,
@@ -68,17 +72,34 @@ class ConversationFlowIntegrationTests: XCTestCase {
         questionFlowCoordinator.conversationStateManager = conversationStateManager
         questionFlowCoordinator.addressManager = addressManager
         
-        // Clear any existing data
-        // Note: clearAllNotes might not exist, using alternative approach
-        let emptyStore = NotesStoreData(questions: [], notes: [:])
-        // Clear notes - import method not in protocol
+        // Ensure we have predefined questions available
+        let notesStore = try await notesService.loadNotesStore()
+        XCTAssertGreaterThan(notesStore.questions.count, 0, "NotesService should have predefined questions")
+        
+        // Clear all existing answers to ensure questions need review
+        try await notesService.clearAllData()
+        
+        // Verify we have questions that need review
+        let cleanStore = try await notesService.loadNotesStore()
+        let questionsNeedingReview = cleanStore.questionsNeedingReview()
+        XCTAssertGreaterThan(questionsNeedingReview.count, 0, "Should have questions needing review after clearing data")
     }
     
     override func tearDown() async throws {
         cancellables = nil
-        // Clear notes
-        let emptyStore = NotesStoreData(questions: [], notes: [:])
-        // Clear notes - import method not in protocol
+        
+        // Clean up test data
+        try? await notesService?.clearAllData()
+        
+        // Clear references
+        questionFlowCoordinator = nil
+        conversationStateManager = nil
+        addressManager = nil
+        notesService = nil
+        locationServiceMock = nil
+        weatherServiceMock = nil
+        ttsMock = nil
+        
         try await super.tearDown()
     }
     
