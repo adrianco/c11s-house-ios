@@ -79,10 +79,16 @@ class MockNotesServiceWithTracking: SharedMockNotesService {
     var errorToThrow: Error?
     
     override func loadNotesStore() async throws -> NotesStoreData {
+        print("[MockNotesServiceWithTracking] loadNotesStore called")
         if shouldThrowError {
             throw errorToThrow ?? NotesError.decodingFailed(NSError(domain: "test", code: 1))
         }
-        return try await super.loadNotesStore()
+        let notesStore = try await super.loadNotesStore()
+        print("[MockNotesServiceWithTracking] Returning notes store with \(notesStore.questions.count) questions")
+        for question in notesStore.questions {
+            print("[MockNotesServiceWithTracking] Question: \(question.text)")
+        }
+        return notesStore
     }
     
     override func saveNote(_ note: Note) async throws {
@@ -103,8 +109,8 @@ class MockNotesServiceWithTracking: SharedMockNotesService {
         try await super.updateNote(note)
     }
     
-    // Override saveOrUpdateNote to track calls properly
-    override func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+    // Provide custom implementation of saveOrUpdateNote to track calls
+    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
         print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
         saveOrUpdateNoteCallCount += 1
         print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
@@ -113,7 +119,14 @@ class MockNotesServiceWithTracking: SharedMockNotesService {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         
-        try await super.saveOrUpdateNote(for: questionId, answer: answer, metadata: metadata)
+        // Don't call super since it's an extension method
+        // Instead, directly create and save the note
+        let note = Note(
+            questionId: questionId,
+            answer: answer,
+            metadata: metadata
+        )
+        try await saveNote(note)
     }
 }
 
