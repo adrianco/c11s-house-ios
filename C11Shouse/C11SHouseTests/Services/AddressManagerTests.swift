@@ -250,8 +250,9 @@ class AddressManagerTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Clear UserDefaults
+        // Clear UserDefaults - remove both confirmed and detected addresses
         UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
         
         sut = nil
         mockNotesService = nil

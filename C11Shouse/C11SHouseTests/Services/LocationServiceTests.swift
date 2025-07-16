@@ -33,6 +33,10 @@ class LocationServiceTests: XCTestCase {
     }
     
     override func tearDown() {
+        // Clear UserDefaults to prevent test data from persisting
+        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        
         cancellables = nil
         sut = nil
         super.tearDown()

@@ -21,6 +21,29 @@ This helps maintain a clean project structure and makes documentation easy to fi
 
 Use `git push` after committing your changes.
 
+## 🚫 No Test Data in Production Code
+
+**CRITICAL:** Never include test data in the main codebase:
+
+### Test Data Prevention Checklist
+1. **No hardcoded test addresses** - Never use addresses like "123 Test Street" in production code
+2. **No mock data in main code** - Keep all mock data in test files only
+3. **Clean UserDefaults in tests** - Always clean up UserDefaults after tests
+4. **Use #if DEBUG sparingly** - Test data cleanup should be the only DEBUG code in main app
+5. **Review preview providers** - Ensure SwiftUI previews don't leak test data into production
+
+### Common Test Data Patterns to Avoid
+- Addresses containing "Test", "Mock", "Example", or "Demo"
+- Postal codes like "12345", "00000", or other obvious test values
+- State codes like "TS", "TC", "MC" (Test State, Test City, Mock City)
+- Any data that's clearly not real user data
+
+### Test Data Cleanup
+The app includes automatic test data cleanup in debug builds to prevent test data from persisting:
+- Checks UserDefaults on startup for known test patterns
+- Removes any detected test addresses or house names
+- Only runs in DEBUG builds to avoid affecting production
+
 ## 🧪 Test Maintenance Policy
 
 **CRITICAL:** Always check and update tests when making code changes:
