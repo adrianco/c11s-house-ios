@@ -92,41 +92,53 @@ class MockNotesServiceWithTracking: SharedMockNotesService {
     }
     
     override func saveNote(_ note: Note) async throws {
-        print("[MockNotesService] saveNote called with questionId: \(note.questionId), answer: \(note.answer)")
+        print("[MockNotesServiceWithTracking] saveNote called with questionId: \(note.questionId), answer: \(note.answer)")
         if shouldThrowError {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         saveNoteCallCount += 1
-        print("[MockNotesService] Incremented saveNoteCallCount to: \(saveNoteCallCount)")
+        print("[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: \(saveNoteCallCount)")
         try await super.saveNote(note)
     }
     
     override func updateNote(_ note: Note) async throws {
-        print("[MockNotesService] updateNote called with questionId: \(note.questionId), answer: \(note.answer)")
+        print("[MockNotesServiceWithTracking] updateNote called with questionId: \(note.questionId), answer: \(note.answer)")
         if shouldThrowError {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         try await super.updateNote(note)
     }
     
-    // Provide custom implementation of saveOrUpdateNote to track calls
+    // Override the protocol extension method by providing our own implementation
     func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
-        print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
+        print("[MockNotesServiceWithTracking] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
         saveOrUpdateNoteCallCount += 1
-        print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
+        print("[MockNotesServiceWithTracking] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
         
         if shouldThrowError {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         
-        // Don't call super since it's an extension method
-        // Instead, directly create and save the note
-        let note = Note(
-            questionId: questionId,
-            answer: answer,
-            metadata: metadata
-        )
-        try await saveNote(note)
+        // Check if note exists to decide between save and update
+        let store = try await loadNotesStore()
+        if var existingNote = store.notes[questionId] {
+            // Update existing note
+            existingNote.updateAnswer(answer)
+            if let metadata = metadata {
+                for (key, value) in metadata {
+                    existingNote.setMetadata(key: key, value: value)
+                }
+            }
+            try await updateNote(existingNote)
+        } else {
+            // Create new note
+            let note = Note(
+                questionId: questionId,
+                answer: answer,
+                metadata: metadata
+            )
+            try await saveNote(note)
+        }
     }
 }
 
@@ -646,8 +658,9 @@ class AddressManagerTests: XCTestCase {
         let notesStore = try await mockNotesService.loadNotesStore()
         print("Debug test: notes count = \(notesStore.notes.count)")
         
-        // Expected: 2 calls (address + house name) - AddressManager uses saveOrUpdateNote
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2, "Expected 2 calls to saveOrUpdateNote")
+        // Expected: 2 calls (address + house name)
+        // Since saveOrUpdateNote is a protocol extension, it calls saveNote internally
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote")
     }
     
     func testSaveAddressToNotesHandlesError() async {
@@ -751,8 +764,9 @@ class AddressManagerTests: XCTestCase {
         print("Debug: notes count = \(notesStore.notes.count)")
         
         // We expect 2 calls: one for address, one for house name (if house name not already answered)
-        // AddressManager uses saveOrUpdateNote, not saveNote directly
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2, "Expected 2 calls to saveOrUpdateNote (address + house name)")
+        // Since saveOrUpdateNote is a protocol extension method, it calls saveNote internally
+        // So we need to check saveNoteCallCount instead
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote (address + house name)")
         
         // 7. Load saved address
         let loadedAddress = sut.loadSavedAddress()
