@@ -45,21 +45,31 @@ final class ThreadingSafetyUITests: XCTestCase {
     // MARK: - Recording Flow Tests
     
     func testRecordingFlowThreadSafety() throws {
-        // Navigate to conversation view
-        let conversationTab = app.tabBars.buttons["Conversation"]
-        XCTAssertTrue(conversationTab.waitForExistence(timeout: 5))
-        conversationTab.tap()
+        // Navigate to conversation view using the Start Conversation button
+        let conversationButton = app.buttons["StartConversation"]
+        if !conversationButton.waitForExistence(timeout: 5) {
+            // Fallback to text-based button
+            let textButton = app.buttons["Start Conversation"]
+            XCTAssertTrue(textButton.waitForExistence(timeout: 5))
+            textButton.tap()
+        } else {
+            conversationButton.tap()
+        }
         
-        // Find record button
-        let recordButton = app.buttons["Start Recording"]
+        // Wait for conversation view to load
+        let conversationView = app.otherElements["ConversationView"]
+        XCTAssertTrue(conversationView.waitForExistence(timeout: 5))
+        
+        // Find microphone button for recording
+        let recordButton = app.buttons["mic.circle.fill"]
         XCTAssertTrue(recordButton.waitForExistence(timeout: 5))
         
         // Rapid start/stop to test threading
         for _ in 0..<5 {
             recordButton.tap()
             
-            // Wait for recording to start
-            let stopButton = app.buttons["Stop Recording"]
+            // Wait for recording to start (button changes to stop icon)
+            let stopButton = app.buttons["stop.circle.fill"]
             XCTAssertTrue(stopButton.waitForExistence(timeout: 2))
             
             // Quick stop
@@ -77,10 +87,15 @@ final class ThreadingSafetyUITests: XCTestCase {
     // MARK: - Notes View Tests
     
     func testNotesViewRapidEditingThreadSafety() throws {
-        // Navigate to notes view
-        let notesTab = app.tabBars.buttons["Notes"]
-        XCTAssertTrue(notesTab.waitForExistence(timeout: 5))
-        notesTab.tap()
+        // Navigate to notes view via settings menu
+        let settingsButton = app.buttons["gearshape.fill"]
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
+        settingsButton.tap()
+        
+        // Find and tap Manage Notes in menu
+        let notesMenuItem = app.buttons["Manage Notes"]
+        XCTAssertTrue(notesMenuItem.waitForExistence(timeout: 2))
+        notesMenuItem.tap()
         
         // Enter edit mode
         let editButton = app.navigationBars.buttons["Edit"]
@@ -125,16 +140,27 @@ final class ThreadingSafetyUITests: XCTestCase {
     // MARK: - Background/Foreground Tests
     
     func testBackgroundTransitionWhileRecording() throws {
-        // Start recording
-        let conversationTab = app.tabBars.buttons["Conversation"]
-        conversationTab.tap()
+        // Navigate to conversation view
+        let conversationButton = app.buttons["StartConversation"]
+        if !conversationButton.waitForExistence(timeout: 5) {
+            let textButton = app.buttons["Start Conversation"]
+            XCTAssertTrue(textButton.waitForExistence(timeout: 5))
+            textButton.tap()
+        } else {
+            conversationButton.tap()
+        }
         
-        let recordButton = app.buttons["Start Recording"]
+        // Wait for conversation view
+        let conversationView = app.otherElements["ConversationView"]
+        XCTAssertTrue(conversationView.waitForExistence(timeout: 5))
+        
+        // Start recording
+        let recordButton = app.buttons["mic.circle.fill"]
         XCTAssertTrue(recordButton.waitForExistence(timeout: 5))
         recordButton.tap()
         
         // Wait for recording to start
-        let stopButton = app.buttons["Stop Recording"]
+        let stopButton = app.buttons["stop.circle.fill"]
         XCTAssertTrue(stopButton.waitForExistence(timeout: 2))
         
         // Simulate background
@@ -158,34 +184,45 @@ final class ThreadingSafetyUITests: XCTestCase {
     // MARK: - View Switching Tests
     
     func testRapidViewSwitchingThreadSafety() throws {
-        let tabs = ["Dashboard", "Conversation", "Notes", "Settings"]
+        // Since app uses NavigationLinks, not tabs, test navigation between views
         
-        // Rapid tab switching
-        for _ in 0..<10 {
-            for tabName in tabs {
-                let tab = app.tabBars.buttons[tabName]
-                if tab.exists {
-                    tab.tap()
-                    // Don't wait - immediate switch
-                }
+        // Rapid navigation between conversation and back
+        for _ in 0..<5 {
+            // Go to conversation
+            let conversationButton = app.buttons["StartConversation"]
+            if conversationButton.waitForExistence(timeout: 1) {
+                conversationButton.tap()
+            }
+            
+            // Go back
+            let backButton = app.buttons["Back"]
+            if backButton.waitForExistence(timeout: 1) {
+                backButton.tap()
+            }
+        }
+        
+        // Test settings menu rapid open/close
+        for _ in 0..<5 {
+            let settingsButton = app.buttons["gearshape.fill"]
+            if settingsButton.exists {
+                settingsButton.tap()
+                // Tap outside to dismiss
+                app.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.1)).tap()
             }
         }
         
         // Verify final state
         XCTAssertTrue(app.state == .runningForeground)
-        
-        // Verify we can still interact
-        let firstTab = app.tabBars.buttons.firstMatch
-        XCTAssertTrue(firstTab.exists)
-        firstTab.tap()
     }
     
     // MARK: - Stress Tests
     
     func testConcurrentUIOperations() throws {
-        // Navigate to notes
-        let notesTab = app.tabBars.buttons["Notes"]
-        notesTab.tap()
+        // Navigate to notes via settings menu
+        let settingsButton = app.buttons["gearshape.fill"]
+        settingsButton.tap()
+        let notesMenuItem = app.buttons["Manage Notes"]
+        notesMenuItem.tap()
         
         // Create multiple concurrent operations
         let group = DispatchGroup()
@@ -233,23 +270,31 @@ final class ThreadingSafetyUITests: XCTestCase {
     // MARK: - Memory Pressure Tests
     
     func testThreadingUnderMemoryPressure() throws {
-        // Start recording
-        let conversationTab = app.tabBars.buttons["Conversation"]
-        conversationTab.tap()
+        // Navigate to conversation and start recording
+        let conversationButton = app.buttons["StartConversation"]
+        if !conversationButton.waitForExistence(timeout: 5) {
+            let textButton = app.buttons["Start Conversation"]
+            textButton.tap()
+        } else {
+            conversationButton.tap()
+        }
         
-        let recordButton = app.buttons["Start Recording"]
+        let recordButton = app.buttons["mic.circle.fill"]
         recordButton.tap()
         
-        // Simulate memory pressure by rapidly creating/destroying UI elements
-        for _ in 0..<20 {
-            // Switch tabs rapidly
-            app.tabBars.buttons["Notes"].tap()
-            app.tabBars.buttons["Dashboard"].tap()
-            app.tabBars.buttons["Conversation"].tap()
+        // Simulate memory pressure by rapidly navigating
+        for _ in 0..<10 {
+            // Go back
+            app.buttons["Back"].tap()
+            Thread.sleep(forTimeInterval: 0.1)
+            
+            // Go to conversation again
+            app.buttons["StartConversation"].tap()
+            Thread.sleep(forTimeInterval: 0.1)
         }
         
         // Stop recording if still active
-        let stopButton = app.buttons["Stop Recording"]
+        let stopButton = app.buttons["stop.circle.fill"]
         if stopButton.exists {
             stopButton.tap()
         }

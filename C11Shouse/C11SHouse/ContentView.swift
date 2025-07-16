@@ -99,6 +99,7 @@ struct ContentView: View {
                         Text(viewModel.houseName)
                             .font(.largeTitle)
                             .fontWeight(.bold)
+                            .accessibilityIdentifier("HouseName")
                         
                         if let thought = viewModel.houseThought {
                             HStack(spacing: 4) {
@@ -194,6 +195,7 @@ struct ContentView: View {
                         .cornerRadius(25)
                         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                     }
+                    .accessibilityIdentifier("StartConversation")
                     
                     Spacer()
                         .frame(height: 100)

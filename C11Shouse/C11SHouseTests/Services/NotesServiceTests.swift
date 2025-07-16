@@ -133,6 +133,9 @@ class NotesServiceTests: XCTestCase {
         let originalNote = Note(questionId: question.id, answer: "Original")
         try await sut.saveNote(originalNote)
         
+        // Add small delay to ensure different timestamps
+        try await Task.sleep(nanoseconds: 10_000_000) // 0.01 seconds
+        
         // When: Updating the note
         var updatedNote = originalNote
         updatedNote.answer = "Updated answer"

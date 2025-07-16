@@ -255,20 +255,21 @@ class ConversationViewUITests: XCTestCase {
     
     private func navigateToConversationView() {
         // Navigate from main screen to conversation view
-        // This depends on your app's navigation structure
-        let conversationButton = app.buttons["Start Conversation"].firstMatch
+        // Try by accessibility identifier first
+        let conversationButton = app.buttons["StartConversation"]
         if conversationButton.waitForExistence(timeout: 5) {
             conversationButton.tap()
         } else {
-            // Alternative navigation path
-            let houseButton = app.buttons["House"].firstMatch
-            if houseButton.exists {
-                houseButton.tap()
+            // Fallback to button with text
+            let textButton = app.buttons["Start Conversation"].firstMatch
+            if textButton.waitForExistence(timeout: 2) {
+                textButton.tap()
             }
         }
         
-        // Wait for conversation view to load
-        XCTAssertTrue(app.staticTexts["House Chat"].waitForExistence(timeout: 5), "Conversation view should load")
+        // Wait for conversation view to load by checking its identifier
+        let conversationView = app.otherElements["ConversationView"]
+        XCTAssertTrue(conversationView.waitForExistence(timeout: 5), "Conversation view should load")
     }
     
     private func muteConversation() {

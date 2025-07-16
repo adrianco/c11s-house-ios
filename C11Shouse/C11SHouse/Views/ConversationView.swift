@@ -144,6 +144,7 @@ struct ConversationView: View {
             )
         }
         .navigationBarHidden(true)
+        .accessibilityIdentifier("ConversationView")
         .onAppear {
             print("[ConversationView] onAppear called")
             print("[ConversationView] hasCompletedPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial"))")

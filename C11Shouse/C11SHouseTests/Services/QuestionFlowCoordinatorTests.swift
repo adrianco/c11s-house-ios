@@ -621,7 +621,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     func testHandleQuestionChangeForAddressQuestionWithError() async {
         // Given: Address detection will fail
         let addressQuestion = mockNotesService.mockNotesStore.questions.first(where: { 
-            $0.text == "What's your home address?" 
+            $0.text == "Is this the right address?" 
         })!
         mockAddressManager.shouldThrowError = true
         
