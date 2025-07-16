@@ -29,9 +29,9 @@ import XCTest
 import Combine
 @testable import C11SHouse
 
-// MARK: - Mock NotesService with call tracking for QuestionFlowCoordinatorTests
+// MARK: - Test-specific mock that extends SharedMockNotesService
 
-class MockNotesService: SharedMockNotesService {
+class MockNotesServiceForQuestionFlow: SharedMockNotesService {
     var saveNoteCallCount = 0
     var saveOrUpdateNoteCallCount = 0
     var shouldThrowError = false
@@ -252,7 +252,7 @@ class MockConversationRecognizerForFlow: ConversationRecognizer {
 @MainActor
 class QuestionFlowCoordinatorTests: XCTestCase {
     var sut: QuestionFlowCoordinator!
-    var mockNotesService: MockNotesService!
+    var mockNotesService: MockNotesServiceForQuestionFlow!
     var mockStateManager: MockConversationStateManager!
     var mockRecognizer: MockConversationRecognizerForFlow!
     var mockAddressManager: MockAddressManager!
@@ -260,7 +260,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     
     override func setUp() async throws {
         try await super.setUp()
-        mockNotesService = MockNotesService()
+        mockNotesService = MockNotesServiceForQuestionFlow()
         sut = QuestionFlowCoordinator(notesService: mockNotesService)
         
         // Create and inject mock dependencies

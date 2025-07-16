@@ -168,7 +168,7 @@ class SharedMockNotesService: NotesServiceProtocol {
         notesStoreSubject.eraseToAnyPublisher()
     }
     
-    private let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
+    internal let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
         questions: Question.predefinedQuestions,
         notes: [:],
         version: 1
