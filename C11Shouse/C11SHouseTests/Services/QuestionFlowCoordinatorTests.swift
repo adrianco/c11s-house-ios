@@ -74,46 +74,6 @@ class MockNotesServiceForQuestionFlow: SharedMockNotesService {
         
         try await super.saveOrUpdateNote(for: questionId, answer: answer, metadata: metadata)
     }
-    
-    func getCurrentQuestion() async -> Question? {
-        return mockNotesStore.questionsNeedingReview().first
-    }
-    
-    func getNextUnansweredQuestion() async -> Question? {
-        return mockNotesStore.questions.first { question in
-            mockNotesStore.notes[question.id] == nil
-        }
-    }
-    
-    func getNote(for questionId: UUID) async throws -> Note? {
-        return mockNotesStore.notes[questionId]
-    }
-    
-    func getNote(forQuestionText questionText: String) async -> Note? {
-        if let question = mockNotesStore.questions.first(where: { $0.text == questionText }) {
-            return mockNotesStore.notes[question.id]
-        }
-        return nil
-    }
-    
-    func getUnansweredQuestions() async throws -> [Question] {
-        return mockNotesStore.questions.filter { question in
-            mockNotesStore.notes[question.id] == nil
-        }
-    }
-    
-    func exportData() async throws -> Data {
-        return try JSONEncoder().encode(mockNotesStore)
-    }
-    
-    func importData(_ data: Data) async throws {
-        mockNotesStore = try JSONDecoder().decode(NotesStoreData.self, from: data)
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func saveWeatherSummary(_ weather: Weather) async {
-        // Not implemented for tests
-    }
 }
 
 // MARK: - Mock ConversationStateManager
