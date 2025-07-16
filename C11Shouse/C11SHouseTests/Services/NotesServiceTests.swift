@@ -335,14 +335,17 @@ class NotesServiceTests: XCTestCase {
         // Given: Subscription to publisher
         var receivedStores: [NotesStoreData] = []
         let expectation = expectation(description: "Publisher emits updates")
-        expectation.expectedFulfillmentCount = 1 // Only fulfill once when we have enough updates
+        expectation.expectedFulfillmentCount = 1 // Only fulfill once
+        
+        var hasFulfilled = false
         
         // Skip initial values and only track changes after subscription
         sut.notesStorePublisher
             .dropFirst() // Drop the current value from initialization
             .sink { store in
                 receivedStores.append(store)
-                if receivedStores.count >= 3 && expectation.expectedFulfillmentCount > 0 {
+                if receivedStores.count >= 3 && !hasFulfilled {
+                    hasFulfilled = true
                     expectation.fulfill()
                 }
             }

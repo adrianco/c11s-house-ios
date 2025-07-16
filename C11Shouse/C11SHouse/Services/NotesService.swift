@@ -47,6 +47,12 @@
 import Foundation
 import Combine
 
+/// Actor for coordinating thread-safe save operations
+@globalActor
+actor NotesStoreActor {
+    static let shared = NotesStoreActor()
+}
+
 /// Type alias for backward compatibility
 typealias NotesService = NotesServiceProtocol
 
@@ -99,14 +105,6 @@ class NotesServiceImpl: NotesServiceProtocol {
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     
-    // Actor for thread-safe save operations
-    private actor SaveCoordinator {
-        func performSave(_ operation: () async throws -> Void) async throws {
-            try await operation()
-        }
-    }
-    private let saveCoordinator = SaveCoordinator()
-    
     // MARK: - Initialization
     
     init(userDefaults: UserDefaults = .standard) {
@@ -132,110 +130,103 @@ class NotesServiceImpl: NotesServiceProtocol {
         return store
     }
     
+    @NotesStoreActor
     func saveNote(_ note: Note) async throws {
-        try await saveCoordinator.performSave {
-            var store = try await self.loadFromUserDefaults()
-            
-            // Ensure the question exists
-            guard store.questions.contains(where: { $0.id == note.questionId }) else {
-                throw NotesError.questionNotFound(note.questionId)
-            }
-            
-            // Save or update the note
-            store.notes[note.questionId] = note
-            
-            try await self.save(store)
+        var store = try await loadFromUserDefaults()
+        
+        // Ensure the question exists
+        guard store.questions.contains(where: { $0.id == note.questionId }) else {
+            throw NotesError.questionNotFound(note.questionId)
         }
+        
+        // Save or update the note
+        store.notes[note.questionId] = note
+        
+        try await save(store)
     }
     
+    @NotesStoreActor
     func updateNote(_ note: Note) async throws {
-        try await saveCoordinator.performSave {
-            var store = try await self.loadFromUserDefaults()
-            
-            // Ensure the note exists
-            guard store.notes[note.questionId] != nil else {
-                throw NotesError.noteNotFound(note.questionId)
-            }
-            
-            // Update with new timestamp
-            var updatedNote = note
-            updatedNote.lastModified = Date()
-            store.notes[note.questionId] = updatedNote
-            
-            try await self.save(store)
+        var store = try await loadFromUserDefaults()
+        
+        // Ensure the note exists
+        guard store.notes[note.questionId] != nil else {
+            throw NotesError.noteNotFound(note.questionId)
         }
+        
+        // Update with new timestamp
+        var updatedNote = note
+        updatedNote.lastModified = Date()
+        store.notes[note.questionId] = updatedNote
+        
+        try await save(store)
     }
     
+    @NotesStoreActor
     func deleteNote(for questionId: UUID) async throws {
-        try await saveCoordinator.performSave {
-            var store = try await self.loadFromUserDefaults()
-            store.notes.removeValue(forKey: questionId)
-            try await self.save(store)
-        }
+        var store = try await loadFromUserDefaults()
+        store.notes.removeValue(forKey: questionId)
+        try await save(store)
     }
     
+    @NotesStoreActor
     func addQuestion(_ question: Question) async throws {
-        try await saveCoordinator.performSave {
-            var store = try await self.loadFromUserDefaults()
-            
-            // Check for duplicates
-            if store.questions.contains(where: { $0.id == question.id }) {
-                throw NotesError.duplicateQuestion(question.id)
-            }
-            
-            store.questions.append(question)
-            try await self.save(store)
+        var store = try await loadFromUserDefaults()
+        
+        // Check for duplicates
+        if store.questions.contains(where: { $0.id == question.id }) {
+            throw NotesError.duplicateQuestion(question.id)
         }
+        
+        store.questions.append(question)
+        try await save(store)
     }
     
+    @NotesStoreActor
     func deleteQuestion(_ questionId: UUID) async throws {
-        try await saveCoordinator.performSave {
-            var store = try await self.loadFromUserDefaults()
-            
-            // Remove the question
-            store.questions.removeAll { $0.id == questionId }
-            
-            // Remove associated note
-            store.notes.removeValue(forKey: questionId)
-            
-            try await self.save(store)
-        }
+        var store = try await loadFromUserDefaults()
+        
+        // Remove the question
+        store.questions.removeAll { $0.id == questionId }
+        
+        // Remove associated note
+        store.notes.removeValue(forKey: questionId)
+        
+        try await save(store)
     }
     
+    @NotesStoreActor
     func resetToDefaults() async throws {
-        try await saveCoordinator.performSave {
-            var store = try await self.loadFromUserDefaults()
-            
-            // Keep existing notes for predefined questions
-            let existingNotes = store.notes
-            
-            // Reset questions to predefined set
-            store.questions = Question.predefinedQuestions
-            
-            // Restore notes for questions that still exist
-            var newNotes: [UUID: Note] = [:]
-            for question in store.questions {
-                if let existingNote = existingNotes[question.id] {
-                    newNotes[question.id] = existingNote
-                }
+        var store = try await loadFromUserDefaults()
+        
+        // Keep existing notes for predefined questions
+        let existingNotes = store.notes
+        
+        // Reset questions to predefined set
+        store.questions = Question.predefinedQuestions
+        
+        // Restore notes for questions that still exist
+        var newNotes: [UUID: Note] = [:]
+        for question in store.questions {
+            if let existingNote = existingNotes[question.id] {
+                newNotes[question.id] = existingNote
             }
-            store.notes = newNotes
-            
-            try await self.save(store)
         }
+        store.notes = newNotes
+        
+        try await save(store)
     }
     
+    @NotesStoreActor
     func clearAllData() async throws {
-        try await saveCoordinator.performSave {
-            print("[NotesService] Clearing all data...")
-            let emptyStore = NotesStoreData(
-                questions: Question.predefinedQuestions,
-                notes: [:],
-                version: self.currentVersion
-            )
-            print("[NotesService] Resetting to \(emptyStore.questions.count) predefined questions")
-            try await self.save(emptyStore)
-        }
+        print("[NotesService] Clearing all data...")
+        let emptyStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: currentVersion
+        )
+        print("[NotesService] Resetting to \(emptyStore.questions.count) predefined questions")
+        try await save(emptyStore)
     }
     
     // MARK: - Private Methods
@@ -281,6 +272,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         }
     }
     
+    @NotesStoreActor
     private func save(_ store: NotesStoreData) async throws {
         do {
             let data = try encoder.encode(store)
