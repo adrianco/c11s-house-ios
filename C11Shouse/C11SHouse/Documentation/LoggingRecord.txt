@@ -1,3 +1,4 @@
+[C11SHouseApp] Removing test data from UserDefaults: 123 Test Street, Test City, TS 12345
 [WeatherKitService] 🌦️ Initializing WeatherKit service
 [WeatherKitService] Bundle ID: com.c11s.house
 [WeatherKitService] ✅ Running on real device
@@ -11,42 +12,31 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
-[ContentViewModel] Weather update received: nil
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 123 Test Street, Test City, TS 12345
-[ContentViewModel] Current weather before fetch: nil
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[WeatherCoordinator] Weather question already exists
 Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: FB0B730D-A1F8-40CC-9AED-907D59D1A2DA
+🚀 ONBOARDING SESSION STARTED - ID: 8E9A7CDB-1C2A-4B17-80DF-005D5FD4868A
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 PHASE TRANSITION: Start → welcome
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 👆 USER ACTION: view_appeared in welcome
-App is being debugged, do not track this hang
-Hang detected: 0.51s (debugger attached, not reporting)
-Test Suite 'All tests' started at 2025-07-16 12:18:36.960.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-16 12:18:36.960.
-Test Suite 'AddressManagerTests' started at 2025-07-16 12:18:36.961.
+Test Suite 'All tests' started at 2025-07-16 12:37:48.715.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-16 12:37:48.715.
+Test Suite 'AddressManagerTests' started at 2025-07-16 12:37:48.715.
 Test Case '-[C11SHouseTests.AddressManagerTests testAddressErrorDescriptions]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testAddressErrorDescriptions]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testAddressErrorDescriptions]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError]' started.
-[WeatherCoordinator] Weather question creation already in progress
-[ContentViewModel] Weather update received: partlyCloudy
-[WeatherCoordinator] Created Weather question in notes store
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError]' passed (0.014 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesGeocodeError]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressHandlesLocationError]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' started.
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
-[ContentViewModel] Temperature: 61°F
-[ContentViewModel] Current weather after fetch: exists
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' passed (0.004 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressSetsIsDetectingFlag]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithPermission]' started.
@@ -54,51 +44,84 @@ Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithPerm
 Test Case '-[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration]' started.
 Debug: saveNoteCallCount before saveAddress = 0
 [AddressManager] saveAddressToNotes called with address: 100 Universal City Plaza, Universal City, CA 91608
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 [AddressManager] Loaded notes store with 4 questions
 [AddressManager] Found address question: Is this the right address?
-[MockNotesService] saveNote called with questionId: 620FBCF7-4000-4C20-AB64-96DD33C6E26E, answer: 100 Universal City Plaza, Universal City, CA 91608
-[MockNotesService] Incremented saveNoteCallCount to: 1
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: F950D1A5-49FA-4F57-BCAC-70CB2C859EE6, answer: 100 Universal City Plaza, Universal City, CA 91608
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 1
 [AddressManager] Saved address note
 [AddressManager] Found house name question: What should I call this house?
 [AddressManager] Generated house name: Universal City House
-[MockNotesService] saveNote called with questionId: 22585890-41A5-41E4-9B55-F85B1FC71C79, answer: Universal City House
-[MockNotesService] Incremented saveNoteCallCount to: 2
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: 984BE821-A142-4D4F-9AA9-A3720EA3198B, answer: Universal City House
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 2
 [AddressManager] Saved house name note
 [AddressManager] User confirmed address, now saving as answered: 100 Universal City Plaza, Universal City, CA 91608
 Debug: saveNoteCallCount after saveAddress = 2
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 Debug: saveNoteCallCount = 2
 Debug: saveOrUpdateNoteCallCount = 0
 Debug: shouldThrowError = false
 Debug: questions count = 4
 Debug: notes count = 2
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:742: error: -[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration] : XCTAssertEqual failed: ("0") is not equal to ("2") - Expected 2 calls to saveOrUpdateNote (address + house name)
-Test Case '-[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration]' failed (0.265 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testFullAddressFlowIntegration]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromFullAddress]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromFullAddress]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromFullAddress]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromStreetOnly]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameFromStreetOnly]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameHandlesVariousFormats]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameHandlesVariousFormats]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testGenerateHouseNameHandlesVariousFormats]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenExists]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenExists]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenNotExists]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenNotExists]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWhenNotExists]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWithCorruptData]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testLoadSavedAddressWithCorruptData]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithDetectedCoordinates]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithDetectedCoordinates]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithDetectedCoordinates]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithInvalidFormat]' started.
-Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithInvalidFormat]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithInvalidFormat]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithoutDetectedCoordinates]' started.
 Test Case '-[C11SHouseTests.AddressManagerTests testParseAddressWithoutDetectedCoordinates]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressDoesNotOverwriteExistingHouseName]' started.
-App is being debugged, do not track this hang
-Hang detected: 0.28s (debugger attached, not reporting)
 [AddressManager] saveAddressToNotes called with address: 111 Cedar Ave, Seattle, WA 98101
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 [AddressManager] Loaded notes store with 4 questions
 [AddressManager] Found address question: Is this the right address?
-[MockNotesService] saveNote called with questionId: 620FBCF7-4000-4C20-AB64-96DD33C6E26E, answer: 111 Cedar Ave, Seattle, WA 98101
-[MockNotesService] Incremented saveNoteCallCount to: 1
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: F950D1A5-49FA-4F57-BCAC-70CB2C859EE6, answer: 111 Cedar Ave, Seattle, WA 98101
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 1
 [AddressManager] Saved address note
 [AddressManager] Found house name question: What should I call this house?
 [AddressManager] House name question already answered
@@ -106,60 +129,120 @@ Hang detected: 0.28s (debugger attached, not reporting)
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressDoesNotOverwriteExistingHouseName]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressGeneratesHouseNameIfNeeded]' started.
 [AddressManager] saveAddressToNotes called with address: 999 Birch Lane, Portland, OR 97201
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 [AddressManager] Loaded notes store with 4 questions
 [AddressManager] Found address question: Is this the right address?
-[MockNotesService] saveNote called with questionId: 620FBCF7-4000-4C20-AB64-96DD33C6E26E, answer: 999 Birch Lane, Portland, OR 97201
-[MockNotesService] Incremented saveNoteCallCount to: 1
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: F950D1A5-49FA-4F57-BCAC-70CB2C859EE6, answer: 999 Birch Lane, Portland, OR 97201
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 1
 [AddressManager] Saved address note
 [AddressManager] Found house name question: What should I call this house?
 [AddressManager] Generated house name: Birch House
-[MockNotesService] saveNote called with questionId: 22585890-41A5-41E4-9B55-F85B1FC71C79, answer: Birch House
-[MockNotesService] Incremented saveNoteCallCount to: 2
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: 984BE821-A142-4D4F-9AA9-A3720EA3198B, answer: Birch House
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 2
 [AddressManager] Saved house name note
 [AddressManager] User confirmed address, now saving as answered: 999 Birch Lane, Portland, OR 97201
-Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressGeneratesHouseNameIfNeeded]' passed (0.007 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressGeneratesHouseNameIfNeeded]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToAllStorageLocations]' started.
 [AddressManager] saveAddressToNotes called with address: 789 Elm Street, Chicago, IL 60601
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 [AddressManager] Loaded notes store with 4 questions
 [AddressManager] Found address question: Is this the right address?
-[MockNotesService] saveNote called with questionId: 620FBCF7-4000-4C20-AB64-96DD33C6E26E, answer: 789 Elm Street, Chicago, IL 60601
-[MockNotesService] Incremented saveNoteCallCount to: 1
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: F950D1A5-49FA-4F57-BCAC-70CB2C859EE6, answer: 789 Elm Street, Chicago, IL 60601
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 1
 [AddressManager] Saved address note
 [AddressManager] Found house name question: What should I call this house?
 [AddressManager] Generated house name: Elm House
-[MockNotesService] saveNote called with questionId: 22585890-41A5-41E4-9B55-F85B1FC71C79, answer: Elm House
-[MockNotesService] Incremented saveNoteCallCount to: 2
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: 984BE821-A142-4D4F-9AA9-A3720EA3198B, answer: Elm House
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 2
 [AddressManager] Saved house name note
 [AddressManager] User confirmed address, now saving as answered: 789 Elm Street, Chicago, IL 60601
-Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToAllStorageLocations]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToAllStorageLocations]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesBasicFunctionality]' started.
 [AddressManager] saveAddressToNotes called with address: 123 Test Street, Test City, TC 12345
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 [AddressManager] Loaded notes store with 4 questions
 [AddressManager] Found address question: Is this the right address?
-[MockNotesService] saveNote called with questionId: 620FBCF7-4000-4C20-AB64-96DD33C6E26E, answer: 123 Test Street, Test City, TC 12345
-[MockNotesService] Incremented saveNoteCallCount to: 1
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: F950D1A5-49FA-4F57-BCAC-70CB2C859EE6, answer: 123 Test Street, Test City, TC 12345
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 1
 [AddressManager] Saved address note
 [AddressManager] Found house name question: What should I call this house?
 [AddressManager] Generated house name: Test House
-[MockNotesService] saveNote called with questionId: 22585890-41A5-41E4-9B55-F85B1FC71C79, answer: Test House
-[MockNotesService] Incremented saveNoteCallCount to: 2
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
+[MockNotesServiceWithTracking] saveNote called with questionId: 984BE821-A142-4D4F-9AA9-A3720EA3198B, answer: Test House
+[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: 2
 [AddressManager] Saved house name note
 Debug test: saveNoteCallCount = 2
-Debug test: mockNotesService instance = ObjectIdentifier(0x00000001453d0400)
+Debug test: mockNotesService instance = ObjectIdentifier(0x0000000106c59700)
+[MockNotesServiceWithTracking] loadNotesStore called
+[MockNotesServiceWithTracking] Returning notes store with 4 questions
+[MockNotesServiceWithTracking] Question: Is this the right address?
+[MockNotesServiceWithTracking] Question: What should I call this house?
+[MockNotesServiceWithTracking] Question: What's your name?
+[MockNotesServiceWithTracking] Question: Let's start by creating your first room note! What room would you like to add a note about?
 Debug test: notes count = 2
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:637: error: -[C11SHouseTests.AddressManagerTests testSaveAddressToNotesBasicFunctionality] : XCTAssertEqual failed: ("0") is not equal to ("2") - Expected 2 calls to saveOrUpdateNote
-Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesBasicFunctionality]' failed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesBasicFunctionality]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesHandlesError]' started.
 [AddressManager] saveAddressToNotes called with address: Error Street, Error City, ER 00000
+[MockNotesServiceWithTracking] loadNotesStore called
 Error saving address to notes: decodingFailed(Error Domain=test Code=1 "(null)")
-Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesHandlesError]' passed (0.001 seconds).
-Test Suite 'AddressManagerTests' failed at 2025-07-16 12:18:37.277.
-	 Executed 22 tests, with 2 failures (0 unexpected) in 0.313 (0.316) seconds
-Test Suite 'AddressParserTests' started at 2025-07-16 12:18:37.277.
+Test Case '-[C11SHouseTests.AddressManagerTests testSaveAddressToNotesHandlesError]' passed (0.000 seconds).
+Test Suite 'AddressManagerTests' passed at 2025-07-16 12:37:48.734.
+	 Executed 22 tests, with 0 failures (0 unexpected) in 0.017 (0.018) seconds
+Test Suite 'AddressParserTests' started at 2025-07-16 12:37:48.734.
 Test Case '-[C11SHouseTests.AddressParserTests testAddressWithLineBreaks]' started.
-Test Case '-[C11SHouseTests.AddressParserTests testAddressWithLineBreaks]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressParserTests testAddressWithLineBreaks]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testAllStreetSuffixVariations]' started.
-Test Case '-[C11SHouseTests.AddressParserTests testAllStreetSuffixVariations]' passed (0.008 seconds).
+Test Case '-[C11SHouseTests.AddressParserTests testAllStreetSuffixVariations]' passed (0.006 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetComponent_EmptyString]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetComponent_EmptyString]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetComponent_ExtraSpaces]' started.
@@ -197,11 +280,11 @@ Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetName_WithPeriodI
 Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetName_WithStreetSuffix]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testExtractStreetName_WithStreetSuffix]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_EmptyString]' started.
-Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_EmptyString]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_EmptyString]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_NoStreetSuffix]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_NoStreetSuffix]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_OnlyNumbers]' started.
-Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_OnlyNumbers]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_OnlyNumbers]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_OnlyStreetSuffix]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_OnlyStreetSuffix]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testGenerateHouseName_SpecialCharacters]' started.
@@ -252,25 +335,25 @@ Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_ValidUSAddres
 Test Case '-[C11SHouseTests.AddressParserTests testParseComponents_ValidUSAddress]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.AddressParserTests testUnicodeCharacters]' started.
 Test Case '-[C11SHouseTests.AddressParserTests testUnicodeCharacters]' passed (0.000 seconds).
-Test Suite 'AddressParserTests' passed at 2025-07-16 12:18:37.317.
-	 Executed 48 tests, with 0 failures (0 unexpected) in 0.036 (0.040) seconds
-Test Suite 'AddressSuggestionServiceTests' started at 2025-07-16 12:18:37.317.
+Test Suite 'AddressParserTests' passed at 2025-07-16 12:37:48.769.
+	 Executed 48 tests, with 0 failures (0 unexpected) in 0.032 (0.035) seconds
+Test Suite 'AddressSuggestionServiceTests' started at 2025-07-16 12:37:48.769.
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testCreateAddressConfirmationResponse]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testCreateAddressConfirmationResponse]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testCreateAddressConfirmationResponse]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForConfirmedAddress]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
 [AddressSuggestionService] Starting weather fetch for confirmed address
+[WeatherCoordinator] Created Weather question in notes store
 [AddressSuggestionService] Address: 123 Main Street, San Francisco, CA 94105
 [AddressSuggestionService] Coordinates: 37.7749, -122.4194
-[WeatherCoordinator] Created Weather question in notes store
-[AddressSuggestionService] Timestamp: 2025-07-16 19:18:37 +0000
+[AddressSuggestionService] Timestamp: 2025-07-16 19:37:48 +0000
 [AddressSuggestionService] Ensuring weather question exists in notes store
 [WeatherCoordinator] Weather question creation already in progress
 [WeatherCoordinator] Created Weather question in notes store
@@ -280,19 +363,19 @@ Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForCon
 [AddressSuggestionService] Temperature: 72.0°<_NSStatic_NSUnitTemperature: 0x20f382eb0> °F
 [AddressSuggestionService] Humidity: 65%
 [AddressSuggestionService] Wind: 10 km/h
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForConfirmedAddress]' passed (0.517 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testFetchWeatherForConfirmedAddress]' passed (0.511 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_NoStreetType]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_NoStreetType]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_NoStreetType]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_StreetType]' started.
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: MockWeatherKitService
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_StreetType]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testGenerateHouseNameSuggestions_StreetType]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddress_Success]' started.
 [WeatherCoordinator] Created Weather question in notes store
 [WeatherCoordinator] 🌤️ Initialized with services
@@ -300,15 +383,15 @@ Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddr
 [WeatherCoordinator] Notes service: SharedMockNotesService
 [WeatherCoordinator] Location service: MockLocationService
 [WeatherCoordinator] Created Weather question in notes store
-Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddress_Success]' passed (0.002 seconds).
-Test Suite 'AddressSuggestionServiceTests' passed at 2025-07-16 12:18:37.846.
-	 Executed 5 tests, with 0 failures (0 unexpected) in 0.527 (0.529) seconds
-Test Suite 'C11SHouseTests' started at 2025-07-16 12:18:37.847.
+Test Case '-[C11SHouseTests.AddressSuggestionServiceTests testSuggestCurrentAddress_Success]' passed (0.001 seconds).
+Test Suite 'AddressSuggestionServiceTests' passed at 2025-07-16 12:37:49.283.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.514 (0.514) seconds
+Test Suite 'C11SHouseTests' started at 2025-07-16 12:37:49.283.
 Test Case '-[C11SHouseTests.C11SHouseTests testExample]' started.
-Test Case '-[C11SHouseTests.C11SHouseTests testExample]' passed (0.002 seconds).
-Test Suite 'C11SHouseTests' passed at 2025-07-16 12:18:37.849.
-	 Executed 1 test, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
-Test Suite 'ConversationFlowIntegrationTests' started at 2025-07-16 12:18:37.850.
+Test Case '-[C11SHouseTests.C11SHouseTests testExample]' passed (0.001 seconds).
+Test Suite 'C11SHouseTests' passed at 2025-07-16 12:37:49.284.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ConversationFlowIntegrationTests' started at 2025-07-16 12:37:49.284.
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' started.
 [WeatherCoordinator] Created Weather question in notes store
 [QuestionFlowCoordinator] Initialized
@@ -327,9 +410,11 @@ Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectio
 [QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:273: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow] : XCTAssertNotNil failed
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:274: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("350 5th Ave, New York, NY 10118")")
+App is being debugged, do not track this hang
+Hang detected: 0.29s (debugger attached, not reporting)
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' failed (0.009 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' failed (0.310 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -380,7 +465,7 @@ Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCate
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:335: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories] : XCTAssertGreaterThanOrEqual failed: ("2") is less than ("3")
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' failed (0.019 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' failed (0.021 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -416,7 +501,7 @@ Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConvers
 [QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' failed (0.015 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' failed (0.013 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -452,7 +537,7 @@ Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]'
 [QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -467,15 +552,15 @@ Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransit
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' failed (0.003 seconds).
-Test Suite 'ConversationFlowIntegrationTests' failed at 2025-07-16 12:18:37.903.
-	 Executed 6 tests, with 5 failures (0 unexpected) in 0.052 (0.053) seconds
-Test Suite 'ConversationStateManagerTests' started at 2025-07-16 12:18:37.903.
+Test Suite 'ConversationFlowIntegrationTests' failed at 2025-07-16 12:37:49.637.
+	 Executed 6 tests, with 5 failures (0 unexpected) in 0.352 (0.353) seconds
+Test Suite 'ConversationStateManagerTests' started at 2025-07-16 12:37:49.637.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testBeginAndEndSavingAnswer]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testBeginAndEndSavingAnswer]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testClearTranscript]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testClearTranscript]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testCurrentSessionStartIndex]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testCurrentSessionStartIndex]' passed (0.000 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testCurrentSessionStartIndex]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testGetTranscriptHeader_WithoutUserName]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testGetTranscriptHeader_WithoutUserName]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testGetTranscriptHeader_WithUserName]' started.
@@ -497,7 +582,7 @@ Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenAlreadyS
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenMuted]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenMuted]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenNotMuted]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenNotMuted]' passed (0.207 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenNotMuted]' passed (0.214 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenSavingAnswer]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WhenSavingAnswer]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeak_WithError]' started.
@@ -507,17 +592,17 @@ Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithNil]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithNil]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithSuggestion]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithSuggestion]' passed (0.416 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithSuggestion]' passed (0.413 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithThoughtOnly]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithThoughtOnly]' passed (0.213 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testSpeakHouseThought_WithThoughtOnly]' passed (0.207 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testStartNewRecordingSession]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testStartNewRecordingSession]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testStartNewRecordingSession]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testStopSpeaking]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testStopSpeaking]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testStopSpeaking]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testToggleEditing]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testToggleEditing]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testToggleEditing]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_EmptySessionStart]' started.
-Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_EmptySessionStart]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_EmptySessionStart]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_FirstUpdate]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_FirstUpdate]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscript_SubsequentUpdate]' started.
@@ -528,9 +613,9 @@ Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscriptFr
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateTranscriptFromSession_MatchingSession]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateUserName]' started.
 Test Case '-[C11SHouseTests.ConversationStateManagerTests testUpdateUserName]' passed (0.002 seconds).
-Test Suite 'ConversationStateManagerTests' passed at 2025-07-16 12:18:38.776.
-	 Executed 29 tests, with 0 failures (0 unexpected) in 0.865 (0.873) seconds
-Test Suite 'ErrorViewTests' started at 2025-07-16 12:18:38.776.
+Test Suite 'ConversationStateManagerTests' passed at 2025-07-16 12:37:50.510.
+	 Executed 29 tests, with 0 failures (0 unexpected) in 0.864 (0.872) seconds
+Test Suite 'ErrorViewTests' started at 2025-07-16 12:37:50.510.
 Test Case '-[C11SHouseTests.ErrorViewTests testAppErrorUserFriendlyMessages]' started.
 Test Case '-[C11SHouseTests.ErrorViewTests testAppErrorUserFriendlyMessages]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testAutoDissmissProperty]' started.
@@ -552,9 +637,9 @@ Test Case '-[C11SHouseTests.ErrorViewTests testFullScreenErrorViewInitialization
 Test Case '-[C11SHouseTests.ErrorViewTests testFullScreenErrorViewInitialization]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.ErrorViewTests testRecoverySuggestions]' started.
 Test Case '-[C11SHouseTests.ErrorViewTests testRecoverySuggestions]' passed (0.001 seconds).
-Test Suite 'ErrorViewTests' failed at 2025-07-16 12:18:38.789.
-	 Executed 10 tests, with 1 failure (0 unexpected) in 0.010 (0.013) seconds
-Test Suite 'InitialSetupFlowTests' started at 2025-07-16 12:18:38.789.
+Test Suite 'ErrorViewTests' failed at 2025-07-16 12:37:50.522.
+	 Executed 10 tests, with 1 failure (0 unexpected) in 0.010 (0.012) seconds
+Test Suite 'InitialSetupFlowTests' started at 2025-07-16 12:37:50.523.
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -562,7 +647,7 @@ Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]'
 [NotesService] Resetting to 4 predefined questions
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testAddressParsingVariations]' passed (0.004 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testCompleteInitialSetupFlow]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -655,7 +740,7 @@ Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermi
 [AddressManager] User confirmed address, now saving as answered: 123 Manual Entry St, Test City, CA 94000
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' failed (0.004 seconds).
+Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' failed (0.005 seconds).
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithNetworkErrors]' started.
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
@@ -674,18 +759,18 @@ Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithNetworkErrors
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithNetworkErrors]' passed (0.002 seconds).
-Test Suite 'InitialSetupFlowTests' failed at 2025-07-16 12:18:38.819.
-	 Executed 6 tests, with 5 failures (0 unexpected) in 0.029 (0.030) seconds
-Test Suite 'LocationServiceTests' started at 2025-07-16 12:18:38.819.
+Test Suite 'InitialSetupFlowTests' failed at 2025-07-16 12:37:50.555.
+	 Executed 6 tests, with 5 failures (0 unexpected) in 0.031 (0.032) seconds
+Test Suite 'LocationServiceTests' started at 2025-07-16 12:37:50.555.
 Test Case '-[C11SHouseTests.LocationServiceTests testAuthorizationStatusPublisher]' started.
 Test Case '-[C11SHouseTests.LocationServiceTests testAuthorizationStatusPublisher]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.LocationServiceTests testConfirmAddressSavesToUserDefaults]' started.
-Test Case '-[C11SHouseTests.LocationServiceTests testConfirmAddressSavesToUserDefaults]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.LocationServiceTests testConfirmAddressSavesToUserDefaults]' passed (0.003 seconds).
 Test Case '-[C11SHouseTests.LocationServiceTests testLocationErrorTypes]' started.
-Test Case '-[C11SHouseTests.LocationServiceTests testLocationErrorTypes]' passed (0.001 seconds).
-Test Suite 'LocationServiceTests' passed at 2025-07-16 12:18:38.826.
-	 Executed 3 tests, with 0 failures (0 unexpected) in 0.006 (0.006) seconds
-Test Suite 'NotesServiceQuestionsTests' started at 2025-07-16 12:18:38.826.
+Test Case '-[C11SHouseTests.LocationServiceTests testLocationErrorTypes]' passed (0.002 seconds).
+Test Suite 'LocationServiceTests' passed at 2025-07-16 12:37:50.563.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.007 (0.008) seconds
+Test Suite 'NotesServiceQuestionsTests' started at 2025-07-16 12:37:50.563.
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testAreAllRequiredQuestionsAnswered]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
@@ -728,13 +813,13 @@ Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testIsQuestionAnswered]' 
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
 Test Case '-[C11SHouseTests.NotesServiceQuestionsTests testIsQuestionAnswered]' passed (0.002 seconds).
-Test Suite 'NotesServiceQuestionsTests' passed at 2025-07-16 12:18:38.844.
+Test Suite 'NotesServiceQuestionsTests' passed at 2025-07-16 12:37:50.581.
 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.017 (0.018) seconds
-Test Suite 'NotesServiceTests' started at 2025-07-16 12:18:38.844.
+Test Suite 'NotesServiceTests' started at 2025-07-16 12:37:50.581.
 Test Case '-[C11SHouseTests.NotesServiceTests testAddDuplicateQuestionThrows]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testAddDuplicateQuestionThrows]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testAddQuestion]' started.
-Test Case '-[C11SHouseTests.NotesServiceTests testAddQuestion]' passed (0.007 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testAddQuestion]' passed (0.008 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testClearAllData]' started.
 [NotesService] Clearing all data...
 [NotesService] Resetting to 4 predefined questions
@@ -742,7 +827,6 @@ Test Case '-[C11SHouseTests.NotesServiceTests testClearAllData]' passed (0.002 s
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentReadWriteOperations]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentReadWriteOperations]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceTests.swift:387: error: -[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("Concurrent answer 0")")
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceTests.swift:387: error: -[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("Concurrent answer 2")")
 Test Case '-[C11SHouseTests.NotesServiceTests testConcurrentSaveOperations]' failed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testCorruptDataHandling]' started.
@@ -752,7 +836,7 @@ Test Case '-[C11SHouseTests.NotesServiceTests testDataPersistenceAcrossInstances
 Test Case '-[C11SHouseTests.NotesServiceTests testDeleteNote]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testDeleteNote]' passed (0.001 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testDeleteQuestion]' started.
-Test Case '-[C11SHouseTests.NotesServiceTests testDeleteQuestion]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.NotesServiceTests testDeleteQuestion]' passed (0.002 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testErrorDescriptions]' started.
 Test Case '-[C11SHouseTests.NotesServiceTests testErrorDescriptions]' passed (0.000 seconds).
 Test Case '-[C11SHouseTests.NotesServiceTests testGetCurrentQuestion]' started.

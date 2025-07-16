@@ -333,15 +333,18 @@ class NotesServiceTests: XCTestCase {
     
     func testNotesStorePublisher() async throws {
         // Given: Subscription to publisher
-        let expectation = expectation(description: "Publisher emits updates")
-        expectation.expectedFulfillmentCount = 3 // Initial + save + update
-        
         var receivedStores: [NotesStoreData] = []
+        let expectation = expectation(description: "Publisher emits updates")
+        expectation.expectedFulfillmentCount = 1 // Only fulfill once when we have enough updates
         
+        // Skip initial values and only track changes after subscription
         sut.notesStorePublisher
+            .dropFirst() // Drop the current value from initialization
             .sink { store in
                 receivedStores.append(store)
-                expectation.fulfill()
+                if receivedStores.count >= 3 && expectation.expectedFulfillmentCount > 0 {
+                    expectation.fulfill()
+                }
             }
             .store(in: &cancellables)
         
