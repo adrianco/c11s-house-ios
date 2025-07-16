@@ -139,6 +139,14 @@ enum AddressParser {
                        "Lane", "Ln", "Drive", "Dr", "Court", "Ct", "Place", "Pl", "Way", 
                        "Circle", "Cir", "Terrace", "Ter", "Parkway", "Pkwy", "Plaza"]
         
+        // Check if the input is only a suffix (with optional punctuation)
+        for suffix in suffixes {
+            if cleanedStreet.lowercased() == suffix.lowercased() || 
+               cleanedStreet.lowercased() == suffix.lowercased() + "." {
+                return ""
+            }
+        }
+        
         // Remove suffixes from the end of the string only
         // We iterate through suffixes to handle cases like "Court Street" -> "Court"
         for suffix in suffixes {

@@ -93,7 +93,11 @@ extension NotesServiceProtocol {
     func isQuestionAnswered(_ questionId: UUID) async -> Bool {
         do {
             let notesStore = try await loadNotesStore()
-            return notesStore.notes[questionId] != nil
+            // Check if note exists AND has a non-empty answer
+            if let note = notesStore.notes[questionId] {
+                return note.isAnswered
+            }
+            return false
         } catch {
             print("Error checking if question answered: \(error)")
             return false

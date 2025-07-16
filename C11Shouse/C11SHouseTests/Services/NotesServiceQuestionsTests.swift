@@ -44,7 +44,8 @@ class NotesServiceQuestionsTests: XCTestCase {
         // Answer the first question
         try await notesService.saveOrUpdateNote(
             for: current!.id,
-            answer: "123 Test St"
+            answer: "123 Test St",
+            metadata: ["updated_via_conversation": "true"]
         )
         
         // Now should get the second question
@@ -59,7 +60,8 @@ class NotesServiceQuestionsTests: XCTestCase {
         for question in requiredQuestions {
             try await notesService.saveOrUpdateNote(
                 for: question.id,
-                answer: "Test Answer"
+                answer: "Test Answer",
+                metadata: ["updated_via_conversation": "true"]
             )
         }
         
@@ -94,7 +96,8 @@ class NotesServiceQuestionsTests: XCTestCase {
         for question in requiredQuestions {
             try await notesService.saveOrUpdateNote(
                 for: question.id,
-                answer: "Test Answer"
+                answer: "Test Answer",
+                metadata: ["updated_via_conversation": "true"]
             )
         }
         
