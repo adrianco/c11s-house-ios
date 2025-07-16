@@ -109,8 +109,8 @@ class MockNotesServiceWithTracking: SharedMockNotesService {
         try await super.updateNote(note)
     }
     
-    // Override the protocol extension method by providing our own implementation
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+    // Override the parent class implementation
+    override func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
         print("[MockNotesServiceWithTracking] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
         saveOrUpdateNoteCallCount += 1
         print("[MockNotesServiceWithTracking] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")

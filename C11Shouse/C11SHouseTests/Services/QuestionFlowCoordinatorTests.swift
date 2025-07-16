@@ -62,8 +62,8 @@ class MockNotesServiceForQuestionFlow: SharedMockNotesService {
         try await super.updateNote(note)
     }
     
-    // Provide custom implementation of saveOrUpdateNote to track calls
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+    // Override the parent class implementation
+    override func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
         print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
         saveOrUpdateNoteCallCount += 1
         print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
