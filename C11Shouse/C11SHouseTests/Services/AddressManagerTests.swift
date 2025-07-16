@@ -611,7 +611,7 @@ class AddressManagerTests: XCTestCase {
     
     // MARK: - saveAddressToNotes Tests
     
-    func testSaveAddressToNotesBasicFunctionality() async {
+    func testSaveAddressToNotesBasicFunctionality() async throws {
         // Given: A valid address
         let address = Address(
             street: "123 Test Street",
@@ -633,8 +633,8 @@ class AddressManagerTests: XCTestCase {
         let notesStore = try await mockNotesService.loadNotesStore()
         print("Debug test: notes count = \(notesStore.notes.count)")
         
-        // Expected: 2 calls (address + house name) - both should be new notes, so saveNote should be called
-        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote")
+        // Expected: 2 calls (address + house name) - AddressManager uses saveOrUpdateNote
+        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2, "Expected 2 calls to saveOrUpdateNote")
     }
     
     func testSaveAddressToNotesHandlesError() async {
