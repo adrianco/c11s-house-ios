@@ -248,6 +248,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         }
     }
     
+    @NotesStoreActor
     private func loadFromUserDefaults() async throws -> NotesStoreData {
         guard let data = userDefaults.data(forKey: userDefaultsKey) else {
             // Return default store if no data exists

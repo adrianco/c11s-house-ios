@@ -33,26 +33,6 @@ C11SHouseTests
 
 C11SHouseUITests
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testAddressQuestionDisplay(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testBackButtonNavigation(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testErrorOverlayDisplay(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testInitialWelcomeMessage(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testMessageBubbleDisplay(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testMessageInputPerformance(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testMessageListScrolling(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testMessageTimestamps(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testMuteToggle(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testRoomNoteCreation(): XCTAssertTrue failed - Conversation view should load
-
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testScrollingPerformance(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testTextMessageKeyboardSubmit(): XCTAssertTrue failed - Conversation view should load
@@ -62,6 +42,26 @@ C11SHouseUITests
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testVoiceInputButton(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testVoiceTranscriptDisplay(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testAddressQuestionDisplay(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testBackButtonNavigation(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testErrorOverlayDisplay(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testInitialWelcomeMessage(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageBubbleDisplay(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageInputPerformance(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageListScrolling(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageTimestamps(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMuteToggle(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testRoomNoteCreation(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:43 testWelcomeScreenAppearance(): XCTAssertTrue failed

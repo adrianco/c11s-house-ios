@@ -36,18 +36,22 @@ class OnboardingUITests: XCTestCase {
     // MARK: - Welcome Flow Tests
     
     func testWelcomeScreenAppearance() throws {
-        // Verify welcome screen elements
-        let welcomeElements = WelcomeScreenElements(app: app)
+        // Verify onboarding welcome screen elements
         
-        // Check house name - default is "Your House"
-        let houseName = app.staticTexts["HouseName"]
-        XCTAssertTrue(houseName.waitForExistence(timeout: 5))
-        // House name can be customized, so just check it exists
-        XCTAssertFalse(houseName.label.isEmpty)
+        // Check for greeting text
+        let greetingTexts = ["Good morning", "Good afternoon", "Good evening"]
+        let greetingPredicate = NSPredicate(format: "label IN %@", greetingTexts)
+        let greetingText = app.staticTexts.matching(greetingPredicate).firstMatch
+        XCTAssertTrue(greetingText.waitForExistence(timeout: 5))
         
-        // Check call to action button
-        XCTAssertTrue(welcomeElements.startButton.waitForExistence(timeout: 2))
-        XCTAssertTrue(welcomeElements.startButton.isEnabled)
+        // Check for "Your House, Awakened" text
+        let awakenedText = app.staticTexts["Your House, Awakened"]
+        XCTAssertTrue(awakenedText.waitForExistence(timeout: 2))
+        
+        // Check for Begin Setup button
+        let beginSetupButton = app.buttons["Begin Setup"]
+        XCTAssertTrue(beginSetupButton.waitForExistence(timeout: 2))
+        XCTAssertTrue(beginSetupButton.isEnabled)
         
         // Measure load time
         measure(metrics: [XCTApplicationLaunchMetric()]) {
@@ -56,18 +60,31 @@ class OnboardingUITests: XCTestCase {
     }
     
     func testStartConversationFlow() throws {
-        let welcomeElements = WelcomeScreenElements(app: app)
+        // Tap Begin Setup button on welcome screen
+        let beginSetupButton = app.buttons["Begin Setup"]
+        XCTAssertTrue(beginSetupButton.waitForExistence(timeout: 3))
+        beginSetupButton.tap()
         
-        // Wait for start button and tap it
-        XCTAssertTrue(welcomeElements.startButton.waitForExistence(timeout: 3))
-        welcomeElements.startButton.tap()
+        // Should navigate to permissions screen
+        let quickSetupText = app.staticTexts["Quick Setup"]
+        XCTAssertTrue(quickSetupText.waitForExistence(timeout: 5))
         
-        // Verify navigation to conversation view
-        let conversationView = app.otherElements["ConversationView"]
-        XCTAssertTrue(conversationView.waitForExistence(timeout: 5))
+        // Grant permissions
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        if grantPermissionsButton.waitForExistence(timeout: 2) {
+            grantPermissionsButton.tap()
+            handlePermissionRequestsIfPresent()
+        }
         
-        // Check for permission requests if they appear
-        handlePermissionRequestsIfPresent()
+        // Continue button should appear after permissions
+        let continueButton = app.buttons["Continue"]
+        if continueButton.waitForExistence(timeout: 5) {
+            continueButton.tap()
+        }
+        
+        // Should reach completion screen
+        let completionText = app.staticTexts["Setup Complete!"]
+        XCTAssertTrue(completionText.waitForExistence(timeout: 5))
     }
     
     // MARK: - Permission Flow Tests
@@ -90,10 +107,14 @@ class OnboardingUITests: XCTestCase {
     }
     
     func testPermissionGrantFlow() throws {
-        // Navigate directly to conversation
-        let startButton = app.buttons["StartConversation"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 3))
-        startButton.tap()
+        // Navigate to permissions screen
+        let beginSetupButton = app.buttons["Begin Setup"]
+        beginSetupButton.tap()
+        
+        // Tap Grant Permissions
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        XCTAssertTrue(grantPermissionsButton.waitForExistence(timeout: 3))
+        grantPermissionsButton.tap()
         
         // Handle system permission alerts
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
@@ -110,30 +131,41 @@ class OnboardingUITests: XCTestCase {
             }
         }
         
-        // Verify conversation view is accessible
-        let conversationView = app.otherElements["ConversationView"]
-        XCTAssertTrue(conversationView.waitForExistence(timeout: 5))
+        // Continue button should appear
+        let continueButton = app.buttons["Continue"]
+        if continueButton.waitForExistence(timeout: 5) {
+            continueButton.tap()
+        }
+        
+        // Should reach completion screen
+        let completionText = app.staticTexts["Setup Complete!"]
+        XCTAssertTrue(completionText.waitForExistence(timeout: 5))
     }
     
     func testPermissionDenialRecovery() throws {
-        // Navigate to conversation
-        let startButton = app.buttons["StartConversation"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 3))
-        startButton.tap()
+        // Navigate to permissions screen
+        let beginSetupButton = app.buttons["Begin Setup"]
+        beginSetupButton.tap()
+        
+        // Tap Grant Permissions
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        grantPermissionsButton.tap()
         
         // Deny microphone permission when prompted
         denySystemPermissionAlert(for: "microphone")
         
-        // The app should still allow conversation view access
-        // Text input will be available even without microphone
-        let conversationView = app.otherElements["ConversationView"]
-        XCTAssertTrue(conversationView.waitForExistence(timeout: 5))
+        // The "Open Settings" button should appear for recovery
+        let openSettingsButton = app.buttons["Open Settings"]
+        XCTAssertTrue(openSettingsButton.waitForExistence(timeout: 5))
         
-        // Check if text input is available as fallback
-        let textField = app.textFields.firstMatch
-        if textField.waitForExistence(timeout: 2) {
-            XCTAssertTrue(textField.isEnabled)
-        }
+        // Grant other permissions
+        handleSystemPermissionAlert(for: "speech recognition")
+        handleSystemPermissionAlert(for: "location")
+        
+        // Continue button should be enabled since microphone and speech are required
+        // But we can't continue without them, so verify the UI state
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.exists || !continueButton.isEnabled)
     }
     
     // MARK: - Personalization Flow Tests
@@ -377,6 +409,33 @@ class OnboardingUITests: XCTestCase {
         navigateToConversation()
         // Handle any permission alerts that appear
         handlePermissionRequestsIfPresent()
+    }
+    
+    private func completeOnboardingFlow() {
+        // Tap Begin Setup
+        let beginSetupButton = app.buttons["Begin Setup"]
+        if beginSetupButton.waitForExistence(timeout: 3) {
+            beginSetupButton.tap()
+        }
+        
+        // Grant permissions
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        if grantPermissionsButton.waitForExistence(timeout: 3) {
+            grantPermissionsButton.tap()
+            handlePermissionRequestsIfPresent()
+        }
+        
+        // Continue
+        let continueButton = app.buttons["Continue"]
+        if continueButton.waitForExistence(timeout: 5) {
+            continueButton.tap()
+        }
+        
+        // Start chatting
+        let startChattingButton = app.buttons["Start Chatting"]
+        if startChattingButton.waitForExistence(timeout: 5) {
+            startChattingButton.tap()
+        }
     }
     
     private func navigateToQuestions() {

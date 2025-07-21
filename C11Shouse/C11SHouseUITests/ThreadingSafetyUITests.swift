@@ -29,10 +29,12 @@ final class ThreadingSafetyUITests: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication()
         
-        // Enable thread sanitizer in test
+        // Enable thread sanitizer in test and skip onboarding
         app.launchArguments = [
             "-com.apple.CoreData.ConcurrencyDebug", "1",
-            "-com.apple.CoreData.ThreadingDebug", "1"
+            "-com.apple.CoreData.ThreadingDebug", "1",
+            "UI_TESTING",
+            "--skip-onboarding"
         ]
         
         app.launch()

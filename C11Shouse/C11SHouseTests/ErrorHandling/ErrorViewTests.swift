@@ -149,11 +149,18 @@ class ErrorViewTests: XCTestCase {
         let converted = userFriendlyError.asUserFriendlyError
         XCTAssertTrue(converted is AppError)
         
+        // Test converting a UserFriendlyError that is already a TestError
+        // TestError conforms to UserFriendlyError, so it should return itself
+        let testError = TestError.generic
+        let convertedTest = testError.asUserFriendlyError
+        XCTAssertTrue(convertedTest is TestError)
+        
         // Test converting a non-UserFriendlyError
-        let genericError = TestError.generic
-        let convertedGeneric = genericError.asUserFriendlyError
-        if case AppError.unknown(let wrappedError) = convertedGeneric {
-            XCTAssertTrue(wrappedError is TestError)
+        struct PlainError: Error {}
+        let plainError = PlainError()
+        let convertedPlain = plainError.asUserFriendlyError
+        if case AppError.unknown(let wrappedError) = convertedPlain {
+            XCTAssertTrue(wrappedError is PlainError)
         } else {
             XCTFail("Expected AppError.unknown")
         }

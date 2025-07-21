@@ -2726,3 +2726,8 @@ ed up" --claude
   Would you like me to start implementing any of these improvements, beginning with breaking down ConversationView into smaller components?
 
 > spawn 5 agents to implement these improvements
+
+
+July 21st
+"log of latest code running UI tests is in C11SHouse/Documentation/LoggingRecord.txt and ErrorRecord.txt, they are mostly failing"
+

@@ -25,7 +25,7 @@ class ConversationViewUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["UI_TESTING"]
+        app.launchArguments = ["UI_TESTING", "--skip-onboarding"]
         app.launch()
         
         // Navigate to ConversationView
