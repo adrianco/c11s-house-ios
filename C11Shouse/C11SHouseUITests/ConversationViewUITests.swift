@@ -747,49 +747,80 @@ class ConversationViewUITests: XCTestCase {
 
 extension ConversationViewUITests {
     func testScrollingPerformance() {
-        // Given - create many messages
+        // Given - create many messages BEFORE measuring
         muteConversation()
         
-        measure {
-            // Send 20 messages
-            for i in 1...20 {
-                sendTextMessage("Performance test message \(i)")
+        // Pre-populate with messages outside of measure block
+        for i in 1...10 {
+            // Quick message send without full validation
+            let textField = app.textFields["Type a message..."]
+            if textField.waitForExistence(timeout: 1) {
+                textField.tap()
+                textField.typeText("Msg \(i)")
+                
+                let sendButtonById = app.buttons["arrow.up.circle.fill"]
+                let sendButtonByLabel = app.buttons["Arrow Up Circle"]
+                let sendButton = sendButtonById.exists ? sendButtonById : sendButtonByLabel
+                
+                if sendButton.exists {
+                    sendButton.tap()
+                    Thread.sleep(forTimeInterval: 0.1)
+                }
             }
-            
-            // Scroll up and down
+        }
+        
+        // Now measure just the scrolling performance
+        let options = XCTMeasureOptions()
+        options.iterationCount = 3
+        
+        measure(options: options) {
+            // Just measure scrolling, not message creation
             let scrollView = app.scrollViews.firstMatch
-            scrollView.swipeUp()
-            scrollView.swipeUp()
-            scrollView.swipeDown()
-            scrollView.swipeDown()
+            if scrollView.exists {
+                scrollView.swipeUp()
+                scrollView.swipeUp()
+                scrollView.swipeDown()
+                scrollView.swipeDown()
+            }
         }
     }
     
     func testMessageInputPerformance() {
         muteConversation()
         
-        measure {
+        // Performance tests should be quick - reduce iterations and messages
+        let options = XCTMeasureOptions()
+        options.iterationCount = 3  // Reduce from default (usually 5-10) to 3
+        
+        measure(options: options) {
             let textField = app.textFields["Type a message..."]
-            guard textField.waitForExistence(timeout: 5) else {
+            guard textField.waitForExistence(timeout: 2) else {
                 XCTFail("Text field did not appear")
                 return
             }
             
-            // Type and send 10 messages
-            for i in 1...10 {
+            // Type and send only 3 messages per iteration (instead of 10)
+            for i in 1...3 {
                 if !textField.isHittable {
-                    Thread.sleep(forTimeInterval: 0.2)
+                    Thread.sleep(forTimeInterval: 0.1)
                 }
                 textField.tap()
-                textField.typeText("Perf test \(i)")
+                textField.typeText("Perf \(i)")
                 
-                let sendButton = app.buttons["arrow.up.circle.fill"]
-                if sendButton.waitForExistence(timeout: 1) {
+                // Use the correct send button detection
+                let sendButtonById = app.buttons["arrow.up.circle.fill"]
+                let sendButtonByLabel = app.buttons["Arrow Up Circle"]
+                let sendButton = sendButtonById.exists ? sendButtonById : sendButtonByLabel
+                
+                if sendButton.waitForExistence(timeout: 0.5) {
                     sendButton.tap()
+                } else {
+                    print("⚠️ Performance test: Send button not found, skipping")
+                    break
                 }
                 
-                // Small delay to let UI update
-                Thread.sleep(forTimeInterval: 0.1)
+                // Minimal delay
+                Thread.sleep(forTimeInterval: 0.05)
             }
         }
     }

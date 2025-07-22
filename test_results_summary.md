@@ -39,21 +39,21 @@
 ## UI Tests Run
 
 ### 🔧 UI Tests in Progress  
-1. **ConversationViewUITests** (Latest run: testMessageBubbleDisplay only - IN PROGRESS)
-   - 🔧 testMessageBubbleDisplay - Fixed: Multiple detection improvements
+1. **ConversationViewUITests** (Latest run: Performance tests running too long)
+   - ❌ testMessageInputPerformance - ABANDONED: Running far too long
+     - Issue: Send button not found (using wrong identifier "arrow.up.circle.fill")
+     - Performance test running 10 messages × multiple iterations = extremely slow
+   - ❌ testScrollingPerformance - Likely also too slow
+     - Calls sendTextMessage 20 times inside measure block
    - **Previous Issues Fixed**: 
      - Mute button detection (using label "Mute" instead of identifier)
      - Send button detection (using label "Arrow Up Circle" instead of identifier)
-   - **Current Issue**: Message not appearing in app.staticTexts after send
-     - Send button tapped successfully
-     - Text field cleared after send
-     - Message "Hello house" not found in UI hierarchy
-   - **Latest Fix Applied**: Enhanced message detection with multiple methods:
-     - Direct static text lookup
-     - Predicate-based search
-     - Contains search
-     - Descendant element search
-     - Comprehensive debug output to understand UI hierarchy
+   - **Latest Fixes Applied**:
+     - Reduced performance test iterations from default to 3
+     - Reduced messages per iteration from 10 to 3
+     - Fixed send button detection in performance tests
+     - Moved message creation outside measure block for scrolling test
+     - Reduced all timeouts for faster execution
 
 ### 🔧 UI Tests - Recent Status
 2. **ThreadingSafetyUITests** (Latest run: testNotesViewRapidEditingThreadSafety FAILED after fix)
