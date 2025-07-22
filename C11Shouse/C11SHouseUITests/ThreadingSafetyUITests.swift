@@ -202,6 +202,15 @@ final class ThreadingSafetyUITests: XCTestCase {
         let doneButton = app.navigationBars.buttons["Done"]
         if doneButton.exists {
             doneButton.tap()
+            // Brief pause to let UI settle after exiting edit mode
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        
+        // Navigate back to avoid hanging on notes view
+        let backButton = app.navigationBars.buttons["Back"]
+        if backButton.exists {
+            backButton.tap()
+            Thread.sleep(forTimeInterval: 0.1)
         }
         
         // Verify app stability
