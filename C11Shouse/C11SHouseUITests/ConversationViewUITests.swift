@@ -102,8 +102,8 @@ class ConversationViewUITests: XCTestCase {
     func testMuteToggle() {
         // Look for mute button with various possible identifiers
         let possibleMuteButtons = [
-            app.buttons["speaker.wave.2.fill"],
-            app.buttons["speaker.slash.fill"],
+            app.buttons.matching(NSPredicate(format: "identifier == %@", "speaker.wave.2.fill")),
+            app.buttons.matching(NSPredicate(format: "identifier == %@", "speaker.slash.fill")),
             app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'speaker'")),
             app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'mute'")),
             app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'voice'"))
