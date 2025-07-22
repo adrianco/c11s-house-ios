@@ -79,7 +79,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         if muteButton.exists && muteButton.identifier.contains("slash") {
             // Currently muted, unmute to show mic button
             muteButton.tap()
-            Thread.sleep(forTimeInterval: 0.5)
+            Thread.sleep(forTimeInterval: 0.2)
         }
         
         // Find microphone button for recording
@@ -90,7 +90,7 @@ final class ThreadingSafetyUITests: XCTestCase {
             let speakerButton = app.buttons.matching(NSPredicate(format: "identifier CONTAINS 'speaker'")).firstMatch
             if speakerButton.exists {
                 speakerButton.tap()
-                Thread.sleep(forTimeInterval: 0.5)
+                Thread.sleep(forTimeInterval: 0.2)
             }
         }
         
@@ -141,7 +141,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         notesMenuItem.tap()
         
         // Wait for notes view to load
-        Thread.sleep(forTimeInterval: 1.0)
+        Thread.sleep(forTimeInterval: 0.3)
         
         // Enter edit mode - look for Edit button in various locations
         let editButton = app.navigationBars.buttons["Edit"].firstMatch
@@ -163,36 +163,39 @@ final class ThreadingSafetyUITests: XCTestCase {
         
         // Find first note row
         let firstNote = app.cells.firstMatch
-        if firstNote.waitForExistence(timeout: 2) {
-            // Rapid tap multiple notes
-            for i in 0..<3 {
-                // Re-query cells each time as the UI might update after save
-                let cells = app.cells
-                if cells.count > i {
-                    let note = cells.element(boundBy: i)
-                    if note.exists && note.isHittable {
-                        note.tap()
+        if firstNote.waitForExistence(timeout: 1) {
+            // Get initial cell count
+            let initialCellCount = app.cells.count
+            print("Initial cell count: \(initialCellCount)")
+            
+            // Edit up to 3 notes or however many exist
+            let notesToEdit = min(3, initialCellCount)
+            
+            for i in 0..<notesToEdit {
+                print("Editing note \(i)")
+                
+                // Tap the note at index i
+                let note = app.cells.element(boundBy: i)
+                if note.exists && note.isHittable {
+                    note.tap()
+                    
+                    // Type rapidly
+                    let textEditor = app.textViews.firstMatch
+                    if textEditor.waitForExistence(timeout: 0.5) {
+                        textEditor.tap()
+                        textEditor.typeText("Test \(i)")
                         
-                        // Type rapidly
-                        let textEditor = app.textViews.firstMatch
-                        if textEditor.waitForExistence(timeout: 1) {
-                            textEditor.tap()
-                            textEditor.typeText("Test \(i)")
+                        // Quick save
+                        let saveButton = app.buttons["Save"]
+                        if saveButton.exists && saveButton.isHittable {
+                            saveButton.tap()
                             
-                            // Quick save
-                            let saveButton = app.buttons["Save"]
-                            if saveButton.exists && saveButton.isHittable {
-                                saveButton.tap()
-                                
-                                // Wait for save to complete and UI to update
-                                // Don't wait for cells immediately after save, as the UI might be transitioning
-                                Thread.sleep(forTimeInterval: 0.5)
-                            }
+                            // Brief pause to let save complete
+                            Thread.sleep(forTimeInterval: 0.2)
                         }
                     }
                 } else {
-                    // If we don't have enough cells, break out of the loop
-                    print("Only \(cells.count) cells available, stopping at index \(i)")
+                    print("Note \(i) not available, skipping")
                     break
                 }
             }
@@ -249,7 +252,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         if unmuteButtonByLabel.exists {
             // Currently muted, tap to unmute
             unmuteButtonByLabel.tap()
-            Thread.sleep(forTimeInterval: 0.5)
+            Thread.sleep(forTimeInterval: 0.2)
         }
         
         // Start recording - check both identifier and label
@@ -407,7 +410,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         }
         
         // Wait for conversation view
-        Thread.sleep(forTimeInterval: 1.0)
+        Thread.sleep(forTimeInterval: 0.3)
         
         // Check if we need to unmute first - use label-based detection
         let muteButtonByLabel = app.buttons["Mute"]
@@ -418,7 +421,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         if unmuteButtonByLabel.exists {
             // Currently muted, tap to unmute
             unmuteButtonByLabel.tap()
-            Thread.sleep(forTimeInterval: 0.5)
+            Thread.sleep(forTimeInterval: 0.2)
         }
         
         // Find microphone button
