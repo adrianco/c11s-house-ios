@@ -22,12 +22,23 @@ import XCTest
 class ConversationViewUITests: XCTestCase {
     var app: XCUIApplication!
     
+    // VERBOSE LOGGING CONTROL
+    // Set to true to enable detailed logging output for debugging failing tests
+    // When false (default), tests run with minimal logging to reduce noise
+    // To enable for specific test debugging:
+    //   1. Change this value to true
+    //   2. Run the failing test
+    //   3. Change back to false when done debugging
+    static let verboseLogging = false
+    
     override func setUpWithError() throws {
-        print("🧪 ConversationViewUITests: Starting test setup")
         continueAfterFailure = false
         app = XCUIApplication()
         app.launchArguments = ["UI_TESTING", "--skip-onboarding"]
-        print("🧪 ConversationViewUITests: Launching app with arguments: \(app.launchArguments)")
+        if Self.verboseLogging {
+            print("🧪 ConversationViewUITests: Starting test setup")
+            print("🧪 ConversationViewUITests: Launching app with arguments: \(app.launchArguments)")
+        }
         app.launch()
         
         // Navigate to ConversationView
@@ -35,14 +46,15 @@ class ConversationViewUITests: XCTestCase {
     }
     
     override func tearDownWithError() throws {
-        print("🧪 ConversationViewUITests: Test teardown")
+        if Self.verboseLogging {
+            print("🧪 ConversationViewUITests: Test teardown")
+        }
         app = nil
     }
     
     // MARK: - Navigation Tests
     
     func testBackButtonNavigation() {
-        print("🧪 ConversationViewUITests: testBackButtonNavigation started")
         // Given - wait for back button to be ready
         let backButton = app.buttons["Back"]
         XCTAssertTrue(backButton.waitForExistence(timeout: 2), "Back button should be visible")
@@ -66,14 +78,11 @@ class ConversationViewUITests: XCTestCase {
     // MARK: - Message Display Tests
     
     func testInitialWelcomeMessage() {
-        print("🧪 ConversationViewUITests: testInitialWelcomeMessage started")
-        
         // Wait a moment for messages to load
         Thread.sleep(forTimeInterval: 0.5)
         
         // Check if there are any static texts in the conversation (messages)
         let allTexts = app.staticTexts.allElementsBoundByIndex
-        print("🧪 ConversationViewUITests: Found \(allTexts.count) static texts")
         
         // Look for any text that indicates a message is displayed
         var foundMessage = false
@@ -81,7 +90,6 @@ class ConversationViewUITests: XCTestCase {
         // First check if we have enough texts (more than just navigation elements)
         if allTexts.count > 3 {  // More than just "House Chat", "Back", etc.
             foundMessage = true
-            print("🧪 ConversationViewUITests: Multiple texts found, messages are displayed")
         } else {
             // Try specific message patterns with shorter timeout
             let messagePatterns = [
@@ -99,7 +107,6 @@ class ConversationViewUITests: XCTestCase {
                 let matches = app.staticTexts.matching(predicate)
                 if matches.count > 0 && matches.firstMatch.waitForExistence(timeout: 0.5) {
                     foundMessage = true
-                    print("🧪 ConversationViewUITests: Found message containing '\(pattern)'")
                     break
                 }
             }
@@ -111,19 +118,15 @@ class ConversationViewUITests: XCTestCase {
                 let text = allTexts[i]
                 if text.exists && !text.label.isEmpty && text.label != "House Chat" && text.label != "Back" {
                     foundMessage = true
-                    print("🧪 ConversationViewUITests: Found text: '\(text.label)'")
                     break
                 }
             }
         }
         
-        print("🧪 ConversationViewUITests: Found message: \(foundMessage)")
         XCTAssertTrue(foundMessage, "Should display some message content in conversation")
-        print("🧪 ConversationViewUITests: testInitialWelcomeMessage completed")
     }
     
     func testMessageBubbleDisplay() {
-        print("🧪 ConversationViewUITests: testMessageBubbleDisplay started")
         
         // Given - Send a test message
         sendTextMessage("Hello house")
@@ -144,10 +147,8 @@ class ConversationViewUITests: XCTestCase {
         // If no specific response found, check if there are any new messages
         if !houseResponseFound {
             let allTexts = app.staticTexts.allElementsBoundByIndex
-            print("🧪 testMessageBubbleDisplay: No expected house response found. Current text count: \(allTexts.count)")
             // Check if there are more messages than before (indicating a response)
             if allTexts.count > 5 { // Assuming UI has at least some static texts
-                print("🧪 testMessageBubbleDisplay: Multiple texts found, assuming house responded")
                 houseResponseFound = true
             }
         }
@@ -156,7 +157,6 @@ class ConversationViewUITests: XCTestCase {
     }
     
     func testMessageTimestamps() {
-        print("🧪 ConversationViewUITests: testMessageTimestamps started")
         // Given
         sendTextMessage("Test message")
         
@@ -169,7 +169,9 @@ class ConversationViewUITests: XCTestCase {
     // MARK: - Mute Toggle Tests
     
     func testMuteToggle() {
-        print("🧪 ConversationViewUITests: testMuteToggle started")
+        if Self.verboseLogging {
+            print("🧪 ConversationViewUITests: testMuteToggle started")
+        }
         
         // Use label-based detection which works reliably
         let muteButtonByLabel = app.buttons["Mute"]
@@ -187,7 +189,9 @@ class ConversationViewUITests: XCTestCase {
         
         // Check if currently unmuted (Mute label exists)
         if muteButtonByLabel.exists {
-            print("🧪 testMuteToggle: Currently unmuted, will mute")
+            if Self.verboseLogging {
+                print("🧪 testMuteToggle: Currently unmuted, will mute")
+            }
             
             // Tap to mute
             muteButtonByLabel.tap()
@@ -208,16 +212,10 @@ class ConversationViewUITests: XCTestCase {
                                       !textField.exists
             
             if !unmutedStateVerified {
-                // Debug output if mic button not found
-                print("🧪 testMuteToggle: Mic button not found after unmute. Checking UI state...")
-                print("  Text field exists: \(textField.exists)")
-                print("  Mute button exists: \(muteButtonByLabel.exists)")
-                
                 // Check if we're in voice confirmation state
                 let confirmButton = app.buttons["Confirm"]
                 let cancelButton = app.buttons["Cancel"]
                 if confirmButton.exists || cancelButton.exists {
-                    print("🧪 testMuteToggle: In voice confirmation mode")
                     // Cancel to get back to normal state
                     if cancelButton.exists {
                         cancelButton.tap()
@@ -230,7 +228,9 @@ class ConversationViewUITests: XCTestCase {
             XCTAssertTrue(unmutedStateVerified || !textField.exists || muteButtonByLabel.exists, 
                          "Should be in unmuted state (text field hidden or mute button visible)")
         } else {
-            print("🧪 testMuteToggle: Currently muted, will unmute first")
+            if Self.verboseLogging {
+                print("🧪 testMuteToggle: Currently muted, will unmute")
+            }
             
             // Tap to unmute
             unmuteButtonByLabel.tap()
@@ -259,7 +259,9 @@ class ConversationViewUITests: XCTestCase {
     // MARK: - Text Input Tests
     
     func testTextMessageSending() {
-        print("🧪 ConversationViewUITests: testTextMessageSending started")
+        if Self.verboseLogging {
+            print("🧪 ConversationViewUITests: testTextMessageSending started")
+        }
         // Given - mute to enable text input
         muteConversation()
         
@@ -284,7 +286,6 @@ class ConversationViewUITests: XCTestCase {
     }
     
     func testTextMessageKeyboardSubmit() {
-        print("🧪 ConversationViewUITests: testTextMessageKeyboardSubmit started")
         // Given
         muteConversation()
         let textField = app.textFields["Type a message..."]
@@ -312,7 +313,9 @@ class ConversationViewUITests: XCTestCase {
     // MARK: - Voice Input Tests
     
     func testVoiceInputButton() {
-        print("🧪 ConversationViewUITests: testVoiceInputButton started")
+        if Self.verboseLogging {
+            print("🧪 ConversationViewUITests: testVoiceInputButton started")
+        }
         // Given - ensure unmuted
         unmuteConversation()
         
@@ -337,13 +340,11 @@ class ConversationViewUITests: XCTestCase {
                                           app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] 'recording'")).count > 0
             XCTAssertTrue(recordingIndicatorExists, "Recording indicator should be visible")
         } else {
-            print("🧪 testVoiceInputButton: Microphone button is disabled, may need permissions")
             // This is acceptable in test environment where microphone might not be available
         }
     }
     
     func testVoiceTranscriptDisplay() {
-        print("🧪 ConversationViewUITests: testVoiceTranscriptDisplay started")
         // This test would require mocking voice input
         // For now, we'll test the UI elements exist
         unmuteConversation()
@@ -363,7 +364,6 @@ class ConversationViewUITests: XCTestCase {
     // MARK: - Question and Answer Tests
     
     func testAddressQuestionDisplay() {
-        print("🧪 ConversationViewUITests: testAddressQuestionDisplay started")
         // Wait for initial UI to load - give more time for messages to appear
         Thread.sleep(forTimeInterval: 2)
         
@@ -388,7 +388,6 @@ class ConversationViewUITests: XCTestCase {
             if matches.count > 0 {
                 foundMessage = true
                 foundText = matches.firstMatch.label
-                print("🧪 testAddressQuestionDisplay: Found message containing '\(pattern)': '\(foundText)'")
                 break
             }
         }
@@ -396,10 +395,8 @@ class ConversationViewUITests: XCTestCase {
         // If no specific message found, check if there are any messages at all
         if !foundMessage {
             let allTexts = app.staticTexts.allElementsBoundByIndex
-            print("🧪 testAddressQuestionDisplay: No expected message found. All texts count: \(allTexts.count)")
             if allTexts.count > 3 {  // Navigation elements + at least one message
                 foundMessage = true
-                print("🧪 testAddressQuestionDisplay: Found \(allTexts.count) text elements, assuming messages are displayed")
             }
         }
         
@@ -524,16 +521,20 @@ class ConversationViewUITests: XCTestCase {
         }
         
         // Debug: Print what elements we can see if we fail
-        print("Failed to find conversation elements. Visible elements:")
-        print("Buttons: \(app.buttons.allElementsBoundByIndex.map { $0.label })")
-        print("Static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(10).map { $0.label })")
-        print("Navigation bars: \(app.navigationBars.allElementsBoundByIndex.map { $0.identifier })")
+        if Self.verboseLogging {
+            print("Failed to find conversation elements. Visible elements:")
+            print("Buttons: \(app.buttons.allElementsBoundByIndex.map { $0.label })")
+            print("Static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(10).map { $0.label })")
+            print("Navigation bars: \(app.navigationBars.allElementsBoundByIndex.map { $0.identifier })")
+        }
         
         return false
     }
     
     private func muteConversation() {
-        print("🧪 muteConversation: Starting")
+        if Self.verboseLogging {
+            print("🧪 muteConversation: Starting")
+        }
         
         // First try to find button by accessibility identifier
         let unmuteButton = app.buttons["speaker.wave.2.fill"]
@@ -545,31 +546,41 @@ class ConversationViewUITests: XCTestCase {
         
         // Check if already in desired state
         if muteButton.exists || unmuteButtonByLabel.exists {
-            print("🧪 muteConversation: Already muted")
+            if Self.verboseLogging {
+                print("🧪 muteConversation: Already muted")
+            }
             return
         }
         
         // Wait for text field (which indicates muted state)
         let textField = app.textFields["Type a message..."]
         if textField.exists {
-            print("🧪 muteConversation: Already muted (text field exists)")
+            if Self.verboseLogging {
+                print("🧪 muteConversation: Already muted (text field exists)")
+            }
             return
         }
         
         // Try to tap unmute button to mute
         if unmuteButton.waitForExistence(timeout: 3) {
-            print("🧪 muteConversation: Tapping unmute button (by identifier) to mute")
+            if Self.verboseLogging {
+                print("🧪 muteConversation: Tapping unmute button (by identifier) to mute")
+            }
             unmuteButton.tap()
         } else if muteButtonByLabel.waitForExistence(timeout: 2) {
-            print("🧪 muteConversation: Tapping mute button (by label)")
+            if Self.verboseLogging {
+                print("🧪 muteConversation: Tapping mute button (by label)")
+            }
             muteButtonByLabel.tap()
         } else {
-            // Debug output
-            print("🧪 muteConversation: No mute/unmute buttons found. Available buttons:")
-            let allButtons = app.buttons.allElementsBoundByIndex
-            for i in 0..<min(allButtons.count, 10) {
-                let button = allButtons[i]
-                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            // Debug output only when verbose or on failure
+            if Self.verboseLogging {
+                print("🧪 muteConversation: No mute/unmute buttons found. Available buttons:")
+                let allButtons = app.buttons.allElementsBoundByIndex
+                for i in 0..<min(allButtons.count, 10) {
+                    let button = allButtons[i]
+                    print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+                }
             }
             XCTFail("Could not find mute button to mute the conversation")
             return
@@ -578,11 +589,15 @@ class ConversationViewUITests: XCTestCase {
         // Wait for text input to appear
         let textFieldAppeared = textField.waitForExistence(timeout: 5)
         XCTAssertTrue(textFieldAppeared, "Text field should appear after muting")
-        print("🧪 muteConversation: Completed")
+        if Self.verboseLogging {
+            print("🧪 muteConversation: Completed")
+        }
     }
     
     private func unmuteConversation() {
-        print("🧪 unmuteConversation: Starting")
+        if Self.verboseLogging {
+            print("🧪 unmuteConversation: Starting")
+        }
         
         // First try to find button by accessibility identifier
         let muteButton = app.buttons["speaker.slash.fill"]
@@ -594,31 +609,41 @@ class ConversationViewUITests: XCTestCase {
         
         // Check if already in desired state
         if unmuteButton.exists || muteButtonByLabel.exists {
-            print("🧪 unmuteConversation: Already unmuted")
+            if Self.verboseLogging {
+                print("🧪 unmuteConversation: Already unmuted")
+            }
             return
         }
         
         // Check for mic button (which indicates unmuted state)
         let micButton = app.buttons["mic.circle.fill"]
         if micButton.exists {
-            print("🧪 unmuteConversation: Already unmuted (mic button exists)")
+            if Self.verboseLogging {
+                print("🧪 unmuteConversation: Already unmuted (mic button exists)")
+            }
             return
         }
         
         // Try to tap mute button to unmute
         if muteButton.waitForExistence(timeout: 3) {
-            print("🧪 unmuteConversation: Tapping mute button (by identifier) to unmute")
+            if Self.verboseLogging {
+                print("🧪 unmuteConversation: Tapping mute button (by identifier) to unmute")
+            }
             muteButton.tap()
         } else if unmuteButtonByLabel.waitForExistence(timeout: 2) {
-            print("🧪 unmuteConversation: Tapping unmute button (by label)")
+            if Self.verboseLogging {
+                print("🧪 unmuteConversation: Tapping unmute button (by label)")
+            }
             unmuteButtonByLabel.tap()
         } else {
-            // Debug output
-            print("🧪 unmuteConversation: No mute/unmute buttons found. Available buttons:")
-            let allButtons = app.buttons.allElementsBoundByIndex
-            for i in 0..<min(allButtons.count, 10) {
-                let button = allButtons[i]
-                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            // Debug output only when verbose or on failure
+            if Self.verboseLogging {
+                print("🧪 unmuteConversation: No mute/unmute buttons found. Available buttons:")
+                let allButtons = app.buttons.allElementsBoundByIndex
+                for i in 0..<min(allButtons.count, 10) {
+                    let button = allButtons[i]
+                    print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+                }
             }
             XCTFail("Could not find unmute button to unmute the conversation")
             return
@@ -627,11 +652,15 @@ class ConversationViewUITests: XCTestCase {
         // Wait for voice input to appear
         let micButtonAppeared = micButton.waitForExistence(timeout: 5)
         XCTAssertTrue(micButtonAppeared, "Microphone button should appear after unmuting")
-        print("🧪 unmuteConversation: Completed")
+        if Self.verboseLogging {
+            print("🧪 unmuteConversation: Completed")
+        }
     }
     
     private func sendTextMessage(_ text: String) {
-        print("🧪 sendTextMessage: Starting with text: '\(text)'")
+        if Self.verboseLogging {
+            print("🧪 sendTextMessage: Starting with text: '\(text)'")
+        }
         let startTime = Date()
         muteConversation()
         
@@ -644,7 +673,9 @@ class ConversationViewUITests: XCTestCase {
         
         // Make sure the text field is hittable before tapping
         if !textField.isHittable {
-            print("🧪 sendTextMessage: Text field not hittable, waiting...")
+            if Self.verboseLogging {
+                print("🧪 sendTextMessage: Text field not hittable, waiting...")
+            }
             Thread.sleep(forTimeInterval: 0.1)
         }
         
@@ -660,12 +691,14 @@ class ConversationViewUITests: XCTestCase {
                         (sendButtonByLabel.exists ? sendButtonByLabel : sendButtonByPredicate)
         
         guard sendButton.waitForExistence(timeout: 1) else {
-            // Debug output
-            print("🧪 sendTextMessage: Send button not found. Available buttons:")
-            let allButtons = app.buttons.allElementsBoundByIndex
-            for i in 0..<min(allButtons.count, 20) {
-                let button = allButtons[i]
-                print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
+            // Debug output only when verbose or on failure
+            if Self.verboseLogging {
+                print("🧪 sendTextMessage: Send button not found. Available buttons:")
+                let allButtons = app.buttons.allElementsBoundByIndex
+                for i in 0..<min(allButtons.count, 20) {
+                    let button = allButtons[i]
+                    print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
+                }
             }
             XCTFail("Send button did not appear")
             return
@@ -673,7 +706,9 @@ class ConversationViewUITests: XCTestCase {
         
         // Remove wait for button enabled check
         
-        print("🧪 sendTextMessage: Tapping send button")
+        if Self.verboseLogging {
+            print("🧪 sendTextMessage: Tapping send button")
+        }
         sendButton.tap()
         
         // Wait for message to appear - try multiple detection methods
@@ -682,7 +717,9 @@ class ConversationViewUITests: XCTestCase {
         // Method 1: Direct static text
         if app.staticTexts[text].waitForExistence(timeout: 2) {
             messageFound = true
-            print("🧪 sendTextMessage: Found message via direct staticText lookup")
+            if Self.verboseLogging {
+                print("🧪 sendTextMessage: Found message via direct staticText lookup")
+            }
         }
         
         // Method 2: Predicate search
@@ -691,7 +728,9 @@ class ConversationViewUITests: XCTestCase {
             let messageElement = app.staticTexts.matching(messagePredicate).firstMatch
             if messageElement.waitForExistence(timeout: 1) {
                 messageFound = true
-                print("🧪 sendTextMessage: Found message via predicate search")
+                if Self.verboseLogging {
+                    print("🧪 sendTextMessage: Found message via predicate search")
+                }
             }
         }
         
@@ -701,12 +740,14 @@ class ConversationViewUITests: XCTestCase {
             let containsElement = app.staticTexts.matching(containsPredicate).firstMatch
             if containsElement.waitForExistence(timeout: 1) {
                 messageFound = true
-                print("🧪 sendTextMessage: Found message via contains search: '\(containsElement.label)'")
+                if Self.verboseLogging {
+                    print("🧪 sendTextMessage: Found message via contains search: '\(containsElement.label)'")
+                }
             }
         }
         
         // Simplified debug output if message not found
-        if !messageFound {
+        if !messageFound && Self.verboseLogging {
             print("🧪 sendTextMessage: Message '\(text)' not found after \(Date().timeIntervalSince(startTime))s")
             // Only print minimal debug info
             let textCount = app.staticTexts.count
@@ -714,7 +755,9 @@ class ConversationViewUITests: XCTestCase {
         }
         
         XCTAssertTrue(messageFound, "Sent message '\(text)' should appear in chat")
-        print("🧪 sendTextMessage: Completed")
+        if Self.verboseLogging {
+            print("🧪 sendTextMessage: Completed")
+        }
     }
 }
 
