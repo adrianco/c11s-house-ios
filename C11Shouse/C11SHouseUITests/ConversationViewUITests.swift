@@ -57,7 +57,7 @@ class ConversationViewUITests: XCTestCase {
     func testInitialWelcomeMessage() {
         // The app might show either a welcome message or jump to a question
         let possibleMessages = [
-            app.staticTexts["Hello! I'm your house consciousness. How can I help you today?"],
+            app.staticTexts.matching(NSPredicate(format: "label == %@", "Hello! I'm your house consciousness. How can I help you today?")),
             app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] 'welcome'")),
             app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] 'Is this the right address'")),
             app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] 'question'"))
