@@ -160,6 +160,9 @@ class InitialSetupFlowTests: XCTestCase {
         XCTAssertNotNil(savedAddress)
         XCTAssertEqual(savedAddress?.fullAddress, detectedAddress.fullAddress)
         
+        // Load next question after answering the address question
+        await questionFlowCoordinator.loadNextQuestion()
+        
         // Step 5: House naming
         guard let houseQuestion = await questionFlowCoordinator.currentQuestion,
               houseQuestion.text == "What should I call this house?" else {
@@ -179,6 +182,9 @@ class InitialSetupFlowTests: XCTestCase {
         // Verify house name was saved
         let savedHouseName = await notesService.getHouseName()
         XCTAssertEqual(savedHouseName, customHouseName)
+        
+        // Load next question after answering the house name question
+        await questionFlowCoordinator.loadNextQuestion()
         
         // Step 6: User name
         guard let nameQuestion = await questionFlowCoordinator.currentQuestion,
@@ -218,8 +224,8 @@ class InitialSetupFlowTests: XCTestCase {
             _ = try await addressManager.detectCurrentAddress()
             XCTFail("Should have thrown error for denied permission")
         } catch {
-            // Expected error
-            XCTAssertTrue(error is LocationError)
+            // Expected error - AddressManager throws AddressError, not LocationError
+            XCTAssertTrue(error is AddressError)
         }
         
         // Load question - should show manual address entry

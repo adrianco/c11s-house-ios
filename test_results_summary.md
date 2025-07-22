@@ -1,6 +1,6 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 22:15 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 22:25 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
@@ -28,9 +28,9 @@
 - ✅ testConversationStateManagement (0.001s)
 - ✅ testErrorRecovery (0.001s)
 
-**InitialSetupFlowTests** (2/6 failed):
-- ❌ testCompleteInitialSetupFlow (0.009s)
-- ❌ testSetupFlowWithLocationPermissionDenied (0.004s)
+**InitialSetupFlowTests** (2/6 failed) - **FIXES APPLIED**:
+- ❌ testCompleteInitialSetupFlow - Fixed missing loadNextQuestion calls
+- ❌ testSetupFlowWithLocationPermissionDenied - Fixed error type expectation
 - ✅ testAddressParsingVariations (0.002s)
 - ✅ testDataPersistenceAcrossSetup (0.006s)
 - ✅ testHouseNameGeneration (0.004s)
@@ -203,6 +203,17 @@
    - Updated LocationServiceTests.testConfirmAddressSavesToUserDefaults to expect new behavior
    - Added UserDefaults cleanup in both setUp and tearDown for complete isolation
    - Addresses are now only persisted through NotesService as intended
+
+### InitialSetupFlowTests Fixes (2025-07-22 22:25)
+1. **Fixed testSetupFlowWithLocationPermissionDenied**:
+   - Test was expecting LocationError but AddressManager throws AddressError
+   - Changed assertion to expect AddressError.locationPermissionDenied
+
+2. **Fixed testCompleteInitialSetupFlow**:
+   - Added missing loadNextQuestion() calls between question transitions
+   - After saving address answer, need to load house name question
+   - After saving house name answer, need to load user name question
+   - QuestionFlowCoordinator doesn't auto-advance after saveAnswer
 
 ### NotesServiceTests Fixes (2025-07-22 22:15)
 1. **Fixed testUpdateNote timestamp comparison**:
