@@ -48,5 +48,10 @@
     <!-- Speech Recognition Permission -->
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>C11S House uses speech recognition to convert your voice commands into actions for controlling your smart home devices.</string>
+    <!-- Location Services Permission -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>C11S House can monitor weather conditions continuously to keep your house informed about changing conditions.</string>
 </dict>
 </plist>
