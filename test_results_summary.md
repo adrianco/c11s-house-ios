@@ -1,6 +1,6 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 22:10 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 22:15 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
@@ -151,6 +151,12 @@
   - Cause: Using both @NotesStoreActor isolation AND NSLock causing deadlock
   - Fix: Removed NSLock since actor isolation already provides thread safety
 
+- **testUpdateNote** ❌ FAILED - **FIX APPLIED**
+  - Error: "XCTAssertGreaterThan failed: (timestamp) is not greater than (timestamp)"
+  - Cause: Test running too fast, timestamps were identical
+  - Fix: Increased sleep from 0.1 to 0.2 seconds
+  - Fix: Compare against actual saved timestamp, not original note timestamp
+
 ### UI Tests - Latest Run (2025-07-22 14:18)
 **ThreadingSafetyUITests**:
 - **testBackgroundTransitionWhileRecording** ❌ FAILED (24.120s) - **FIX APPLIED**
@@ -197,6 +203,13 @@
    - Updated LocationServiceTests.testConfirmAddressSavesToUserDefaults to expect new behavior
    - Added UserDefaults cleanup in both setUp and tearDown for complete isolation
    - Addresses are now only persisted through NotesService as intended
+
+### NotesServiceTests Fixes (2025-07-22 22:15)
+1. **Fixed testUpdateNote timestamp comparison**:
+   - Test was failing because timestamps were identical
+   - Increased Task.sleep from 0.1 to 0.2 seconds for timestamp difference
+   - Fixed comparison to use actual saved timestamp instead of original note
+   - Now properly validates that updateNote creates a new timestamp
 
 ### NotesService Deadlock Fix (2025-07-22 21:55)
 1. **Fixed testConcurrentSaveOperations hanging**:

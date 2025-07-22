@@ -133,8 +133,13 @@ class NotesServiceTests: XCTestCase {
         let originalNote = Note(questionId: question.id, answer: "Original")
         try await sut.saveNote(originalNote)
         
-        // Add small delay to ensure different timestamps
-        try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        // Get the actual saved timestamp (saveNote might modify it)
+        let savedStore = try await sut.loadNotesStore()
+        let savedTimestamp = savedStore.notes[question.id]!.lastModified
+        
+        // Add delay to ensure different timestamps
+        // Increased from 0.1 to 0.2 seconds to ensure timestamp difference
+        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
         
         // When: Updating the note
         var updatedNote = originalNote
@@ -144,10 +149,12 @@ class NotesServiceTests: XCTestCase {
         // Then: Note should be updated with new timestamp
         let updatedStore = try await sut.loadNotesStore()
         XCTAssertEqual(updatedStore.notes[question.id]?.answer, "Updated answer")
-        // Use a small tolerance for timestamp comparison in case of timing issues
-        XCTAssertGreaterThanOrEqual(
+        
+        // Compare against the actual saved timestamp, not the original note
+        XCTAssertGreaterThan(
             updatedStore.notes[question.id]!.lastModified.timeIntervalSince1970,
-            originalNote.lastModified.timeIntervalSince1970
+            savedTimestamp.timeIntervalSince1970,
+            "Updated timestamp should be greater than the original saved timestamp"
         )
     }
     
