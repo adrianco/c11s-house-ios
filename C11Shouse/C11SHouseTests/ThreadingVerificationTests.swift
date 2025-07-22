@@ -40,14 +40,6 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Main Thread Verification Tests
     
     func testAudioEnginePublishedPropertiesUpdateOnMainThread() async {
-        // Skip this test in test environment due to audio hardware limitations
-        // The audio format mismatch and memory corruption make this test unreliable
-        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-        if isTestEnvironment {
-            print("[ThreadingVerificationTests] Skipping audio engine test in test environment - audio hardware not properly available")
-            return
-        }
-        
         let expectation = XCTestExpectation(description: "Audio level updates on main thread")
         
         // Create AudioEngine on main actor since it's @MainActor
@@ -63,31 +55,26 @@ final class ThreadingVerificationTests: XCTestCase {
             }
             .store(in: &cancellables)
         
-        // Trigger audio level update
-        // Wrap in do-catch to handle audio format mismatch in test environment
+        // Try to trigger audio level update
         do {
             try await audioEngine.prepareForRecording()
             try await audioEngine.startRecording()
+            
+            // Give a brief moment for audio level updates
+            try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            
+            // Always clean up properly
+            await audioEngine.stopRecording()
+            
         } catch {
-            // In test environment, audio hardware might not be available or have format mismatch
-            // This is expected, we're just testing threading behavior
-            print("Audio engine error in test (expected): \(error)")
+            print("Audio engine setup failed: \(error)")
+            // Test still passes if setup fails - we're testing threading behavior
         }
         
-        // Still wait for any potential updates
         await fulfillment(of: [expectation], timeout: 2.0, enforceOrder: false)
-        
-        // Stop recording if it was started
-        await audioEngine.stopRecording()
     }
     
     func testVoiceTranscriptionViewModelStateUpdatesOnMainThread() async {
-        // Skip this test in test environment due to Core Audio instability
-        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-        if isTestEnvironment {
-            print("[ThreadingVerificationTests] Skipping view model state test - Core Audio not stable in test environment")
-            return
-        }
         
         let expectation = XCTestExpectation(description: "State updates on main thread")
         let container = ServiceContainer.shared
@@ -186,13 +173,6 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - State Consistency Tests
     
     func testRapidStateChangesThreadSafety() async {
-        // Skip this test in test environment due to Core Audio crashes
-        // The rapid audio engine start/stop operations cause "nullptr == Tap()" crashes
-        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-        if isTestEnvironment {
-            print("[ThreadingVerificationTests] Skipping rapid state changes test - Core Audio not stable in test environment")
-            return
-        }
         
         let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
         let operationCount = 50
@@ -221,12 +201,6 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Memory Management Tests
     
     func testNoRetainCyclesInTimers() async {
-        // Skip this test in test environment due to Core Audio instability
-        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-        if isTestEnvironment {
-            print("[ThreadingVerificationTests] Skipping retain cycle test - Core Audio not stable in test environment")
-            return
-        }
         
         weak var weakViewModel: VoiceTranscriptionViewModel?
         
@@ -249,12 +223,6 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Integration Tests
     
     func testFullRecordingFlowThreadSafety() async {
-        // Skip this test in test environment due to Core Audio instability
-        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-        if isTestEnvironment {
-            print("[ThreadingVerificationTests] Skipping full recording flow test - Core Audio not stable in test environment")
-            return
-        }
         
         let viewModel = await ViewModelFactory.shared.makeVoiceTranscriptionViewModel()
         var updateCount = 0
