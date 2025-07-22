@@ -1,6 +1,6 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 22:05 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 22:10 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
@@ -140,6 +140,11 @@
   - Cause: Leftover UserDefaults saves in LocationService and NotesView
   - Fix: Removed all remaining UserDefaults address persistence
 
+- **testFullAddressFlowIntegration** ❌ FAILED - **FIX APPLIED**
+  - Same error: "XCTAssertNil failed: '193 bytes' - Should not save to UserDefaults"
+  - Additional fix: Updated LocationServiceTests which was expecting old behavior
+  - Additional fix: Added UserDefaults cleanup in both setUp and tearDown
+
 **NotesServiceTests** (Reported by user):
 - **testConcurrentSaveOperations** - HANGING - **FIX APPLIED**
   - Issue: Test hung due to deadlock in concurrent save operations
@@ -182,13 +187,15 @@
 
 ## Recent Fixes Applied
 
-### AddressManagerTests Fix (2025-07-22 22:05)
-1. **Fixed testSaveAddressToAllStorageLocations failure**:
-   - Test was finding 193 bytes in UserDefaults when expecting nil
+### AddressManagerTests Fix (2025-07-22 22:10)
+1. **Fixed multiple test failures related to UserDefaults**:
+   - testSaveAddressToAllStorageLocations and testFullAddressFlowIntegration
+   - Tests were finding 193 bytes in UserDefaults when expecting nil
    - Found remaining UserDefaults saves in LocationService.confirmAddress
    - Found remaining UserDefaults saves in NotesView address handling
    - Removed all UserDefaults address persistence code
-   - Added UserDefaults cleanup in test setUp for old data
+   - Updated LocationServiceTests.testConfirmAddressSavesToUserDefaults to expect new behavior
+   - Added UserDefaults cleanup in both setUp and tearDown for complete isolation
    - Addresses are now only persisted through NotesService as intended
 
 ### NotesService Deadlock Fix (2025-07-22 21:55)

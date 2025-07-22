@@ -254,7 +254,10 @@ class AddressManagerTests: XCTestCase {
     }
     
     override func tearDown() {
-        // No need to clear UserDefaults - addresses are only persisted via NotesService
+        // Clear UserDefaults to ensure clean state for next test
+        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        UserDefaults.standard.synchronize()
         
         sut = nil
         mockNotesService = nil
