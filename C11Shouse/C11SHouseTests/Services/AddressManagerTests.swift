@@ -250,9 +250,7 @@ class AddressManagerTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Clear UserDefaults - remove both confirmed and detected addresses
-        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
-        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        // No need to clear UserDefaults - addresses are only persisted via NotesService
         
         sut = nil
         mockNotesService = nil
@@ -507,11 +505,9 @@ class AddressManagerTests: XCTestCase {
         // When: Saving address
         try await sut.saveAddress(address)
         
-        // Then: Should save to UserDefaults
+        // Then: Should NOT save to UserDefaults (addresses only persisted via NotesService)
         let savedData = UserDefaults.standard.data(forKey: "confirmedHomeAddress")
-        XCTAssertNotNil(savedData)
-        let decodedAddress = try JSONDecoder().decode(Address.self, from: savedData!)
-        XCTAssertEqual(decodedAddress.street, "789 Elm Street")
+        XCTAssertNil(savedData, "Address should not be saved to UserDefaults")
         
         // Then: Should save to LocationService
         XCTAssertEqual(mockLocationService.confirmAddressCallCount, 1)
@@ -624,14 +620,27 @@ class AddressManagerTests: XCTestCase {
         XCTAssertNil(loaded)
     }
     
-    func testLoadSavedAddressWithCorruptData() {
-        // Given: Corrupt data in UserDefaults
-        UserDefaults.standard.set("corrupt data", forKey: "confirmedHomeAddress")
+    func testLoadSavedAddressWithCorruptData() async {
+        // Given: Invalid address answer in NotesService
+        let addressQuestion = Question(
+            text: "Is this the right address?",
+            category: .houseInfo,
+            displayOrder: 0,
+            isRequired: true
+        )
+        notesStore.questions = [addressQuestion]
+        notesStore.notes[addressQuestion.id] = Note(
+            questionId: addressQuestion.id,
+            answer: "invalid address data",
+            createdAt: Date(),
+            lastModified: Date()
+        )
+        mockNotesService.notesStore = notesStore
         
         // When: Loading saved address
-        let loaded = sut.loadSavedAddress()
+        let loaded = await sut.loadSavedAddress()
         
-        // Then: Should return nil
+        // Then: Should return nil (unparseable address)
         XCTAssertNil(loaded)
     }
     
@@ -741,8 +750,8 @@ class AddressManagerTests: XCTestCase {
         try await sut.saveAddress(parsedAddress!)
         print("Debug: saveNoteCallCount after saveAddress = \(mockNotesService.saveNoteCallCount)")
         
-        // 6. Verify all storage locations updated
-        XCTAssertNotNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"))
+        // 6. Verify storage locations updated (NOT UserDefaults)
+        XCTAssertNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"), "Should not save to UserDefaults")
         XCTAssertEqual(mockLocationService.confirmAddressCallCount, 1)
         
         // Check if the questions exist in the mock service
