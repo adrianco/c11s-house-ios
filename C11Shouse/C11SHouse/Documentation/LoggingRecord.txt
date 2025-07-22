@@ -25,7 +25,53 @@ Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Updated weather note successfully
 [ContentViewModel] ✅ Weather fetch successful: windy
-[ContentViewModel] Temperature: 75°F
+[ContentViewModel] Temperature: 74°F
 [ContentViewModel] Current weather after fetch: exists
 [ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
+void * _Nullable NSMapGet(NSMapTable * _Nonnull, const void * _Nullable): map table argument is NULL
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8ac5a0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f75c0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8ac3c0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afca0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afd40>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afde0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afe80>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8aff20>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7f20>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7e80>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7de0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7d40>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7ca0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7c00>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7980>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7840>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7b60>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7ac0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7a20>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7660>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7700>
+App is being debugged, do not track this hang
+Hang detected: 0.65s (debugger attached, not reporting)
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Unknown client: C11SHouse
+[ConversationView] onAppear called
+[ConversationView] hasCompletedPhase4Tutorial: true
+[ConversationView] isInPhase4Tutorial: false
+[ConversationViewModel] setupView() called
+[ConversationViewModel] Loaded house name: Roland House
+[ConversationViewModel] Found 47 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 6 questions
+[QuestionFlowCoordinator] Questions needing review: 0
+[QuestionFlowCoordinator] No more questions to ask
+[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
+[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
+[ConversationViewModel] hasCompletedAllQuestions: true
+[ConversationViewModel] All questions complete, starting Phase 4 tutorial
+[ConversationViewModel] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question
 Message from debugger: killed

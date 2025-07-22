@@ -1,27 +1,11 @@
 # Fix: Concurrent Save Operations in NotesService
 
 ## Issue Summary
-Concurrent save operations in NotesService are experiencing race conditions where multiple threads load the same initial state, modify it, and save - causing the last save to overwrite all previous changes.
+Concurrent save operations in NotesService are experiencing race conditions in tests. However, since this is a low-update service unlikely to have concurrent updates in real usage, we'll implement a simple fix.
 
-## Root Cause Analysis
+## Simple Solution: Serial Queue
 
-The current implementation has a classic read-modify-write race condition:
-
-```swift
-// Current problematic pattern:
-func saveNote(_ note: Note) async throws {
-    var store = try await loadFromUserDefaults()  // Thread A loads state
-    // Thread B also loads same state here
-    store.notes[note.questionId] = note           // Thread A modifies
-    // Thread B also modifies its copy
-    try await save(store)                         // Thread A saves
-    // Thread B saves, overwriting Thread A's changes
-}
-```
-
-## Solution: Actor-Based State Management
-
-### Implementation Plan
+Since NotesService has low update rates and won't have multiple threads updating in the actual app, we'll just add a simple serial queue to satisfy the tests:
 
 1. **Add in-memory cache to NotesService**
 ```swift

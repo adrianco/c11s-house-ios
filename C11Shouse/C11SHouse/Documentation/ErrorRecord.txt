@@ -33,16 +33,6 @@ C11SHouseTests
 
 C11SHouseUITests
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testScrollingPerformance(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testTextMessageKeyboardSubmit(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testTextMessageSending(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testVoiceInputButton(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:271 testVoiceTranscriptDisplay(): XCTAssertTrue failed - Conversation view should load
-
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testAddressQuestionDisplay(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testBackButtonNavigation(): XCTAssertTrue failed - Conversation view should load
@@ -62,6 +52,16 @@ C11SHouseUITests
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMuteToggle(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testRoomNoteCreation(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testScrollingPerformance(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testTextMessageKeyboardSubmit(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testTextMessageSending(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testVoiceInputButton(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testVoiceTranscriptDisplay(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:43 testWelcomeScreenAppearance(): XCTAssertTrue failed
@@ -108,24 +108,7 @@ See test report attachments for more detail.
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:149 testAddressDetectionFlow(): Asynchronous wait failed: Exceeded timeout of 5 seconds, with unfulfilled expectations: "Expect predicate `label CONTAINS "Is this the right address"` for object "QuestionText" StaticText".
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:171 testHouseNamingFlow(): Failed to get matching snapshot: No matches found for Elements matching predicate '"QuestionText" IN identifiers' from input {(
-    StaticText, label: 'Good afternoon',
-    StaticText, label: 'Your House, Awakened',
-    StaticText, label: 'Natural Conversations',
-    StaticText, label: 'Talk to your house like a helpful companion',
-    StaticText, label: 'Intelligent Memory',
-    StaticText, label: 'Remembers important details about your home',
-    StaticText, label: 'Privacy First',
-    StaticText, label: 'Your data stays on your device',
-    StaticText, label: 'Your House', Disabled,
-    StaticText, label: '🤔', Disabled,
-    StaticText, label: 'Feeling curious', Disabled,
-    StaticText, label: 'Conversations to help manage your house', Disabled,
-    StaticText, label: '67°F', Disabled,
-    StaticText, label: 'Partlycloudy', Disabled,
-    StaticText, label: 'I'm curious to learn more about you and your home. Let's chat!', Disabled,
-    StaticText, label: 'Start Conversation', Disabled
-)}
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:179 testAddressQuestionFlow(): XCTAssertTrue failed
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:198 testUserIntroductionFlow(): Failed to get matching snapshot: No matches found for Elements matching predicate '"QuestionText" IN identifiers' from input {(
     StaticText, label: 'Good afternoon',
@@ -146,9 +129,9 @@ See test report attachments for more detail.
     StaticText, label: 'Start Conversation', Disabled
 )}
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:230 testConversationTutorial(): XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:200 testHouseNamingFlow(): XCTAssertTrue failed
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:254 testNotesFeatureIntroduction(): XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:259 testConversationTutorial(): XCTAssertTrue failed
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:284 testOnboardingCompletionCelebration(): XCTAssertTrue failed
 
@@ -157,33 +140,11 @@ See test report attachments for more detail.
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:50 testRecordingFlowThreadSafety(): XCTAssertTrue failed
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:82 testNotesViewRapidEditingThreadSafety(): XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:104 testNotesViewRapidEditingThreadSafety(): XCTAssertTrue failed
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:130 testBackgroundTransitionWhileRecording(): Failed to tap "Conversation" Button: No matches found for Descendants matching type TabBar from input {(
-    Application, pid: 27374, label: 'Conscious House'
-)}
-Possibly caused by runtime issues:
-Automation type mismatch: computed Button from legacy attributes vs PopUpButton from modern attribute. Input attributes and values: {
-    "XC_kAXXCAttributeAutomationType" = 14;
-    "XC_kAXXCAttributeElementBaseType" = UIResponder;
-    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
-    "XC_kAXXCAttributeTraits" = 1108101562625;
-}
-See test report attachments for more detail.
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:157 testBackgroundTransitionWhileRecording(): XCTAssertTrue failed
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:179 testRapidViewSwitchingThreadSafety(): XCTAssertTrue failed
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:188 testConcurrentUIOperations(): Failed to tap "Notes" Button: No matches found for Descendants matching type TabBar from input {(
-    Application, pid: 27378, label: 'Conscious House'
-)}
-Possibly caused by runtime issues:
-Automation type mismatch: computed Button from legacy attributes vs PopUpButton from modern attribute. Input attributes and values: {
-    "XC_kAXXCAttributeAutomationType" = 14;
-    "XC_kAXXCAttributeElementBaseType" = UIResponder;
-    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
-    "XC_kAXXCAttributeTraits" = 1108101562625;
-}
-See test report attachments for more detail.
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:238 testThreadingUnderMemoryPressure(): Failed to tap "Conversation" Button: No matches found for Descendants matching type TabBar from input {(
     Application, pid: 27400, label: 'Conscious House'
@@ -196,3 +157,5 @@ Automation type mismatch: computed Button from legacy attributes vs PopUpButton 
     "XC_kAXXCAttributeTraits" = 1108101562625;
 }
 See test report attachments for more detail.
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:256 testConcurrentUIOperations(): Must be called on the main thread. (NSInternalInconsistencyException)

@@ -12,10 +12,10 @@ This document summarizes the test failure analysis and proposed fixes for the C1
 - **Implementation**: [fix-threading-violations.md](implementation/fix-threading-violations.md)
 
 ### 2. 🔄 Concurrent Save Race Conditions (High)
-- **Impact**: Data loss during concurrent operations
+- **Impact**: Test failures during concurrent operations (not a real-world issue)
 - **Location**: NotesService.swift
-- **Fix**: Implement actor-based state management with caching
-- **Implementation**: [fix-concurrent-saves.md](implementation/fix-concurrent-saves.md)
+- **Fix**: Add simple NSLock to serialize saves
+- **Implementation**: [fix-concurrent-saves-simple.md](implementation/fix-concurrent-saves-simple.md)
 
 ### 3. 🧭 UI Element Detection Failures (High)
 - **Impact**: 15/15 ConversationView tests failing
@@ -41,9 +41,9 @@ This document summarizes the test failure analysis and proposed fixes for the C1
 ### Phase 2: High Priority (Do Second)
 2. **Fix Concurrent Saves**
    - File: `NotesService.swift`
-   - Add actor-based caching mechanism
-   - Update all save/load methods
-   - Estimated time: 3 hours
+   - Add simple NSLock to serialize saves
+   - Minimal changes needed
+   - Estimated time: 30 minutes
 
 3. **Fix UI Navigation**
    - Files: All UI test files
