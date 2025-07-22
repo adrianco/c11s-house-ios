@@ -161,44 +161,41 @@ final class ThreadingSafetyUITests: XCTestCase {
             editButtonAlternative.tap()
         }
         
-        // Find first note row
+        // Test rapid editing by tapping first cell multiple times
         let firstNote = app.cells.firstMatch
-        if firstNote.waitForExistence(timeout: 1) {
-            // Get initial cell count
-            let initialCellCount = app.cells.count
-            print("Initial cell count: \(initialCellCount)")
+        if firstNote.waitForExistence(timeout: 0.5) {
+            print("Starting rapid edit test")
             
-            // Edit up to 3 notes or however many exist
-            let notesToEdit = min(3, initialCellCount)
-            
-            for i in 0..<notesToEdit {
-                print("Editing note \(i)")
+            // Edit the same note rapidly 3 times to test threading
+            for i in 0..<3 {
+                print("Edit iteration \(i)")
                 
-                // Tap the note at index i
-                let note = app.cells.element(boundBy: i)
-                if note.exists && note.isHittable {
-                    note.tap()
+                // Tap the first note
+                if firstNote.exists && firstNote.isHittable {
+                    firstNote.tap()
                     
                     // Type rapidly
                     let textEditor = app.textViews.firstMatch
-                    if textEditor.waitForExistence(timeout: 0.5) {
+                    if textEditor.waitForExistence(timeout: 0.3) {
                         textEditor.tap()
-                        textEditor.typeText("Test \(i)")
+                        textEditor.typeText(" Edit\(i)")
                         
                         // Quick save
                         let saveButton = app.buttons["Save"]
                         if saveButton.exists && saveButton.isHittable {
                             saveButton.tap()
                             
-                            // Brief pause to let save complete
-                            Thread.sleep(forTimeInterval: 0.2)
+                            // Very brief pause
+                            Thread.sleep(forTimeInterval: 0.1)
                         }
                     }
                 } else {
-                    print("Note \(i) not available, skipping")
+                    print("First note not available, breaking")
                     break
                 }
             }
+        } else {
+            print("No notes found to edit")
         }
         
         // Exit edit mode
