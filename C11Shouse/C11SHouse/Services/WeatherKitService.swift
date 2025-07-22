@@ -147,11 +147,15 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
         print("[WeatherKitService] ✅ Running on real device")
         #endif
         
-        // Log entitlements
+        // Log entitlements (suppress warning in test environment)
+        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         if let path = Bundle.main.path(forResource: "C11SHouse", ofType: "entitlements") {
             print("[WeatherKitService] Entitlements file found at: \(path)")
-        } else {
+        } else if !isTestEnvironment {
             print("[WeatherKitService] ⚠️ Entitlements file not found in bundle")
+        } else {
+            // In test environment, entitlements not being bundled is expected
+            print("[WeatherKitService] Running in test environment - entitlements not bundled")
         }
     }
     
