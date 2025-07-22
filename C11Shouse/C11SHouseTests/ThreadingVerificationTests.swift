@@ -41,7 +41,11 @@ final class ThreadingVerificationTests: XCTestCase {
     
     func testAudioEnginePublishedPropertiesUpdateOnMainThread() async {
         let expectation = XCTestExpectation(description: "Audio level updates on main thread")
-        let audioEngine = await AudioEngine()
+        
+        // Create AudioEngine on main actor since it's @MainActor
+        let audioEngine = await MainActor.run {
+            AudioEngine()
+        }
         
         await audioEngine.$audioLevel
             .dropFirst() // Skip initial value
@@ -114,7 +118,10 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Concurrent Operation Tests
     
     func testConcurrentAudioBufferOperations() async {
-        let audioEngine = await AudioEngine()
+        // Create AudioEngine on main actor since it's @MainActor
+        let audioEngine = await MainActor.run {
+            AudioEngine()
+        }
         let operationCount = 100
         let expectation = XCTestExpectation(description: "Concurrent operations complete")
         expectation.expectedFulfillmentCount = operationCount
