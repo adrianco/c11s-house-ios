@@ -43,17 +43,24 @@ class ConversationViewUITests: XCTestCase {
     
     func testBackButtonNavigation() {
         print("🧪 ConversationViewUITests: testBackButtonNavigation started")
-        // Given
+        // Given - wait for back button to be ready
         let backButton = app.buttons["Back"]
-        
-        // Then
-        XCTAssertTrue(backButton.exists, "Back button should be visible")
+        XCTAssertTrue(backButton.waitForExistence(timeout: 2), "Back button should be visible")
         
         // When
         backButton.tap()
         
-        // Then - should navigate back
-        XCTAssertFalse(app.staticTexts["House Chat"].exists, "Should have navigated away from conversation view")
+        // Then - verify we navigated away by checking conversation elements are gone
+        // Use a short wait to ensure navigation completes
+        Thread.sleep(forTimeInterval: 0.5)
+        
+        // Check multiple indicators that we left conversation view
+        let conversationGone = !app.buttons["Back"].exists &&
+                              !app.buttons["Mute"].exists &&
+                              !app.buttons["Unmute"].exists &&
+                              !app.textFields["Type a message..."].exists
+        
+        XCTAssertTrue(conversationGone, "Should have navigated away from conversation view")
     }
     
     // MARK: - Message Display Tests
@@ -451,21 +458,26 @@ class ConversationViewUITests: XCTestCase {
     }
     
     private func waitForConversationElements(timeout: TimeInterval = 5) -> Bool {
-        let startTime = Date()
+        // Use XCTest's built-in waiting instead of manual polling
+        // Check for Back button as primary indicator (always present in conversation view)
+        if app.buttons["Back"].waitForExistence(timeout: timeout) {
+            return true
+        }
         
-        while Date().timeIntervalSince(startTime) < timeout {
-            // Check for any element that proves ConversationView is loaded
-            if app.staticTexts["House Chat"].exists ||
-               app.navigationBars["House Chat"].exists ||
-               app.buttons["mic.circle.fill"].exists ||
-               app.textFields["Type a message..."].exists ||
-               app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'speaker'")).count > 0 ||
-               app.staticTexts["Hello! I'm your house consciousness. How can I help you today?"].exists {
+        // Fallback: Check for other conversation elements
+        let conversationElements = [
+            app.staticTexts["House Chat"],
+            app.buttons["mic.circle.fill"],
+            app.buttons["Microphone"],
+            app.textFields["Type a message..."],
+            app.buttons["Mute"],
+            app.buttons["Unmute"]
+        ]
+        
+        for element in conversationElements {
+            if element.exists {
                 return true
             }
-            
-            // Small delay before next check
-            Thread.sleep(forTimeInterval: 0.1)
         }
         
         // Debug: Print what elements we can see if we fail
@@ -577,6 +589,7 @@ class ConversationViewUITests: XCTestCase {
     
     private func sendTextMessage(_ text: String) {
         print("🧪 sendTextMessage: Starting with text: '\(text)'")
+        let startTime = Date()
         muteConversation()
         
         // Wait for text field to appear after muting
@@ -649,38 +662,12 @@ class ConversationViewUITests: XCTestCase {
             }
         }
         
-        // Debug output if message not found
+        // Simplified debug output if message not found
         if !messageFound {
-            print("🧪 sendTextMessage: Message '\(text)' not found. Debugging UI hierarchy...")
-            
-            // Print all static texts
-            let allTexts = app.staticTexts.allElementsBoundByIndex
-            print("🧪 sendTextMessage: All static texts (count: \(allTexts.count)):")
-            for i in 0..<min(allTexts.count, 20) {
-                let textElement = allTexts[i]
-                if textElement.exists {
-                    print("🧪 sendTextMessage: Text \(i): '\(textElement.label)'")
-                }
-            }
-            
-            // Check if text field was cleared
-            print("🧪 sendTextMessage: Text field value after send: '\(textField.value ?? "nil")'")
-            
-            // Try to find in other element types
-            let otherElements = app.otherElements.matching(NSPredicate(format: "label CONTAINS[c] %@", text))
-            if otherElements.count > 0 {
-                print("🧪 sendTextMessage: Found \(otherElements.count) otherElements containing text")
-            }
-            
-            // Look in descendants
-            let descendants = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", text))
-            if descendants.count > 0 {
-                print("🧪 sendTextMessage: Found \(descendants.count) descendants containing text")
-                for i in 0..<min(descendants.count, 5) {
-                    let element = descendants.element(boundBy: i)
-                    print("🧪 sendTextMessage: Descendant \(i): type=\(element.elementType.rawValue) label='\(element.label)'")
-                }
-            }
+            print("🧪 sendTextMessage: Message '\(text)' not found after \(Date().timeIntervalSince(startTime))s")
+            // Only print minimal debug info
+            let textCount = app.staticTexts.count
+            print("🧪 sendTextMessage: \(textCount) static texts in view")
         }
         
         XCTAssertTrue(messageFound, "Sent message '\(text)' should appear in chat")

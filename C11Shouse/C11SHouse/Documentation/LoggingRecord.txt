@@ -1,1010 +1,330 @@
+
+
 CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
 Running tests...
     t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 12:29:16.452.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 12:29:16.452.
-Test Suite 'OnboardingUITests' started at 2025-07-22 12:29:16.452.
-Test Case '-[C11SHouseUITests.OnboardingUITests testAddressQuestionFlow]' started.
-    t =     0.00s Start Test at 2025-07-22 12:29:16.452
+Test Suite 'Selected tests' started at 2025-07-22 12:54:27.756.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 12:54:27.757.
+Test Suite 'OnboardingUITests' started at 2025-07-22 12:54:27.757.
+Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionGrantFlow]' started.
+    t =     0.00s Start Test at 2025-07-22 12:54:27.757
     t =     0.01s Set Up
     t =     0.01s     Open com.c11s.house
     t =     0.01s         Launch com.c11s.house
-    t =     2.48s             Setting up automation session
-    t =     4.82s             Wait for com.c11s.house to idle
-    t =     6.28s Waiting 3.0s for "StartConversation" Button to exist
-    t =     7.29s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.29s         Checking existence of `"StartConversation" Button`
-    t =     9.55s         Capturing element debug description
-    t =     9.55s     Checking existence of `"StartConversation" Button`
-    t =    10.42s Tap "StartConversation" Button
-    t =    10.42s     Wait for com.c11s.house to idle
-    t =    10.43s     Find the "StartConversation" Button
-    t =    10.46s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.51s     Synthesize event
-    t =    10.81s     Wait for com.c11s.house to idle
-    t =    10.93s Waiting 1.0s for Alert (First Match) to exist
-    t =    11.94s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    11.94s         Checking existence of `Alert (First Match)`
-    t =    11.99s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.00s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.01s         Capturing element debug description
-    t =    12.01s     Checking existence of `Alert (First Match)`
-    t =    12.04s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.04s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.05s Collecting debug information to assist test failure triage
-    t =    12.05s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    12.14s Waiting 1.0s for Alert (First Match) to exist
-    t =    13.14s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    13.14s         Checking existence of `Alert (First Match)`
-    t =    13.19s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.20s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.21s         Capturing element debug description
-    t =    13.21s     Checking existence of `Alert (First Match)`
-    t =    13.25s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.25s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.26s Collecting debug information to assist test failure triage
-    t =    13.26s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    13.35s Waiting 1.0s for Alert (First Match) to exist
-    t =    14.35s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    14.35s         Checking existence of `Alert (First Match)`
-    t =    14.40s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.41s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.42s         Capturing element debug description
-    t =    14.42s     Checking existence of `Alert (First Match)`
-    t =    14.45s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.46s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.47s Collecting debug information to assist test failure triage
-    t =    14.47s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    14.56s Waiting 5.0s for "House Chat" StaticText to exist
-    t =    15.59s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    15.59s         Checking existence of `"House Chat" StaticText`
-    t =    15.64s         Capturing element debug description
-    t =    16.56s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    16.56s         Checking existence of `"House Chat" StaticText`
-    t =    16.60s         Capturing element debug description
-    t =    17.63s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    17.63s         Checking existence of `"House Chat" StaticText`
-    t =    17.67s         Capturing element debug description
-    t =    18.59s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    18.59s         Checking existence of `"House Chat" StaticText`
-    t =    18.63s         Capturing element debug description
-    t =    19.56s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    19.56s         Checking existence of `"House Chat" StaticText`
-    t =    19.60s         Capturing element debug description
-    t =    19.60s     Checking existence of `"House Chat" StaticText`
-    t =    19.63s Collecting debug information to assist test failure triage
-    t =    19.63s     Requesting snapshot of accessibility hierarchy for app with pid 51554
-    t =    19.69s Waiting 2.0s for "House Chat" NavigationBar to exist
-    t =    20.70s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" NavigationBar`
-    t =    20.70s         Checking existence of `"House Chat" NavigationBar`
-    t =    20.74s         Capturing element debug description
-    t =    21.70s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" NavigationBar`
-    t =    21.70s         Checking existence of `"House Chat" NavigationBar`
-    t =    21.73s         Capturing element debug description
-    t =    21.74s     Checking existence of `"House Chat" NavigationBar`
-    t =    21.76s Collecting debug information to assist test failure triage
-    t =    21.77s     Requesting snapshot of accessibility hierarchy for app with pid 51554
-    t =    21.82s Waiting 2.0s for "Back" Button to exist
-    t =    22.84s     Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    22.84s         Checking existence of `"Back" Button`
-    t =    22.88s Waiting 10.0s for StaticText (First Match) to exist
-    t =    23.91s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    23.91s         Checking existence of `StaticText (First Match)`
-    t =    23.95s         Capturing element debug description
-    t =    24.89s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    24.89s         Checking existence of `StaticText (First Match)`
-    t =    24.92s         Capturing element debug description
-    t =    25.96s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    25.97s         Checking existence of `StaticText (First Match)`
-    t =    26.00s         Capturing element debug description
-    t =    26.94s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    26.94s         Checking existence of `StaticText (First Match)`
-    t =    26.98s         Capturing element debug description
-    t =    27.90s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    27.90s         Checking existence of `StaticText (First Match)`
-    t =    27.94s         Capturing element debug description
-    t =    28.88s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    28.88s         Checking existence of `StaticText (First Match)`
-    t =    28.92s         Capturing element debug description
-    t =    29.92s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    29.92s         Checking existence of `StaticText (First Match)`
-    t =    29.96s         Capturing element debug description
-    t =    30.88s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    30.88s         Checking existence of `StaticText (First Match)`
-    t =    30.92s         Capturing element debug description
-    t =    31.96s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    31.96s         Checking existence of `StaticText (First Match)`
-    t =    32.00s         Capturing element debug description
-    t =    32.88s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    32.88s         Checking existence of `StaticText (First Match)`
-    t =    32.92s         Capturing element debug description
-    t =    32.93s     Checking existence of `StaticText (First Match)`
-    t =    32.95s Collecting debug information to assist test failure triage
-    t =    32.95s     Requesting snapshot of accessibility hierarchy for app with pid 51554
-    t =    33.02s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testAddressQuestionFlow]' passed (33.245 seconds).
-Test Case '-[C11SHouseUITests.OnboardingUITests testConversationTutorial]' started.
-    t =     0.00s Start Test at 2025-07-22 12:29:49.699
-    t =     0.03s Set Up
-    t =     0.04s     Open com.c11s.house
-    t =     0.04s         Launch com.c11s.house
-    t =     0.04s             Terminate com.c11s.house:51554
-    t =     1.37s             Setting up automation session
+    t =     1.89s             Setting up automation session
     t =     4.62s             Wait for com.c11s.house to idle
-    t =     6.12s Waiting 3.0s for "StartConversation" Button to exist
-    t =     7.14s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.15s         Checking existence of `"StartConversation" Button`
-    t =     9.39s         Capturing element debug description
-    t =     9.39s     Checking existence of `"StartConversation" Button`
-    t =    10.22s Tap "StartConversation" Button
-    t =    10.22s     Wait for com.c11s.house to idle
-    t =    10.23s     Find the "StartConversation" Button
-    t =    10.26s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.30s         Wait for com.apple.springboard to idle
-    t =    10.36s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    10.36s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    10.38s     Synthesize event
-    t =    10.68s     Wait for com.c11s.house to idle
-    t =    10.76s Waiting 1.0s for Alert (First Match) to exist
-    t =    11.76s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    11.76s         Checking existence of `Alert (First Match)`
-    t =    11.82s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.82s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.83s         Capturing element debug description
-    t =    11.83s     Checking existence of `Alert (First Match)`
-    t =    11.87s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.87s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.88s Collecting debug information to assist test failure triage
-    t =    11.88s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    11.97s Waiting 1.0s for Alert (First Match) to exist
-    t =    12.98s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    12.98s         Checking existence of `Alert (First Match)`
-    t =    13.03s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.04s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.05s         Capturing element debug description
-    t =    13.05s     Checking existence of `Alert (First Match)`
-    t =    13.09s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.09s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.10s Collecting debug information to assist test failure triage
-    t =    13.10s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    13.19s Waiting 1.0s for Alert (First Match) to exist
-    t =    14.20s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    14.20s         Checking existence of `Alert (First Match)`
-    t =    14.25s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.25s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.26s         Capturing element debug description
-    t =    14.26s     Checking existence of `Alert (First Match)`
-    t =    14.30s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.30s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.31s Collecting debug information to assist test failure triage
-    t =    14.31s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    14.40s Waiting 2.0s for "ConversationView" Other to exist
-    t =    15.42s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
-    t =    15.42s         Checking existence of `"ConversationView" Other`
-    t =    15.47s         Capturing element debug description
-    t =    16.40s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
-    t =    16.41s         Checking existence of `"ConversationView" Other`
-    t =    16.44s         Capturing element debug description
-    t =    16.45s     Checking existence of `"ConversationView" Other`
-    t =    16.47s Collecting debug information to assist test failure triage
-    t =    16.48s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    16.54s Waiting 3.0s for "StartConversation" Button to exist
-    t =    17.55s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    17.55s         Checking existence of `"StartConversation" Button`
-    t =    17.58s         Capturing element debug description
-    t =    18.61s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    18.61s         Checking existence of `"StartConversation" Button`
-    t =    18.65s         Capturing element debug description
-    t =    19.54s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    19.54s         Checking existence of `"StartConversation" Button`
-    t =    19.58s         Capturing element debug description
-    t =    19.58s     Checking existence of `"StartConversation" Button`
-    t =    19.61s Collecting debug information to assist test failure triage
-    t =    19.61s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    19.67s Waiting 2.0s for Button (First Match) to exist
-    t =    20.69s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    20.69s         Checking existence of `Button (First Match)`
-    t =    20.72s         Capturing element debug description
-    t =    21.67s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    21.68s         Checking existence of `Button (First Match)`
-    t =    21.71s         Capturing element debug description
-    t =    21.71s     Checking existence of `Button (First Match)`
-    t =    21.74s Collecting debug information to assist test failure triage
-    t =    21.74s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    21.80s Waiting 10.0s for StaticText (First Match) to exist
-    t =    22.82s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    22.82s         Checking existence of `StaticText (First Match)`
-    t =    22.85s         Capturing element debug description
-    t =    23.88s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    23.88s         Checking existence of `StaticText (First Match)`
-    t =    23.92s         Capturing element debug description
-    t =    24.84s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    24.84s         Checking existence of `StaticText (First Match)`
-    t =    24.88s         Capturing element debug description
-    t =    25.81s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    25.82s         Checking existence of `StaticText (First Match)`
-    t =    25.85s         Capturing element debug description
-    t =    26.88s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    26.88s         Checking existence of `StaticText (First Match)`
-    t =    26.92s         Capturing element debug description
-    t =    27.81s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    27.82s         Checking existence of `StaticText (First Match)`
-    t =    27.85s         Capturing element debug description
-    t =    28.88s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    28.88s         Checking existence of `StaticText (First Match)`
-    t =    28.92s         Capturing element debug description
-    t =    29.84s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    29.84s         Checking existence of `StaticText (First Match)`
-    t =    29.88s         Capturing element debug description
-    t =    30.89s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    30.89s         Checking existence of `StaticText (First Match)`
-    t =    30.93s         Capturing element debug description
-    t =    31.81s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    31.81s         Checking existence of `StaticText (First Match)`
-    t =    31.85s         Capturing element debug description
-    t =    31.85s     Checking existence of `StaticText (First Match)`
-    t =    31.88s Collecting debug information to assist test failure triage
-    t =    31.88s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    31.94s Waiting 10.0s for StaticText (First Match) to exist
-    t =    32.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    32.97s         Checking existence of `StaticText (First Match)`
-    t =    33.00s         Capturing element debug description
-    t =    34.03s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    34.03s         Checking existence of `StaticText (First Match)`
-    t =    34.07s         Capturing element debug description
-    t =    34.95s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    34.95s         Checking existence of `StaticText (First Match)`
-    t =    34.99s         Capturing element debug description
-    t =    36.02s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    36.02s         Checking existence of `StaticText (First Match)`
-    t =    36.05s         Capturing element debug description
-    t =    36.95s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    36.95s         Checking existence of `StaticText (First Match)`
-    t =    36.99s         Capturing element debug description
-    t =    37.99s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    38.00s         Checking existence of `StaticText (First Match)`
-    t =    38.03s         Capturing element debug description
-    t =    38.96s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    38.96s         Checking existence of `StaticText (First Match)`
-    t =    39.00s         Capturing element debug description
-    t =    40.02s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    40.02s         Checking existence of `StaticText (First Match)`
-    t =    40.05s         Capturing element debug description
-    t =    40.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    40.97s         Checking existence of `StaticText (First Match)`
-    t =    41.00s         Capturing element debug description
-    t =    41.95s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    41.95s         Checking existence of `StaticText (First Match)`
-    t =    41.99s         Capturing element debug description
-    t =    41.99s     Checking existence of `StaticText (First Match)`
-    t =    42.02s Collecting debug information to assist test failure triage
-    t =    42.02s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    42.07s Waiting 10.0s for StaticText (First Match) to exist
-    t =    43.09s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    43.09s         Checking existence of `StaticText (First Match)`
-    t =    43.12s         Capturing element debug description
-    t =    44.15s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    44.15s         Checking existence of `StaticText (First Match)`
-    t =    44.19s         Capturing element debug description
-    t =    45.10s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    45.10s         Checking existence of `StaticText (First Match)`
-    t =    45.14s         Capturing element debug description
-    t =    46.17s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    46.17s         Checking existence of `StaticText (First Match)`
-    t =    46.21s         Capturing element debug description
-    t =    47.08s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    47.09s         Checking existence of `StaticText (First Match)`
-    t =    47.12s         Capturing element debug description
-    t =    48.15s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    48.15s         Checking existence of `StaticText (First Match)`
-    t =    48.19s         Capturing element debug description
-    t =    49.08s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    49.09s         Checking existence of `StaticText (First Match)`
-    t =    49.12s         Capturing element debug description
-    t =    50.15s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    50.15s         Checking existence of `StaticText (First Match)`
-    t =    50.19s         Capturing element debug description
-    t =    51.08s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    51.09s         Checking existence of `StaticText (First Match)`
-    t =    51.12s         Capturing element debug description
-    t =    52.07s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    52.07s         Checking existence of `StaticText (First Match)`
-    t =    52.11s         Capturing element debug description
-    t =    52.11s     Checking existence of `StaticText (First Match)`
-    t =    52.14s Collecting debug information to assist test failure triage
-    t =    52.14s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    52.20s Waiting 10.0s for StaticText (First Match) to exist
-    t =    53.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    53.24s         Checking existence of `StaticText (First Match)`
-    t =    53.28s         Capturing element debug description
-    t =    54.30s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    54.30s         Checking existence of `StaticText (First Match)`
-    t =    54.34s         Capturing element debug description
-    t =    55.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    55.24s         Checking existence of `StaticText (First Match)`
-    t =    55.27s         Capturing element debug description
-    t =    56.30s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    56.30s         Checking existence of `StaticText (First Match)`
-    t =    56.34s         Capturing element debug description
-    t =    57.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    57.24s         Checking existence of `StaticText (First Match)`
-    t =    57.28s         Capturing element debug description
-    t =    58.21s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    58.21s         Checking existence of `StaticText (First Match)`
-    t =    58.24s         Capturing element debug description
-    t =    59.27s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    59.27s         Checking existence of `StaticText (First Match)`
-    t =    59.31s         Capturing element debug description
-    t =    60.22s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    60.22s         Checking existence of `StaticText (First Match)`
-    t =    60.26s         Capturing element debug description
-    t =    61.28s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    61.28s         Checking existence of `StaticText (First Match)`
-    t =    61.32s         Capturing element debug description
-    t =    62.21s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    62.21s         Checking existence of `StaticText (First Match)`
-    t =    62.25s         Capturing element debug description
-    t =    62.25s     Checking existence of `StaticText (First Match)`
-    t =    62.28s Collecting debug information to assist test failure triage
-    t =    62.28s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    63.35s Checking existence of `"House Chat" StaticText`
-    t =    63.39s Checking existence of `"Back" Button`
-    t =    63.41s Waiting 10.0s for StaticText (First Match) to exist
-    t =    64.44s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    64.44s         Checking existence of `StaticText (First Match)`
-    t =    64.48s         Capturing element debug description
-    t =    65.50s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    65.50s         Checking existence of `StaticText (First Match)`
-    t =    65.54s         Capturing element debug description
-    t =    66.42s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    66.42s         Checking existence of `StaticText (First Match)`
-    t =    66.46s         Capturing element debug description
-    t =    67.48s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    67.48s         Checking existence of `StaticText (First Match)`
-    t =    67.52s         Capturing element debug description
-    t =    68.45s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    68.45s         Checking existence of `StaticText (First Match)`
-    t =    68.49s         Capturing element debug description
-    t =    69.42s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    69.42s         Checking existence of `StaticText (First Match)`
-    t =    69.46s         Capturing element debug description
-    t =    70.49s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    70.49s         Checking existence of `StaticText (First Match)`
-    t =    70.53s         Capturing element debug description
-    t =    71.44s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    71.45s         Checking existence of `StaticText (First Match)`
-    t =    71.48s         Capturing element debug description
-    t =    72.51s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    72.51s         Checking existence of `StaticText (First Match)`
-    t =    72.54s         Capturing element debug description
-    t =    73.42s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    73.42s         Checking existence of `StaticText (First Match)`
-    t =    73.46s         Capturing element debug description
-    t =    73.47s     Checking existence of `StaticText (First Match)`
-    t =    73.49s Collecting debug information to assist test failure triage
-    t =    73.50s     Requesting snapshot of accessibility hierarchy for app with pid 51558
-    t =    73.56s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testConversationTutorial]' passed (73.787 seconds).
-Test Case '-[C11SHouseUITests.OnboardingUITests testHouseNamingFlow]' started.
-    t =     0.00s Start Test at 2025-07-22 12:31:03.487
-    t =     0.02s Set Up
-    t =     0.03s     Open com.c11s.house
-    t =     0.03s         Launch com.c11s.house
-    t =     0.03s             Terminate com.c11s.house:51558
-    t =     1.34s             Setting up automation session
-    t =     4.71s             Wait for com.c11s.house to idle
-    t =     6.18s Waiting 3.0s for "StartConversation" Button to exist
-    t =     7.19s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.19s         Checking existence of `"StartConversation" Button`
-    t =     9.45s         Capturing element debug description
-    t =     9.46s     Checking existence of `"StartConversation" Button`
-    t =    10.65s Tap "StartConversation" Button
-    t =    10.65s     Wait for com.c11s.house to idle
-    t =    10.66s     Find the "StartConversation" Button
-    t =    10.69s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.73s     Synthesize event
-    t =    11.04s     Wait for com.c11s.house to idle
-    t =    11.16s Waiting 1.0s for Alert (First Match) to exist
-    t =    12.17s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    12.17s         Checking existence of `Alert (First Match)`
-    t =    12.22s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.22s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.23s         Capturing element debug description
-    t =    12.24s     Checking existence of `Alert (First Match)`
-    t =    12.26s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.27s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.28s Collecting debug information to assist test failure triage
-    t =    12.28s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    12.36s Waiting 1.0s for Alert (First Match) to exist
-    t =    13.36s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    13.37s         Checking existence of `Alert (First Match)`
-    t =    13.42s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.42s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.43s         Capturing element debug description
-    t =    13.43s     Checking existence of `Alert (First Match)`
-    t =    13.47s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.47s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.48s Collecting debug information to assist test failure triage
-    t =    13.48s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    13.56s Waiting 1.0s for Alert (First Match) to exist
-    t =    14.56s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    14.57s         Checking existence of `Alert (First Match)`
-    t =    14.62s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.62s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.63s         Capturing element debug description
-    t =    14.63s     Checking existence of `Alert (First Match)`
-    t =    14.66s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.67s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.67s Collecting debug information to assist test failure triage
-    t =    14.68s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    14.76s Waiting 5.0s for "House Chat" StaticText to exist
-    t =    15.79s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    15.79s         Checking existence of `"House Chat" StaticText`
-    t =    15.84s         Capturing element debug description
-    t =    16.77s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    16.77s         Checking existence of `"House Chat" StaticText`
-    t =    16.81s         Capturing element debug description
-    t =    17.84s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    17.84s         Checking existence of `"House Chat" StaticText`
-    t =    17.88s         Capturing element debug description
-    t =    18.80s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    18.81s         Checking existence of `"House Chat" StaticText`
-    t =    18.84s         Capturing element debug description
-    t =    19.76s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    19.77s         Checking existence of `"House Chat" StaticText`
-    t =    19.80s         Capturing element debug description
-    t =    19.81s     Checking existence of `"House Chat" StaticText`
-    t =    19.84s Collecting debug information to assist test failure triage
-    t =    19.84s     Requesting snapshot of accessibility hierarchy for app with pid 51562
-    t =    19.90s Waiting 2.0s for "Back" Button to exist
-    t =    20.92s     Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    20.92s         Checking existence of `"Back" Button`
-    t =    20.96s Waiting 15.0s for StaticText (First Match) to exist
-    t =    22.00s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    22.01s         Checking existence of `StaticText (First Match)`
-    t =    22.04s         Capturing element debug description
-    t =    22.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    22.97s         Checking existence of `StaticText (First Match)`
-    t =    23.01s         Capturing element debug description
-    t =    24.04s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    24.04s         Checking existence of `StaticText (First Match)`
-    t =    24.08s         Capturing element debug description
-    t =    25.00s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    25.01s         Checking existence of `StaticText (First Match)`
-    t =    25.04s         Capturing element debug description
-    t =    25.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    25.97s         Checking existence of `StaticText (First Match)`
-    t =    26.01s         Capturing element debug description
-    t =    27.03s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    27.03s         Checking existence of `StaticText (First Match)`
-    t =    27.06s         Capturing element debug description
-    t =    27.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    27.97s         Checking existence of `StaticText (First Match)`
-    t =    28.01s         Capturing element debug description
-    t =    29.05s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    29.05s         Checking existence of `StaticText (First Match)`
-    t =    29.09s         Capturing element debug description
-    t =    30.02s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    30.02s         Checking existence of `StaticText (First Match)`
-    t =    30.05s         Capturing element debug description
-    t =    30.98s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    30.98s         Checking existence of `StaticText (First Match)`
-    t =    31.02s         Capturing element debug description
-    t =    32.06s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    32.06s         Checking existence of `StaticText (First Match)`
-    t =    32.09s         Capturing element debug description
-    t =    33.01s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    33.01s         Checking existence of `StaticText (First Match)`
-    t =    33.05s         Capturing element debug description
-    t =    33.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    33.97s         Checking existence of `StaticText (First Match)`
-    t =    34.01s         Capturing element debug description
-    t =    35.04s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    35.04s         Checking existence of `StaticText (First Match)`
-    t =    35.08s         Capturing element debug description
-    t =    35.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    35.97s         Checking existence of `StaticText (First Match)`
-    t =    36.01s         Capturing element debug description
-    t =    36.01s     Checking existence of `StaticText (First Match)`
-    t =    36.04s Collecting debug information to assist test failure triage
-    t =    36.04s     Requesting snapshot of accessibility hierarchy for app with pid 51562
-    t =    36.10s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testHouseNamingFlow]' passed (36.332 seconds).
-Test Case '-[C11SHouseUITests.OnboardingUITests testNotesFeatureIntroduction]' started.
-    t =     0.00s Start Test at 2025-07-22 12:31:39.820
-    t =     0.03s Set Up
-    t =     0.03s     Open com.c11s.house
-    t =     0.03s         Launch com.c11s.house
-    t =     0.03s             Terminate com.c11s.house:51562
-    t =     1.32s             Setting up automation session
-    t =     4.70s             Wait for com.c11s.house to idle
-    t =     6.16s Waiting 3.0s for Button (First Match) to exist
-    t =     7.18s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =     7.18s         Checking existence of `Button (First Match)`
-    t =     9.19s     Checking existence of `Button (First Match)`
-    t =    10.10s Tap Button (First Match)
-    t =    10.10s     Wait for com.c11s.house to idle
-    t =    10.28s     Find the Button (First Match)
-    t =    10.31s     Check for interrupting elements affecting "gearshape.fill" Button
-    t =    10.36s     Synthesize event
-    t =    10.68s     Wait for com.c11s.house to idle
-    t =    10.97s Waiting 2.0s for "Manage Notes" Button to exist
-    t =    11.99s     Checking `Expect predicate `existsNoRetry == 1` for object "Manage Notes" Button`
-    t =    11.99s         Checking existence of `"Manage Notes" Button`
-    t =    12.05s Tap "Manage Notes" Button
-    t =    12.05s     Wait for com.c11s.house to idle
-    t =    12.06s     Find the "Manage Notes" Button
-    t =    12.09s     Check for interrupting elements affecting "note.text" Button
-    t =    12.12s     Synthesize event
-    t =    12.42s     Wait for com.c11s.house to idle
-    t =    12.63s Waiting 3.0s for NavigationBar (First Match) to exist
-    t =    13.66s     Checking `Expect predicate `existsNoRetry == 1` for object NavigationBar (First Match)`
-    t =    13.66s         Checking existence of `NavigationBar (First Match)`
-    t =    13.67s Get number of matches for: Descendants matching type Cell
-    t =    13.72s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testNotesFeatureIntroduction]' passed (13.943 seconds).
-Test Case '-[C11SHouseUITests.OnboardingUITests testOnboardingPerformanceMetrics]' started.
-    t =     0.00s Start Test at 2025-07-22 12:31:53.764
+    t =     6.03s Tap "Begin Setup" Button
+    t =     6.03s     Wait for com.c11s.house to idle
+    t =     6.14s     Find the "Begin Setup" Button
+    t =    10.37s         Find the "Begin Setup" Button (retry 1)
+    t =    11.41s         Find the "Begin Setup" Button (retry 2)
+    t =    11.46s Requesting snapshot of accessibility hierarchy for app with pid 51753
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:134: error: -[C11SHouseUITests.OnboardingUITests testPermissionGrantFlow] : Failed to tap "Begin Setup" Button: No matches found for Elements matching predicate '"Begin Setup" IN identifiers' from input {(
+    Button,
+    Button,
+    Button,
+    Button, identifier: 'StartConversation', label: 'Start Conversation',
+    Button, label: 'gearshape.fill',
+    Button
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Button from legacy attributes vs PopUpButton from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 14;
+    "XC_kAXXCAttributeElementBaseType" = UIResponder;
+    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
+    "XC_kAXXCAttributeTraits" = 1108101562369;
+}
+See test report attachments for more detail.
+    t =    11.69s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionGrantFlow]' failed (11.904 seconds).
+Test Suite 'OnboardingUITests' failed at 2025-07-22 12:54:39.662.
+	 Executed 1 test, with 1 failure (0 unexpected) in 11.904 (11.905) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 12:54:39.663.
+	 Executed 1 test, with 1 failure (0 unexpected) in 11.904 (11.907) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 12:54:39.665.
+	 Executed 1 test, with 1 failure (0 unexpected) in 11.904 (11.908) seconds
+
+     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
+Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2025-07-22 12:55:20.776.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 12:55:20.776.
+Test Suite 'OnboardingUITests' started at 2025-07-22 12:55:20.776.
+Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionDenialRecovery]' started.
+    t =     0.00s Start Test at 2025-07-22 12:55:20.776
     t =     0.01s Set Up
     t =     0.01s     Open com.c11s.house
     t =     0.01s         Launch com.c11s.house
-    t =     0.01s             Terminate com.c11s.house:51566
-    t =     1.35s             Setting up automation session
-    t =     4.75s             Wait for com.c11s.house to idle
-    t =     6.22s Waiting 3.0s for "StartConversation" Button to exist
-    t =     7.24s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.24s         Checking existence of `"StartConversation" Button`
-    t =     9.49s         Capturing element debug description
-    t =     9.49s     Checking existence of `"StartConversation" Button`
-    t =    10.39s Tap "StartConversation" Button
-    t =    10.39s     Wait for com.c11s.house to idle
-    t =    10.39s     Find the "StartConversation" Button
-    t =    10.42s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.46s     Synthesize event
-    t =    10.78s     Wait for com.c11s.house to idle
-    t =    10.91s Waiting 1.0s for Alert (First Match) to exist
-    t =    11.91s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    11.92s         Checking existence of `Alert (First Match)`
-    t =    11.97s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.97s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.98s         Capturing element debug description
-    t =    11.98s     Checking existence of `Alert (First Match)`
-    t =    12.02s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.02s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    12.03s Collecting debug information to assist test failure triage
-    t =    12.03s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    12.12s Waiting 1.0s for Alert (First Match) to exist
-    t =    13.13s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    13.13s         Checking existence of `Alert (First Match)`
-    t =    13.18s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.18s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.19s         Capturing element debug description
-    t =    13.19s     Checking existence of `Alert (First Match)`
-    t =    13.23s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.23s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    13.24s Collecting debug information to assist test failure triage
-    t =    13.24s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    13.33s Waiting 1.0s for Alert (First Match) to exist
-    t =    14.33s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    14.33s         Checking existence of `Alert (First Match)`
-    t =    14.38s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.39s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.40s         Capturing element debug description
-    t =    14.40s     Checking existence of `Alert (First Match)`
-    t =    14.44s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.44s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    14.45s Collecting debug information to assist test failure triage
-    t =    14.45s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    14.55s Waiting 2.0s for "ConversationView" Other to exist
-    t =    15.56s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
-    t =    15.56s         Checking existence of `"ConversationView" Other`
-    t =    15.61s         Capturing element debug description
-    t =    16.55s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
-    t =    16.55s         Checking existence of `"ConversationView" Other`
-    t =    16.59s         Capturing element debug description
-    t =    16.59s     Checking existence of `"ConversationView" Other`
-    t =    16.62s Collecting debug information to assist test failure triage
-    t =    16.62s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    16.69s Waiting 3.0s for "StartConversation" Button to exist
-    t =    17.71s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    17.71s         Checking existence of `"StartConversation" Button`
-    t =    17.75s         Capturing element debug description
-    t =    18.69s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    18.69s         Checking existence of `"StartConversation" Button`
-    t =    18.73s         Capturing element debug description
-    t =    19.69s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    19.69s         Checking existence of `"StartConversation" Button`
-    t =    19.73s         Capturing element debug description
-    t =    19.73s     Checking existence of `"StartConversation" Button`
-    t =    19.76s Collecting debug information to assist test failure triage
-    t =    19.76s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    19.83s Waiting 2.0s for Button (First Match) to exist
-    t =    20.84s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    20.85s         Checking existence of `Button (First Match)`
-    t =    20.88s         Capturing element debug description
-    t =    21.83s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    21.83s         Checking existence of `Button (First Match)`
-    t =    21.86s         Capturing element debug description
-    t =    21.86s     Checking existence of `Button (First Match)`
-    t =    21.89s Collecting debug information to assist test failure triage
-    t =    21.89s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    21.95s Waiting 10.0s for StaticText (First Match) to exist
-    t =    22.99s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    22.99s         Checking existence of `StaticText (First Match)`
-    t =    23.03s         Capturing element debug description
-    t =    23.96s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    23.96s         Checking existence of `StaticText (First Match)`
-    t =    24.00s         Capturing element debug description
-    t =    25.04s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    25.04s         Checking existence of `StaticText (First Match)`
-    t =    25.08s         Capturing element debug description
-    t =    25.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    25.97s         Checking existence of `StaticText (First Match)`
-    t =    26.01s         Capturing element debug description
-    t =    27.02s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    27.02s         Checking existence of `StaticText (First Match)`
-    t =    27.06s         Capturing element debug description
-    t =    27.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    27.97s         Checking existence of `StaticText (First Match)`
-    t =    28.01s         Capturing element debug description
-    t =    29.04s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    29.04s         Checking existence of `StaticText (First Match)`
-    t =    29.08s         Capturing element debug description
-    t =    29.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    29.97s         Checking existence of `StaticText (First Match)`
-    t =    30.01s         Capturing element debug description
-    t =    31.04s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    31.04s         Checking existence of `StaticText (First Match)`
-    t =    31.08s         Capturing element debug description
-    t =    31.96s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    31.96s         Checking existence of `StaticText (First Match)`
-    t =    31.99s         Capturing element debug description
-    t =    32.00s     Checking existence of `StaticText (First Match)`
-    t =    32.02s Collecting debug information to assist test failure triage
-    t =    32.03s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    32.09s Waiting 10.0s for StaticText (First Match) to exist
-    t =    33.10s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    33.11s         Checking existence of `StaticText (First Match)`
-    t =    33.14s         Capturing element debug description
-    t =    34.17s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    34.17s         Checking existence of `StaticText (First Match)`
-    t =    34.21s         Capturing element debug description
-    t =    35.12s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    35.12s         Checking existence of `StaticText (First Match)`
-    t =    35.16s         Capturing element debug description
-    t =    36.09s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    36.09s         Checking existence of `StaticText (First Match)`
-    t =    36.13s         Capturing element debug description
-    t =    37.16s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    37.16s         Checking existence of `StaticText (First Match)`
-    t =    37.20s         Capturing element debug description
-    t =    38.10s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    38.11s         Checking existence of `StaticText (First Match)`
-    t =    38.14s         Capturing element debug description
-    t =    39.17s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    39.17s         Checking existence of `StaticText (First Match)`
-    t =    39.21s         Capturing element debug description
-    t =    40.11s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    40.11s         Checking existence of `StaticText (First Match)`
-    t =    40.14s         Capturing element debug description
-    t =    41.16s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    41.17s         Checking existence of `StaticText (First Match)`
-    t =    41.20s         Capturing element debug description
-    t =    42.09s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    42.09s         Checking existence of `StaticText (First Match)`
-    t =    42.13s         Capturing element debug description
-    t =    42.13s     Checking existence of `StaticText (First Match)`
-    t =    42.16s Collecting debug information to assist test failure triage
-    t =    42.16s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    42.22s Waiting 10.0s for StaticText (First Match) to exist
-    t =    43.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    43.24s         Checking existence of `StaticText (First Match)`
-    t =    43.28s         Capturing element debug description
-    t =    44.31s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    44.31s         Checking existence of `StaticText (First Match)`
-    t =    44.34s         Capturing element debug description
-    t =    45.26s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    45.26s         Checking existence of `StaticText (First Match)`
-    t =    45.30s         Capturing element debug description
-    t =    46.22s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    46.23s         Checking existence of `StaticText (First Match)`
-    t =    46.26s         Capturing element debug description
-    t =    47.27s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    47.27s         Checking existence of `StaticText (First Match)`
-    t =    47.31s         Capturing element debug description
-    t =    48.22s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    48.23s         Checking existence of `StaticText (First Match)`
-    t =    48.26s         Capturing element debug description
-    t =    49.29s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    49.29s         Checking existence of `StaticText (First Match)`
-    t =    49.33s         Capturing element debug description
-    t =    50.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    50.24s         Checking existence of `StaticText (First Match)`
-    t =    50.28s         Capturing element debug description
-    t =    51.31s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    51.31s         Checking existence of `StaticText (First Match)`
-    t =    51.34s         Capturing element debug description
-    t =    52.22s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    52.22s         Checking existence of `StaticText (First Match)`
-    t =    52.26s         Capturing element debug description
-    t =    52.27s     Checking existence of `StaticText (First Match)`
-    t =    52.30s Collecting debug information to assist test failure triage
-    t =    52.30s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    52.36s Waiting 10.0s for StaticText (First Match) to exist
-    t =    53.38s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    53.38s         Checking existence of `StaticText (First Match)`
-    t =    53.42s         Capturing element debug description
-    t =    54.44s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    54.44s         Checking existence of `StaticText (First Match)`
-    t =    54.48s         Capturing element debug description
-    t =    55.37s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    55.38s         Checking existence of `StaticText (First Match)`
-    t =    55.41s         Capturing element debug description
-    t =    56.37s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    56.38s         Checking existence of `StaticText (First Match)`
-    t =    56.41s         Capturing element debug description
-    t =    57.44s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    57.44s         Checking existence of `StaticText (First Match)`
-    t =    57.48s         Capturing element debug description
-    t =    58.41s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    58.41s         Checking existence of `StaticText (First Match)`
-    t =    58.45s         Capturing element debug description
-    t =    59.38s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    59.38s         Checking existence of `StaticText (First Match)`
-    t =    59.41s         Capturing element debug description
-    t =    60.44s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    60.44s         Checking existence of `StaticText (First Match)`
-    t =    60.48s         Capturing element debug description
-    t =    61.38s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    61.38s         Checking existence of `StaticText (First Match)`
-    t =    61.41s         Capturing element debug description
-    t =    62.37s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    62.37s         Checking existence of `StaticText (First Match)`
-    t =    62.40s         Capturing element debug description
-    t =    62.41s     Checking existence of `StaticText (First Match)`
-    t =    62.44s Collecting debug information to assist test failure triage
-    t =    62.44s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    62.50s Waiting 3.0s for "StartConversation" Button to exist
-    t =    63.51s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    63.51s         Checking existence of `"StartConversation" Button`
-    t =    63.55s         Capturing element debug description
-    t =    64.58s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    64.58s         Checking existence of `"StartConversation" Button`
-    t =    64.62s         Capturing element debug description
-    t =    65.50s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    65.50s         Checking existence of `"StartConversation" Button`
-    t =    65.54s         Capturing element debug description
-    t =    65.54s     Checking existence of `"StartConversation" Button`
-    t =    65.57s Collecting debug information to assist test failure triage
-    t =    65.57s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    65.63s Waiting 2.0s for Button (First Match) to exist
-    t =    66.64s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    66.64s         Checking existence of `Button (First Match)`
-    t =    66.68s         Capturing element debug description
-    t =    67.63s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    67.63s         Checking existence of `Button (First Match)`
-    t =    67.66s         Capturing element debug description
-    t =    67.67s     Checking existence of `Button (First Match)`
-    t =    67.69s Collecting debug information to assist test failure triage
-    t =    67.69s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    67.75s Waiting 1.0s for Alert (First Match) to exist
-    t =    68.76s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    68.76s         Checking existence of `Alert (First Match)`
-    t =    68.81s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    68.81s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    68.82s         Capturing element debug description
-    t =    68.82s     Checking existence of `Alert (First Match)`
-    t =    68.85s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    68.86s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    68.87s Collecting debug information to assist test failure triage
-    t =    68.87s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    68.96s Waiting 1.0s for Alert (First Match) to exist
-    t =    69.96s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    69.96s         Checking existence of `Alert (First Match)`
-    t =    70.01s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    70.02s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    70.03s         Capturing element debug description
-    t =    70.03s     Checking existence of `Alert (First Match)`
-    t =    70.07s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    70.07s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    70.08s Collecting debug information to assist test failure triage
-    t =    70.08s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    70.19s Waiting 1.0s for Alert (First Match) to exist
-    t =    71.19s     Checking `Expect predicate `existsNoRetry == 1` for object Alert (First Match)`
-    t =    71.19s         Checking existence of `Alert (First Match)`
-    t =    71.23s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    71.24s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    71.25s         Capturing element debug description
-    t =    71.25s     Checking existence of `Alert (First Match)`
-    t =    71.28s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    71.28s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    71.29s Collecting debug information to assist test failure triage
-    t =    71.29s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    71.37s Waiting 2.0s for "ConversationView" Other to exist
-    t =    72.40s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
-    t =    72.40s         Checking existence of `"ConversationView" Other`
-    t =    72.43s         Capturing element debug description
-    t =    73.37s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
-    t =    73.37s         Checking existence of `"ConversationView" Other`
-    t =    73.41s         Capturing element debug description
-    t =    73.41s     Checking existence of `"ConversationView" Other`
-    t =    73.44s Collecting debug information to assist test failure triage
-    t =    73.44s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    73.50s Waiting 3.0s for "StartConversation" Button to exist
-    t =    74.53s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    74.53s         Checking existence of `"StartConversation" Button`
-    t =    74.57s         Capturing element debug description
-    t =    75.60s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    75.61s         Checking existence of `"StartConversation" Button`
-    t =    75.65s         Capturing element debug description
-    t =    76.51s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =    76.51s         Checking existence of `"StartConversation" Button`
-    t =    76.55s         Capturing element debug description
-    t =    76.55s     Checking existence of `"StartConversation" Button`
-    t =    76.57s Collecting debug information to assist test failure triage
-    t =    76.58s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    76.63s Waiting 2.0s for Button (First Match) to exist
-    t =    77.65s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    77.65s         Checking existence of `Button (First Match)`
-    t =    77.68s         Capturing element debug description
-    t =    78.64s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =    78.64s         Checking existence of `Button (First Match)`
-    t =    78.68s         Capturing element debug description
-    t =    78.68s     Checking existence of `Button (First Match)`
-    t =    78.71s Collecting debug information to assist test failure triage
-    t =    78.71s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    78.77s Waiting 10.0s for StaticText (First Match) to exist
-    t =    79.80s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    79.80s         Checking existence of `StaticText (First Match)`
-    t =    79.84s         Capturing element debug description
-    t =    80.86s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    80.86s         Checking existence of `StaticText (First Match)`
-    t =    80.90s         Capturing element debug description
-    t =    81.83s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    81.83s         Checking existence of `StaticText (First Match)`
-    t =    81.87s         Capturing element debug description
-    t =    82.78s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    82.78s         Checking existence of `StaticText (First Match)`
-    t =    82.82s         Capturing element debug description
-    t =    83.85s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    83.85s         Checking existence of `StaticText (First Match)`
-    t =    83.88s         Capturing element debug description
-    t =    84.78s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    84.78s         Checking existence of `StaticText (First Match)`
-    t =    84.82s         Capturing element debug description
-    t =    85.85s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    85.85s         Checking existence of `StaticText (First Match)`
-    t =    85.88s         Capturing element debug description
-    t =    86.78s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    86.78s         Checking existence of `StaticText (First Match)`
-    t =    86.82s         Capturing element debug description
-    t =    87.85s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    87.85s         Checking existence of `StaticText (First Match)`
-    t =    87.89s         Capturing element debug description
-    t =    88.78s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    88.78s         Checking existence of `StaticText (First Match)`
-    t =    88.81s         Capturing element debug description
-    t =    88.82s     Checking existence of `StaticText (First Match)`
-    t =    88.85s Collecting debug information to assist test failure triage
-    t =    88.85s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    88.91s Waiting 10.0s for StaticText (First Match) to exist
-    t =    89.93s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    89.93s         Checking existence of `StaticText (First Match)`
-    t =    89.97s         Capturing element debug description
-    t =    91.00s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    91.00s         Checking existence of `StaticText (First Match)`
-    t =    91.04s         Capturing element debug description
-    t =    91.96s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    91.97s         Checking existence of `StaticText (First Match)`
-    t =    92.00s         Capturing element debug description
-    t =    92.91s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    92.92s         Checking existence of `StaticText (First Match)`
-    t =    92.95s         Capturing element debug description
-    t =    93.98s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    93.98s         Checking existence of `StaticText (First Match)`
-    t =    94.02s         Capturing element debug description
-    t =    94.91s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    94.92s         Checking existence of `StaticText (First Match)`
-    t =    94.95s         Capturing element debug description
-    t =    95.98s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    95.98s         Checking existence of `StaticText (First Match)`
-    t =    96.02s         Capturing element debug description
-    t =    96.91s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    96.92s         Checking existence of `StaticText (First Match)`
-    t =    96.95s         Capturing element debug description
-    t =    97.98s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    97.98s         Checking existence of `StaticText (First Match)`
-    t =    98.02s         Capturing element debug description
-    t =    98.91s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    98.92s         Checking existence of `StaticText (First Match)`
-    t =    98.95s         Capturing element debug description
-    t =    98.96s     Checking existence of `StaticText (First Match)`
-    t =    98.98s Collecting debug information to assist test failure triage
-    t =    98.99s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =    99.05s Waiting 10.0s for StaticText (First Match) to exist
-    t =   100.07s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   100.08s         Checking existence of `StaticText (First Match)`
-    t =   100.11s         Capturing element debug description
-    t =   101.13s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   101.13s         Checking existence of `StaticText (First Match)`
-    t =   101.17s         Capturing element debug description
-    t =   102.05s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   102.05s         Checking existence of `StaticText (First Match)`
-    t =   102.09s         Capturing element debug description
-    t =   103.12s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   103.12s         Checking existence of `StaticText (First Match)`
-    t =   103.15s         Capturing element debug description
-    t =   104.08s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   104.08s         Checking existence of `StaticText (First Match)`
-    t =   104.12s         Capturing element debug description
-    t =   105.05s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   105.05s         Checking existence of `StaticText (First Match)`
-    t =   105.09s         Capturing element debug description
-    t =   106.12s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   106.12s         Checking existence of `StaticText (First Match)`
-    t =   106.15s         Capturing element debug description
-    t =   107.05s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   107.05s         Checking existence of `StaticText (First Match)`
-    t =   107.09s         Capturing element debug description
-    t =   108.11s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   108.11s         Checking existence of `StaticText (First Match)`
-    t =   108.14s         Capturing element debug description
-    t =   109.05s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   109.05s         Checking existence of `StaticText (First Match)`
-    t =   109.09s         Capturing element debug description
-    t =   109.09s     Checking existence of `StaticText (First Match)`
-    t =   109.12s Collecting debug information to assist test failure triage
-    t =   109.12s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =   109.18s Waiting 10.0s for StaticText (First Match) to exist
-    t =   110.20s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   110.20s         Checking existence of `StaticText (First Match)`
-    t =   110.24s         Capturing element debug description
-    t =   111.27s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   111.27s         Checking existence of `StaticText (First Match)`
-    t =   111.31s         Capturing element debug description
-    t =   112.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   112.24s         Checking existence of `StaticText (First Match)`
-    t =   112.27s         Capturing element debug description
-    t =   113.18s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   113.19s         Checking existence of `StaticText (First Match)`
-    t =   113.22s         Capturing element debug description
-    t =   114.26s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   114.26s         Checking existence of `StaticText (First Match)`
-    t =   114.30s         Capturing element debug description
-    t =   115.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   115.24s         Checking existence of `StaticText (First Match)`
-    t =   115.27s         Capturing element debug description
-    t =   116.20s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   116.20s         Checking existence of `StaticText (First Match)`
-    t =   116.24s         Capturing element debug description
-    t =   117.27s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   117.27s         Checking existence of `StaticText (First Match)`
-    t =   117.31s         Capturing element debug description
-    t =   118.24s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   118.24s         Checking existence of `StaticText (First Match)`
-    t =   118.27s         Capturing element debug description
-    t =   119.18s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =   119.18s         Checking existence of `StaticText (First Match)`
-    t =   119.22s         Capturing element debug description
-    t =   119.23s     Checking existence of `StaticText (First Match)`
-    t =   119.25s Collecting debug information to assist test failure triage
-    t =   119.26s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =   119.32s Waiting 3.0s for "StartConversation" Button to exist
-    t =   120.34s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =   120.34s         Checking existence of `"StartConversation" Button`
-    t =   120.37s         Capturing element debug description
-    t =   121.40s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =   121.41s         Checking existence of `"StartConversation" Button`
-    t =   121.44s         Capturing element debug description
-    t =   122.32s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =   122.32s         Checking existence of `"StartConversation" Button`
-    t =   122.36s         Capturing element debug description
-    t =   122.36s     Checking existence of `"StartConversation" Button`
-    t =   122.39s Collecting debug information to assist test failure triage
-    t =   122.39s     Requesting snapshot of accessibility hierarchy for app with pid 51571
-    t =   122.45s Waiting 2.0s for Button (First Match) to exist
-    t =   123.48s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
-    t =   123.48s         Checking existence of `Button (First Match)`
-    t =   123.51s         Capturing element debug description
+    t =     2.39s             Setting up automation session
+    t =     5.20s             Wait for com.c11s.house to idle
+    t =     6.66s Tap "Begin Setup" Button
+    t =     6.66s     Wait for com.c11s.house to idle
+    t =     6.86s     Find the "Begin Setup" Button
+    t =    10.78s         Find the "Begin Setup" Button (retry 1)
+    t =    11.82s         Find the "Begin Setup" Button (retry 2)
+    t =    11.86s Requesting snapshot of accessibility hierarchy for app with pid 51762
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:170: error: -[C11SHouseUITests.OnboardingUITests testPermissionDenialRecovery] : Failed to tap "Begin Setup" Button: No matches found for Elements matching predicate '"Begin Setup" IN identifiers' from input {(
+    Button,
+    Button,
+    Button,
+    Button, identifier: 'StartConversation', label: 'Start Conversation',
+    Button, label: 'gearshape.fill',
+    Button
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Button from legacy attributes vs PopUpButton from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 14;
+    "XC_kAXXCAttributeElementBaseType" = UIResponder;
+    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
+    "XC_kAXXCAttributeTraits" = 1108101562369;
+}
+See test report attachments for more detail.
+    t =    12.09s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionDenialRecovery]' failed (12.325 seconds).
+Test Suite 'OnboardingUITests' failed at 2025-07-22 12:55:33.102.
+	 Executed 1 test, with 1 failure (0 unexpected) in 12.325 (12.326) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 12:55:33.104.
+	 Executed 1 test, with 1 failure (0 unexpected) in 12.325 (12.328) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 12:55:33.106.
+	 Executed 1 test, with 1 failure (0 unexpected) in 12.325 (12.330) seconds
 
-    looped on this forever. Speed up these tests as well
+     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
+Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2025-07-22 12:55:53.923.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 12:55:53.924.
+Test Suite 'OnboardingUITests' started at 2025-07-22 12:55:53.924.
+Test Case '-[C11SHouseUITests.OnboardingUITests testUserIntroductionFlow]' started.
+    t =     0.00s Start Test at 2025-07-22 12:55:53.924
+    t =     0.01s Set Up
+    t =     0.01s     Open com.c11s.house
+    t =     0.01s         Launch com.c11s.house
+    t =     2.39s             Setting up automation session
+    t =     4.53s             Wait for com.c11s.house to idle
+    t =     5.97s Waiting 3.0s for "StartConversation" Button to exist
+    t =     6.98s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =     6.98s         Checking existence of `"StartConversation" Button`
+    t =     9.24s         Capturing element debug description
+    t =     9.24s     Checking existence of `"StartConversation" Button`
+    t =    10.32s Tap "StartConversation" Button
+    t =    10.32s     Wait for com.c11s.house to idle
+    t =    10.33s     Find the "StartConversation" Button
+    t =    10.36s     Check for interrupting elements affecting "StartConversation" Button
+    t =    10.39s     Synthesize event
+    t =    10.70s     Wait for com.c11s.house to idle
+    t =    11.10s Waiting 0.5s for Alert (First Match) to exist
+    t =    11.61s     Checking existence of `Alert (First Match)`
+    t =    11.66s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    11.66s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    11.67s Collecting debug information to assist test failure triage
+    t =    11.67s     Requesting snapshot of accessibility hierarchy for app with pid 44373
+    t =    11.77s Waiting 0.5s for Alert (First Match) to exist
+    t =    12.27s     Checking existence of `Alert (First Match)`
+    t =    12.32s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.32s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.33s Collecting debug information to assist test failure triage
+    t =    12.33s     Requesting snapshot of accessibility hierarchy for app with pid 44373
+    t =    12.43s Waiting 0.5s for Alert (First Match) to exist
+    t =    12.93s     Checking existence of `Alert (First Match)`
+    t =    12.98s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.99s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    13.00s Collecting debug information to assist test failure triage
+    t =    13.00s     Requesting snapshot of accessibility hierarchy for app with pid 44373
+    t =    13.10s Waiting 2.0s for "ConversationView" Other to exist
+    t =    14.12s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
+    t =    14.12s         Checking existence of `"ConversationView" Other`
+    t =    14.17s         Capturing element debug description
+    t =    15.10s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
+    t =    15.10s         Checking existence of `"ConversationView" Other`
+    t =    15.14s         Capturing element debug description
+    t =    15.14s     Checking existence of `"ConversationView" Other`
+    t =    15.17s Collecting debug information to assist test failure triage
+    t =    15.17s     Requesting snapshot of accessibility hierarchy for app with pid 51769
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:274: error: -[C11SHouseUITests.OnboardingUITests testUserIntroductionFlow] : XCTAssertTrue failed
+    t =    15.40s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testUserIntroductionFlow]' failed (15.638 seconds).
+Test Suite 'OnboardingUITests' failed at 2025-07-22 12:56:09.563.
+	 Executed 1 test, with 1 failure (0 unexpected) in 15.638 (15.640) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 12:56:09.565.
+	 Executed 1 test, with 1 failure (0 unexpected) in 15.638 (15.641) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 12:56:09.566.
+	 Executed 1 test, with 1 failure (0 unexpected) in 15.638 (15.643) seconds
+
+     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
+Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2025-07-22 12:57:00.979.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 12:57:00.980.
+Test Suite 'OnboardingUITests' started at 2025-07-22 12:57:00.980.
+Test Case '-[C11SHouseUITests.OnboardingUITests testQuestionFlowCompletion]' started.
+    t =     0.00s Start Test at 2025-07-22 12:57:00.980
+    t =     0.01s Set Up
+    t =     0.01s     Open com.c11s.house
+    t =     0.01s         Launch com.c11s.house
+    t =     2.35s             Setting up automation session
+    t =     4.66s             Wait for com.c11s.house to idle
+    t =     6.05s Waiting 3.0s for "StartConversation" Button to exist
+    t =     7.07s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =     7.08s         Checking existence of `"StartConversation" Button`
+    t =     9.34s         Capturing element debug description
+    t =     9.34s     Checking existence of `"StartConversation" Button`
+    t =    10.27s Tap "StartConversation" Button
+    t =    10.27s     Wait for com.c11s.house to idle
+    t =    10.28s     Find the "StartConversation" Button
+    t =    10.31s     Check for interrupting elements affecting "StartConversation" Button
+    t =    10.35s     Synthesize event
+    t =    10.65s     Wait for com.c11s.house to idle
+    t =    11.05s Waiting 0.5s for Alert (First Match) to exist
+    t =    11.56s     Checking existence of `Alert (First Match)`
+    t =    11.61s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    11.61s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    11.62s Collecting debug information to assist test failure triage
+    t =    11.62s     Requesting snapshot of accessibility hierarchy for app with pid 44373
+    t =    11.72s Waiting 0.5s for Alert (First Match) to exist
+    t =    12.22s     Checking existence of `Alert (First Match)`
+    t =    12.27s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.28s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.29s Collecting debug information to assist test failure triage
+    t =    12.29s     Requesting snapshot of accessibility hierarchy for app with pid 44373
+    t =    12.39s Waiting 0.5s for Alert (First Match) to exist
+    t =    12.89s     Checking existence of `Alert (First Match)`
+    t =    12.94s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.94s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
+    t =    12.95s Collecting debug information to assist test failure triage
+    t =    12.95s     Requesting snapshot of accessibility hierarchy for app with pid 44373
+    t =    13.04s Waiting 2.0s for "ConversationView" Other to exist
+    t =    14.06s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
+    t =    14.07s         Checking existence of `"ConversationView" Other`
+    t =    14.12s         Capturing element debug description
+    t =    15.04s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Other`
+    t =    15.05s         Checking existence of `"ConversationView" Other`
+    t =    15.08s         Capturing element debug description
+    t =    15.08s     Checking existence of `"ConversationView" Other`
+    t =    15.11s Collecting debug information to assist test failure triage
+    t =    15.11s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    15.17s Waiting 3.0s for "StartConversation" Button to exist
+    t =    16.19s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =    16.19s         Checking existence of `"StartConversation" Button`
+    t =    16.23s         Capturing element debug description
+    t =    17.26s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =    17.26s         Checking existence of `"StartConversation" Button`
+    t =    17.29s         Capturing element debug description
+    t =    18.17s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =    18.17s         Checking existence of `"StartConversation" Button`
+    t =    18.21s         Capturing element debug description
+    t =    18.21s     Checking existence of `"StartConversation" Button`
+    t =    18.23s Collecting debug information to assist test failure triage
+    t =    18.23s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    18.29s Waiting 2.0s for Button (First Match) to exist
+    t =    19.32s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    19.32s         Checking existence of `Button (First Match)`
+    t =    19.36s         Capturing element debug description
+    t =    20.29s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    20.30s         Checking existence of `Button (First Match)`
+    t =    20.33s         Capturing element debug description
+    t =    20.33s     Checking existence of `Button (First Match)`
+    t =    20.36s Collecting debug information to assist test failure triage
+    t =    20.36s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    20.42s Waiting 3.0s for StaticText (First Match) to exist
+    t =    21.45s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    21.45s         Checking existence of `StaticText (First Match)`
+    t =    21.48s         Capturing element debug description
+    t =    22.47s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    22.47s         Checking existence of `StaticText (First Match)`
+    t =    22.51s         Capturing element debug description
+    t =    23.43s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    23.43s         Checking existence of `StaticText (First Match)`
+    t =    23.47s         Capturing element debug description
+    t =    23.47s     Checking existence of `StaticText (First Match)`
+    t =    23.50s Collecting debug information to assist test failure triage
+    t =    23.50s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    23.56s Waiting 3.0s for StaticText (First Match) to exist
+    t =    24.57s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    24.57s         Checking existence of `StaticText (First Match)`
+    t =    24.61s         Capturing element debug description
+    t =    25.64s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    25.65s         Checking existence of `StaticText (First Match)`
+    t =    25.68s         Capturing element debug description
+    t =    26.56s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    26.56s         Checking existence of `StaticText (First Match)`
+    t =    26.60s         Capturing element debug description
+    t =    26.60s     Checking existence of `StaticText (First Match)`
+    t =    26.63s Collecting debug information to assist test failure triage
+    t =    26.63s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    26.69s Waiting 3.0s for StaticText (First Match) to exist
+    t =    27.72s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    27.73s         Checking existence of `StaticText (First Match)`
+    t =    27.76s         Capturing element debug description
+    t =    28.77s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    28.77s         Checking existence of `StaticText (First Match)`
+    t =    28.81s         Capturing element debug description
+    t =    29.70s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    29.70s         Checking existence of `StaticText (First Match)`
+    t =    29.73s         Capturing element debug description
+    t =    29.74s     Checking existence of `StaticText (First Match)`
+    t =    29.77s Collecting debug information to assist test failure triage
+    t =    29.77s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    29.82s Waiting 3.0s for StaticText (First Match) to exist
+    t =    30.85s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    30.85s         Checking existence of `StaticText (First Match)`
+    t =    30.89s         Capturing element debug description
+    t =    31.92s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    31.92s         Checking existence of `StaticText (First Match)`
+    t =    31.95s         Capturing element debug description
+    t =    32.82s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    32.83s         Checking existence of `StaticText (First Match)`
+    t =    32.86s         Capturing element debug description
+    t =    32.87s     Checking existence of `StaticText (First Match)`
+    t =    32.90s Collecting debug information to assist test failure triage
+    t =    32.90s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    32.96s Checking existence of `"House Chat" StaticText`
+    t =    32.98s Checking existence of `"Back" Button`
+    t =    32.99s Checking existence of `"Type a message..." TextField`
+    t =    33.01s Waiting 2.0s for TextField (First Match) to exist
+    t =    34.03s     Checking `Expect predicate `existsNoRetry == 1` for object TextField (First Match)`
+    t =    34.04s         Checking existence of `TextField (First Match)`
+    t =    34.07s         Capturing element debug description
+    t =    35.01s     Checking `Expect predicate `existsNoRetry == 1` for object TextField (First Match)`
+    t =    35.01s         Checking existence of `TextField (First Match)`
+    t =    35.04s         Capturing element debug description
+    t =    35.05s     Checking existence of `TextField (First Match)`
+    t =    35.07s Collecting debug information to assist test failure triage
+    t =    35.07s     Requesting snapshot of accessibility hierarchy for app with pid 51776
+    t =    35.14s Checking existence of `"mic.circle.fill" Button`
+    t =    35.16s Checking existence of `"Microphone" Button`
+    t =    35.19s Find the "Microphone" Button
+    t =    35.21s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testQuestionFlowCompletion]' passed (35.447 seconds).
+Test Suite 'OnboardingUITests' passed at 2025-07-22 12:57:36.428.
+	 Executed 1 test, with 0 failures (0 unexpected) in 35.447 (35.449) seconds
+Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 12:57:36.430.
+	 Executed 1 test, with 0 failures (0 unexpected) in 35.447 (35.451) seconds
+Test Suite 'Selected tests' passed at 2025-07-22 12:57:36.432.
+	 Executed 1 test, with 0 failures (0 unexpected) in 35.447 (35.452) seconds
+
+     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
+Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2025-07-22 12:58:13.444.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 12:58:13.444.
+Test Suite 'OnboardingUITests' started at 2025-07-22 12:58:13.445.
+Test Case '-[C11SHouseUITests.OnboardingUITests testVoiceOverNavigation]' started.
+    t =     0.00s Start Test at 2025-07-22 12:58:13.445
+    t =     0.01s Set Up
+    t =     0.01s     Open com.c11s.house
+    t =     0.01s         Launch com.c11s.house
+    t =     2.49s             Setting up automation session
+    t =     4.66s             Wait for com.c11s.house to idle
+    t =     6.06s Checking existence of `Other (First Match)`
+    t =     6.69s Get all elements bound by index for: Descendants matching type Button
+    t =     8.60s Checking existence of `Button (Element at index 0)`
+    t =     9.44s Find the Button (Element at index 0)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:395: error: -[C11SHouseUITests.OnboardingUITests testVoiceOverNavigation] : XCTAssertFalse failed - Button should have accessibility label
+    t =    10.78s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testVoiceOverNavigation]' failed (10.998 seconds).
+Test Suite 'OnboardingUITests' failed at 2025-07-22 12:58:24.444.
+	 Executed 1 test, with 1 failure (0 unexpected) in 10.998 (11.000) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 12:58:24.446.
+	 Executed 1 test, with 1 failure (0 unexpected) in 10.998 (11.002) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 12:58:24.447.
+	 Executed 1 test, with 1 failure (0 unexpected) in 10.998 (11.003) seconds
