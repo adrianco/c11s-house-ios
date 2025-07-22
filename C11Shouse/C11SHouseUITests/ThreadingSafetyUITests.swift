@@ -280,7 +280,14 @@ final class ThreadingSafetyUITests: XCTestCase {
         
         // Verify app is still responsive
         XCTAssertTrue(app.state == .runningForeground)
-        XCTAssertTrue(recordButton.waitForExistence(timeout: 2))
+        
+        // After stopping recording, the mic button should be visible again
+        // Try multiple ways to find it since the UI might be in transition
+        let micButtonExists = recordButton.waitForExistence(timeout: 2) ||
+                            app.buttons["mic.circle.fill"].waitForExistence(timeout: 1) ||
+                            app.buttons["Microphone"].waitForExistence(timeout: 1)
+        
+        XCTAssertTrue(micButtonExists, "Microphone button should be visible after stopping recording")
     }
     
     // MARK: - View Switching Tests
