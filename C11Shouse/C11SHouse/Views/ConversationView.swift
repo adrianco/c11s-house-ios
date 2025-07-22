@@ -117,6 +117,8 @@ struct ConversationView: View {
                         .background(Color(UIColor.secondarySystemBackground))
                         .clipShape(Circle())
                 }
+                .accessibilityIdentifier(isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                .accessibilityLabel(isMuted ? "Unmute" : "Mute")
             }
             .padding()
             .background(Color(UIColor.systemBackground))

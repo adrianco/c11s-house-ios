@@ -57,6 +57,7 @@ struct ChatInputView: View {
                             .foregroundColor(inputText.isEmpty ? .gray : .blue)
                     }
                     .disabled(inputText.isEmpty || isProcessing)
+                    .accessibilityIdentifier("arrow.up.circle.fill")
                 } else {
                     // Voice input
                     if showVoiceConfirmation {
@@ -95,6 +96,7 @@ struct ChatInputView: View {
                                         .foregroundColor(recognizer.isRecording ? .red : .blue)
                                 }
                                 .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
+                                .accessibilityIdentifier(recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
                                 
                                 Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
                                     .font(.caption)
