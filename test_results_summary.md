@@ -56,32 +56,39 @@
      - Other tests need re-running with new optimizations
 
 ### 🚨 UI Tests - Latest Run Results (OnboardingUITests)
-2. **OnboardingUITests** (Latest run 2025-07-22)
+2. **OnboardingUITests** (Latest run 2025-07-22 - Still using old launch arguments)
    - ❌ **Failed Tests** (4):
-     - testPermissionGrantFlow - "Begin Setup" button not found
+     - testPermissionGrantFlow (11.904s) - "Begin Setup" button not found
        - Issue: Button has identifier "StartConversation" not "Begin Setup"
-       - App is skipping onboarding due to --skip-onboarding launch argument
-     - testPermissionDenialRecovery - Same "Begin Setup" button issue
-     - testUserIntroductionFlow - Trying to access otherElements["ConversationView"]
+       - App is skipping onboarding due to old launch arguments
+     - testPermissionDenialRecovery (12.325s) - Same "Begin Setup" button issue
+     - testUserIntroductionFlow (15.638s) - Trying to access otherElements["ConversationView"]
        - Issue: SwiftUI accessibility identifiers don't work as otherElements
-     - testVoiceOverNavigation - Button with empty accessibility label
+       - Need to fix line 274 in OnboardingUITests.swift
+     - testVoiceOverNavigation (10.998s) - Button with empty accessibility label
        - Issue: First button in hierarchy has no label
-       - Fix: Skip system buttons without labels
+       - Need to fix line 395 in OnboardingUITests.swift
    
-   - **Issues Identified**:
-     - Launch arguments include "--skip-onboarding" which bypasses onboarding flow
-     - Tests expect "Begin Setup" button but app shows "Start Conversation"
-     - Need to remove skip-onboarding argument for proper onboarding tests
-     - testUserIntroductionFlow needs UI element detection fix
+   - ✅ **Passing Test** (1):
+     - testQuestionFlowCompletion (35.447s) ⚠️ Very Slow - Passed but needs optimization:
+       - Multiple 3s waits for permission alerts (3x 0.5s = 1.5s wasted)
+       - Waiting 2s for ConversationView that doesn't exist
+       - Multiple 3s waits for static text and buttons
+       - Total of ~20s spent just waiting
    
-   - ✅ **Passing Test**:
-     - testQuestionFlowCompletion (35.447s) - Passed after navigation fixes
+   - **Performance Issues in testQuestionFlowCompletion**:
+     - Lines 177-194: 3 permission alert checks, each waiting 0.5s
+     - Lines 195-204: Waiting 2s for non-existent ConversationView
+     - Lines 205-240: Multiple 3s waits for StartConversation button
+     - Lines 241-282: Multiple 3s waits for static text
+     - Lines 283-296: 2s wait for text field
    
-   - **Previously Passed Tests** (need re-running with fixed launch arguments):
-     - testNotesFeatureIntroduction (13.943s)
-     - testAddressQuestionFlow (33.245s) ⚠️ Slow
-     - testHouseNamingFlow (36.332s) ⚠️ Slow  
-     - testConversationTutorial (73.787s) ⚠️ Very Slow
+   - **Optimizations Applied**:
+     - ✅ Reduced permission alert waits from 0.5s to 0.2s
+     - ✅ Reduced all 3s timeouts to 1s, 2s to 0.5s
+     - ✅ Optimized navigateToConversation (3s→1s, 2s→0.5s)
+     - ✅ Optimized all helper methods with faster timeouts
+     - ✅ Expected speedup: ~15-20s reduction (from 35s to ~15-20s)
 
 ### 🔧 UI Tests - In Progress
 3. **ThreadingSafetyUITests** 
