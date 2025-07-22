@@ -1,155 +1,108 @@
 CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
 Running tests...
     t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 11:11:55.279.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 11:11:55.279.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 11:11:55.279.
-Test Case '-[C11SHouseUITests.ConversationViewUITests testMessageBubbleDisplay]' started.
-    t =     0.00s Start Test at 2025-07-22 11:11:55.279
+Test Suite 'Selected tests' started at 2025-07-22 11:17:56.345.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 11:17:56.345.
+Test Suite 'ThreadingSafetyUITests' started at 2025-07-22 11:17:56.345.
+Test Case '-[C11SHouseUITests.ThreadingSafetyUITests testNotesViewRapidEditingThreadSafety]' started.
+    t =     0.00s Start Test at 2025-07-22 11:17:56.345
     t =     0.01s Set Up
-🧪 ConversationViewUITests: Starting test setup
-🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
     t =     0.01s     Open com.c11s.house
     t =     0.01s         Launch com.c11s.house
-    t =     0.01s             Terminate com.c11s.house:50996
-    t =     3.17s             Setting up automation session
-    t =     4.28s             Wait for com.c11s.house to idle
-    t =     5.49s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     6.51s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     6.51s             Checking existence of `"StartConversation" Button`
-    t =     7.27s     Find the "StartConversation" Button
-    t =     7.31s     Tap "StartConversation" Button
-    t =     7.31s         Wait for com.c11s.house to idle
-    t =     7.32s         Find the "StartConversation" Button
-    t =     7.34s         Check for interrupting elements affecting "StartConversation" Button
-    t =     7.36s         Synthesize event
-    t =     7.65s         Wait for com.c11s.house to idle
-    t =     7.69s     Checking existence of `"House Chat" StaticText`
-🧪 ConversationViewUITests: testMessageBubbleDisplay started
-🧪 sendTextMessage: Starting with text: 'Hello house'
-🧪 muteConversation: Starting
-    t =     7.74s Checking existence of `"speaker.slash.fill" Button`
-    t =     7.77s Checking existence of `"Unmute" Button`
-    t =     7.80s Checking existence of `"Type a message..." TextField`
-    t =     7.83s Waiting 3.0s for "speaker.wave.2.fill" Button to exist
-    t =     8.86s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =     8.86s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =     8.92s         Capturing element debug description
-    t =     9.84s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =     9.84s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =     9.90s         Capturing element debug description
-    t =    10.83s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    10.83s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    10.89s         Capturing element debug description
-    t =    10.89s     Checking existence of `"speaker.wave.2.fill" Button`
-    t =    10.93s Collecting debug information to assist test failure triage
-    t =    10.93s     Requesting snapshot of accessibility hierarchy for app with pid 51003
-    t =    11.00s Waiting 2.0s for "Mute" Button to exist
-    t =    12.00s     Checking `Expect predicate `existsNoRetry == 1` for object "Mute" Button`
-    t =    12.00s         Checking existence of `"Mute" Button`
-🧪 muteConversation: Tapping mute button (by label)
-    t =    12.06s Tap "Mute" Button
-    t =    12.06s     Wait for com.c11s.house to idle
-    t =    12.06s     Find the "Mute" Button
-    t =    12.10s     Check for interrupting elements affecting "ConversationView" Button
-    t =    12.14s     Synthesize event
-    t =    12.44s     Wait for com.c11s.house to idle
-    t =    12.62s Waiting 5.0s for "Type a message..." TextField to exist
-    t =    13.65s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    13.65s         Checking existence of `"Type a message..." TextField`
-🧪 muteConversation: Completed
-    t =    15.17s Waiting 5.0s for "Type a message..." TextField to exist
-    t =    16.20s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    16.20s         Checking existence of `"Type a message..." TextField`
-    t =    16.28s Find the "Type a message..." TextField
-    t =    16.33s Tap "ConversationView" TextField
-    t =    16.33s     Wait for com.c11s.house to idle
-    t =    16.34s     Find the "ConversationView" TextField
-    t =    16.37s     Check for interrupting elements affecting "ConversationView" TextField
-    t =    16.41s     Synthesize event
-    t =    16.71s     Wait for com.c11s.house to idle
-    t =    16.72s Type 'Hello house' into "ConversationView" TextField
-    t =    16.72s     Wait for com.c11s.house to idle
-    t =    16.72s     Find the "ConversationView" TextField
-    t =    16.76s     Check for interrupting elements affecting "ConversationView" TextField
-    t =    16.81s     Synthesize event
-    t =    17.20s     Wait for com.c11s.house to idle
-    t =    17.41s Waiting 3.0s for "arrow.up.circle.fill" Button to exist
-    t =    18.44s     Checking `Expect predicate `existsNoRetry == 1` for object "arrow.up.circle.fill" Button`
-    t =    18.44s         Checking existence of `"arrow.up.circle.fill" Button`
-    t =    18.50s         Capturing element debug description
-    t =    19.44s     Checking `Expect predicate `existsNoRetry == 1` for object "arrow.up.circle.fill" Button`
-    t =    19.44s         Checking existence of `"arrow.up.circle.fill" Button`
-    t =    19.50s         Capturing element debug description
-    t =    20.42s     Checking `Expect predicate `existsNoRetry == 1` for object "arrow.up.circle.fill" Button`
-    t =    20.42s         Checking existence of `"arrow.up.circle.fill" Button`
-    t =    20.48s         Capturing element debug description
-    t =    20.48s     Checking existence of `"arrow.up.circle.fill" Button`
-    t =    20.52s Collecting debug information to assist test failure triage
-    t =    20.52s     Requesting snapshot of accessibility hierarchy for app with pid 51003
-🧪 sendTextMessage: Send button not found by identifier, searching by image...
-    t =    20.62s Get all elements bound by index for: Descendants matching type Button
-    t =    20.65s Find the Button (Element at index 0)
-    t =    20.68s Find the "Emoji" Button
-🧪 sendTextMessage: Found button 0: 'Emoji' id:''
-    t =    20.71s Find the Button (Element at index 1)
-    t =    20.74s Find the "dictation" Button
-🧪 sendTextMessage: Found button 1: 'Dictate' id:'dictation'
-    t =    20.77s Find the Button (Element at index 2)
-    t =    20.80s Find the "shift" Button
-🧪 sendTextMessage: Found button 2: 'shift' id:'shift'
-    t =    20.83s Find the Button (Element at index 3)
-    t =    20.86s Find the "Return" Button
-🧪 sendTextMessage: Found button 3: 'return' id:'Return'
-    t =    20.89s Find the Button (Element at index 4)
-    t =    20.93s Find the "ConversationView" Button
-🧪 sendTextMessage: Found button 4: '' id:'ConversationView'
-    t =    20.95s Find the Button (Element at index 5)
-    t =    20.99s Find the "ConversationView" Button
-🧪 sendTextMessage: Found button 5: 'Back' id:'ConversationView'
-    t =    21.02s Find the Button (Element at index 6)
-    t =    21.05s Find the "ConversationView" Button
-🧪 sendTextMessage: Found button 6: 'Unmute' id:'ConversationView'
-    t =    21.08s Find the Button (Element at index 7)
-    t =    21.11s Find the "ConversationView" Button
-🧪 sendTextMessage: Found button 7: 'Arrow Up Circle' id:'ConversationView'
-    t =    21.14s Find the Button (Element at index 8)
-    t =    21.18s Find the "pencil.circle.fill" Button
-🧪 sendTextMessage: Found button 8: 'Edit' id:'pencil.circle.fill'
-    t =    21.21s Find the Button (Element at index 9)
-    t =    21.24s Find the "Yes, this is correct" Button
-🧪 sendTextMessage: Found button 9: 'Yes, this is correct' id:''
-    t =    21.27s Find the Button (Element at index 10)
-    t =    21.30s Find the "pencil.circle.fill" Button
-🧪 sendTextMessage: Found button 10: 'Edit' id:'pencil.circle.fill'
-    t =    21.33s Find the Button (Element at index 11)
-    t =    21.37s Find the "Yes, this is correct" Button
-🧪 sendTextMessage: Found button 11: 'Yes, this is correct' id:''
-    t =    21.40s Find the Button (Element at index 12)
-    t =    21.43s Find the "pencil.circle.fill" Button
-🧪 sendTextMessage: Found button 12: 'Edit' id:'pencil.circle.fill'
-    t =    21.46s Find the Button (Element at index 13)
-    t =    21.50s Find the "Yes, this is correct" Button
-🧪 sendTextMessage: Found button 13: 'Yes, this is correct' id:''
-    t =    21.53s Find the Button (Element at index 14)
-    t =    21.56s Find the "pencil.circle.fill" Button
-🧪 sendTextMessage: Found button 14: 'Edit' id:'pencil.circle.fill'
-    t =    21.59s Find the Button (Element at index 15)
-    t =    21.63s Find the "Yes, this is correct" Button
-🧪 sendTextMessage: Found button 15: 'Yes, this is correct' id:''
-    t =    21.66s Find the Button (Element at index 16)
-    t =    21.70s Find the "pencil.circle.fill" Button
-🧪 sendTextMessage: Found button 16: 'Edit' id:'pencil.circle.fill'
-    t =    21.73s Find the Button (Element at index 17)
-    t =    21.76s Find the "Yes, this is correct" Button
-🧪 sendTextMessage: Found button 17: 'Yes, this is correct' id:''
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:592: error: -[C11SHouseUITests.ConversationViewUITests testMessageBubbleDisplay] : failed - Send button did not appear
-    t =    21.93s Tear Down
-🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testMessageBubbleDisplay]' failed (22.166 seconds).
-Test Suite 'ConversationViewUITests' failed at 2025-07-22 11:12:17.446.
-	 Executed 1 test, with 1 failure (0 unexpected) in 22.166 (22.168) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 11:12:17.448.
-	 Executed 1 test, with 1 failure (0 unexpected) in 22.166 (22.169) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 11:12:17.449.
-	 Executed 1 test, with 1 failure (0 unexpected) in 22.166 (22.171) seconds
+    t =     1.96s             Setting up automation session
+    t =     3.27s             Wait for com.c11s.house to idle
+    t =     4.51s Waiting 5.0s for "gearshape.fill" Button to exist
+    t =     5.52s     Checking `Expect predicate `existsNoRetry == 1` for object "gearshape.fill" Button`
+    t =     5.52s         Checking existence of `"gearshape.fill" Button`
+    t =     6.26s Tap "gearshape.fill" Button
+    t =     6.26s     Wait for com.c11s.house to idle
+    t =     6.27s     Find the "gearshape.fill" Button
+    t =     6.29s     Check for interrupting elements affecting "gearshape.fill" Button
+    t =     6.32s     Synthesize event
+    t =     6.63s     Wait for com.c11s.house to idle
+    t =     6.71s Waiting 2.0s for "Manage Notes" Button to exist
+    t =     7.73s     Checking `Expect predicate `existsNoRetry == 1` for object "Manage Notes" Button`
+    t =     7.73s         Checking existence of `"Manage Notes" Button`
+    t =     7.79s Tap "Manage Notes" Button
+    t =     7.79s     Wait for com.c11s.house to idle
+    t =     7.80s     Find the "Manage Notes" Button
+    t =     7.83s     Check for interrupting elements affecting "note.text" Button
+    t =     7.86s     Synthesize event
+    t =     8.16s     Wait for com.c11s.house to idle
+    t =     9.23s Waiting 3.0s for "Edit" Button to exist
+    t =    10.25s     Checking `Expect predicate `existsNoRetry == 1` for object "Edit" Button`
+    t =    10.25s         Checking existence of `"Edit" Button`
+    t =    10.27s         Capturing element debug description
+    t =    11.29s     Checking `Expect predicate `existsNoRetry == 1` for object "Edit" Button`
+    t =    11.29s         Checking existence of `"Edit" Button`
+    t =    11.31s         Capturing element debug description
+    t =    12.23s     Checking `Expect predicate `existsNoRetry == 1` for object "Edit" Button`
+    t =    12.23s         Checking existence of `"Edit" Button`
+    t =    12.25s         Capturing element debug description
+    t =    12.25s     Checking existence of `"Edit" Button`
+    t =    12.26s Collecting debug information to assist test failure triage
+    t =    12.26s     Requesting snapshot of accessibility hierarchy for app with pid 51054
+    t =    12.35s Waiting 1.0s for "Edit" Button to exist
+    t =    13.35s     Checking `Expect predicate `existsNoRetry == 1` for object "Edit" Button`
+    t =    13.35s         Checking existence of `"Edit" Button`
+    t =    13.37s     Checking existence of `"Edit" Button`
+    t =    13.38s Checking existence of `"Edit" Button`
+    t =    13.40s Checking existence of `"Edit" Button`
+    t =    13.41s Tap "Edit" Button
+    t =    13.41s     Wait for com.c11s.house to idle
+    t =    13.41s     Find the "Edit" Button
+    t =    13.43s     Check for interrupting elements affecting "pencil.circle.fill" Button
+    t =    13.47s     Synthesize event
+    t =    13.77s     Wait for com.c11s.house to idle
+    t =    13.91s Waiting 5.0s for Cell (First Match) to exist
+    t =    14.93s     Checking `Expect predicate `existsNoRetry == 1` for object Cell (First Match)`
+    t =    14.93s         Checking existence of `Cell (First Match)`
+    t =    14.95s Get number of matches for: Descendants matching type Cell
+    t =    14.99s Checking existence of `Cell (Element at index 0)`
+    t =    15.03s Find the Cell (Element at index 0)
+    t =    15.08s Tap Cell at {{16.0, 263.0}, {370.0, 38.7}}
+    t =    15.08s     Wait for com.c11s.house to idle
+    t =    15.09s     Find the Cell at {{16.0, 263.0}, {370.0, 38.7}}
+    t =    15.13s     Check for interrupting elements affecting Cell
+    t =    15.18s     Synthesize event
+    t =    15.48s     Wait for com.c11s.house to idle
+    t =    15.48s Waiting 2.0s for TextView (First Match) to exist
+    t =    16.51s     Checking `Expect predicate `existsNoRetry == 1` for object TextView (First Match)`
+    t =    16.51s         Checking existence of `TextView (First Match)`
+    t =    16.53s Tap TextView (First Match)
+    t =    16.53s     Wait for com.c11s.house to idle
+    t =    16.54s     Find the TextView (First Match)
+    t =    16.56s     Check for interrupting elements affecting "Test 0Test 0" TextView
+    t =    16.61s     Synthesize event
+    t =    16.90s     Wait for com.c11s.house to idle
+    t =    16.90s Type 'Test 0' into "Test 0Test 0" TextView
+    t =    16.90s     Wait for com.c11s.house to idle
+    t =    16.91s     Find the "Test 0Test 0" TextView
+    t =    17.00s     Check for interrupting elements affecting "Test 0Test 0" TextView
+    t =    17.05s     Synthesize event
+    t =    17.36s     Wait for com.c11s.house to idle
+    t =    17.54s Checking existence of `"Save" Button`
+    t =    17.59s Find the "Save" Button
+    t =    17.64s Tap "Save" Button
+    t =    17.64s     Wait for com.c11s.house to idle
+    t =    17.65s     Find the "Save" Button
+    t =    17.69s     Check for interrupting elements affecting "Save" Button
+    t =    17.74s     Synthesize event
+    t =    18.04s     Wait for com.c11s.house to idle
+    t =    18.55s Get number of matches for: Descendants matching type Cell
+    t =    18.59s Checking existence of `Cell (Element at index 1)`
+    t =    18.67s Find the Cell (Element at index 1)
+    t =    49.69s     Find the Cell (Element at index 1) (retry 1)
+    t =    80.72s     Find the Cell (Element at index 1) (retry 2)
+    t =   110.74s Get number of matches for: Descendants matching type Cell
+    t =   141.76s Get number of matches for: <XCUIElementQuery: 0x113429040> (retry 1)
+    t =   172.79s Get number of matches for: <XCUIElementQuery: 0x113429040> (retry 2)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:171: error: -[C11SHouseUITests.ThreadingSafetyUITests testNotesViewRapidEditingThreadSafety] : Failed to get matching snapshots: Timed out while evaluating UI query.
+    t =   226.17s Tear Down
+Test Case '-[C11SHouseUITests.ThreadingSafetyUITests testNotesViewRapidEditingThreadSafety]' failed (226.400 seconds).
+Test Suite 'ThreadingSafetyUITests' failed at 2025-07-22 11:21:42.747.
+	 Executed 1 test, with 1 failure (0 unexpected) in 226.400 (226.402) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 11:21:42.748.
+	 Executed 1 test, with 1 failure (0 unexpected) in 226.400 (226.403) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 11:21:42.750.
+	 Executed 1 test, with 1 failure (0 unexpected) in 226.400 (226.405) seconds

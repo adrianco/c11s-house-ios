@@ -54,10 +54,10 @@ final class ThreadingSafetyUITests: XCTestCase {
     func testRecordingFlowThreadSafety() throws {
         // Navigate to conversation view using the Start Conversation button
         let conversationButton = app.buttons["StartConversation"]
-        if !conversationButton.waitForExistence(timeout: 5) {
+        if !conversationButton.waitForExistence(timeout: 2) {
             // Fallback to text-based button
             let textButton = app.buttons["Start Conversation"]
-            XCTAssertTrue(textButton.waitForExistence(timeout: 5))
+            XCTAssertTrue(textButton.waitForExistence(timeout: 1))
             textButton.tap()
         } else {
             conversationButton.tap()
@@ -69,9 +69,9 @@ final class ThreadingSafetyUITests: XCTestCase {
         let micButton = app.buttons["mic.circle.fill"]
         let muteButton = app.buttons.matching(NSPredicate(format: "identifier CONTAINS 'speaker'")).firstMatch
         
-        let conversationLoaded = backButton.waitForExistence(timeout: 5) ||
-                                micButton.waitForExistence(timeout: 2) ||
-                                muteButton.waitForExistence(timeout: 2)
+        let conversationLoaded = backButton.waitForExistence(timeout: 2) ||
+                                micButton.waitForExistence(timeout: 1) ||
+                                muteButton.waitForExistence(timeout: 1)
         
         XCTAssertTrue(conversationLoaded, "Conversation view should load with navigation elements")
         
@@ -95,7 +95,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         }
         
         // Skip recording test if mic button still doesn't exist (may be in test mode without permissions)
-        guard recordButton.waitForExistence(timeout: 5) else {
+        guard recordButton.waitForExistence(timeout: 2) else {
             print("Skipping recording test - microphone button not available")
             return
         }
@@ -114,7 +114,7 @@ final class ThreadingSafetyUITests: XCTestCase {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         expectation.fulfill()
                     }
-                    wait(for: [expectation], timeout: 1.0)
+                    wait(for: [expectation], timeout: 0.6)
                     stopButton.tap()
                     
                     // Wait for ready state
@@ -132,7 +132,7 @@ final class ThreadingSafetyUITests: XCTestCase {
     func testNotesViewRapidEditingThreadSafety() throws {
         // Navigate to notes view via settings menu
         let settingsButton = app.buttons["gearshape.fill"]
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 2))
         settingsButton.tap()
         
         // Find and tap Manage Notes in menu
@@ -147,7 +147,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         let editButton = app.navigationBars.buttons["Edit"].firstMatch
         let editButtonAlternative = app.buttons["Edit"].firstMatch
         
-        let editExists = editButton.waitForExistence(timeout: 3) || editButtonAlternative.waitForExistence(timeout: 1)
+        let editExists = editButton.waitForExistence(timeout: 1) || editButtonAlternative.waitForExistence(timeout: 0.5)
         
         // Skip test if no notes to edit
         guard editExists else {
@@ -163,7 +163,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         
         // Find first note row
         let firstNote = app.cells.firstMatch
-        if firstNote.waitForExistence(timeout: 5) {
+        if firstNote.waitForExistence(timeout: 2) {
             // Rapid tap multiple notes
             for i in 0..<3 {
                 // Re-query cells each time as the UI might update after save
@@ -175,7 +175,7 @@ final class ThreadingSafetyUITests: XCTestCase {
                         
                         // Type rapidly
                         let textEditor = app.textViews.firstMatch
-                        if textEditor.waitForExistence(timeout: 2) {
+                        if textEditor.waitForExistence(timeout: 1) {
                             textEditor.tap()
                             textEditor.typeText("Test \(i)")
                             
@@ -215,9 +215,9 @@ final class ThreadingSafetyUITests: XCTestCase {
         let conversationButton = app.buttons["StartConversation"]
         let conversationButtonByLabel = app.buttons["Start Conversation"]
         
-        if conversationButton.waitForExistence(timeout: 5) {
+        if conversationButton.waitForExistence(timeout: 2) {
             conversationButton.tap()
-        } else if conversationButtonByLabel.waitForExistence(timeout: 2) {
+        } else if conversationButtonByLabel.waitForExistence(timeout: 1) {
             conversationButtonByLabel.tap()
         } else {
             // Debug output
@@ -238,10 +238,10 @@ final class ThreadingSafetyUITests: XCTestCase {
         let muteButtonByLabel = app.buttons["Mute"]
         let unmuteButtonByLabel = app.buttons["Unmute"]
         
-        let conversationLoaded = backButton.waitForExistence(timeout: 5) ||
-                                micButton.waitForExistence(timeout: 2) ||
-                                micButtonByLabel.waitForExistence(timeout: 2) ||
-                                muteButtonByLabel.waitForExistence(timeout: 2)
+        let conversationLoaded = backButton.waitForExistence(timeout: 2) ||
+                                micButton.waitForExistence(timeout: 1) ||
+                                micButtonByLabel.waitForExistence(timeout: 1) ||
+                                muteButtonByLabel.waitForExistence(timeout: 1)
         
         XCTAssertTrue(conversationLoaded, "Conversation view should load with navigation elements")
         
@@ -256,7 +256,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         let recordButton = micButton.exists ? micButton : micButtonByLabel
         
         // Skip test if mic button doesn't exist (may be in test mode without permissions)
-        guard recordButton.waitForExistence(timeout: 5) else {
+        guard recordButton.waitForExistence(timeout: 2) else {
             print("Skipping background transition test - microphone button not available")
             // Debug output
             let allButtons = app.buttons.allElementsBoundByIndex
@@ -287,7 +287,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             backgroundExpectation.fulfill()
         }
-        wait(for: [backgroundExpectation], timeout: 2.0)
+        wait(for: [backgroundExpectation], timeout: 1.5)
         
         // Return to app
         app.activate()
@@ -297,7 +297,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             foregroundExpectation.fulfill()
         }
-        wait(for: [foregroundExpectation], timeout: 1.0)
+        wait(for: [foregroundExpectation], timeout: 0.6)
         
         // Stop recording
         if stopButton.exists {
@@ -306,7 +306,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         
         // Verify app is still responsive
         XCTAssertTrue(app.state == .runningForeground)
-        XCTAssertTrue(recordButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(recordButton.waitForExistence(timeout: 2))
     }
     
     // MARK: - View Switching Tests
@@ -396,9 +396,9 @@ final class ThreadingSafetyUITests: XCTestCase {
         let conversationButton = app.buttons["StartConversation"]
         let conversationButtonByLabel = app.buttons["Start Conversation"]
         
-        if conversationButton.waitForExistence(timeout: 5) {
+        if conversationButton.waitForExistence(timeout: 2) {
             conversationButton.tap()
-        } else if conversationButtonByLabel.waitForExistence(timeout: 2) {
+        } else if conversationButtonByLabel.waitForExistence(timeout: 1) {
             conversationButtonByLabel.tap()
         } else {
             print("⚠️ testThreadingUnderMemoryPressure: Could not find Start Conversation button")
@@ -425,7 +425,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         let recordButton = micButton.exists ? micButton : micButtonByLabel
         
         // Skip test if mic button doesn't exist
-        guard recordButton.waitForExistence(timeout: 5) else {
+        guard recordButton.waitForExistence(timeout: 2) else {
             print("Skipping memory pressure test - microphone button not available")
             // Still test navigation without recording
             for _ in 0..<5 {
@@ -467,7 +467,7 @@ final class ThreadingSafetyUITests: XCTestCase {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 pauseExpectation.fulfill()
             }
-            wait(for: [pauseExpectation], timeout: 0.5)
+            wait(for: [pauseExpectation], timeout: 0.2)
             
             // Go to conversation again
             if app.buttons["StartConversation"].exists {
@@ -479,7 +479,7 @@ final class ThreadingSafetyUITests: XCTestCase {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 pauseExpectation2.fulfill()
             }
-            wait(for: [pauseExpectation2], timeout: 0.5)
+            wait(for: [pauseExpectation2], timeout: 0.2)
         }
         
         // Stop recording if still active
