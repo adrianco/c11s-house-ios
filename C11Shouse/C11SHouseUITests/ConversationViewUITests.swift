@@ -29,7 +29,7 @@ class ConversationViewUITests: XCTestCase {
     //   1. Change this value to true
     //   2. Run the failing test
     //   3. Change back to false when done debugging
-    static let verboseLogging = true // Temporarily enabled for debugging failing tests
+    static let verboseLogging = false // Disabled after applying fixes
     
     override func setUpWithError() throws {
         continueAfterFailure = false
