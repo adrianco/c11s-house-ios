@@ -213,38 +213,58 @@ final class ThreadingSafetyUITests: XCTestCase {
     func testBackgroundTransitionWhileRecording() throws {
         // Navigate to conversation view
         let conversationButton = app.buttons["StartConversation"]
-        if !conversationButton.waitForExistence(timeout: 5) {
-            let textButton = app.buttons["Start Conversation"]
-            XCTAssertTrue(textButton.waitForExistence(timeout: 5))
-            textButton.tap()
-        } else {
+        let conversationButtonByLabel = app.buttons["Start Conversation"]
+        
+        if conversationButton.waitForExistence(timeout: 5) {
             conversationButton.tap()
+        } else if conversationButtonByLabel.waitForExistence(timeout: 2) {
+            conversationButtonByLabel.tap()
+        } else {
+            // Debug output
+            print("⚠️ testBackgroundTransitionWhileRecording: Could not find Start Conversation button")
+            let allButtons = app.buttons.allElementsBoundByIndex
+            for i in 0..<min(allButtons.count, 10) {
+                let button = allButtons[i]
+                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            }
+            XCTFail("Could not find Start Conversation button")
+            return
         }
         
         // Wait for conversation view - check for actual conversation elements
         let backButton = app.buttons["Back"]
         let micButton = app.buttons["mic.circle.fill"]
-        let muteButton = app.buttons.matching(NSPredicate(format: "identifier CONTAINS 'speaker'")).firstMatch
+        let micButtonByLabel = app.buttons["Microphone"]
+        let muteButtonByLabel = app.buttons["Mute"]
+        let unmuteButtonByLabel = app.buttons["Unmute"]
         
         let conversationLoaded = backButton.waitForExistence(timeout: 5) ||
                                 micButton.waitForExistence(timeout: 2) ||
-                                muteButton.waitForExistence(timeout: 2)
+                                micButtonByLabel.waitForExistence(timeout: 2) ||
+                                muteButtonByLabel.waitForExistence(timeout: 2)
         
         XCTAssertTrue(conversationLoaded, "Conversation view should load with navigation elements")
         
-        // Check if we need to unmute first
-        if muteButton.exists && muteButton.identifier.contains("slash") {
-            // Currently muted, unmute to show mic button
-            muteButton.tap()
+        // Check if we need to unmute first - use label-based detection
+        if unmuteButtonByLabel.exists {
+            // Currently muted, tap to unmute
+            unmuteButtonByLabel.tap()
             Thread.sleep(forTimeInterval: 0.5)
         }
         
-        // Start recording
-        let recordButton = app.buttons["mic.circle.fill"]
+        // Start recording - check both identifier and label
+        let recordButton = micButton.exists ? micButton : micButtonByLabel
         
         // Skip test if mic button doesn't exist (may be in test mode without permissions)
         guard recordButton.waitForExistence(timeout: 5) else {
             print("Skipping background transition test - microphone button not available")
+            // Debug output
+            let allButtons = app.buttons.allElementsBoundByIndex
+            print("Available buttons:")
+            for i in 0..<min(allButtons.count, 10) {
+                let button = allButtons[i]
+                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            }
             return
         }
         
@@ -374,25 +394,35 @@ final class ThreadingSafetyUITests: XCTestCase {
     func testThreadingUnderMemoryPressure() throws {
         // Navigate to conversation and start recording
         let conversationButton = app.buttons["StartConversation"]
-        if !conversationButton.waitForExistence(timeout: 5) {
-            let textButton = app.buttons["Start Conversation"]
-            textButton.tap()
-        } else {
+        let conversationButtonByLabel = app.buttons["Start Conversation"]
+        
+        if conversationButton.waitForExistence(timeout: 5) {
             conversationButton.tap()
+        } else if conversationButtonByLabel.waitForExistence(timeout: 2) {
+            conversationButtonByLabel.tap()
+        } else {
+            print("⚠️ testThreadingUnderMemoryPressure: Could not find Start Conversation button")
+            XCTFail("Could not find Start Conversation button")
+            return
         }
         
         // Wait for conversation view
         Thread.sleep(forTimeInterval: 1.0)
         
-        // Check if we need to unmute first
-        let muteButton = app.buttons.matching(NSPredicate(format: "identifier CONTAINS 'speaker'")).firstMatch
-        if muteButton.exists && muteButton.identifier.contains("slash") {
-            // Currently muted, unmute to show mic button
-            muteButton.tap()
+        // Check if we need to unmute first - use label-based detection
+        let muteButtonByLabel = app.buttons["Mute"]
+        let unmuteButtonByLabel = app.buttons["Unmute"]
+        let micButton = app.buttons["mic.circle.fill"]
+        let micButtonByLabel = app.buttons["Microphone"]
+        
+        if unmuteButtonByLabel.exists {
+            // Currently muted, tap to unmute
+            unmuteButtonByLabel.tap()
             Thread.sleep(forTimeInterval: 0.5)
         }
         
-        let recordButton = app.buttons["mic.circle.fill"]
+        // Find microphone button
+        let recordButton = micButton.exists ? micButton : micButtonByLabel
         
         // Skip test if mic button doesn't exist
         guard recordButton.waitForExistence(timeout: 5) else {
@@ -407,9 +437,11 @@ final class ThreadingSafetyUITests: XCTestCase {
                 // Brief pause
                 Thread.sleep(forTimeInterval: 0.2)
                 
-                // Go to conversation again
+                // Go to conversation again - check both identifiers
                 if app.buttons["StartConversation"].exists {
                     app.buttons["StartConversation"].tap()
+                } else if app.buttons["Start Conversation"].exists {
+                    app.buttons["Start Conversation"].tap()
                 }
                 
                 Thread.sleep(forTimeInterval: 0.2)
