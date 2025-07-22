@@ -1,6 +1,6 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 22:25 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 15:05 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
@@ -58,35 +58,39 @@
 ## UI Test Results
 
 ### ConversationViewUITests
-**Status**: 1 passing, 2 failing (logging verbosity reduced 2025-07-22 20:32)
+**Status**: 1 passing, 3 failing - **AWAITING RE-RUN WITH FIXES**
 
-#### Recent Test Results:
+#### Recent Test Results (from 14:48-14:51, before fixes):
 1. **testMuteToggle** ✅ (17.409s)
    - Status: PASSING
    - Successfully toggles between mute/unmute states
-   - Logging: Now minimal with verboseLogging=false
+   - Logging: Now with verboseLogging=true for debugging
 
-2. **testTextMessageSending** ❌ (29.151s) - **FIX APPLIED 2025-07-22 14:55**
-   - Issue: Test typed text but tapped dictation button instead of send button
+2. **testTextMessageSending** ❌ (29.151s) - **FIX APPLIED 2025-07-22 14:59**
+   - Last Run: Test typed text but tapped dictation button instead of send button
    - Error: "Sent message should appear in chat" - message wasn't sent
    - Root Cause: Send button detection was picking up dictation button
    - Fix Applied: Explicitly exclude dictation button by checking identifier/label
    - Fix Applied: Look for buttons to right of text field that aren't dictation
    - Fix Applied: Add "Send" accessibility label check
+   - **Status: Awaiting re-run with fixes**
    
-3. **testVoiceTranscriptDisplay** ❌ (17.578s) - **FIX APPLIED 2025-07-22 14:55**
-   - Issue: Microphone button not found when unmuted  
+3. **testVoiceTranscriptDisplay** ❌ (17.578s) - **FIX APPLIED 2025-07-22 14:59**
+   - Last Run: Microphone button not found when unmuted  
    - Error: "Microphone button should exist" assertion failed
    - Fix Applied: Added wait time after unmuting for UI update
    - Fix Applied: Multiple fallback detection methods (identifier, label, predicate)
    - Fix Applied: Check if accidentally still muted and re-unmute if needed
    - Fix Applied: Accept button exists even if not enabled (permissions)
+   - **Status: Awaiting re-run with fixes**
 
-4. **testVoiceInputButton** ❌ (13.728s) - **ALREADY HAD FIX**
-   - Issue: Microphone button not visible when unmuted
+4. **testVoiceInputButton** ❌ (13.728s) - **FIX APPLIED 2025-07-22 14:59**
+   - Last Run: Microphone button not visible when unmuted
    - Error: "Microphone button should be visible when unmuted" assertion failed  
-   - Note: This test already had comprehensive fallback detection
-   - The UI may be in an unexpected state or the mic button has a different identifier
+   - Fix Applied: Enhanced unmuteConversation() to handle various UI states
+   - Fix Applied: Check mic button existence before trying to unmute
+   - Fix Applied: Handle case where UI starts muted by default
+   - **Status: Awaiting re-run with fixes**
 
 #### Passing Tests:
 - ✅ testMuteToggle (verified passing)
@@ -200,6 +204,32 @@
 ---
 
 ## Recent Fixes Applied
+
+### ConversationViewUITests Fixes (2025-07-22 14:59-15:05)
+1. **Fixed testTextMessageSending** (First attempt 14:59):
+   - Problem: Test was tapping dictation button instead of send button
+   - Solution: Added explicit checks to exclude dictation button when searching for send button
+   - Added "Send" accessibility label as additional detection method
+   - Result: Test now found Return button instead - still failed
+
+2. **Fixed testTextMessageSending** (Second attempt 15:05):
+   - Problem: Test was tapping Return button which didn't send the message
+   - Solution: Modified logic to use keyboard return (\n) when no send button found
+   - Now excludes shift, Return, Emoji buttons from button search
+   - Falls back to typing newline character to send message
+
+3. **Fixed testVoiceTranscriptDisplay** (14:59):
+   - Problem: Microphone button not found after unmuting
+   - Solution: Added comprehensive fallback detection methods
+   - Added check to re-unmute if UI is still in muted state
+
+4. **Fixed testVoiceInputButton** (14:59): 
+   - Problem: Microphone button not visible when unmuted
+   - Solution: Enhanced unmuteConversation() helper to handle all UI states
+   - Added check for mic button before attempting to unmute
+
+5. **Enabled verbose logging**:
+   - Temporarily enabled verboseLogging=true to help debug any remaining issues
 
 ### AddressManagerTests Fix (2025-07-22 22:10)
 1. **Fixed multiple test failures related to UserDefaults**:
@@ -338,17 +368,28 @@
 
 ### What's Working Well ✅
 - **ThreadingSafetyUITests**: All 6 tests passing reliably
-- **ConversationViewUITests.testMuteToggle**: Now passing with reduced logging
+- **ConversationViewUITests.testMuteToggle**: Passing consistently
 - **OnboardingUITests.testUserIntroductionFlow**: Passing successfully  
-- **Logging verbosity**: Significantly reduced for passing tests
+- **NotesServiceTests**: All tests passing after deadlock fix
+- **AddressManagerTests**: All tests passing after UserDefaults fix
 - **ConversationFlowIntegrationTests**: All 4 failing tests have been fixed
+- **InitialSetupFlowTests**: Fixes applied for 2 failing tests
 
 ### Still Needs Attention ⚠️
-- **ConversationViewUITests**: 2 tests failing (fixes applied, awaiting re-run)
+- **ConversationViewUITests**: 3 tests failing (fixes applied 14:59, awaiting re-run)
 - **OnboardingUITests**: 3-4 tests still need fixes
-- **InitialSetupFlowTests**: 2 tests failing (fixes applied, awaiting re-run)
-- **ThreadingSafetyUITests**: 1 test failing (fix applied, awaiting re-run)
 - **Performance**: Some tests still taking 20-30+ seconds
+
+### Tests Awaiting Re-run with Fixes
+1. **ConversationViewUITests** (3 tests - fixes applied 14:59)
+   - testTextMessageSending 
+   - testVoiceTranscriptDisplay
+   - testVoiceInputButton
+2. **InitialSetupFlowTests** (2 tests - fixes applied 22:25)
+   - testCompleteInitialSetupFlow
+   - testSetupFlowWithLocationPermissionDenied
+3. **ThreadingSafetyUITests** (1 test - fix applied 22:25)
+   - testBackgroundTransitionWhileRecording
 
 ### Key Improvements Made
 1. **Bug Fix**: Addresses now only persisted through NotesService (removed UserDefaults usage)
