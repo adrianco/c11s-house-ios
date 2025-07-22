@@ -1,8 +1,216 @@
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Infrastructure/SpeechErrorTests.swift:126 testEquality(): XCTAssertNotEqual failed: ("recordingError(Error Domain=test Code=1101 "(null)")") is equal to ("recordingError(Error Domain=test Code=1101 "(null)")")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:377 testSaveAnswerWithFullIntegration(): XCTAssertEqual failed: ("0") is not equal to ("1")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:473 testSaveAnswerBasicWithValidData(): XCTAssertEqual failed: ("0") is not equal to ("1")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:433 testSaveAnswerForHouseNameQuestion(): XCTAssertEqual failed: ("nil") is not equal to ("Optional("Maple House")")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:474 testSaveAnswerBasicWithValidData(): XCTAssertNil failed: "Question(id: F71D1E22-EF16-4CD6-BD2E-566CFCB6D2A9, text: "What should I call this house?", category: C11SHouse.QuestionCategory.houseInfo, displayOrder: 1, isRequired: true, hint: Optional("Give your house a name (e.g., \'Maple House\', \'The Smith Home\')"), createdAt: 2025-07-22 22:31:22 +0000)"
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:596 testHandleQuestionChangeWithNoQuestion(): XCTAssertFalse failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:616 testHandleQuestionChangeForAddressQuestionWithoutAnswer(): XCTAssertEqual failed: ("123 Main St, Springfield, IL 62701") is not equal to ("123 Main St, Springfield, IL, 62701, USA")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:691 testHandleQuestionChangeWithExistingAnswer(): XCTAssertTrue failed
+[WeatherKitService] 🌦️ Initializing WeatherKit service
+[WeatherKitService] Bundle ID: com.c11s.house
+[WeatherKitService] ✅ Running on real device
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
+[WeatherCoordinator] 🌤️ Initialized with services
+[WeatherCoordinator] Weather service: WeatherKitServiceImpl
+[WeatherCoordinator] Notes service: NotesServiceImpl
+[WeatherCoordinator] Location service: LocationServiceImpl
+[ContentViewModel] Init complete - currentWeather: nil
+[ContentViewModel] Init complete - houseName: Your House
+[ContentViewModel] Init complete - address: nil
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: 70301BF9-B780-443E-B9EC-D2655EE0ABFF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+#FactoryInstall Unable to query results, error: 5
+👆 USER ACTION: view_appeared in welcome
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Test Suite 'Selected tests' started at 2025-07-22 15:45:26.331.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 15:45:26.331.
+Test Suite 'QuestionFlowCoordinatorTests' started at 2025-07-22 15:45:26.331.
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerWithFullIntegration]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[TEST] Current question: Is this the right address?
+[TEST] Transcript value: '  Test answer  '
+[QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
+[QuestionFlowCoordinator] Answer: 'Test answer'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Test answer'
+[QuestionFlowCoordinator] Trimmed answer: 'Test answer'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: D19038DA-AEBE-4D35-88F6-FBCD8D04B8D9
+[MockNotesService] saveNote called with questionId: D19038DA-AEBE-4D35-88F6-FBCD8D04B8D9, answer: Test answer
+[MockNotesService] Incremented saveNoteCallCount to: 1
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+[WeatherCoordinator] Created Weather question in notes store
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Processing address answer: Test answer
+[TEST] beginSavingAnswerCallCount: 1
+[TEST] clearHouseThoughtCallCount: 1
+[TEST] saveOrUpdateNoteCallCount: 0
+[TEST] clearTranscriptCallCount: 1
+[TEST] endSavingAnswerCallCount: 1
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:388: error: -[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerWithFullIntegration] : XCTAssertEqual failed: ("0") is not equal to ("1")
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerWithFullIntegration]' failed (0.127 seconds).
+Test Suite 'QuestionFlowCoordinatorTests' failed at 2025-07-22 15:45:26.459.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.127 (0.128) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 15:45:26.459.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.127 (0.128) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 15:45:26.459.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.127 (0.128) seconds
+
+     [WeatherKitService] 🌦️ Initializing WeatherKit service
+[WeatherKitService] Bundle ID: com.c11s.house
+[WeatherKitService] ✅ Running on real device
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
+[WeatherCoordinator] 🌤️ Initialized with services
+[WeatherCoordinator] Weather service: WeatherKitServiceImpl
+[WeatherCoordinator] Notes service: NotesServiceImpl
+[WeatherCoordinator] Location service: LocationServiceImpl
+[ContentViewModel] Init complete - currentWeather: nil
+[ContentViewModel] Init complete - houseName: Your House
+[ContentViewModel] Init complete - address: nil
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+#FactoryInstall Unable to query results, error: 5
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Test Suite 'Selected tests' started at 2025-07-22 15:45:58.819.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 15:45:58.819.
+Test Suite 'QuestionFlowCoordinatorTests' started at 2025-07-22 15:45:58.819.
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerWithFullIntegration]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: B5DA257A-0321-4160-974C-DDD2D6AA9D47
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
+[WeatherCoordinator] Weather question already exists
+[TEST] Current question: Is this the right address?
+[TEST] Transcript value: '  Test answer  '
+[QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
+[QuestionFlowCoordinator] Answer: 'Test answer'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Test answer'
+[QuestionFlowCoordinator] Trimmed answer: 'Test answer'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 45F69561-F145-429D-B967-267DF1C31F7C
+[MockNotesService] saveNote called with questionId: 45F69561-F145-429D-B967-267DF1C31F7C, answer: Test answer
+[MockNotesService] Incremented saveNoteCallCount to: 1
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+👆 USER ACTION: view_appeared in welcome
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Processing address answer: Test answer
+[TEST] beginSavingAnswerCallCount: 1
+[TEST] clearHouseThoughtCallCount: 1
+[TEST] saveOrUpdateNoteCallCount: 0
+[TEST] clearTranscriptCallCount: 1
+[TEST] endSavingAnswerCallCount: 1
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:388: error: -[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerWithFullIntegration] : XCTAssertEqual failed: ("0") is not equal to ("1")
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerWithFullIntegration]' failed (0.140 seconds).
+Test Suite 'QuestionFlowCoordinatorTests' failed at 2025-07-22 15:45:58.959.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.140 (0.140) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 15:45:58.960.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.140 (0.140) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 15:45:58.960.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.140 (0.141) seconds
+
+     [WeatherKitService] 🌦️ Initializing WeatherKit service
+[WeatherKitService] Bundle ID: com.c11s.house
+[WeatherKitService] ✅ Running on real device
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
+[WeatherCoordinator] 🌤️ Initialized with services
+[WeatherCoordinator] Weather service: WeatherKitServiceImpl
+[WeatherCoordinator] Notes service: NotesServiceImpl
+[WeatherCoordinator] Location service: LocationServiceImpl
+[ContentViewModel] Init complete - currentWeather: nil
+[ContentViewModel] Init complete - houseName: Your House
+[ContentViewModel] Init complete - address: nil
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+#FactoryInstall Unable to query results, error: 5
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Test Suite 'Selected tests' started at 2025-07-22 15:46:15.456.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 15:46:15.456.
+Test Suite 'QuestionFlowCoordinatorTests' started at 2025-07-22 15:46:15.456.
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerBasicWithValidData]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: E1732211-E63C-42C8-B47C-E1046F3BB95B
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
+[WeatherCoordinator] Weather question already exists
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Test answer'
+[QuestionFlowCoordinator] Trimmed answer: 'Test answer'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: CE72C07E-CB66-4F1D-9022-7FA494E79AA1
+[MockNotesService] saveNote called with questionId: CE72C07E-CB66-4F1D-9022-7FA494E79AA1, answer: Test answer
+[MockNotesService] Incremented saveNoteCallCount to: 1
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+👆 USER ACTION: view_appeared in welcome
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:484: error: -[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerBasicWithValidData] : XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:485: error: -[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerBasicWithValidData] : XCTAssertNil failed: "Question(id: 3FB70040-7F6F-4D40-8242-4B3875E0739F, text: "What should I call this house?", category: C11SHouse.QuestionCategory.houseInfo, displayOrder: 1, isRequired: true, hint: Optional("Give your house a name (e.g., \'Maple House\', \'The Smith Home\')"), createdAt: 2025-07-22 22:46:15 +0000)"
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testSaveAnswerBasicWithValidData]' failed (0.149 seconds).
+Test Suite 'QuestionFlowCoordinatorTests' failed at 2025-07-22 15:46:15.605.
+	 Executed 1 test, with 2 failures (0 unexpected) in 0.149 (0.149) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 15:46:15.605.
+	 Executed 1 test, with 2 failures (0 unexpected) in 0.149 (0.150) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 15:46:15.606.
+	 Executed 1 test, with 2 failures (0 unexpected) in 0.149 (0.150) seconds
+
+     [WeatherKitService] 🌦️ Initializing WeatherKit service
+[WeatherKitService] Bundle ID: com.c11s.house
+[WeatherKitService] ✅ Running on real device
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
+[WeatherCoordinator] 🌤️ Initialized with services
+[WeatherCoordinator] Weather service: WeatherKitServiceImpl
+[WeatherCoordinator] Notes service: NotesServiceImpl
+[WeatherCoordinator] Location service: LocationServiceImpl
+[ContentViewModel] Init complete - currentWeather: nil
+[ContentViewModel] Init complete - houseName: Your House
+[ContentViewModel] Init complete - address: nil
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+#FactoryInstall Unable to query results, error: 5
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: 7E9FEC72-3DD8-4F71-8453-E5571586E354
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
+[WeatherCoordinator] Weather question already exists
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+👆 USER ACTION: view_appeared in welcome
+Test Suite 'Selected tests' started at 2025-07-22 15:46:33.657.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 15:46:33.657.
+Test Suite 'QuestionFlowCoordinatorTests' started at 2025-07-22 15:46:33.657.
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testHandleQuestionChangeWithExistingAnswer]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:702: error: -[C11SHouseTests.QuestionFlowCoordinatorTests testHandleQuestionChangeWithExistingAnswer] : XCTAssertTrue failed
+Test Case '-[C11SHouseTests.QuestionFlowCoordinatorTests testHandleQuestionChangeWithExistingAnswer]' failed (0.109 seconds).
+Test Suite 'QuestionFlowCoordinatorTests' failed at 2025-07-22 15:46:33.766.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.109 (0.109) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 15:46:33.766.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.109 (0.109) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 15:46:33.766.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.109 (0.109) seconds
+     
