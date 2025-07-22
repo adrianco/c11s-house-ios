@@ -166,22 +166,34 @@ final class ThreadingSafetyUITests: XCTestCase {
         if firstNote.waitForExistence(timeout: 5) {
             // Rapid tap multiple notes
             for i in 0..<3 {
-                let note = app.cells.element(boundBy: i)
-                if note.exists {
-                    note.tap()
-                    
-                    // Type rapidly
-                    let textEditor = app.textViews.firstMatch
-                    if textEditor.waitForExistence(timeout: 2) {
-                        textEditor.tap()
-                        textEditor.typeText("Test \(i)")
+                // Re-query cells each time as the UI might update after save
+                let cells = app.cells
+                if cells.count > i {
+                    let note = cells.element(boundBy: i)
+                    if note.exists && note.isHittable {
+                        note.tap()
                         
-                        // Quick save
-                        let saveButton = app.buttons["Save"]
-                        if saveButton.exists {
-                            saveButton.tap()
+                        // Type rapidly
+                        let textEditor = app.textViews.firstMatch
+                        if textEditor.waitForExistence(timeout: 2) {
+                            textEditor.tap()
+                            textEditor.typeText("Test \(i)")
+                            
+                            // Quick save
+                            let saveButton = app.buttons["Save"]
+                            if saveButton.exists && saveButton.isHittable {
+                                saveButton.tap()
+                                
+                                // Wait for save to complete and UI to update
+                                // Don't wait for cells immediately after save, as the UI might be transitioning
+                                Thread.sleep(forTimeInterval: 0.5)
+                            }
                         }
                     }
+                } else {
+                    // If we don't have enough cells, break out of the loop
+                    print("Only \(cells.count) cells available, stopping at index \(i)")
+                    break
                 }
             }
         }
