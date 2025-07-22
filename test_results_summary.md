@@ -38,23 +38,23 @@
 
 ## UI Tests Run
 
-### ✅ Fixed UI Tests
-1. **ConversationViewUITests** (Updated run: 11/15 failed → FIXED AGAIN, 152.6s total)
-   - ✅ testBackButtonNavigation (8.041s) - Passed
-   - ✅ testErrorOverlayDisplay (7.263s) - Passed
-   - ✅ testInitialWelcomeMessage (12.464s) - Passed
-   - ✅ testAddressQuestionDisplay (9.306s) - Passed
-   - 🔧 testMessageBubbleDisplay (9.921s) - Fixed: Enhanced speaker button detection
-   - 🔧 testMessageInputPerformance (9.985s) - Fixed: Enhanced speaker button detection
-   - 🔧 testMessageListScrolling (10.487s) - Fixed: Enhanced speaker button detection
-   - 🔧 testMessageTimestamps (9.912s) - Fixed: Enhanced speaker button detection
-   - 🔧 testMuteToggle (13.743s) - Fixed: Added predicate-based button search
-   - 🔧 testRoomNoteCreation (10.266s) - Fixed: Enhanced speaker button detection
-   - 🔧 testScrollingPerformance (10.681s) - Fixed: Enhanced speaker button detection
-   - 🔧 testTextMessageKeyboardSubmit (10.421s) - Fixed: Enhanced speaker button detection
-   - 🔧 testTextMessageSending (10.477s) - Fixed: Enhanced speaker button detection
-   - 🔧 testVoiceInputButton (9.835s) - Fixed: Enhanced speaker button detection
-   - 🔧 testVoiceTranscriptDisplay (9.769s) - Fixed: Enhanced speaker button detection
+### 🔧 UI Tests in Progress
+1. **ConversationViewUITests** (Latest run: 11/15 failed - FIXING NOW, 164.8s total)
+   - ✅ testBackButtonNavigation (8.225s) - Passed
+   - ✅ testErrorOverlayDisplay (7.302s) - Passed  
+   - ✅ testInitialWelcomeMessage (12.805s) - Passed
+   - ✅ testAddressQuestionDisplay (10.516s) - Passed
+   - 🔧 testMessageBubbleDisplay (11.344s) - Fixing: Mute button detection issue
+   - 🔧 testMessageInputPerformance (11.339s) - Fixing: Mute button detection issue
+   - 🔧 testMessageListScrolling (10.987s) - Fixing: Mute button detection issue
+   - 🔧 testMessageTimestamps (11.237s) - Fixing: Mute button detection issue
+   - 🔧 testMuteToggle (14.339s) - Fixing: Updated to use label-based detection
+   - 🔧 testRoomNoteCreation (11.200s) - Fixing: Mute button detection issue
+   - 🔧 testScrollingPerformance (11.119s) - Fixing: Mute button detection issue
+   - 🔧 testTextMessageKeyboardSubmit (11.331s) - Fixing: Mute button detection issue
+   - 🔧 testTextMessageSending (10.920s) - Fixing: Mute button detection issue
+   - 🔧 testVoiceInputButton (10.995s) - Fixing: Mute button detection issue
+   - 🔧 testVoiceTranscriptDisplay (11.113s) - Fixing: Mute button detection issue
 
 ### ✅ Fixed UI Tests
 2. **ThreadingSafetyUITests** (Updated run: 1/6 failed → FIXED, 295.1s total)
@@ -64,6 +64,26 @@
    - 🔧 testNotesViewRapidEditingThreadSafety (209.501s) - Fixed: Improved cell re-querying after save
    - ✅ testRecordingFlowThreadSafety (10.905s) - Passed
    - ✅ testThreadingUnderMemoryPressure (9.587s) - Passed
+
+### 🔧 ConversationViewUITests Fixes Applied (Current)
+
+#### Mute Button Detection Issue:
+1. **Problem**: Tests were looking for buttons with accessibility identifiers `speaker.wave.2.fill` and `speaker.slash.fill`
+   - Actual buttons have identifier `ConversationView` with label `Mute` 
+   - SwiftUI accessibility identifiers not properly exposed to XCUITest
+   - Debug logs show: `Button 2: id='ConversationView' label='Mute'`
+
+2. **Solution**:
+   - Modified `muteConversation()` and `unmuteConversation()` helpers to use label-based detection
+   - Added fallback to check for button by label: `app.buttons["Mute"]` and `app.buttons["Unmute"]`
+   - Check for UI state (text field or mic button) to determine current mute state
+   - Improved debug output to help diagnose button detection issues
+
+3. **Key Changes**:
+   - Added label-based button detection as primary method
+   - Keep identifier-based detection as fallback
+   - Use UI state indicators (text field, mic button) to verify state
+   - Simplified logic to handle SwiftUI accessibility quirks
 
 ### 🔧 ThreadingSafetyUITests Fixes Applied (Latest Update)
 
