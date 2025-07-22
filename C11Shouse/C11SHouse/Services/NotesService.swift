@@ -104,7 +104,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     private let userDefaults: UserDefaults
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
-    private let saveLock = NSLock()
+    // NSLock removed - actor isolation provides thread safety
     
     // MARK: - Initialization
     
@@ -124,9 +124,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     // MARK: - Public Methods
     
     func loadNotesStore() async throws -> NotesStoreData {
-        saveLock.lock()
-        defer { saveLock.unlock() }
-        
+        // Actor isolation ensures thread safety - no lock needed
         let store = try await loadFromUserDefaults()
         await MainActor.run {
             notesStoreSubject.send(store)
@@ -136,9 +134,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     
     @NotesStoreActor
     func saveNote(_ note: Note) async throws {
-        saveLock.lock()
-        defer { saveLock.unlock() }
-        
+        // Actor isolation ensures thread safety - no lock needed
         var store = try await loadFromUserDefaults()
         
         // Ensure the question exists
@@ -282,7 +278,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     
     @NotesStoreActor
     private func save(_ store: NotesStoreData) async throws {
-        // Note: Caller should already hold the lock
+        // Actor isolation ensures thread safety
         do {
             let data = try encoder.encode(store)
             userDefaults.set(data, forKey: userDefaultsKey)

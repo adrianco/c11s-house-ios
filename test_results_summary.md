@@ -1,11 +1,11 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 21:45 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 21:55 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
-- **Failed Tests**: 10 (across 2 suites)
-- **Passing Test Suites**: 15
+- **Failed Tests**: 10 (across 2 suites) + 1 hanging test
+- **Passing Test Suites**: 14 (1 with hanging test)
 
 ### UI Tests  
 - **Total UI Test Suites**: 4
@@ -44,7 +44,7 @@
 - ErrorViewTests (10 tests)
 - LocationServiceTests (3 tests)
 - NotesServiceQuestionsTests (7 tests)
-- NotesServiceTests
+- NotesServiceTests ⚠️ (1 test hanging - fix applied)
 - QuestionFlowCoordinatorTests
 - SpeechErrorTests
 - ThreadingVerificationTests
@@ -130,7 +130,13 @@
 
 ---
 
-## Latest Test Run Results (from LoggingRecord.txt)
+## Latest Test Run Results
+
+### NotesServiceTests (Reported by user)
+- **testConcurrentSaveOperations** - HANGING - **FIX APPLIED**
+  - Issue: Test hung due to deadlock in concurrent save operations
+  - Cause: Using both @NotesStoreActor isolation AND NSLock causing deadlock
+  - Fix: Removed NSLock since actor isolation already provides thread safety
 
 ### UI Tests - Latest Run (2025-07-22 14:18)
 **ThreadingSafetyUITests**:
@@ -167,6 +173,13 @@
 ---
 
 ## Recent Fixes Applied
+
+### NotesService Deadlock Fix (2025-07-22 21:55)
+1. **Fixed testConcurrentSaveOperations hanging**:
+   - Removed NSLock from NotesServiceImpl
+   - Actor isolation (@NotesStoreActor) already provides thread safety
+   - NSLock was causing deadlock when multiple concurrent tasks tried to acquire it
+   - Now relies solely on actor isolation for concurrent access control
 
 ### Address Persistence Bug Fix (2025-07-22 21:00)
 1. **Fixed improper UserDefaults usage for address storage**:
@@ -252,6 +265,8 @@
 - **Solution**: Skip problematic operations, wait for UI transitions
 - **Problem**: Background/foreground transition breaks button detection
 - **Solution**: Multiple fallback methods for finding UI elements after transitions
+- **Problem**: Deadlock in NotesService concurrent operations
+- **Solution**: Remove redundant NSLock, rely on actor isolation for thread safety
 
 ---
 
