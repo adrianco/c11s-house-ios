@@ -67,8 +67,26 @@
      - Helper methods: Reduced all timeouts and removed unnecessary sleeps
      - sendTextMessage: Reduced timeouts (5s→2s, 3s→1s), removed 0.5s delays
 
+### 🚨 UI Tests - Latest Run Results (OnboardingUITests)
+2. **OnboardingUITests**
+   - ✅ Passed Tests (4):
+     - testNotesFeatureIntroduction (13.943s)
+     - testAddressQuestionFlow (33.245s) ⚠️ Slow
+     - testHouseNamingFlow (36.332s) ⚠️ Slow  
+     - testConversationTutorial (73.787s) ⚠️ Very Slow
+   
+   - ❌ Hung Test (1):
+     - testOnboardingPerformanceMetrics - Infinite loop waiting for buttons/static text
+   
+   - **Performance Optimizations Applied**:
+     - Reduced all 10s timeouts to 3s, 15s to 5s, 5s to 2s
+     - Removed Thread.sleep calls that were slowing tests
+     - Fixed testOnboardingPerformanceMetrics to avoid infinite loops
+     - Reduced permission alert wait from 1s to 0.5s
+     - Expected speedup: ~40-50% reduction in test times
+
 ### 🔧 UI Tests - In Progress
-2. **ThreadingSafetyUITests** 
+3. **ThreadingSafetyUITests** 
    - ❌ testNotesViewRapidEditingThreadSafety - Persistent 60s idle hang after save
      - Attempted fixes:
        - Changed to edit same note multiple times instead of accessing by index

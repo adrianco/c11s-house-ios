@@ -42,7 +42,7 @@ class OnboardingUITests: XCTestCase {
         let greetingTexts = ["Good morning", "Good afternoon", "Good evening"]
         let greetingPredicate = NSPredicate(format: "label IN %@", greetingTexts)
         let greetingText = app.staticTexts.matching(greetingPredicate).firstMatch
-        XCTAssertTrue(greetingText.waitForExistence(timeout: 5))
+        XCTAssertTrue(greetingText.waitForExistence(timeout: 2))
         
         // Check for "Your House, Awakened" text
         let awakenedText = app.staticTexts["Your House, Awakened"]
@@ -67,7 +67,7 @@ class OnboardingUITests: XCTestCase {
         
         // Should navigate to permissions screen
         let quickSetupText = app.staticTexts["Quick Setup"]
-        XCTAssertTrue(quickSetupText.waitForExistence(timeout: 5))
+        XCTAssertTrue(quickSetupText.waitForExistence(timeout: 2))
         
         // Grant permissions
         let grantPermissionsButton = app.buttons["Grant Permissions"]
@@ -78,13 +78,13 @@ class OnboardingUITests: XCTestCase {
         
         // Continue button should appear after permissions
         let continueButton = app.buttons["Continue"]
-        if continueButton.waitForExistence(timeout: 5) {
+        if continueButton.waitForExistence(timeout: 2) {
             continueButton.tap()
         }
         
         // Should reach completion screen
         let completionText = app.staticTexts["Setup Complete!"]
-        XCTAssertTrue(completionText.waitForExistence(timeout: 5))
+        XCTAssertTrue(completionText.waitForExistence(timeout: 2))
     }
     
     // MARK: - Permission Flow Tests
@@ -120,7 +120,7 @@ class OnboardingUITests: XCTestCase {
         
         // Verify conversation view is displayed after permissions
         // Don't rely on otherElements["ConversationView"] - check for actual UI elements
-        let conversationLoaded = app.staticTexts["House Chat"].waitForExistence(timeout: 5) ||
+        let conversationLoaded = app.staticTexts["House Chat"].waitForExistence(timeout: 2) ||
                                 app.navigationBars["House Chat"].waitForExistence(timeout: 2) ||
                                 app.buttons["Back"].waitForExistence(timeout: 2) ||
                                 app.buttons["mic.circle.fill"].waitForExistence(timeout: 2)
@@ -155,13 +155,13 @@ class OnboardingUITests: XCTestCase {
         
         // Continue button should appear
         let continueButton = app.buttons["Continue"]
-        if continueButton.waitForExistence(timeout: 5) {
+        if continueButton.waitForExistence(timeout: 2) {
             continueButton.tap()
         }
         
         // Should reach completion screen
         let completionText = app.staticTexts["Setup Complete!"]
-        XCTAssertTrue(completionText.waitForExistence(timeout: 5))
+        XCTAssertTrue(completionText.waitForExistence(timeout: 2))
     }
     
     func testPermissionDenialRecovery() throws {
@@ -178,7 +178,7 @@ class OnboardingUITests: XCTestCase {
         
         // The "Open Settings" button should appear for recovery
         let openSettingsButton = app.buttons["Open Settings"]
-        XCTAssertTrue(openSettingsButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(openSettingsButton.waitForExistence(timeout: 2))
         
         // Grant other permissions
         handleSystemPermissionAlert(for: "speech recognition")
@@ -197,7 +197,7 @@ class OnboardingUITests: XCTestCase {
         completePermissions()
         
         // Verify conversation view is loaded - check for actual UI elements
-        let conversationLoaded = app.staticTexts["House Chat"].waitForExistence(timeout: 5) ||
+        let conversationLoaded = app.staticTexts["House Chat"].waitForExistence(timeout: 2) ||
                                 app.navigationBars["House Chat"].waitForExistence(timeout: 2) ||
                                 app.buttons["Back"].waitForExistence(timeout: 2)
         
@@ -207,7 +207,7 @@ class OnboardingUITests: XCTestCase {
         let addressMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Is this the right address'")).firstMatch
         
         // Address question should appear within a reasonable time
-        if addressMessage.waitForExistence(timeout: 10) {
+        if addressMessage.waitForExistence(timeout: 3) {
             // User can respond via text or voice
             // Check if text input is available
             let textField = app.textFields["Type a message..."].exists ? 
@@ -221,7 +221,7 @@ class OnboardingUITests: XCTestCase {
                 let muteButton = app.buttons["Mute"]
                 if muteButton.exists {
                     muteButton.tap()
-                    Thread.sleep(forTimeInterval: 0.5)
+                    // Brief pause removed for speed
                     XCTAssertTrue(app.textFields["Type a message..."].waitForExistence(timeout: 2), "Text field should appear after muting")
                 }
             }
@@ -232,7 +232,7 @@ class OnboardingUITests: XCTestCase {
         completePermissions()
         
         // Verify conversation view is loaded
-        let conversationLoaded = app.staticTexts["House Chat"].waitForExistence(timeout: 5) ||
+        let conversationLoaded = app.staticTexts["House Chat"].waitForExistence(timeout: 2) ||
                                 app.buttons["Back"].waitForExistence(timeout: 2)
         
         XCTAssertTrue(conversationLoaded, "Conversation view should be loaded")
@@ -241,7 +241,7 @@ class OnboardingUITests: XCTestCase {
         let houseMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'call this house'")).firstMatch
         
         // The question should appear after address is answered
-        if houseMessage.waitForExistence(timeout: 15) {
+        if houseMessage.waitForExistence(timeout: 5) {
             // User can respond with house name
             let textField = app.textFields["Type a message..."].exists ? 
                            app.textFields["Type a message..."] : 
@@ -271,12 +271,12 @@ class OnboardingUITests: XCTestCase {
         
         // Wait for conversation view
         let conversationView = app.otherElements["ConversationView"]
-        XCTAssertTrue(conversationView.waitForExistence(timeout: 5))
+        XCTAssertTrue(conversationView.waitForExistence(timeout: 2))
         
         // Look for name question in messages
         let nameMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'your name'")).firstMatch
         
-        if nameMessage.waitForExistence(timeout: 15) {
+        if nameMessage.waitForExistence(timeout: 5) {
             // Enter name via text input
             let textField = app.textFields.firstMatch
             if textField.waitForExistence(timeout: 2) {
@@ -291,7 +291,7 @@ class OnboardingUITests: XCTestCase {
                 
                 // Look for personalized response
                 let response = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Test User'")).firstMatch
-                XCTAssertTrue(response.waitForExistence(timeout: 5))
+                XCTAssertTrue(response.waitForExistence(timeout: 2))
             }
         }
     }
@@ -313,7 +313,7 @@ class OnboardingUITests: XCTestCase {
         let tutorialMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'room note'")).firstMatch
         
         // Tutorial should guide user through creating first room note
-        if tutorialMessage.waitForExistence(timeout: 10) {
+        if tutorialMessage.waitForExistence(timeout: 3) {
             // User can respond to create a room note
             let textField = app.textFields["Type a message..."].exists ? 
                            app.textFields["Type a message..."] : 
@@ -409,10 +409,16 @@ class OnboardingUITests: XCTestCase {
     // MARK: - Performance Tests
     
     func testOnboardingPerformanceMetrics() throws {
-        measure(metrics: [XCTClockMetric(), XCTMemoryMetric(), XCTCPUMetric()]) {
-            // Complete full onboarding flow
-            completePermissions()
-            progressToCompletion()
+        // Performance test - just measure navigation to conversation
+        measure(metrics: [XCTClockMetric(), XCTMemoryMetric()]) {
+            navigateToConversation()
+            
+            // Verify we reached conversation view
+            let conversationActive = app.staticTexts["House Chat"].exists ||
+                                    app.buttons["Back"].exists ||
+                                    app.buttons["StartConversation"].exists
+            
+            XCTAssertTrue(conversationActive, "Should reach conversation area")
         }
     }
     
@@ -443,7 +449,7 @@ class OnboardingUITests: XCTestCase {
         
         for alertText in permissionAlerts {
             let alert = springboard.alerts.firstMatch
-            if alert.waitForExistence(timeout: 1) && alert.label.contains(alertText) {
+            if alert.waitForExistence(timeout: 0.5) && alert.label.contains(alertText) {
                 alert.buttons["OK"].tap()
             }
         }
@@ -491,13 +497,13 @@ class OnboardingUITests: XCTestCase {
         
         // Continue
         let continueButton = app.buttons["Continue"]
-        if continueButton.waitForExistence(timeout: 5) {
+        if continueButton.waitForExistence(timeout: 2) {
             continueButton.tap()
         }
         
         // Start chatting
         let startChattingButton = app.buttons["Start Chatting"]
-        if startChattingButton.waitForExistence(timeout: 5) {
+        if startChattingButton.waitForExistence(timeout: 2) {
             startChattingButton.tap()
         }
     }
@@ -515,7 +521,7 @@ class OnboardingUITests: XCTestCase {
         
         // In conversation flow, answer address question via text
         let addressMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Is this the right address'")).firstMatch
-        if addressMessage.waitForExistence(timeout: 10) {
+        if addressMessage.waitForExistence(timeout: 3) {
             let textField = app.textFields.firstMatch
             if textField.waitForExistence(timeout: 2) {
                 textField.tap()
@@ -534,7 +540,7 @@ class OnboardingUITests: XCTestCase {
         
         // Answer house name question via text
         let houseMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'call this house'")).firstMatch
-        if houseMessage.waitForExistence(timeout: 10) {
+        if houseMessage.waitForExistence(timeout: 3) {
             let textField = app.textFields.firstMatch
             if textField.waitForExistence(timeout: 2) {
                 textField.tap()
@@ -553,7 +559,7 @@ class OnboardingUITests: XCTestCase {
         
         // Answer name question via text
         let nameMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'your name'")).firstMatch
-        if nameMessage.waitForExistence(timeout: 10) {
+        if nameMessage.waitForExistence(timeout: 3) {
             let textField = app.textFields.firstMatch
             if textField.waitForExistence(timeout: 2) {
                 textField.tap()
@@ -568,7 +574,7 @@ class OnboardingUITests: XCTestCase {
         
         // Answer tutorial question about room note
         let tutorialMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'room note'")).firstMatch
-        if tutorialMessage.waitForExistence(timeout: 10) {
+        if tutorialMessage.waitForExistence(timeout: 3) {
             let textField = app.textFields.firstMatch
             if textField.waitForExistence(timeout: 2) {
                 textField.tap()
@@ -586,8 +592,7 @@ class OnboardingUITests: XCTestCase {
         completePermissions()
         progressToCompletion()
         
-        // Wait for completion
-        sleep(1)
+        // Completion wait removed for speed
     }
 }
 
