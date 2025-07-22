@@ -254,22 +254,65 @@ class ConversationViewUITests: XCTestCase {
     // MARK: - Helper Methods
     
     private func navigateToConversationView() {
-        // Navigate from main screen to conversation view
-        // Try by accessibility identifier first
-        let conversationButton = app.buttons["StartConversation"]
-        if conversationButton.waitForExistence(timeout: 5) {
-            conversationButton.tap()
-        } else {
-            // Fallback to button with text
-            let textButton = app.buttons["Start Conversation"].firstMatch
-            if textButton.waitForExistence(timeout: 2) {
-                textButton.tap()
-            }
+        // Step 1: Tap the start button
+        if !tapStartConversationButton() {
+            XCTFail("Could not find Start Conversation button")
+            return
         }
         
-        // Wait for conversation view to load by checking its identifier
-        let conversationView = app.otherElements["ConversationView"]
-        XCTAssertTrue(conversationView.waitForExistence(timeout: 5), "Conversation view should load")
+        // Step 2: Wait for conversation elements (not the view identifier)
+        // NOTE: The ConversationView has .accessibilityIdentifier("ConversationView") set in SwiftUI,
+        // but SwiftUI views with .accessibilityIdentifier() don't always register as otherElements
+        // in the XCUITest element hierarchy. This is a known SwiftUI/XCUITest issue.
+        // Instead, we check for actual UI elements that prove the ConversationView is loaded.
+        XCTAssertTrue(
+            waitForConversationElements(),
+            "Conversation view elements did not appear"
+        )
+    }
+    
+    private func tapStartConversationButton() -> Bool {
+        // Try multiple ways to find the button
+        let buttons = [
+            app.buttons["StartConversation"],
+            app.buttons["Start Conversation"],
+            app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Start Conversation'")).firstMatch
+        ]
+        
+        for button in buttons {
+            if button.waitForExistence(timeout: 2) && button.isHittable {
+                button.tap()
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func waitForConversationElements(timeout: TimeInterval = 10) -> Bool {
+        let startTime = Date()
+        
+        while Date().timeIntervalSince(startTime) < timeout {
+            // Check for any element that proves ConversationView is loaded
+            if app.staticTexts["House Chat"].exists ||
+               app.navigationBars["House Chat"].exists ||
+               app.buttons["mic.circle.fill"].exists ||
+               app.textFields["Type a message..."].exists ||
+               app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'speaker'")).count > 0 ||
+               app.staticTexts["Hello! I'm your house consciousness. How can I help you today?"].exists {
+                return true
+            }
+            
+            // Small delay before next check
+            Thread.sleep(forTimeInterval: 0.1)
+        }
+        
+        // Debug: Print what elements we can see if we fail
+        print("Failed to find conversation elements. Visible elements:")
+        print("Buttons: \(app.buttons.allElementsBoundByIndex.map { $0.label })")
+        print("Static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(10).map { $0.label })")
+        print("Navigation bars: \(app.navigationBars.allElementsBoundByIndex.map { $0.identifier })")
+        
+        return false
     }
     
     private func muteConversation() {

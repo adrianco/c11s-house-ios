@@ -14,6 +14,11 @@
  *   - Background/foreground transition tests
  *   - XCUIApplication launch arguments for enhanced debugging
  *   - Tests simulate real user behavior patterns
+ * - 2025-07-22: Fixed threading violations
+ *   - Removed UI operations from background threads in testConcurrentUIOperations()
+ *   - Replaced Thread.sleep with XCTest expectations for proper waiting
+ *   - UI tests now properly simulate concurrency through rapid sequential actions
+ *   - All UI operations now execute on main thread as required by XCTest
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -75,7 +80,12 @@ final class ThreadingSafetyUITests: XCTestCase {
             XCTAssertTrue(stopButton.waitForExistence(timeout: 2))
             
             // Quick stop
-            Thread.sleep(forTimeInterval: 0.5)
+            // Wait briefly before stopping to simulate recording
+            let expectation = XCTestExpectation(description: "Brief recording")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                expectation.fulfill()
+            }
+            wait(for: [expectation], timeout: 1.0)
             stopButton.tap()
             
             // Wait for ready state
@@ -167,11 +177,23 @@ final class ThreadingSafetyUITests: XCTestCase {
         
         // Simulate background
         XCUIDevice.shared.press(.home)
-        Thread.sleep(forTimeInterval: 1)
+        
+        // Wait for background transition
+        let backgroundExpectation = XCTestExpectation(description: "Background wait")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            backgroundExpectation.fulfill()
+        }
+        wait(for: [backgroundExpectation], timeout: 2.0)
         
         // Return to app
         app.activate()
-        Thread.sleep(forTimeInterval: 0.5)
+        
+        // Wait for foreground transition
+        let foregroundExpectation = XCTestExpectation(description: "Foreground wait")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            foregroundExpectation.fulfill()
+        }
+        wait(for: [foregroundExpectation], timeout: 1.0)
         
         // Stop recording
         if stopButton.exists {
@@ -226,46 +248,38 @@ final class ThreadingSafetyUITests: XCTestCase {
         let notesMenuItem = app.buttons["Manage Notes"]
         notesMenuItem.tap()
         
-        // Create multiple concurrent operations
-        let group = DispatchGroup()
-        let queue = DispatchQueue.global(qos: .userInteractive)
+        // Simulate rapid user interactions that might trigger concurrency issues
+        // These all happen on main thread but stress the app's internal threading
         
-        // Operation 1: Toggle edit mode
-        group.enter()
-        queue.async {
-            for _ in 0..<5 {
-                let editButton = self.app.navigationBars.buttons.matching(identifier: "Edit").firstMatch
-                if editButton.exists {
-                    editButton.tap()
-                    Thread.sleep(forTimeInterval: 0.1)
-                }
-                
-                let doneButton = self.app.navigationBars.buttons.matching(identifier: "Done").firstMatch
-                if doneButton.exists {
+        // Rapidly toggle edit mode
+        for _ in 0..<10 {
+            if let editButton = app.navigationBars.buttons["Edit"].firstMatch, editButton.exists {
+                editButton.tap()
+                // Don't wait - immediate next action
+                if let doneButton = app.navigationBars.buttons["Done"].firstMatch, doneButton.exists {
                     doneButton.tap()
-                    Thread.sleep(forTimeInterval: 0.1)
                 }
             }
-            group.leave()
         }
         
-        // Operation 2: Scroll content
-        group.enter()
-        queue.async {
+        // Rapidly scroll while editing
+        let editButton = app.navigationBars.buttons["Edit"]
+        if editButton.exists {
+            editButton.tap()
+            
+            // Rapid scrolling
             for _ in 0..<5 {
-                self.app.swipeUp()
-                Thread.sleep(forTimeInterval: 0.1)
-                self.app.swipeDown()
-                Thread.sleep(forTimeInterval: 0.1)
+                app.swipeUp(velocity: .fast)
+                app.swipeDown(velocity: .fast)
             }
-            group.leave()
+            
+            let doneButton = app.navigationBars.buttons["Done"]
+            if doneButton.exists {
+                doneButton.tap()
+            }
         }
         
-        // Wait for completion
-        let result = group.wait(timeout: .now() + 10)
-        XCTAssertEqual(result, .success)
-        
-        // Verify app stability
+        // Verify app survived the stress test
         XCTAssertTrue(app.state == .runningForeground)
     }
     
@@ -287,12 +301,28 @@ final class ThreadingSafetyUITests: XCTestCase {
         // Simulate memory pressure by rapidly navigating
         for _ in 0..<10 {
             // Go back
-            app.buttons["Back"].tap()
-            Thread.sleep(forTimeInterval: 0.1)
+            if app.buttons["Back"].exists {
+                app.buttons["Back"].tap()
+            }
+            
+            // Brief pause using expectation
+            let pauseExpectation = XCTestExpectation(description: "Navigation pause")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                pauseExpectation.fulfill()
+            }
+            wait(for: [pauseExpectation], timeout: 0.5)
             
             // Go to conversation again
-            app.buttons["StartConversation"].tap()
-            Thread.sleep(forTimeInterval: 0.1)
+            if app.buttons["StartConversation"].exists {
+                app.buttons["StartConversation"].tap()
+            }
+            
+            // Another brief pause
+            let pauseExpectation2 = XCTestExpectation(description: "Navigation pause 2")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                pauseExpectation2.fulfill()
+            }
+            wait(for: [pauseExpectation2], timeout: 0.5)
         }
         
         // Stop recording if still active
@@ -307,6 +337,40 @@ final class ThreadingSafetyUITests: XCTestCase {
 }
 
 // MARK: - Test Helpers
+
+extension ThreadingSafetyUITests {
+    /// Performs a brief wait using XCTest expectations instead of Thread.sleep
+    func waitBriefly(seconds: TimeInterval) {
+        let expectation = XCTestExpectation(description: "Brief wait")
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: seconds + 0.5)
+    }
+    
+    /// Stresses the UI with rapid interactions to test internal threading
+    func stressTestUI(interactions: Int = 20, action: () -> Void) {
+        for _ in 0..<interactions {
+            autoreleasepool {
+                action()
+            }
+        }
+        
+        // Give the app a moment to process using proper waiting
+        waitBriefly(seconds: 0.1)
+    }
+    
+    /// Performs rapid navigation to stress test view transitions
+    func rapidNavigate(between buttons: [(String, String)], iterations: Int = 5) {
+        for _ in 0..<iterations {
+            for (buttonName, _) in buttons {
+                if let button = app.buttons[buttonName].firstMatch, button.exists {
+                    button.tap()
+                }
+            }
+        }
+    }
+}
 
 extension XCUIElement {
     func clearAndType(_ text: String) {

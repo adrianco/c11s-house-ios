@@ -104,6 +104,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     private let userDefaults: UserDefaults
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let saveLock = NSLock()
     
     // MARK: - Initialization
     
@@ -132,6 +133,9 @@ class NotesServiceImpl: NotesServiceProtocol {
     
     @NotesStoreActor
     func saveNote(_ note: Note) async throws {
+        saveLock.lock()
+        defer { saveLock.unlock() }
+        
         var store = try await loadFromUserDefaults()
         
         // Ensure the question exists
