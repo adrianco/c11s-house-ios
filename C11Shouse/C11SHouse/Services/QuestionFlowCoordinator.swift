@@ -186,23 +186,29 @@ class QuestionFlowCoordinator: ObservableObject {
     
     /// Save an answer for the current question (basic version)
     func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
+        print("[QuestionFlowCoordinator] saveAnswer called with answer: '\(answer)'")
         guard let question = currentQuestion else {
+            print("[QuestionFlowCoordinator] Error: No current question")
             throw QuestionFlowError.noCurrentQuestion
         }
         
         let trimmedAnswer = answer.trimmingCharacters(in: .whitespacesAndNewlines)
+        print("[QuestionFlowCoordinator] Trimmed answer: '\(trimmedAnswer)'")
         guard !trimmedAnswer.isEmpty else {
+            print("[QuestionFlowCoordinator] Error: Empty answer after trimming")
             throw QuestionFlowError.emptyAnswer
         }
         
         var finalMetadata = metadata ?? [:]
         finalMetadata["updated_via_conversation"] = "true"
         
+        print("[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: \(question.id)")
         try await notesService.saveOrUpdateNote(
             for: question.id,
             answer: trimmedAnswer,
             metadata: finalMetadata
         )
+        print("[QuestionFlowCoordinator] saveOrUpdateNote completed successfully")
         
         // Clear current question after saving
         await MainActor.run {
@@ -270,7 +276,8 @@ class QuestionFlowCoordinator: ObservableObject {
             if hasCompletedAllQuestions {
                 conversationRecognizer?.setThankYouThought()
             }
-            return isInitializing
+            // Always return false when there's no question (initialization is complete)
+            return false
         }
         
         // Mark initialization as complete

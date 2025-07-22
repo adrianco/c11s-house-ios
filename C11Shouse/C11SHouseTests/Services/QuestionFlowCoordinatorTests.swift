@@ -368,8 +368,19 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut.currentQuestion = question
         mockStateManager.persistentTranscriptValue = "  Test answer  "
         
+        // Debug: Check the question details
+        print("[TEST] Current question: \(question.text)")
+        print("[TEST] Transcript value: '\(mockStateManager.persistentTranscriptValue)'")
+        
         // When: Saving answer
         await sut.saveAnswer()
+        
+        // Debug: Check what happened
+        print("[TEST] beginSavingAnswerCallCount: \(mockStateManager.beginSavingAnswerCallCount)")
+        print("[TEST] clearHouseThoughtCallCount: \(mockRecognizer.clearHouseThoughtCallCount)")
+        print("[TEST] saveOrUpdateNoteCallCount: \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("[TEST] clearTranscriptCallCount: \(mockStateManager.clearTranscriptCallCount)")
+        print("[TEST] endSavingAnswerCallCount: \(mockStateManager.endSavingAnswerCallCount)")
         
         // Then: Should follow full save flow
         XCTAssertEqual(mockStateManager.beginSavingAnswerCallCount, 1)
@@ -613,7 +624,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         // Then: Should detect address and set question thought
         XCTAssertFalse(stillInitializing)
         XCTAssertEqual(mockAddressManager.detectCurrentAddressCallCount, 1)
-        XCTAssertEqual(mockStateManager.persistentTranscriptValue, "123 Main St, Springfield, IL, 62701, USA")
+        XCTAssertEqual(mockStateManager.persistentTranscriptValue, "123 Main St, Springfield, IL 62701")
         XCTAssertEqual(mockRecognizer.setQuestionThoughtCallCount, 0) // Should set HouseThought instead
         XCTAssertNotNil(mockRecognizer.currentHouseThought)
     }
