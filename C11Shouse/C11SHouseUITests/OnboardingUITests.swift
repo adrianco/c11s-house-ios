@@ -49,10 +49,16 @@ class OnboardingUITests: XCTestCase {
         let awakenedText = app.staticTexts["Your House, Awakened"]
         XCTAssertTrue(awakenedText.waitForExistence(timeout: 2))
         
-        // Check for Begin Setup button
-        let beginSetupButton = app.buttons["Begin Setup"]
-        XCTAssertTrue(beginSetupButton.waitForExistence(timeout: 2))
-        XCTAssertTrue(beginSetupButton.isEnabled)
+        // Check for Start Conversation button
+        let startButton = app.buttons["StartConversation"]
+        if !startButton.waitForExistence(timeout: 2) {
+            // Try alternative label
+            let startButtonAlt = app.buttons["Start Conversation"]
+            XCTAssertTrue(startButtonAlt.waitForExistence(timeout: 1), "Start button should exist")
+            XCTAssertTrue(startButtonAlt.isEnabled)
+        } else {
+            XCTAssertTrue(startButton.isEnabled)
+        }
         
         // Measure load time
         measure(metrics: [XCTApplicationLaunchMetric()]) {
@@ -61,10 +67,15 @@ class OnboardingUITests: XCTestCase {
     }
     
     func testStartConversationFlow() throws {
-        // Tap Begin Setup button on welcome screen
-        let beginSetupButton = app.buttons["Begin Setup"]
-        XCTAssertTrue(beginSetupButton.waitForExistence(timeout: 1))
-        beginSetupButton.tap()
+        // Tap Start Conversation button on welcome screen
+        let startButton = app.buttons["StartConversation"]
+        if startButton.waitForExistence(timeout: 1) {
+            startButton.tap()
+        } else {
+            let startButtonAlt = app.buttons["Start Conversation"]
+            XCTAssertTrue(startButtonAlt.waitForExistence(timeout: 1))
+            startButtonAlt.tap()
+        }
         
         // Should navigate to permissions screen
         let quickSetupText = app.staticTexts["Quick Setup"]
@@ -130,13 +141,18 @@ class OnboardingUITests: XCTestCase {
     }
     
     func testPermissionGrantFlow() throws {
-        // Navigate to permissions screen
-        let beginSetupButton = app.buttons["Begin Setup"]
-        guard beginSetupButton.waitForExistence(timeout: 3) else {
-            XCTFail("Begin Setup button not found")
-            return
+        // Navigate to conversation which triggers permissions
+        let startButton = app.buttons["StartConversation"]
+        if !startButton.waitForExistence(timeout: 3) {
+            let startButtonAlt = app.buttons["Start Conversation"]
+            guard startButtonAlt.waitForExistence(timeout: 1) else {
+                XCTFail("Start Conversation button not found")
+                return
+            }
+            startButtonAlt.tap()
+        } else {
+            startButton.tap()
         }
-        beginSetupButton.tap()
         
         // Tap Grant Permissions
         let grantPermissionsButton = app.buttons["Grant Permissions"]
@@ -170,13 +186,18 @@ class OnboardingUITests: XCTestCase {
     }
     
     func testPermissionDenialRecovery() throws {
-        // Navigate to permissions screen
-        let beginSetupButton = app.buttons["Begin Setup"]
-        guard beginSetupButton.waitForExistence(timeout: 3) else {
-            XCTFail("Begin Setup button not found")
-            return
+        // Navigate to conversation which triggers permissions
+        let startButton = app.buttons["StartConversation"]
+        if !startButton.waitForExistence(timeout: 3) {
+            let startButtonAlt = app.buttons["Start Conversation"]
+            guard startButtonAlt.waitForExistence(timeout: 1) else {
+                XCTFail("Start Conversation button not found")
+                return
+            }
+            startButtonAlt.tap()
+        } else {
+            startButton.tap()
         }
-        beginSetupButton.tap()
         
         // Tap Grant Permissions
         let grantPermissionsButton = app.buttons["Grant Permissions"]
@@ -499,10 +520,15 @@ class OnboardingUITests: XCTestCase {
     }
     
     private func completeOnboardingFlow() {
-        // Tap Begin Setup
-        let beginSetupButton = app.buttons["Begin Setup"]
-        if beginSetupButton.waitForExistence(timeout: 1) {
-            beginSetupButton.tap()
+        // Tap Start Conversation
+        let startButton = app.buttons["StartConversation"]
+        if startButton.waitForExistence(timeout: 1) {
+            startButton.tap()
+        } else {
+            let startButtonAlt = app.buttons["Start Conversation"]
+            if startButtonAlt.waitForExistence(timeout: 1) {
+                startButtonAlt.tap()
+            }
         }
         
         // Grant permissions

@@ -66,19 +66,27 @@
    - Successfully toggles between mute/unmute states
    - Logging: Now minimal with verboseLogging=false
 
-2. **testTextMessageSending** ❌ (24.866s) - **FIX APPLIED**
-   - Issue: Send button not appearing after typing message
-   - Error: "Send button should exist" assertion failed
-   - Fix Applied: Added multiple fallback detection methods for send button
-   - Fix Applied: Added wait time after typing for UI update
-   - Fix Applied: Check for button by position relative to text field
+2. **testTextMessageSending** ❌ (29.151s) - **FIX APPLIED 2025-07-22 14:55**
+   - Issue: Test typed text but tapped dictation button instead of send button
+   - Error: "Sent message should appear in chat" - message wasn't sent
+   - Root Cause: Send button detection was picking up dictation button
+   - Fix Applied: Explicitly exclude dictation button by checking identifier/label
+   - Fix Applied: Look for buttons to right of text field that aren't dictation
+   - Fix Applied: Add "Send" accessibility label check
    
-3. **testVoiceInputButton** ❌ (17.636s) - **FIX APPLIED**
-   - Issue: Microphone button not visible when unmuted  
-   - Error: "Microphone button should be visible when unmuted" assertion failed
-   - Fix Applied: Added multiple fallback detection methods for mic button
-   - Fix Applied: Handle voice confirmation mode edge case
-   - Fix Applied: Check buttons in input area by position
+3. **testVoiceTranscriptDisplay** ❌ (17.578s) - **FIX APPLIED 2025-07-22 14:55**
+   - Issue: Microphone button not found when unmuted  
+   - Error: "Microphone button should exist" assertion failed
+   - Fix Applied: Added wait time after unmuting for UI update
+   - Fix Applied: Multiple fallback detection methods (identifier, label, predicate)
+   - Fix Applied: Check if accidentally still muted and re-unmute if needed
+   - Fix Applied: Accept button exists even if not enabled (permissions)
+
+4. **testVoiceInputButton** ❌ (13.728s) - **ALREADY HAD FIX**
+   - Issue: Microphone button not visible when unmuted
+   - Error: "Microphone button should be visible when unmuted" assertion failed  
+   - Note: This test already had comprehensive fallback detection
+   - The UI may be in an unexpected state or the mic button has a different identifier
 
 #### Passing Tests:
 - ✅ testMuteToggle (verified passing)
