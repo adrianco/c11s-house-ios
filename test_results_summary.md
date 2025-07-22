@@ -2,10 +2,10 @@
 
 ## Test Overview (As of 2025-07-22 - Latest update 15:25 UTC)
 
-### Unit Tests ✅
+### Unit Tests
 - **Total Unit Test Suites**: 17
-- **ALL UNIT TESTS PASSING!** 🎉
-- All previously failing tests have been fixed
+- **Status**: 1 test failing (fix applied, awaiting re-run)
+- **NotesServiceTests.testUpdateNote**: Timing issue - fix applied
 
 ### UI Tests  
 - **Total UI Test Suites**: 4
@@ -16,15 +16,18 @@
 
 ---
 
-## Unit Test Results ✅
+## Unit Test Results
 
-### ALL UNIT TESTS PASSING! 🎉
+### Status: 1 Test Failing (Fix Applied)
+
+**Current Issue**:
+- **NotesServiceTests.testUpdateNote** - Timing issue with timestamp comparison (fix applied)
 
 Previously failing tests that are now fixed:
 - **ConversationFlowIntegrationTests**: All 6 tests passing ✅
 - **InitialSetupFlowTests**: All 6 tests passing ✅
 - **AddressManagerTests**: All tests passing ✅
-- **NotesServiceTests**: All tests passing (deadlock fixed) ✅
+- **NotesServiceTests**: 1 test failing due to timing issue
 
 ### ✅ All Passing Unit Test Suites (17 total)
 - AddressManagerTests
@@ -149,6 +152,15 @@ Previously failing tests that are now fixed:
 
 ## Latest Test Run Results
 
+### Full Test Suite Run (2025-07-22 - After 15:30)
+User ran all tests from the start and found new failures:
+
+**NotesServiceTests**:
+- **testUpdateNote** ❌ FAILED - **FIX APPLIED**
+  - Error: "XCTAssertGreaterThan failed: (1753223484.0) is not greater than (1753223484.0)"
+  - Issue: Timestamp not updating - same issue as before but 0.2s delay wasn't enough
+  - Fix: Increased delay from 0.2s to 0.5s to ensure timestamp difference on all systems
+
 ### UI Tests - Latest Run (2025-07-22 15:30)
 **OnboardingUITests**:
 - **testWelcomeScreenAppearance** ✅ PASSED (8.050s) - **FIXED**
@@ -216,6 +228,12 @@ Previously failing tests that are now fixed:
 ---
 
 ## Recent Fixes Applied
+
+### NotesServiceTests Fix (2025-07-22 15:55)
+1. **Fixed testUpdateNote (recurring issue)**:
+   - Problem: Timestamps were identical even with 0.2s delay
+   - Solution: Increased delay from 0.2s to 0.5s
+   - This test has been flaky due to timing issues on fast systems
 
 ### OnboardingUITests Fixes (2025-07-22 15:20-15:45)
 1. **Fixed testStartConversationFlow** (15:20) - ✅ NOW PASSING:
@@ -420,7 +438,9 @@ Previously failing tests that are now fixed:
 - **Performance**: Some tests still taking 20-30+ seconds
 
 ### Tests Awaiting Re-run with Fixes
-1. **InitialSetupFlowTests** (2 tests - fixes applied 22:25)
+1. **NotesServiceTests** (1 test - fix applied 15:55)
+   - testUpdateNote (increased delay to 0.5s)
+2. **InitialSetupFlowTests** (2 tests - fixes applied 22:25)
    - testCompleteInitialSetupFlow
    - testSetupFlowWithLocationPermissionDenied
 

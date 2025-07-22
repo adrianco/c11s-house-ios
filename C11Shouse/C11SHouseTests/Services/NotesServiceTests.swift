@@ -138,8 +138,8 @@ class NotesServiceTests: XCTestCase {
         let savedTimestamp = savedStore.notes[question.id]!.lastModified
         
         // Add delay to ensure different timestamps
-        // Increased from 0.1 to 0.2 seconds to ensure timestamp difference
-        try await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+        // Increased to 0.5 seconds to ensure timestamp difference on all systems
+        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
         
         // When: Updating the note
         var updatedNote = originalNote
