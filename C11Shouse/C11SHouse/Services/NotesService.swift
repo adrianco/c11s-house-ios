@@ -282,6 +282,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     
     @NotesStoreActor
     private func save(_ store: NotesStoreData) async throws {
+        // Note: Caller should already hold the lock
         do {
             let data = try encoder.encode(store)
             userDefaults.set(data, forKey: userDefaultsKey)
