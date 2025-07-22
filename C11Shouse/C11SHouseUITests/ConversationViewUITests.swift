@@ -29,7 +29,7 @@ class ConversationViewUITests: XCTestCase {
     //   1. Change this value to true
     //   2. Run the failing test
     //   3. Change back to false when done debugging
-    static let verboseLogging = false // Disabled after fixing mic button and send button issues
+    static let verboseLogging = true // Temporarily enabled to debug message display issues
     
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -892,15 +892,29 @@ class ConversationViewUITests: XCTestCase {
         // Wait for message to appear - try multiple detection methods
         var messageFound = false
         
+        // Add a small delay to allow UI to update
+        Thread.sleep(forTimeInterval: 0.5)
+        
         // Method 1: Direct static text
-        if app.staticTexts[text].waitForExistence(timeout: 2) {
+        if app.staticTexts[text].waitForExistence(timeout: 3) {
             messageFound = true
             if Self.verboseLogging {
                 print("🧪 sendTextMessage: Found message via direct staticText lookup")
             }
         }
         
-        // Method 2: Predicate search
+        // Method 2: Check by accessibility identifier
+        if !messageFound {
+            let messageById = app.staticTexts["message_\(text)"]
+            if messageById.waitForExistence(timeout: 1) {
+                messageFound = true
+                if Self.verboseLogging {
+                    print("🧪 sendTextMessage: Found message via accessibility identifier")
+                }
+            }
+        }
+        
+        // Method 3: Predicate search
         if !messageFound {
             let messagePredicate = NSPredicate(format: "label == %@", text)
             let messageElement = app.staticTexts.matching(messagePredicate).firstMatch
@@ -912,7 +926,7 @@ class ConversationViewUITests: XCTestCase {
             }
         }
         
-        // Method 3: Contains search
+        // Method 4: Contains search
         if !messageFound {
             let containsPredicate = NSPredicate(format: "label CONTAINS[c] %@", text)
             let containsElement = app.staticTexts.matching(containsPredicate).firstMatch
@@ -924,12 +938,32 @@ class ConversationViewUITests: XCTestCase {
             }
         }
         
+        // Method 5: Check all text elements
+        if !messageFound {
+            // Try other text element types
+            if app.otherElements[text].waitForExistence(timeout: 0.5) ||
+               app.cells[text].waitForExistence(timeout: 0.5) {
+                messageFound = true
+                if Self.verboseLogging {
+                    print("🧪 sendTextMessage: Found message in other element types")
+                }
+            }
+        }
+        
         // Simplified debug output if message not found
-        if !messageFound && Self.verboseLogging {
-            print("🧪 sendTextMessage: Message '\(text)' not found after \(Date().timeIntervalSince(startTime))s")
-            // Only print minimal debug info
-            let textCount = app.staticTexts.count
-            print("🧪 sendTextMessage: \(textCount) static texts in view")
+        if !messageFound {
+            if Self.verboseLogging {
+                print("🧪 sendTextMessage: Message '\(text)' not found after \(Date().timeIntervalSince(startTime))s")
+                // Print all static texts to debug
+                let textCount = app.staticTexts.count
+                print("🧪 sendTextMessage: \(textCount) static texts in view")
+                for i in 0..<min(textCount, 10) {
+                    let element = app.staticTexts.element(boundBy: i)
+                    if element.exists {
+                        print("🧪 sendTextMessage: StaticText[\(i)]: '\(element.label)'")
+                    }
+                }
+            }
         }
         
         XCTAssertTrue(messageFound, "Sent message '\(text)' should appear in chat")

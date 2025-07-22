@@ -1,6 +1,6 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 16:20 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 16:45 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
@@ -12,7 +12,7 @@
 
 ### UI Tests  
 - **Total UI Test Suites**: 4
-- **ConversationViewUITests**: ALL 4 TESTS PASSING! ✅
+- **ConversationViewUITests**: 3 tests failing (message display issue) - FIX IN PROGRESS 🔧
 - **OnboardingUITests**: 4 failing, 1 passing (fixes applied, awaiting re-run)
 - **ThreadingSafetyUITests**: ALL 6 TESTS PASSING! ✅
 - **C11SHouseUITestsLaunchTests**: Not run
@@ -55,31 +55,30 @@ Previously failing tests that are now fixed:
 
 ## UI Test Results
 
-### ConversationViewUITests ✅
-**Status**: ALL 4 TESTS PASSING! 🎉
+### ConversationViewUITests
+**Status**: 3 tests failing due to message display issue - investigating
 
-#### Confirmed Passing Tests:
-1. **testMuteToggle** ✅
-   - Successfully toggles between mute/unmute states
-   - Reliable and consistent
+#### Latest Test Results (15:50-15:54 UTC):
+1. **testMessageBubbleDisplay** ❌ FAILED
+   - Successfully sends message "Hello house" 
+   - Message not found in chat display
+   - Line 105: "Sent message 'Hello house' should appear in chat"
 
-2. **testTextMessageSending** ✅
-   - Successfully sends messages using keyboard return
-   - Works correctly without dedicated send button
+2. **testTextMessageSending** ❌ FAILED
+   - Successfully sends message "Hello from UI test"
+   - Message not found in chat display 
+   - Line 228: "Sent message should appear in chat"
 
-3. **testVoiceTranscriptDisplay** ✅
-   - Correctly detects microphone button by "Microphone" label
-   - Properly handles unmuted state
+3. **testMessageListScrolling** ❌ FAILED
+   - Successfully sends multiple messages
+   - Last message "Test message 10" not found
+   - Line 632: "Sent message 'Test message 10' should appear in chat"
 
-4. **testVoiceInputButton** ✅
-   - Successfully finds and taps microphone button
-   - Verifies recording state correctly
+4. **testMuteToggle** ✅ (Previously passing)
+5. **testVoiceTranscriptDisplay** ✅ (Previously passing)
+6. **testVoiceInputButton** ✅ (Previously passing)
 
-**Key Fixes That Made Tests Pass:**
-- Added detection of buttons by labels ("Microphone", "Mute", etc.)
-- Implemented keyboard return fallback for sending messages
-- Removed non-critical assertions
-- Fixed button detection logic to exclude keyboard buttons
+**Issue Pattern**: All failures show messages being sent successfully (send button tapped) but not appearing in the UI for detection by tests.
 
 #### Passing Tests:
 - ✅ testMuteToggle (verified passing)
@@ -154,6 +153,12 @@ Previously failing tests that are now fixed:
 ---
 
 ## Latest Test Run Results
+
+### UI Test Run (2025-07-22 - 15:50-15:54 UTC)
+ConversationViewUITests showing new failures:
+- **testMessageBubbleDisplay**: Message sent but not appearing in UI
+- **testTextMessageSending**: Message sent but not appearing in UI  
+- **testMessageListScrolling**: Messages sent but not appearing in UI
 
 ### Full Test Suite Run (2025-07-22 - After 15:30)
 User ran all tests from the start and found new failures:
@@ -252,7 +257,7 @@ User ran all tests from the start and found new failures:
 
 ## Recent Fixes Applied
 
-### Unit Test Fixes (2025-07-22 15:55-16:20)
+### Unit Test Fixes (2025-07-22 15:55-16:45)
 1. **Fixed NotesServiceTests.testUpdateNote (recurring issue)**:
    - Problem: Timestamps were identical even with 0.2s delay
    - Solution: Increased delay from 0.2s to 0.5s
@@ -301,7 +306,7 @@ User ran all tests from the start and found new failures:
    - Third fix: Removed measure block that was causing launch error
    - Result: Test passed successfully at 15:30!
 
-### ConversationViewUITests Fixes (2025-07-22 14:59-15:15) ✅
+### ConversationViewUITests Fixes (2025-07-22 14:59-16:45)
 1. **Fixed testTextMessageSending** (Three attempts):
    - First attempt (14:59): Excluded dictation button - test then found Return button
    - Second attempt (15:05): Modified to use keyboard return (\n) when no send button
@@ -322,6 +327,15 @@ User ran all tests from the start and found new failures:
    - Enabled temporarily to debug issues
    - Revealed that mic button has label "Microphone" not identifier "mic.circle.fill"
    - Disabled again after all tests passing (15:15)
+   - Re-enabled at 16:45 to debug message display issues
+
+5. **Message display issue (16:45)** - IN PROGRESS:
+   - Added accessibility identifier to MessageBubbleView Text elements
+   - Added accessibility label to ensure text content is exposed
+   - Enhanced sendTextMessage helper with more detection methods
+   - Added debug output to show what static texts are visible
+   - Increased initial wait time to 0.5s for UI update
+   - Added detection by accessibility identifier "message_[content]"
 
 ### AddressManagerTests Fix (2025-07-22 22:10)
 1. **Fixed multiple test failures related to UserDefaults**:

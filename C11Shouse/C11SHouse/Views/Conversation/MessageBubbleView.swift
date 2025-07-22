@@ -82,6 +82,8 @@ struct MessageBubbleView: View {
                         .background(message.isFromUser ? Color.blue : Color(UIColor.secondarySystemBackground))
                         .foregroundColor(message.isFromUser ? .white : .primary)
                         .cornerRadius(20)
+                        .accessibilityIdentifier("message_\(message.content)")
+                        .accessibilityLabel(message.content)
                         .overlay(
                             message.isVoice ?
                             Image(systemName: "mic.fill")
