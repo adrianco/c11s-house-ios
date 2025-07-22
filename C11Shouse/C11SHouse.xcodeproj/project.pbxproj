@@ -30,22 +30,9 @@
 		279E6BF22E15D6A60068863B /* C11SHouseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C11SHouseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		27E2D8AF2E1DCF75002A68CE /* Exceptions for "C11SHouse" folder in "C11SHouse" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 279E6BDA2E15D6A50068863B /* C11SHouse */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		279E6BDD2E15D6A50068863B /* C11SHouse */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				27E2D8AF2E1DCF75002A68CE /* Exceptions for "C11SHouse" folder in "C11SHouse" target */,
-			);
 			path = C11SHouse;
 			sourceTree = "<group>";
 		};
