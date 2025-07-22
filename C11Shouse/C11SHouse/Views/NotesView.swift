@@ -240,12 +240,10 @@ struct NotesView: View {
                         // Parse the user's edited address while keeping detected coordinates
                         let finalAddress = AddressParser.parseAddress(trimmedText, coordinate: detectedAddr.coordinate) ?? detectedAddr
                         
-                        // Save to UserDefaults
-                        if let encoded = try? JSONEncoder().encode(finalAddress) {
-                            UserDefaults.standard.set(encoded, forKey: "confirmedHomeAddress")
-                        }
+                        // Note: Address persistence is handled by NotesService when the note is saved
+                        // No need to save to UserDefaults or LocationService
                         
-                        // Save using LocationService method
+                        // LocationService confirmAddress now only handles location monitoring
                         try? await serviceContainer.locationService.confirmAddress(finalAddress)
                     }
                     

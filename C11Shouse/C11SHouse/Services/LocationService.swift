@@ -156,8 +156,8 @@ class LocationServiceImpl: NSObject, LocationServiceProtocol {
     }
     
     func confirmAddress(_ address: Address) async throws {
-        // Store confirmed address
-        UserDefaults.standard.set(try JSONEncoder().encode(address), forKey: "confirmedHomeAddress")
+        // Note: Address persistence is handled by NotesService, not UserDefaults
+        // This method now only handles location monitoring setup
         
         // Start monitoring location updates if authorized
         if locationManager.authorizationStatus == .authorizedAlways {

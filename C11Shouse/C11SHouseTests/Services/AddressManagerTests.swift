@@ -230,6 +230,10 @@ class AddressManagerTests: XCTestCase {
         mockNotesService = MockNotesServiceWithTracking()
         mockLocationService = MockLocationServiceForAddressManager()
         
+        // Clear any leftover UserDefaults data from old code
+        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        
         // Ensure MockNotesService has predefined questions
         mockNotesService.mockNotesStore = NotesStoreData(
             questions: Question.predefinedQuestions,
