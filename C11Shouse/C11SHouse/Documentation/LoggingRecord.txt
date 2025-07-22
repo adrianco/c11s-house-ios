@@ -1,33 +1,29 @@
 CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
 Running tests...
     t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 15:25:57.717.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:25:57.718.
-Test Suite 'OnboardingUITests' started at 2025-07-22 15:25:57.718.
+Test Suite 'Selected tests' started at 2025-07-22 15:30:27.157.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:30:27.157.
+Test Suite 'OnboardingUITests' started at 2025-07-22 15:30:27.157.
 Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' started.
-    t =     0.00s Start Test at 2025-07-22 15:25:57.718
-    t =     0.01s Set Up
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     3.23s             Setting up automation session
-    t =     5.30s             Wait for com.c11s.house to idle
-    t =     6.72s Checking existence of `"Back" Button`
-    t =     8.71s Checking existence of `"House Chat" NavigationBar`
-    t =     9.68s Checking existence of `"Mute" Button`
-    t =    10.72s Checking existence of `"Microphone" Button`
-    t =    10.94s Checking existence of `"StartConversation" Button`
-    t =    10.97s Checking existence of `"StartConversation" Button`
-    t =    10.99s Checking existence of `"StartConversation" Button`
-    t =    11.01s Find the "StartConversation" Button
-    t =    11.04s Open com.c11s.house
-    t =    11.04s     Launch com.c11s.house
-    t =    11.04s         Terminate com.c11s.house:52638
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:87: error: -[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance] : Failed to get launch progress for <XCUIApplicationImpl: 0x154f87480 com.c11s.house at /Users/adriancockcroft/Library/Developer/Xcode/DerivedData/C11SHouse-akgqjaldbznetpegofxhevimbrkp/Build/Products/Debug-iphoneos/C11SHouse.app>: Pseudo Terminal Setup Error. ErrorCode: 7 Errno: 6. (Underlying Error: The operation couldn’t be completed. Device not configured)
-    t =    13.52s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' failed (13.534 seconds).
-Test Suite 'OnboardingUITests' failed at 2025-07-22 15:26:11.252.
-	 Executed 1 test, with 1 failure (0 unexpected) in 13.534 (13.534) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 15:26:11.252.
-	 Executed 1 test, with 1 failure (0 unexpected) in 13.534 (13.534) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 15:26:11.252.
-	 Executed 1 test, with 1 failure (0 unexpected) in 13.534 (13.535) seconds
+    t =     0.00s Start Test at 2025-07-22 15:30:27.157
+    t =     0.03s Set Up
+    t =     0.04s     Open com.c11s.house
+    t =     0.04s         Launch com.c11s.house
+    t =     3.44s             Setting up automation session
+    t =     4.71s             Wait for com.c11s.house to idle
+    t =     6.07s Checking existence of `"Back" Button`
+    t =     7.62s Checking existence of `"House Chat" NavigationBar`
+    t =     7.65s Checking existence of `"Mute" Button`
+    t =     7.67s Checking existence of `"Microphone" Button`
+    t =     7.69s Checking existence of `"StartConversation" Button`
+    t =     7.71s Checking existence of `"StartConversation" Button`
+    t =     7.73s Checking existence of `"StartConversation" Button`
+    t =     7.74s Find the "StartConversation" Button
+    t =     7.76s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' passed (8.050 seconds).
+Test Suite 'OnboardingUITests' passed at 2025-07-22 15:30:35.209.
+	 Executed 1 test, with 0 failures (0 unexpected) in 8.050 (8.052) seconds
+Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 15:30:35.211.
+	 Executed 1 test, with 0 failures (0 unexpected) in 8.050 (8.054) seconds
+Test Suite 'Selected tests' passed at 2025-07-22 15:30:35.212.
+	 Executed 1 test, with 0 failures (0 unexpected) in 8.050 (8.055) seconds
