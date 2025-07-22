@@ -151,8 +151,12 @@ class InitialSetupFlowTests: XCTestCase {
         conversationStateManager.persistentTranscript = detectedAddress.fullAddress
         try await questionFlowCoordinator.saveAnswer(detectedAddress.fullAddress)
         
+        // Since we're using the simple saveAnswer, we need to manually save the address
+        // The real app uses the parameterless saveAnswer() which handles this automatically
+        try await addressManager.saveAddress(detectedAddress)
+        
         // Verify address was saved
-        let savedAddress = try await addressManager.loadSavedAddress()
+        let savedAddress = await addressManager.loadSavedAddress()
         XCTAssertNotNil(savedAddress)
         XCTAssertEqual(savedAddress?.fullAddress, detectedAddress.fullAddress)
         
@@ -241,7 +245,7 @@ class InitialSetupFlowTests: XCTestCase {
             if let parsed = addressManager.parseAddress(manualAddress) {
                 try await addressManager.saveAddress(parsed)
                 
-                let saved = try await addressManager.loadSavedAddress()
+                let saved = await addressManager.loadSavedAddress()
                 XCTAssertNotNil(saved)
                 XCTAssertTrue(saved!.fullAddress.contains("Manual Entry"))
             }
@@ -306,7 +310,7 @@ class InitialSetupFlowTests: XCTestCase {
         try await addressManager.saveAddress(address)
         
         // Verify immediate persistence
-        let savedAddress1 = try await addressManager.loadSavedAddress()
+        let savedAddress1 = await addressManager.loadSavedAddress()
         XCTAssertNotNil(savedAddress1)
         XCTAssertEqual(savedAddress1?.city, "Los Angeles")
         

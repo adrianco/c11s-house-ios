@@ -1,201 +1,61 @@
-[WeatherKitService] 🌦️ Initializing WeatherKit service
-[WeatherKitService] Bundle ID: com.c11s.house
-[WeatherKitService] ✅ Running on real device
-[WeatherKitService] ⚠️ Entitlements file not found in bundle
-[WeatherCoordinator] 🌤️ Initialized with services
-[WeatherCoordinator] Weather service: WeatherKitServiceImpl
-[WeatherCoordinator] Notes service: NotesServiceImpl
-[WeatherCoordinator] Location service: LocationServiceImpl
-[ContentViewModel] Init complete - currentWeather: nil
-[ContentViewModel] Init complete - houseName: Your House
-[ContentViewModel] Init complete - address: nil
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[ContentViewModel] Weather update received: nil
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Hello houseRd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-#FactoryInstall Unable to query results, error: 5
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-App is being debugged, do not track this hang
-Hang detected: 0.28s (debugger attached, not reporting)
-Test Suite 'Selected tests' started at 2025-07-22 13:37:27.367.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 13:37:27.367.
-Test Suite 'ConversationFlowIntegrationTests' started at 2025-07-22 13:37:27.367.
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' started.
-Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: 0BFC1C2D-BF55-414E-912A-85303F3663B0
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 PHASE TRANSITION: Start → welcome
-👆 USER ACTION: view_appeared in welcome
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[WeatherCoordinator] Weather question creation already in progress
-[ContentViewModel] Weather update received: partlyCloudy
-[WeatherCoordinator] Created Weather question in notes store
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-[WeatherCoordinator] Failed to update weather note: questionNotFound(F210AD40-695A-4773-8A85-311255D2E50F)
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
-[ContentViewModel] Temperature: 74°F
-[ContentViewModel] Current weather after fetch: exists
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:274: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow] : XCTAssertEqual failed: ("Optional("14450 Roland Canyon Hello houseRd, Salinas, CA 93908")") is not equal to ("Optional("350 5th Ave, New York, NY 10118")")
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' failed (0.281 seconds).
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' started.
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 2
-[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 2
-[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 1
-[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 1
-[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:335: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories] : XCTAssertGreaterThanOrEqual failed: ("2") is less than ("3")
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' failed (0.017 seconds).
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' started.
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 2
-[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 1
-[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:176: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : XCTAssertEqual failed: ("") is not equal to ("Test User")
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' failed (0.010 seconds).
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' started.
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' passed (0.002 seconds).
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' started.
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' passed (0.003 seconds).
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' started.
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:228: error: -[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers] : XCTAssertNotEqual failed: ("Optional("Is this the right address?")") is equal to ("Optional("Is this the right address?")")
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' failed (0.003 seconds).
-Test Suite 'ConversationFlowIntegrationTests' failed at 2025-07-22 13:37:27.683.
-	 Executed 6 tests, with 4 failures (0 unexpected) in 0.315 (0.316) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 13:37:27.683.
-	 Executed 6 tests, with 4 failures (0 unexpected) in 0.315 (0.316) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 13:37:27.683.
-	 Executed 6 tests, with 4 failures (0 unexpected) in 0.315 (0.316) seconds
+Test Case '-[C11SHouseUITests.ThreadingSafetyUITests testBackgroundTransitionWhileRecording]' started.
+    t =     0.00s Start Test at 2025-07-22 14:18:31.819
+    t =     0.02s Set Up
+    t =     0.03s     Open com.c11s.house
+    t =     0.03s         Launch com.c11s.house
+    t =     0.03s             Terminate com.c11s.house:52213
+    t =     1.28s             Setting up automation session
+    t =     5.04s             Wait for com.c11s.house to idle
+    t =     6.56s Waiting 2.0s for "StartConversation" Button to exist
+    t =     7.57s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =     7.57s         Checking existence of `"StartConversation" Button`
+    t =     8.89s         Capturing element debug description
+    t =     8.89s     Checking existence of `"StartConversation" Button`
+    t =    11.19s Tap "StartConversation" Button
+    t =    11.19s     Wait for com.c11s.house to idle
+    t =    11.20s     Find the "StartConversation" Button
+    t =    11.23s     Check for interrupting elements affecting "StartConversation" Button
+    t =    11.27s     Synthesize event
+    t =    11.57s     Wait for com.c11s.house to idle
+    t =    11.68s Waiting 2.0s for "Back" Button to exist
+    t =    12.71s     Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
+    t =    12.71s         Checking existence of `"Back" Button`
+    t =    12.77s Checking existence of `"Unmute" Button`
+    t =    12.79s Checking existence of `"mic.circle.fill" Button`
+    t =    12.81s Waiting 2.0s for "Microphone" Button to exist
+    t =    13.82s     Checking `Expect predicate `existsNoRetry == 1` for object "Microphone" Button`
+    t =    13.82s         Checking existence of `"Microphone" Button`
+    t =    13.86s Find the "Microphone" Button
+    t =    13.89s Tap "ConversationView" Button
+    t =    13.89s     Wait for com.c11s.house to idle
+    t =    13.90s     Find the "ConversationView" Button
+    t =    13.92s     Check for interrupting elements affecting "ConversationView" Button
+    t =    13.96s     Synthesize event
+    t =    14.27s     Wait for com.c11s.house to idle
+    t =    14.85s Waiting 2.0s for "stop.circle.fill" Button to exist
+    t =    15.87s     Checking `Expect predicate `existsNoRetry == 1` for object "stop.circle.fill" Button`
+    t =    15.87s         Checking existence of `"stop.circle.fill" Button`
+    t =    15.92s Pressing Home button
+    t =    17.43s Open com.c11s.house
+    t =    17.43s     Activate com.c11s.house
+    t =    17.52s         Wait for com.c11s.house to idle
+    t =    18.04s Checking existence of `"stop.circle.fill" Button`
+    t =    18.08s Tap "stop.circle.fill" Button
+    t =    18.08s     Wait for com.c11s.house to idle
+    t =    18.08s     Find the "stop.circle.fill" Button
+    t =    18.12s     Check for interrupting elements affecting "ConversationView" Button
+    t =    18.16s     Synthesize event
+    t =    18.47s     Wait for com.c11s.house to idle
+    t =    18.79s Waiting 2.0s for "ConversationView" Button to exist
+    t =    19.84s     Checking `Expect predicate `existsNoRetry == 1` for object "ConversationView" Button`
+    t =    19.84s         Checking existence of `"ConversationView" Button`
+    t =    21.08s         Capturing element debug description
+    t =    21.14s             Requesting snapshot of accessibility hierarchy for app with pid 52217
+    t =    21.14s             Requesting snapshot of accessibility hierarchy for app with pid 52217
+    t =    21.14s             Requesting snapshot of accessibility hierarchy for app with pid 52217
+    t =    21.14s     Checking existence of `"ConversationView" Button`
+    t =    23.72s Collecting debug information to assist test failure triage
+    t =    23.72s     Requesting snapshot of accessibility hierarchy for app with pid 52217
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ThreadingSafetyUITests.swift:283: error: -[C11SHouseUITests.ThreadingSafetyUITests testBackgroundTransitionWhileRecording] : XCTAssertTrue failed
+    t =    23.90s Tear Down
+Test Case '-[C11SHouseUITests.ThreadingSafetyUITests testBackgroundTransitionWhileRecording]' failed (24.120 seconds).

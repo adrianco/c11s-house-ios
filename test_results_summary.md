@@ -1,6 +1,6 @@
 # Test Results Summary
 
-## Test Overview (As of 2025-07-22 - Latest update 20:40 UTC)
+## Test Overview (As of 2025-07-22 - Latest update 21:35 UTC)
 
 ### Unit Tests
 - **Total Unit Test Suites**: 17
@@ -66,13 +66,19 @@
    - Successfully toggles between mute/unmute states
    - Logging: Now minimal with verboseLogging=false
 
-2. **testTextMessageSending** ❌ (24.866s)
+2. **testTextMessageSending** ❌ (24.866s) - **FIX APPLIED**
    - Issue: Send button not appearing after typing message
    - Error: "Send button should exist" assertion failed
+   - Fix Applied: Added multiple fallback detection methods for send button
+   - Fix Applied: Added wait time after typing for UI update
+   - Fix Applied: Check for button by position relative to text field
    
-3. **testVoiceInputButton** ❌ (17.636s)
-   - Issue: Microphone button not visible when unmuted
+3. **testVoiceInputButton** ❌ (17.636s) - **FIX APPLIED**
+   - Issue: Microphone button not visible when unmuted  
    - Error: "Microphone button should be visible when unmuted" assertion failed
+   - Fix Applied: Added multiple fallback detection methods for mic button
+   - Fix Applied: Handle voice confirmation mode edge case
+   - Fix Applied: Check buttons in input area by position
 
 #### Passing Tests:
 - ✅ testMuteToggle (verified passing)
@@ -194,6 +200,19 @@
    - Reduced timeouts to 0.5s
    - Accept any non-empty message
 
+3. **testTextMessageSending** (21:35 UTC):
+   - Added wait time after typing for UI update
+   - Multiple fallback methods to find send button
+   - Check by identifier, predicate match, and position
+   - Added debug view hierarchy printing
+
+4. **testVoiceInputButton** (21:35 UTC):
+   - Added wait time after unmuting for UI update
+   - Multiple fallback methods to find mic button
+   - Handle voice confirmation mode edge case
+   - Check buttons in input area by screen position
+   - Added verbose debug output for troubleshooting
+
 ### OnboardingUITests (2025-07-22)
 1. Fixed launch arguments to not skip onboarding
 2. Updated button detection to use "StartConversation"
@@ -256,11 +275,12 @@
 
 ### Key Improvements Made
 1. **Bug Fix**: Addresses now only persisted through NotesService (removed UserDefaults usage)
-2. **Logging Control**: Added verboseLogging flag to reduce noise
+2. **Logging Control**: Added verboseLogging flag to reduce noise (temporarily re-enabled for debugging)
 3. **Test Reliability**: Fixed flaky tests with better element detection
 4. **Performance**: Reduced timeouts where possible
 5. **Documentation**: Clear instructions for debugging with verbose logging
 6. **Unit Test Fixes**: All 4 failing ConversationFlowIntegrationTests now fixed
+7. **UI Test Fixes**: Enhanced element detection for send button and mic button with multiple fallback strategies
 
 ---
 
