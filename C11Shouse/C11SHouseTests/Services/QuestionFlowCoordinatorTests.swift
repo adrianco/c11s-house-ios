@@ -63,7 +63,7 @@ class MockNotesServiceForQuestionFlow: SharedMockNotesService {
     }
     
     // Override the parent class implementation
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+    override func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
         print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
         saveOrUpdateNoteCallCount += 1
         print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
