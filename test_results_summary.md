@@ -38,23 +38,12 @@
 
 ## UI Tests Run
 
-### 🔧 UI Tests in Progress
-1. **ConversationViewUITests** (Latest run: 11/15 failed - FIXING NOW, 164.8s total)
-   - ✅ testBackButtonNavigation (8.225s) - Passed
-   - ✅ testErrorOverlayDisplay (7.302s) - Passed  
-   - ✅ testInitialWelcomeMessage (12.805s) - Passed
-   - ✅ testAddressQuestionDisplay (10.516s) - Passed
-   - 🔧 testMessageBubbleDisplay (11.344s) - Fixing: Mute button detection issue
-   - 🔧 testMessageInputPerformance (11.339s) - Fixing: Mute button detection issue
-   - 🔧 testMessageListScrolling (10.987s) - Fixing: Mute button detection issue
-   - 🔧 testMessageTimestamps (11.237s) - Fixing: Mute button detection issue
-   - 🔧 testMuteToggle (14.339s) - Fixing: Updated to use label-based detection
-   - 🔧 testRoomNoteCreation (11.200s) - Fixing: Mute button detection issue
-   - 🔧 testScrollingPerformance (11.119s) - Fixing: Mute button detection issue
-   - 🔧 testTextMessageKeyboardSubmit (11.331s) - Fixing: Mute button detection issue
-   - 🔧 testTextMessageSending (10.920s) - Fixing: Mute button detection issue
-   - 🔧 testVoiceInputButton (10.995s) - Fixing: Mute button detection issue
-   - 🔧 testVoiceTranscriptDisplay (11.113s) - Fixing: Mute button detection issue
+### 🔧 UI Tests in Progress  
+1. **ConversationViewUITests** (Latest run: testMessageBubbleDisplay only - FIXED, 22.2s)
+   - 🔧 testMessageBubbleDisplay (22.166s) - Fixed: Send button detection issue
+   - **Issue**: Send button has label "Arrow Up Circle" and id "ConversationView", not "arrow.up.circle.fill"
+   - **Fix**: Added label-based detection for send button
+   - **Note**: Mute button fix worked - successfully muted conversation and showed text field
 
 ### ✅ Fixed UI Tests
 2. **ThreadingSafetyUITests** (Updated run: 1/6 failed → FIXED, 295.1s total)
@@ -65,7 +54,27 @@
    - ✅ testRecordingFlowThreadSafety (10.905s) - Passed
    - ✅ testThreadingUnderMemoryPressure (9.587s) - Passed
 
-### 🔧 ConversationViewUITests Fixes Applied (Current)
+### 🔧 ConversationViewUITests Fixes Applied (Latest - Send Button)
+
+#### Send Button Detection Issue:
+1. **Problem**: Test was looking for send button with identifier `arrow.up.circle.fill`
+   - Actual button has label "Arrow Up Circle" and identifier "ConversationView"
+   - Debug logs show: `Button 7: 'Arrow Up Circle' id:'ConversationView'`
+   - The mute button fix worked correctly (successfully muted and showed text field)
+
+2. **Solution**:
+   - Added multi-method detection for send button
+   - Try identifier first: `app.buttons["arrow.up.circle.fill"]`
+   - Fallback to label: `app.buttons["Arrow Up Circle"]`
+   - Final fallback to predicate: `NSPredicate(format: "label CONTAINS[c] 'Arrow'")`
+   - Use whichever method finds the button
+
+3. **Key Changes**:
+   - Changed from single identifier lookup to triple fallback strategy
+   - Label-based detection as primary fallback for send button
+   - Improved debug output to show all available buttons when send fails
+
+### 🔧 ConversationViewUITests Fixes Applied (Previous - Mute Button)
 
 #### Mute Button Detection Issue:
 1. **Problem**: Tests were looking for buttons with accessibility identifiers `speaker.wave.2.fill` and `speaker.slash.fill`

@@ -579,15 +579,21 @@ class ConversationViewUITests: XCTestCase {
         // Give a moment for the UI to update after typing
         Thread.sleep(forTimeInterval: 0.2)
         
-        // Look for send button with the correct identifier
-        let sendButton = app.buttons.matching(identifier: "arrow.up.circle.fill").firstMatch
+        // Look for send button - try multiple methods
+        let sendButtonById = app.buttons["arrow.up.circle.fill"]
+        let sendButtonByLabel = app.buttons["Arrow Up Circle"]
+        let sendButtonByPredicate = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Arrow'")).firstMatch
+        
+        let sendButton = sendButtonById.exists ? sendButtonById : 
+                        (sendButtonByLabel.exists ? sendButtonByLabel : sendButtonByPredicate)
+        
         guard sendButton.waitForExistence(timeout: 3) else {
-            // Try alternative search methods
-            print("🧪 sendTextMessage: Send button not found by identifier, searching by image...")
+            // Debug output
+            print("🧪 sendTextMessage: Send button not found. Available buttons:")
             let allButtons = app.buttons.allElementsBoundByIndex
-            for i in 0..<allButtons.count {
+            for i in 0..<min(allButtons.count, 20) {
                 let button = allButtons[i]
-                print("🧪 sendTextMessage: Found button \(i): '\(button.label)' id:'\(button.identifier)'")
+                print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
             }
             XCTFail("Send button did not appear")
             return
