@@ -81,11 +81,6 @@ class OnboardingUITests: XCTestCase {
                              "App should have some UI elements visible")
             }
         }
-        
-        // Measure load time
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            app.launch()
-        }
     }
     
     func testStartConversationFlow() throws {

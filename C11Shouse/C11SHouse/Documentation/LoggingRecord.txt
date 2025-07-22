@@ -1,130 +1,33 @@
 CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
 Running tests...
     t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 15:21:30.988.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:21:30.989.
-Test Suite 'OnboardingUITests' started at 2025-07-22 15:21:30.989.
+Test Suite 'Selected tests' started at 2025-07-22 15:25:57.717.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:25:57.718.
+Test Suite 'OnboardingUITests' started at 2025-07-22 15:25:57.718.
 Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' started.
-    t =     0.00s Start Test at 2025-07-22 15:21:30.989
+    t =     0.00s Start Test at 2025-07-22 15:25:57.718
     t =     0.01s Set Up
     t =     0.01s     Open com.c11s.house
     t =     0.01s         Launch com.c11s.house
-    t =     2.05s             Setting up automation session
-    t =     5.16s             Wait for com.c11s.house to idle
-    t =     6.58s Checking existence of `"Back" Button`
-    t =     9.88s Checking existence of `"House Chat" NavigationBar`
-    t =    10.91s Checking existence of `"Mute" Button`
-    t =    10.94s Checking existence of `"Microphone" Button`
-    t =    10.96s Waiting 2.0s for StaticText (First Match) to exist
-    t =    11.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    11.97s         Checking existence of `StaticText (First Match)`
-    t =    12.00s         Capturing element debug description
-    t =    12.97s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    12.97s         Checking existence of `StaticText (First Match)`
-    t =    12.98s         Capturing element debug description
-    t =    12.98s     Checking existence of `StaticText (First Match)`
-    t =    13.00s Collecting debug information to assist test failure triage
-    t =    13.00s     Requesting snapshot of accessibility hierarchy for app with pid 52601
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:61: error: -[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance] : XCTAssertTrue failed
-    t =    13.25s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' failed (13.487 seconds).
-Test Suite 'OnboardingUITests' failed at 2025-07-22 15:21:44.477.
-	 Executed 1 test, with 1 failure (0 unexpected) in 13.487 (13.488) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 15:21:44.478.
-	 Executed 1 test, with 1 failure (0 unexpected) in 13.487 (13.489) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 15:21:44.479.
-	 Executed 1 test, with 1 failure (0 unexpected) in 13.487 (13.490) seconds
-
-     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 15:22:09.464.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:22:09.464.
-Test Suite 'OnboardingUITests' started at 2025-07-22 15:22:09.464.
-Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionGrantFlow]' started.
-    t =     0.00s Start Test at 2025-07-22 15:22:09.464
-    t =     0.01s Set Up
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     2.48s             Setting up automation session
-    t =     4.80s             Wait for com.c11s.house to idle
-    t =     6.11s Waiting 3.0s for "StartConversation" Button to exist
-    t =     7.13s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.13s         Checking existence of `"StartConversation" Button`
-    t =     9.38s         Capturing element debug description
-    t =     9.39s     Checking existence of `"StartConversation" Button`
-    t =    10.12s Tap "StartConversation" Button
-    t =    10.12s     Wait for com.c11s.house to idle
-    t =    10.13s     Find the "StartConversation" Button
-    t =    10.15s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.17s     Synthesize event
-    t =    10.47s     Wait for com.c11s.house to idle
-    t =    10.86s Waiting 3.0s for "Grant Permissions" Button to exist
-    t =    11.87s     Checking `Expect predicate `existsNoRetry == 1` for object "Grant Permissions" Button`
-    t =    11.87s         Checking existence of `"Grant Permissions" Button`
-    t =    11.92s         Capturing element debug description
-    t =    12.86s     Checking `Expect predicate `existsNoRetry == 1` for object "Grant Permissions" Button`
-    t =    12.86s         Checking existence of `"Grant Permissions" Button`
-    t =    12.90s         Capturing element debug description
-    t =    13.86s     Checking `Expect predicate `existsNoRetry == 1` for object "Grant Permissions" Button`
-    t =    13.86s         Checking existence of `"Grant Permissions" Button`
-    t =    13.90s         Capturing element debug description
-    t =    13.90s     Checking existence of `"Grant Permissions" Button`
-    t =    13.93s Collecting debug information to assist test failure triage
-    t =    13.93s     Requesting snapshot of accessibility hierarchy for app with pid 52610
-    t =    13.99s Checking existence of `"Back" Button`
-    t =    14.01s Checking existence of `"Back" Button`
-    t =    14.03s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionGrantFlow]' passed (14.262 seconds).
-Test Suite 'OnboardingUITests' passed at 2025-07-22 15:22:23.727.
-	 Executed 1 test, with 0 failures (0 unexpected) in 14.262 (14.263) seconds
-Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 15:22:23.729.
-	 Executed 1 test, with 0 failures (0 unexpected) in 14.262 (14.265) seconds
-Test Suite 'Selected tests' passed at 2025-07-22 15:22:23.730.
-	 Executed 1 test, with 0 failures (0 unexpected) in 14.262 (14.267) seconds
-
-     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 15:22:43.556.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:22:43.557.
-Test Suite 'OnboardingUITests' started at 2025-07-22 15:22:43.557.
-Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionDenialRecovery]' started.
-    t =     0.00s Start Test at 2025-07-22 15:22:43.557
-    t =     0.01s Set Up
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     2.34s             Setting up automation session
-    t =     4.71s             Wait for com.c11s.house to idle
-    t =     6.06s Waiting 3.0s for "StartConversation" Button to exist
-    t =     7.08s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.08s         Checking existence of `"StartConversation" Button`
-    t =     9.33s         Capturing element debug description
-    t =     9.33s     Checking existence of `"StartConversation" Button`
-    t =    10.17s Tap "StartConversation" Button
-    t =    10.17s     Wait for com.c11s.house to idle
-    t =    10.17s     Find the "StartConversation" Button
-    t =    10.20s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.23s     Synthesize event
-    t =    10.53s     Wait for com.c11s.house to idle
-    t =    10.94s Waiting 2.0s for "Grant Permissions" Button to exist
-    t =    11.97s     Checking `Expect predicate `existsNoRetry == 1` for object "Grant Permissions" Button`
-    t =    11.97s         Checking existence of `"Grant Permissions" Button`
-    t =    12.02s         Capturing element debug description
-    t =    12.95s     Checking `Expect predicate `existsNoRetry == 1` for object "Grant Permissions" Button`
-    t =    12.95s         Checking existence of `"Grant Permissions" Button`
-    t =    12.99s         Capturing element debug description
-    t =    12.99s     Checking existence of `"Grant Permissions" Button`
-    t =    13.02s Collecting debug information to assist test failure triage
-    t =    13.02s     Requesting snapshot of accessibility hierarchy for app with pid 52618
-    t =    13.09s Checking existence of `"Back" Button`
-    t =    13.11s Checking existence of `"Back" Button`
-    t =    13.13s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testPermissionDenialRecovery]' passed (13.364 seconds).
-Test Suite 'OnboardingUITests' passed at 2025-07-22 15:22:56.922.
-	 Executed 1 test, with 0 failures (0 unexpected) in 13.364 (13.365) seconds
-Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 15:22:56.924.
-	 Executed 1 test, with 0 failures (0 unexpected) in 13.364 (13.367) seconds
-Test Suite 'Selected tests' passed at 2025-07-22 15:22:56.925.
-	 Executed 1 test, with 0 failures (0 unexpected) in 13.364 (13.369) seconds
-     
+    t =     3.23s             Setting up automation session
+    t =     5.30s             Wait for com.c11s.house to idle
+    t =     6.72s Checking existence of `"Back" Button`
+    t =     8.71s Checking existence of `"House Chat" NavigationBar`
+    t =     9.68s Checking existence of `"Mute" Button`
+    t =    10.72s Checking existence of `"Microphone" Button`
+    t =    10.94s Checking existence of `"StartConversation" Button`
+    t =    10.97s Checking existence of `"StartConversation" Button`
+    t =    10.99s Checking existence of `"StartConversation" Button`
+    t =    11.01s Find the "StartConversation" Button
+    t =    11.04s Open com.c11s.house
+    t =    11.04s     Launch com.c11s.house
+    t =    11.04s         Terminate com.c11s.house:52638
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:87: error: -[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance] : Failed to get launch progress for <XCUIApplicationImpl: 0x154f87480 com.c11s.house at /Users/adriancockcroft/Library/Developer/Xcode/DerivedData/C11SHouse-akgqjaldbznetpegofxhevimbrkp/Build/Products/Debug-iphoneos/C11SHouse.app>: Pseudo Terminal Setup Error. ErrorCode: 7 Errno: 6. (Underlying Error: The operation couldn’t be completed. Device not configured)
+    t =    13.52s Tear Down
+Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' failed (13.534 seconds).
+Test Suite 'OnboardingUITests' failed at 2025-07-22 15:26:11.252.
+	 Executed 1 test, with 1 failure (0 unexpected) in 13.534 (13.534) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 15:26:11.252.
+	 Executed 1 test, with 1 failure (0 unexpected) in 13.534 (13.534) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 15:26:11.252.
+	 Executed 1 test, with 1 failure (0 unexpected) in 13.534 (13.535) seconds
