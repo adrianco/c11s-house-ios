@@ -586,35 +586,39 @@ class AddressManagerTests: XCTestCase {
     
     // MARK: - loadSavedAddress Tests
     
-    func testLoadSavedAddressWhenExists() {
-        // Given: Saved address in UserDefaults
-        let savedAddress = Address(
-            street: "321 Saved Street",
-            city: "Boston",
-            state: "MA",
-            postalCode: "02101",
-            country: "USA",
-            coordinate: Coordinate(latitude: 42.3601, longitude: -71.0589)
+    func testLoadSavedAddressWhenExists() async {
+        // Given: Address saved in NotesService
+        let addressQuestion = Question(
+            text: "Is this the right address?",
+            category: .houseInfo,
+            displayOrder: 0,
+            isRequired: true
         )
-        let encodedData = try! JSONEncoder().encode(savedAddress)
-        UserDefaults.standard.set(encodedData, forKey: "confirmedHomeAddress")
+        var notesStore = mockNotesService.mockNotesStore
+        notesStore.questions = [addressQuestion]
+        notesStore.notes[addressQuestion.id] = Note(
+            questionId: addressQuestion.id,
+            answer: "321 Saved Street, Boston, MA 02101",
+            createdAt: Date(),
+            lastModified: Date()
+        )
+        mockNotesService.mockNotesStore = notesStore
         
         // When: Loading saved address
-        let loaded = sut.loadSavedAddress()
+        let loaded = await sut.loadSavedAddress()
         
         // Then: Should load correctly
         XCTAssertNotNil(loaded)
         XCTAssertEqual(loaded?.street, "321 Saved Street")
         XCTAssertEqual(loaded?.city, "Boston")
-        XCTAssertEqual(loaded?.coordinate.latitude ?? 0, 42.3601, accuracy: 0.0001)
     }
     
-    func testLoadSavedAddressWhenNotExists() {
-        // Given: No saved address
-        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+    func testLoadSavedAddressWhenNotExists() async {
+        // Given: No saved address in NotesService
+        // mockNotesService.mockNotesStore already has empty notes
         
         // When: Loading saved address
-        let loaded = sut.loadSavedAddress()
+        let loaded = await sut.loadSavedAddress()
         
         // Then: Should return nil
         XCTAssertNil(loaded)
@@ -628,6 +632,7 @@ class AddressManagerTests: XCTestCase {
             displayOrder: 0,
             isRequired: true
         )
+        var notesStore = mockNotesService.mockNotesStore
         notesStore.questions = [addressQuestion]
         notesStore.notes[addressQuestion.id] = Note(
             questionId: addressQuestion.id,
@@ -635,7 +640,7 @@ class AddressManagerTests: XCTestCase {
             createdAt: Date(),
             lastModified: Date()
         )
-        mockNotesService.notesStore = notesStore
+        mockNotesService.mockNotesStore = notesStore
         
         // When: Loading saved address
         let loaded = await sut.loadSavedAddress()
@@ -779,7 +784,7 @@ class AddressManagerTests: XCTestCase {
         XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote (address + house name)")
         
         // 7. Load saved address
-        let loadedAddress = sut.loadSavedAddress()
+        let loadedAddress = await sut.loadSavedAddress()
         XCTAssertNotNil(loadedAddress)
         XCTAssertEqual(loadedAddress?.street, "100 Universal City Plaza")
     }
