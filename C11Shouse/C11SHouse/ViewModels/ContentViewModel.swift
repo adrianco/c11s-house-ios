@@ -197,10 +197,13 @@ class ContentViewModel: ObservableObject {
     }
     
     private func loadSavedData() {
-        // AppState already loads saved data in its init
-        // If we have an address on startup (already setup), fetch weather immediately
-        if appState.homeAddress != nil {
-            Task {
+        // Load address from NotesService since we no longer use UserDefaults
+        Task {
+            if let address = await addressManager.loadSavedAddress() {
+                await MainActor.run {
+                    appState.homeAddress = address
+                }
+                // Fetch weather for the loaded address
                 await refreshWeather()
             }
         }
@@ -461,33 +464,33 @@ class ContentViewModel: ObservableObject {
     }
     
     private func checkForAddressUpdate() {
-        // Check if we have a new address that we haven't loaded yet
-        if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
-           let address = try? JSONDecoder().decode(Address.self, from: addressData) {
-            
-            // Create a hash of the address to check if it's truly different
-            let addressHash = "\(address.fullAddress)-\(address.coordinate.latitude)-\(address.coordinate.longitude)"
-            
-            // Only update if the address hash is different from last check
-            if lastCheckedAddressHash != addressHash {
-                print("[ContentViewModel] 📍 Address update detected: \(address.fullAddress)")
-                lastCheckedAddressHash = addressHash
+        // Check if we have a new address from NotesService
+        Task {
+            if let address = await addressManager.loadSavedAddress() {
+                // Create a hash of the address to check if it's truly different
+                let addressHash = "\(address.fullAddress)-\(address.coordinate.latitude)-\(address.coordinate.longitude)"
                 
-                // Only update if the address is different from current state
-                if appState.homeAddress?.fullAddress != address.fullAddress {
-                    print("[ContentViewModel] ✅ New address, updating state and fetching weather")
-                    appState.homeAddress = address
+                // Only update if the address hash is different from last check
+                if lastCheckedAddressHash != addressHash {
+                    print("[ContentViewModel] 📍 Address update detected: \(address.fullAddress)")
+                    lastCheckedAddressHash = addressHash
                     
-                    // Fetch weather for the new address
-                    Task {
+                    // Only update if the address is different from current state
+                    if appState.homeAddress?.fullAddress != address.fullAddress {
+                        print("[ContentViewModel] ✅ New address, updating state and fetching weather")
+                        await MainActor.run {
+                            appState.homeAddress = address
+                        }
+                        
+                        // Fetch weather for the new address
                         await refreshWeather()
                     }
                 }
+            } else if lastCheckedAddressHash != nil {
+                // Address was removed
+                print("[ContentViewModel] Address removed from NotesService")
+                lastCheckedAddressHash = nil
             }
-        } else if lastCheckedAddressHash != nil {
-            // Address was removed
-            print("[ContentViewModel] Address removed from UserDefaults")
-            lastCheckedAddressHash = nil
         }
     }
 }

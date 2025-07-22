@@ -28,11 +28,8 @@ class AppState: ObservableObject {
     // MARK: - User Profile
     
     /// The user's home address
-    @Published var homeAddress: Address? {
-        didSet {
-            saveHomeAddress()
-        }
-    }
+    @Published var homeAddress: Address?
+    // Address is now persisted only through NotesService, not UserDefaults
     
     /// The name of the house (e.g., "123 Main Street")
     @Published var houseName: String = "Your House" {
@@ -120,11 +117,8 @@ class AppState: ObservableObject {
     // MARK: - Persistence
     
     private func loadPersistedState() {
-        // Load home address
-        if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
-           let address = try? JSONDecoder().decode(Address.self, from: addressData) {
-            homeAddress = address
-        }
+        // Address is loaded from NotesService, not UserDefaults
+        // The address will be loaded when needed through AddressManager
         
         // Load house name
         if let savedName = UserDefaults.standard.string(forKey: "houseName") {
@@ -157,16 +151,7 @@ class AppState: ObservableObject {
         }
     }
     
-    private func saveHomeAddress() {
-        if let address = homeAddress {
-            let encoder = JSONEncoder()
-            if let encoded = try? encoder.encode(address) {
-                UserDefaults.standard.set(encoded, forKey: "confirmedHomeAddress")
-            }
-        } else {
-            UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
-        }
-    }
+    // Address persistence removed - now handled only through NotesService
     
     // MARK: - Notification Observers
     

@@ -1,316 +1,201 @@
-CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 13:18:29.111.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 13:18:29.111.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 13:18:29.111.
-Test Case '-[C11SHouseUITests.ConversationViewUITests testMuteToggle]' started.
-    t =     0.00s Start Test at 2025-07-22 13:18:29.111
-    t =     0.01s Set Up
-🧪 ConversationViewUITests: Starting test setup
-🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     1.94s             Setting up automation session
-    t =     4.69s             Wait for com.c11s.house to idle
-    t =     6.06s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     7.09s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.09s             Checking existence of `"StartConversation" Button`
-    t =     8.33s             Capturing element debug description
-    t =     8.33s         Checking existence of `"StartConversation" Button`
-    t =    10.24s     Find the "StartConversation" Button
-    t =    10.29s     Tap "StartConversation" Button
-    t =    10.29s         Wait for com.c11s.house to idle
-    t =    10.30s         Find the "StartConversation" Button
-    t =    10.32s         Check for interrupting elements affecting "StartConversation" Button
-    t =    10.35s         Synthesize event
-    t =    10.64s         Wait for com.c11s.house to idle
-    t =    10.75s     Waiting 5.0s for "Back" Button to exist
-    t =    11.76s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    11.76s             Checking existence of `"Back" Button`
-🧪 ConversationViewUITests: testMuteToggle started
-    t =    11.82s Waiting 2.0s for "Mute" Button to exist
-    t =    12.85s     Checking `Expect predicate `existsNoRetry == 1` for object "Mute" Button`
-    t =    12.85s         Checking existence of `"Mute" Button`
-    t =    12.89s Checking existence of `"Mute" Button`
-🧪 testMuteToggle: Currently unmuted, will mute
-    t =    12.92s Tap "Mute" Button
-    t =    12.92s     Wait for com.c11s.house to idle
-    t =    12.93s     Find the "Mute" Button
-    t =    12.95s     Check for interrupting elements affecting "ConversationView" Button
-    t =    12.99s     Synthesize event
-    t =    13.28s     Wait for com.c11s.house to idle
-    t =    13.29s Waiting 1.0s for "Type a message..." TextField to exist
-    t =    14.29s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    14.29s         Checking existence of `"Type a message..." TextField`
-    t =    14.34s     Checking existence of `"Type a message..." TextField`
-    t =    14.36s Waiting 0.5s for "Unmute" Button to exist
-    t =    14.87s     Checking existence of `"Unmute" Button`
-    t =    14.91s Tap "Unmute" Button
-    t =    14.91s     Wait for com.c11s.house to idle
-    t =    14.92s     Find the "Unmute" Button
-    t =    14.95s     Check for interrupting elements affecting "ConversationView" Button
-    t =    14.98s     Synthesize event
-    t =    15.28s     Wait for com.c11s.house to idle
-    t =    15.49s Waiting 1.0s for "mic.circle.fill" Button to exist
-    t =    16.49s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    16.49s         Checking existence of `"mic.circle.fill" Button`
-    t =    16.53s         Capturing element debug description
-    t =    16.54s     Checking existence of `"mic.circle.fill" Button`
-    t =    16.57s Collecting debug information to assist test failure triage
-    t =    16.57s     Requesting snapshot of accessibility hierarchy for app with pid 51905
-    t =    16.63s Waiting 0.5s for "ConversationView" Button to exist
-    t =    17.13s     Checking existence of `"ConversationView" Button`
-    t =    17.18s Tear Down
-🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testMuteToggle]' passed (17.409 seconds).
-Test Suite 'ConversationViewUITests' passed at 2025-07-22 13:18:46.521.
-	 Executed 1 test, with 0 failures (0 unexpected) in 17.409 (17.410) seconds
-Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 13:18:46.522.
-	 Executed 1 test, with 0 failures (0 unexpected) in 17.409 (17.412) seconds
-Test Suite 'Selected tests' passed at 2025-07-22 13:18:46.524.
-	 Executed 1 test, with 0 failures (0 unexpected) in 17.409 (17.413) seconds
-
-     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 13:19:29.005.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 13:19:29.006.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 13:19:29.006.
-Test Case '-[C11SHouseUITests.ConversationViewUITests testTextMessageSending]' started.
-    t =     0.00s Start Test at 2025-07-22 13:19:29.006
-    t =     0.02s Set Up
-🧪 ConversationViewUITests: Starting test setup
-🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
-    t =     0.02s     Open com.c11s.house
-    t =     0.02s         Launch com.c11s.house
-    t =     2.60s             Setting up automation session
-    t =     4.78s             Wait for com.c11s.house to idle
-    t =     6.14s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     7.17s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.17s             Checking existence of `"StartConversation" Button`
-    t =     8.42s             Capturing element debug description
-    t =     8.42s         Checking existence of `"StartConversation" Button`
-    t =    10.62s     Find the "StartConversation" Button
-    t =    10.67s     Tap "StartConversation" Button
-    t =    10.67s         Wait for com.c11s.house to idle
-    t =    10.67s         Find the "StartConversation" Button
-    t =    10.69s         Check for interrupting elements affecting "StartConversation" Button
-    t =    10.72s         Synthesize event
-    t =    11.02s         Wait for com.c11s.house to idle
-    t =    11.15s     Waiting 5.0s for "Back" Button to exist
-    t =    12.18s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    12.18s             Checking existence of `"Back" Button`
-🧪 ConversationViewUITests: testTextMessageSending started
-🧪 muteConversation: Starting
-    t =    12.24s Checking existence of `"speaker.slash.fill" Button`
-    t =    12.26s Checking existence of `"Unmute" Button`
-    t =    12.28s Checking existence of `"Type a message..." TextField`
-    t =    12.29s Waiting 3.0s for "speaker.wave.2.fill" Button to exist
-    t =    13.31s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    13.31s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    13.35s         Capturing element debug description
-    t =    14.38s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    14.38s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    14.42s         Capturing element debug description
-    t =    15.30s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    15.30s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    15.34s         Capturing element debug description
-    t =    15.34s     Checking existence of `"speaker.wave.2.fill" Button`
-    t =    15.37s Collecting debug information to assist test failure triage
-    t =    15.37s     Requesting snapshot of accessibility hierarchy for app with pid 51912
-    t =    15.43s Waiting 2.0s for "Mute" Button to exist
-    t =    16.46s     Checking `Expect predicate `existsNoRetry == 1` for object "Mute" Button`
-    t =    16.46s         Checking existence of `"Mute" Button`
-🧪 muteConversation: Tapping mute button (by label)
-    t =    16.50s Tap "Mute" Button
-    t =    16.50s     Wait for com.c11s.house to idle
-    t =    16.51s     Find the "Mute" Button
-    t =    16.54s     Check for interrupting elements affecting "ConversationView" Button
-    t =    16.58s     Synthesize event
-    t =    16.89s     Wait for com.c11s.house to idle
-    t =    16.90s Waiting 5.0s for "Type a message..." TextField to exist
-    t =    17.93s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    17.93s         Checking existence of `"Type a message..." TextField`
-🧪 muteConversation: Completed
-    t =    17.98s Waiting 5.0s for "Type a message..." TextField to exist
-    t =    18.99s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    18.99s         Checking existence of `"Type a message..." TextField`
-    t =    19.04s Tap "Type a message..." TextField
-    t =    19.04s     Wait for com.c11s.house to idle
-    t =    19.04s     Find the "Type a message..." TextField
-    t =    19.08s     Check for interrupting elements affecting "ConversationView" TextField
-    t =    19.12s     Synthesize event
-    t =    19.43s     Wait for com.c11s.house to idle
-    t =    19.87s Type 'Hello from UI test' into "ConversationView" TextField
-    t =    19.87s     Wait for com.c11s.house to idle
-    t =    20.46s     Find the "ConversationView" TextField
-    t =    20.49s     Check for interrupting elements affecting "ConversationView" TextField
-    t =    20.52s     Synthesize event
-    t =    21.03s     Wait for com.c11s.house to idle
-    t =    21.17s Waiting 2.0s for "arrow.up.circle.fill" Button to exist
-    t =    22.19s     Checking `Expect predicate `existsNoRetry == 1` for object "arrow.up.circle.fill" Button`
-    t =    22.19s         Checking existence of `"arrow.up.circle.fill" Button`
-    t =    23.43s         Capturing element debug description
-    t =    23.43s     Checking existence of `"arrow.up.circle.fill" Button`
-    t =    24.38s Collecting debug information to assist test failure triage
-    t =    24.38s     Requesting snapshot of accessibility hierarchy for app with pid 51912
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:275: error: -[C11SHouseUITests.ConversationViewUITests testTextMessageSending] : XCTAssertTrue failed - Send button should exist
-    t =    24.64s Tear Down
-🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testTextMessageSending]' failed (24.866 seconds).
-Test Suite 'ConversationViewUITests' failed at 2025-07-22 13:19:53.873.
-	 Executed 1 test, with 1 failure (0 unexpected) in 24.866 (24.867) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 13:19:53.875.
-	 Executed 1 test, with 1 failure (0 unexpected) in 24.866 (24.869) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 13:19:53.876.
-	 Executed 1 test, with 1 failure (0 unexpected) in 24.866 (24.870) seconds
-
-     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 13:21:56.809.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 13:21:56.809.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 13:21:56.809.
-Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceInputButton]' started.
-    t =     0.00s Start Test at 2025-07-22 13:21:56.810
-    t =     0.01s Set Up
-🧪 ConversationViewUITests: Starting test setup
-🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     2.56s             Setting up automation session
-    t =     4.73s             Wait for com.c11s.house to idle
-    t =     6.22s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     7.23s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.23s             Checking existence of `"StartConversation" Button`
-    t =     8.48s             Capturing element debug description
-    t =     8.48s         Checking existence of `"StartConversation" Button`
-    t =    10.37s     Find the "StartConversation" Button
-    t =    10.43s     Tap "StartConversation" Button
-    t =    10.43s         Wait for com.c11s.house to idle
-    t =    10.44s         Find the "StartConversation" Button
-    t =    10.46s         Check for interrupting elements affecting "StartConversation" Button
-    t =    10.50s         Synthesize event
-    t =    10.81s         Wait for com.c11s.house to idle
-    t =    10.93s     Waiting 5.0s for "Back" Button to exist
-    t =    11.94s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    11.95s             Checking existence of `"Back" Button`
-🧪 ConversationViewUITests: testVoiceInputButton started
-🧪 unmuteConversation: Starting
-    t =    12.00s Checking existence of `"speaker.wave.2.fill" Button`
-    t =    12.02s Checking existence of `"Mute" Button`
-🧪 unmuteConversation: Already unmuted
-    t =    12.05s Waiting 5.0s for "mic.circle.fill" Button to exist
-    t =    13.06s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    13.06s         Checking existence of `"mic.circle.fill" Button`
-    t =    13.10s         Capturing element debug description
-    t =    14.06s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    14.06s         Checking existence of `"mic.circle.fill" Button`
-    t =    14.10s         Capturing element debug description
-    t =    15.06s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    15.06s         Checking existence of `"mic.circle.fill" Button`
-    t =    15.10s         Capturing element debug description
-    t =    16.06s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    16.06s         Checking existence of `"mic.circle.fill" Button`
-    t =    16.10s         Capturing element debug description
-    t =    17.06s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    17.06s         Checking existence of `"mic.circle.fill" Button`
-    t =    17.10s         Capturing element debug description
-    t =    17.10s     Checking existence of `"mic.circle.fill" Button`
-    t =    17.13s Collecting debug information to assist test failure triage
-    t =    17.13s     Requesting snapshot of accessibility hierarchy for app with pid 51921
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:321: error: -[C11SHouseUITests.ConversationViewUITests testVoiceInputButton] : XCTAssertTrue failed - Microphone button should be visible when unmuted
-    t =    17.40s Tear Down
-🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceInputButton]' failed (17.636 seconds).
-Test Suite 'ConversationViewUITests' failed at 2025-07-22 13:22:14.447.
-	 Executed 1 test, with 1 failure (0 unexpected) in 17.636 (17.638) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 13:22:14.449.
-	 Executed 1 test, with 1 failure (0 unexpected) in 17.636 (17.639) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 13:22:14.450.
-	 Executed 1 test, with 1 failure (0 unexpected) in 17.636 (17.641) seconds
-     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 13:28:30.565.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 13:28:30.566.
-Test Suite 'OnboardingUITests' started at 2025-07-22 13:28:30.566.
-Test Case '-[C11SHouseUITests.OnboardingUITests testUserIntroductionFlow]' started.
-    t =     0.00s Start Test at 2025-07-22 13:28:30.566
-    t =     0.01s Set Up
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     2.70s             Setting up automation session
-    t =     4.79s             Wait for com.c11s.house to idle
-    t =     6.07s Waiting 1.0s for "StartConversation" Button to exist
-    t =     7.07s     Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.08s         Checking existence of `"StartConversation" Button`
-    t =     7.38s         Capturing element debug description
-    t =     7.38s     Checking existence of `"StartConversation" Button`
-    t =    10.20s Tap "StartConversation" Button
-    t =    10.20s     Wait for com.c11s.house to idle
-    t =    10.20s     Find the "StartConversation" Button
-    t =    10.23s     Check for interrupting elements affecting "StartConversation" Button
-    t =    10.29s     Synthesize event
-    t =    10.60s     Wait for com.c11s.house to idle
-    t =    10.74s Waiting 0.2s for Alert (First Match) to exist
-    t =    10.94s     Checking existence of `Alert (First Match)`
-    t =    11.01s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.02s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.03s Collecting debug information to assist test failure triage
-    t =    11.03s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    11.11s Waiting 0.2s for Alert (First Match) to exist
-    t =    11.32s     Checking existence of `Alert (First Match)`
-    t =    11.36s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.36s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.37s Collecting debug information to assist test failure triage
-    t =    11.37s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    11.47s Waiting 0.2s for Alert (First Match) to exist
-    t =    11.68s     Checking existence of `Alert (First Match)`
-    t =    11.73s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.74s Ignoring failure to get hierarchy for remote element in process 48014 (Error getting main window kAXErrorServerNotFound)
-    t =    11.75s Collecting debug information to assist test failure triage
-    t =    11.75s     Requesting snapshot of accessibility hierarchy for app with pid 44373
-    t =    11.85s Waiting 2.0s for "House Chat" StaticText to exist
-    t =    12.86s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    12.86s         Checking existence of `"House Chat" StaticText`
-    t =    12.92s         Capturing element debug description
-    t =    13.85s     Checking `Expect predicate `existsNoRetry == 1` for object "House Chat" StaticText`
-    t =    13.85s         Checking existence of `"House Chat" StaticText`
-    t =    13.89s         Capturing element debug description
-    t =    13.89s     Checking existence of `"House Chat" StaticText`
-    t =    13.92s Collecting debug information to assist test failure triage
-    t =    13.92s     Requesting snapshot of accessibility hierarchy for app with pid 51958
-    t =    13.98s Waiting 1.0s for "Back" Button to exist
-    t =    14.99s     Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    14.99s         Checking existence of `"Back" Button`
-    t =    15.03s     Checking existence of `"Back" Button`
-    t =    15.06s Waiting 5.0s for StaticText (First Match) to exist
-    t =    16.09s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    16.09s         Checking existence of `StaticText (First Match)`
-    t =    16.13s         Capturing element debug description
-    t =    17.06s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    17.07s         Checking existence of `StaticText (First Match)`
-    t =    17.11s         Capturing element debug description
-    t =    18.13s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    18.13s         Checking existence of `StaticText (First Match)`
-    t =    18.16s         Capturing element debug description
-    t =    19.08s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    19.08s         Checking existence of `StaticText (First Match)`
-    t =    19.12s         Capturing element debug description
-    t =    20.06s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
-    t =    20.06s         Checking existence of `StaticText (First Match)`
-    t =    20.10s         Capturing element debug description
-    t =    20.10s     Checking existence of `StaticText (First Match)`
-    t =    20.13s Collecting debug information to assist test failure triage
-    t =    20.13s     Requesting snapshot of accessibility hierarchy for app with pid 51958
-    t =    20.19s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testUserIntroductionFlow]' passed (20.470 seconds).
-Test Suite 'OnboardingUITests' passed at 2025-07-22 13:28:51.037.
-	 Executed 1 test, with 0 failures (0 unexpected) in 20.470 (20.471) seconds
-Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 13:28:51.039.
-	 Executed 1 test, with 0 failures (0 unexpected) in 20.470 (20.474) seconds
-Test Suite 'Selected tests' passed at 2025-07-22 13:28:51.041.
-	 Executed 1 test, with 0 failures (0 unexpected) in 20.470 (20.475) seconds
-
+[WeatherKitService] 🌦️ Initializing WeatherKit service
+[WeatherKitService] Bundle ID: com.c11s.house
+[WeatherKitService] ✅ Running on real device
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
+[WeatherCoordinator] 🌤️ Initialized with services
+[WeatherCoordinator] Weather service: WeatherKitServiceImpl
+[WeatherCoordinator] Notes service: NotesServiceImpl
+[WeatherCoordinator] Location service: LocationServiceImpl
+[ContentViewModel] Init complete - currentWeather: nil
+[ContentViewModel] Init complete - houseName: Your House
+[ContentViewModel] Init complete - address: nil
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
+[ContentViewModel] 🌤️ refreshWeather() called
+[ContentViewModel] Fetching weather for: 14450 Roland Canyon Hello houseRd, Salinas, CA 93908
+[ContentViewModel] Current weather before fetch: nil
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+#FactoryInstall Unable to query results, error: 5
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+App is being debugged, do not track this hang
+Hang detected: 0.28s (debugger attached, not reporting)
+Test Suite 'Selected tests' started at 2025-07-22 13:37:27.367.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 13:37:27.367.
+Test Suite 'ConversationFlowIntegrationTests' started at 2025-07-22 13:37:27.367.
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' started.
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: 0BFC1C2D-BF55-414E-912A-85303F3663B0
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
+👆 USER ACTION: view_appeared in welcome
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[WeatherCoordinator] Weather question creation already in progress
+[ContentViewModel] Weather update received: partlyCloudy
+[WeatherCoordinator] Created Weather question in notes store
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[WeatherCoordinator] Failed to update weather note: questionNotFound(F210AD40-695A-4773-8A85-311255D2E50F)
+[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
+[ContentViewModel] Temperature: 74°F
+[ContentViewModel] Current weather after fetch: exists
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:274: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow] : XCTAssertEqual failed: ("Optional("14450 Roland Canyon Hello houseRd, Salinas, CA 93908")") is not equal to ("Optional("350 5th Ave, New York, NY 10118")")
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAddressDetectionFlow]' failed (0.281 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 0
+[QuestionFlowCoordinator] No more questions to ask
+[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
+[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:335: error: -[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories] : XCTAssertGreaterThanOrEqual failed: ("2") is less than ("3")
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testAllQuestionCategories]' failed (0.017 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:176: error: -[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow] : XCTAssertEqual failed: ("") is not equal to ("Test User")
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 0
+[QuestionFlowCoordinator] No more questions to ask
+[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
+[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testCompleteConversationFlow]' failed (0.010 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testConversationStateManagement]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testErrorRecovery]' passed (0.003 seconds).
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' started.
+[QuestionFlowCoordinator] Initialized
+[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/ConversationFlowIntegrationTests.swift:228: error: -[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers] : XCTAssertNotEqual failed: ("Optional("Is this the right address?")") is equal to ("Optional("Is this the right address?")")
+[NotesService] Clearing all data...
+[NotesService] Resetting to 4 predefined questions
+Test Case '-[C11SHouseTests.ConversationFlowIntegrationTests testQuestionTransitionWithExistingAnswers]' failed (0.003 seconds).
+Test Suite 'ConversationFlowIntegrationTests' failed at 2025-07-22 13:37:27.683.
+	 Executed 6 tests, with 4 failures (0 unexpected) in 0.315 (0.316) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 13:37:27.683.
+	 Executed 6 tests, with 4 failures (0 unexpected) in 0.315 (0.316) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 13:37:27.683.
+	 Executed 6 tests, with 4 failures (0 unexpected) in 0.315 (0.316) seconds
