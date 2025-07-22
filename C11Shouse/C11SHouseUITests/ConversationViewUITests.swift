@@ -98,7 +98,7 @@ class ConversationViewUITests: XCTestCase {
         // Wait for house response - check for any common pattern quickly
         let responsePredicate = NSPredicate(format: "label CONTAINS[c] 'help' OR label CONTAINS[c] 'hello' OR label CONTAINS[c] 'house'")
         let responseElement = app.staticTexts.matching(responsePredicate).firstMatch
-        let houseResponseFound = responseElement.waitForExistence(timeout: 3)
+        var houseResponseFound = responseElement.waitForExistence(timeout: 3)
         
         // If no specific response found, check if there are any new messages
         if !houseResponseFound {
