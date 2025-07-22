@@ -38,15 +38,34 @@
 
 ## UI Tests Run
 
-### ✅ UI Tests - Recent Successes
+### 🚨 UI Tests - Latest Run Results
 1. **ConversationViewUITests** 
-   - ✅ testMessageInputPerformance - PASSED (51.3s total, avg 7.5s per iteration)
-     - Successfully completed with 3 iterations of 3 messages each
-     - Performance metrics: average 7.524s, relative std dev 2.106%
-   - **Previous Issues Fixed**: 
-     - Mute button detection (using label "Mute" instead of identifier)
-     - Send button detection (using label "Arrow Up Circle" instead of identifier)
-     - Performance test optimizations (reduced iterations and messages)
+   - ✅ Passed Tests (8):
+     - testAddressQuestionDisplay (13.143s)
+     - testErrorOverlayDisplay (11.134s) 
+     - testMessageBubbleDisplay (32.433s) ⚠️ Slow
+     - testMessageInputPerformance (51.595s) ⚠️ Very Slow
+     - testMessageTimestamps (25.598s)
+     - testRoomNoteCreation (32.989s) ⚠️ Slow
+     - testScrollingPerformance (53.996s) ⚠️ Very Slow
+     - testTextMessageKeyboardSubmit (23.886s)
+   
+   - ❌ Failed Tests (7):
+     - testBackButtonNavigation (23.063s)
+     - testInitialWelcomeMessage (19.604s)
+     - testMessageListScrolling (22.019s)
+     - testMuteToggle (26.467s)
+     - testTextMessageSending (23.407s)
+     - testVoiceInputButton (16.250s)
+     - testVoiceTranscriptDisplay (16.456s)
+   
+   - **Performance Optimizations Applied**: 
+     - testScrollingPerformance: Reduced messages from 10→5, iterations 3→2, removed delays
+     - testMessageInputPerformance: Reduced messages 3→2, iterations 3→2, removed delays
+     - testMessageBubbleDisplay: Removed redundant checks and 1s sleep
+     - testRoomNoteCreation: Reduced timeouts from 5s→3s
+     - Helper methods: Reduced all timeouts and removed unnecessary sleeps
+     - sendTextMessage: Reduced timeouts (5s→2s, 3s→1s), removed 0.5s delays
 
 ### 🔧 UI Tests - In Progress
 2. **ThreadingSafetyUITests** 

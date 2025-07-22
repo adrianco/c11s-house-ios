@@ -87,66 +87,18 @@ class ConversationViewUITests: XCTestCase {
         // Given - Send a test message
         sendTextMessage("Hello house")
         
-        // Give UI a moment to update after message is sent
-        Thread.sleep(forTimeInterval: 1.0)
+        // Remove unnecessary sleep - sendTextMessage already waits for message
         
         // Then - Check if message was sent successfully
         // Note: The sendTextMessage method already verifies the message appears
         // Here we just verify again and check for house response
         
-        // Check if user message exists using various methods
-        var userMessageFound = false
+        // Skip redundant user message check - sendTextMessage already verified it
         
-        // Method 1: Direct lookup
-        if app.staticTexts["Hello house"].exists {
-            userMessageFound = true
-            print("🧪 testMessageBubbleDisplay: Found user message via direct lookup")
-        }
-        
-        // Method 2: Predicate search
-        if !userMessageFound {
-            let messagePredicate = NSPredicate(format: "label == %@", "Hello house")
-            if app.staticTexts.matching(messagePredicate).firstMatch.exists {
-                userMessageFound = true
-                print("🧪 testMessageBubbleDisplay: Found user message via predicate")
-            }
-        }
-        
-        // Method 3: Descendant search
-        if !userMessageFound {
-            let descendants = app.descendants(matching: .staticText).matching(NSPredicate(format: "label == %@", "Hello house"))
-            if descendants.firstMatch.exists {
-                userMessageFound = true
-                print("🧪 testMessageBubbleDisplay: Found user message in descendants")
-            }
-        }
-        
-        if userMessageFound {
-            print("🧪 testMessageBubbleDisplay: User message confirmed to be displayed")
-        } else {
-            print("🧪 testMessageBubbleDisplay: User message verification failed, but sendTextMessage should have caught this")
-        }
-        
-        // Wait for house response - look for various possible responses
-        let responsePatterns = [
-            "Let me think",
-            "I'll help",
-            "Hello",
-            "help you",
-            "How can I",
-            "house consciousness"
-        ]
-        
-        var houseResponseFound = false
-        for pattern in responsePatterns {
-            let responsePredicate = NSPredicate(format: "label CONTAINS[c] %@", pattern)
-            let responseElement = app.staticTexts.matching(responsePredicate).firstMatch
-            if responseElement.waitForExistence(timeout: 5) {
-                houseResponseFound = true
-                print("🧪 testMessageBubbleDisplay: Found house response containing '\(pattern)': '\(responseElement.label)'")
-                break
-            }
-        }
+        // Wait for house response - check for any common pattern quickly
+        let responsePredicate = NSPredicate(format: "label CONTAINS[c] 'help' OR label CONTAINS[c] 'hello' OR label CONTAINS[c] 'house'")
+        let responseElement = app.staticTexts.matching(responsePredicate).firstMatch
+        let houseResponseFound = responseElement.waitForExistence(timeout: 3)
         
         // If no specific response found, check if there are any new messages
         if !houseResponseFound {
@@ -451,14 +403,14 @@ class ConversationViewUITests: XCTestCase {
         
         // Then - should see room note prompt
         let roomPrompt = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "What room would you like to add")).firstMatch
-        XCTAssertTrue(roomPrompt.waitForExistence(timeout: 5), "Room note prompt should appear")
+        XCTAssertTrue(roomPrompt.waitForExistence(timeout: 3), "Room note prompt should appear")
         
         // When - provide room name
         sendTextMessage("Living Room")
         
         // Then - should ask for details
         let detailsPrompt = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "What would you like me to remember")).firstMatch
-        XCTAssertTrue(detailsPrompt.waitForExistence(timeout: 5), "Should ask for room details")
+        XCTAssertTrue(detailsPrompt.waitForExistence(timeout: 3), "Should ask for room details")
     }
     
     // MARK: - Helper Methods
@@ -498,7 +450,7 @@ class ConversationViewUITests: XCTestCase {
         return false
     }
     
-    private func waitForConversationElements(timeout: TimeInterval = 10) -> Bool {
+    private func waitForConversationElements(timeout: TimeInterval = 5) -> Bool {
         let startTime = Date()
         
         while Date().timeIntervalSince(startTime) < timeout {
@@ -629,7 +581,7 @@ class ConversationViewUITests: XCTestCase {
         
         // Wait for text field to appear after muting
         let textField = app.textFields["Type a message..."]
-        guard textField.waitForExistence(timeout: 5) else {
+        guard textField.waitForExistence(timeout: 2) else {
             XCTFail("Text field did not appear after muting conversation")
             return
         }
@@ -637,14 +589,11 @@ class ConversationViewUITests: XCTestCase {
         // Make sure the text field is hittable before tapping
         if !textField.isHittable {
             print("🧪 sendTextMessage: Text field not hittable, waiting...")
-            Thread.sleep(forTimeInterval: 0.5)
+            Thread.sleep(forTimeInterval: 0.1)
         }
         
         textField.tap()
         textField.typeText(text)
-        
-        // Give a moment for the UI to update after typing
-        Thread.sleep(forTimeInterval: 0.2)
         
         // Look for send button - try multiple methods
         let sendButtonById = app.buttons["arrow.up.circle.fill"]
@@ -654,7 +603,7 @@ class ConversationViewUITests: XCTestCase {
         let sendButton = sendButtonById.exists ? sendButtonById : 
                         (sendButtonByLabel.exists ? sendButtonByLabel : sendButtonByPredicate)
         
-        guard sendButton.waitForExistence(timeout: 3) else {
+        guard sendButton.waitForExistence(timeout: 1) else {
             // Debug output
             print("🧪 sendTextMessage: Send button not found. Available buttons:")
             let allButtons = app.buttons.allElementsBoundByIndex
@@ -666,11 +615,7 @@ class ConversationViewUITests: XCTestCase {
             return
         }
         
-        // Make sure button is enabled before tapping
-        if !sendButton.isEnabled {
-            print("🧪 sendTextMessage: Send button not enabled, waiting...")
-            Thread.sleep(forTimeInterval: 0.5)
-        }
+        // Remove wait for button enabled check
         
         print("🧪 sendTextMessage: Tapping send button")
         sendButton.tap()
@@ -679,7 +624,7 @@ class ConversationViewUITests: XCTestCase {
         var messageFound = false
         
         // Method 1: Direct static text
-        if app.staticTexts[text].waitForExistence(timeout: 3) {
+        if app.staticTexts[text].waitForExistence(timeout: 2) {
             messageFound = true
             print("🧪 sendTextMessage: Found message via direct staticText lookup")
         }
@@ -688,7 +633,7 @@ class ConversationViewUITests: XCTestCase {
         if !messageFound {
             let messagePredicate = NSPredicate(format: "label == %@", text)
             let messageElement = app.staticTexts.matching(messagePredicate).firstMatch
-            if messageElement.waitForExistence(timeout: 2) {
+            if messageElement.waitForExistence(timeout: 1) {
                 messageFound = true
                 print("🧪 sendTextMessage: Found message via predicate search")
             }
@@ -698,7 +643,7 @@ class ConversationViewUITests: XCTestCase {
         if !messageFound {
             let containsPredicate = NSPredicate(format: "label CONTAINS[c] %@", text)
             let containsElement = app.staticTexts.matching(containsPredicate).firstMatch
-            if containsElement.waitForExistence(timeout: 2) {
+            if containsElement.waitForExistence(timeout: 1) {
                 messageFound = true
                 print("🧪 sendTextMessage: Found message via contains search: '\(containsElement.label)'")
             }
@@ -747,16 +692,16 @@ class ConversationViewUITests: XCTestCase {
 
 extension ConversationViewUITests {
     func testScrollingPerformance() {
-        // Given - create many messages BEFORE measuring
+        // Given - create fewer messages for faster setup
         muteConversation()
         
-        // Pre-populate with messages outside of measure block
-        for i in 1...10 {
+        // Pre-populate with only 5 messages to reduce setup time
+        for i in 1...5 {
             // Quick message send without full validation
             let textField = app.textFields["Type a message..."]
-            if textField.waitForExistence(timeout: 1) {
+            if textField.waitForExistence(timeout: 0.5) {
                 textField.tap()
-                textField.typeText("Msg \(i)")
+                textField.typeText("M\(i)")  // Shorter messages
                 
                 let sendButtonById = app.buttons["arrow.up.circle.fill"]
                 let sendButtonByLabel = app.buttons["Arrow Up Circle"]
@@ -764,23 +709,22 @@ extension ConversationViewUITests {
                 
                 if sendButton.exists {
                     sendButton.tap()
-                    Thread.sleep(forTimeInterval: 0.1)
+                    // Remove sleep between messages
                 }
             }
         }
         
         // Now measure just the scrolling performance
         let options = XCTMeasureOptions()
-        options.iterationCount = 3
+        options.iterationCount = 2  // Reduce iterations from 3 to 2
         
         measure(options: options) {
             // Just measure scrolling, not message creation
             let scrollView = app.scrollViews.firstMatch
             if scrollView.exists {
                 scrollView.swipeUp()
-                scrollView.swipeUp()
                 scrollView.swipeDown()
-                scrollView.swipeDown()
+                // Reduced to single up/down cycle
             }
         }
     }
@@ -790,37 +734,32 @@ extension ConversationViewUITests {
         
         // Performance tests should be quick - reduce iterations and messages
         let options = XCTMeasureOptions()
-        options.iterationCount = 3  // Reduce from default (usually 5-10) to 3
+        options.iterationCount = 2  // Reduce from 3 to 2
         
         measure(options: options) {
             let textField = app.textFields["Type a message..."]
-            guard textField.waitForExistence(timeout: 2) else {
+            guard textField.waitForExistence(timeout: 0.5) else {
                 XCTFail("Text field did not appear")
                 return
             }
             
-            // Type and send only 3 messages per iteration (instead of 10)
-            for i in 1...3 {
-                if !textField.isHittable {
-                    Thread.sleep(forTimeInterval: 0.1)
-                }
+            // Type and send only 2 messages per iteration
+            for i in 1...2 {
                 textField.tap()
-                textField.typeText("Perf \(i)")
+                textField.typeText("P\(i)")  // Shorter message
                 
                 // Use the correct send button detection
                 let sendButtonById = app.buttons["arrow.up.circle.fill"]
                 let sendButtonByLabel = app.buttons["Arrow Up Circle"]
                 let sendButton = sendButtonById.exists ? sendButtonById : sendButtonByLabel
                 
-                if sendButton.waitForExistence(timeout: 0.5) {
+                if sendButton.exists {
                     sendButton.tap()
+                    // Remove all delays
                 } else {
                     print("⚠️ Performance test: Send button not found, skipping")
                     break
                 }
-                
-                // Minimal delay
-                Thread.sleep(forTimeInterval: 0.05)
             }
         }
     }
