@@ -21,9 +21,6 @@ C11SHouseTests
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:218 testSetupFlowWithLocationPermissionDenied(): XCTAssertTrue failed
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ErrorHandling/ErrorViewTests.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ErrorHandling/ErrorViewTests.swift:158 testErrorToUserFriendlyConversion(): failed - Expected AppError.unknown
-
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceTests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/NotesServiceTests.swift:144 testUpdateNote(): XCTAssertGreaterThan failed: ("2025-07-16 20:10:43 +0000") is not greater than ("2025-07-16 20:10:43 +0000")
 
@@ -33,35 +30,45 @@ C11SHouseTests
 
 C11SHouseUITests
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testAddressQuestionDisplay(): XCTAssertTrue failed - Conversation view should load
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:60 testInitialWelcomeMessage(): XCTAssertTrue failed - Welcome message should be displayed
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testBackButtonNavigation(): XCTAssertTrue failed - Conversation view should load
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:91 testMuteToggle(): XCTAssertTrue failed - Mute button should exist
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testErrorOverlayDisplay(): XCTAssertTrue failed - Conversation view should load
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:144 testTextMessageKeyboardSubmit(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47417, label: 'Conscious House'
+)}
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testInitialWelcomeMessage(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageBubbleDisplay(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageInputPerformance(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageListScrolling(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMessageTimestamps(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testMuteToggle(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testRoomNoteCreation(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testScrollingPerformance(): XCTAssertTrue failed - Conversation view should load
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testTextMessageKeyboardSubmit(): XCTAssertTrue failed - Conversation view should load
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:193 testAddressQuestionDisplay(): XCTAssertTrue failed - Address should be displayed with question
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testTextMessageSending(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testVoiceInputButton(): XCTAssertTrue failed - Conversation view should load
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:272 testVoiceTranscriptDisplay(): XCTAssertTrue failed - Conversation view should load
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:339 testMessageBubbleDisplay(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47377, label: 'Conscious House'
+)}
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:339 testMessageListScrolling(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47389, label: 'Conscious House'
+)}
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:339 testMessageTimestamps(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47395, label: 'Conscious House'
+)}
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:339 testRoomNoteCreation(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47405, label: 'Conscious House'
+)}
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:339 testScrollingPerformance(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47411, label: 'Conscious House'
+)}
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:378 testMessageInputPerformance(): Failed to tap "Type a message..." TextField: No matches found for Descendants matching type TextField from input {(
+    Application, pid: 47383, label: 'Conscious House'
+)}
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/OnboardingUITests.swift:43 testWelcomeScreenAppearance(): XCTAssertTrue failed

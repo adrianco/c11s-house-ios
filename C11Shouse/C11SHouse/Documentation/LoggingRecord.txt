@@ -12,66 +12,82 @@
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
 [ContentViewModel] Weather update received: nil
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
-[WeatherCoordinator] Weather question creation already in progress
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Weather question already exists
-[ContentViewModel] Weather update received: windy
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: windy
-[ContentViewModel] Temperature: 74°F
-[ContentViewModel] Current weather after fetch: exists
-[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
 void * _Nullable NSMapGet(NSMapTable * _Nonnull, const void * _Nullable): map table argument is NULL
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8ac5a0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f75c0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8ac3c0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afca0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afd40>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afde0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8afe80>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x10f8aff20>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7f20>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7e80>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7de0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7d40>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7ca0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7c00>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7980>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7840>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7b60>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7ac0>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7a20>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7660>
-This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1073f7700>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114999a0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114988c0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499b80>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499400>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114994a0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114992c0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499220>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499180>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114990e0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499040>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498fa0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498d20>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498be0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498f00>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498e60>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498dc0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498960>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498aa0>
 App is being debugged, do not track this hang
-Hang detected: 0.65s (debugger attached, not reporting)
+Hang detected: 1.97s (debugger attached, not reporting)
 Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
-Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114999a0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114988c0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499b80>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499400>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114994a0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114992c0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499220>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499180>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x1114990e0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111499040>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498fa0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498d20>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498be0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498f00>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498e60>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498dc0>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498960>
+This child can't be serialized correctly: <SwiftUI.AccessibilityNode: 0x111498aa0>
+App is being debugged, do not track this hang
+Hang detected: 0.92s (debugger attached, not reporting)
 Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
 Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
 Unknown client: C11SHouse
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
 [ConversationView] onAppear called
 [ConversationView] hasCompletedPhase4Tutorial: true
 [ConversationView] isInPhase4Tutorial: false
 [ConversationViewModel] setupView() called
-[ConversationViewModel] Loaded house name: Roland House
-[ConversationViewModel] Found 47 existing messages
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Found 59 existing messages
 [ConversationViewModel] Loading next question...
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 6 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-[ConversationViewModel] hasCompletedAllQuestions: true
-[ConversationViewModel] All questions complete, starting Phase 4 tutorial
-[ConversationViewModel] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions still pending, current: Is this the right address?
+[QuestionFlowCoordinator] Found stored detected address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[QuestionFlowCoordinator] Formatted address question with detected address
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Automation type mismatch; legacy system derived element type 9 from class SwiftUI.AccessibilityNode:UIResponder, traits 1108101562369, but AXAutomationType returned 14 which maps to 14
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
+App is being debugged, do not track this hang
+Hang detected: 0.31s (debugger attached, not reporting)
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Message from debugger: killed
