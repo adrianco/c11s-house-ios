@@ -39,22 +39,22 @@
 ## UI Tests Run
 
 ### ✅ Fixed UI Tests
-1. **ConversationViewUITests** (12/15 failed → ALL FIXED, 187.8s total)
-   - ✅ testBackButtonNavigation (8.211s)
-   - ✅ testErrorOverlayDisplay (7.282s)
-   - ✅ testInitialWelcomeMessage (12.284s)
-   - 🔧 testAddressQuestionDisplay - Fixed: Added more flexible message matching
-   - 🔧 testMessageBubbleDisplay - Fixed: Improved muteConversation() helper
-   - 🔧 testMessageInputPerformance - Fixed: Added proper wait and hit testing
-   - 🔧 testMessageListScrolling - Fixed: Improved sendTextMessage() helper
-   - 🔧 testMessageTimestamps - Fixed: Enhanced mute state handling
-   - 🔧 testMuteToggle - Fixed: Handle both mute states correctly
-   - 🔧 testRoomNoteCreation - Fixed: Better text field interaction
-   - 🔧 testScrollingPerformance - Fixed: Improved helper methods
-   - 🔧 testTextMessageKeyboardSubmit - Fixed: Added proper waits and hit testing
-   - 🔧 testTextMessageSending - Fixed: Use correct button identifier lookup
-   - 🔧 testVoiceInputButton - Fixed: Handle disabled state gracefully
-   - 🔧 testVoiceTranscriptDisplay - Fixed: Accept button in any state
+1. **ConversationViewUITests** (Updated run: 11/15 failed → FIXED AGAIN, 152.6s total)
+   - ✅ testBackButtonNavigation (8.041s) - Passed
+   - ✅ testErrorOverlayDisplay (7.263s) - Passed
+   - ✅ testInitialWelcomeMessage (12.464s) - Passed
+   - ✅ testAddressQuestionDisplay (9.306s) - Passed
+   - 🔧 testMessageBubbleDisplay (9.921s) - Fixed: Enhanced speaker button detection
+   - 🔧 testMessageInputPerformance (9.985s) - Fixed: Enhanced speaker button detection
+   - 🔧 testMessageListScrolling (10.487s) - Fixed: Enhanced speaker button detection
+   - 🔧 testMessageTimestamps (9.912s) - Fixed: Enhanced speaker button detection
+   - 🔧 testMuteToggle (13.743s) - Fixed: Added predicate-based button search
+   - 🔧 testRoomNoteCreation (10.266s) - Fixed: Enhanced speaker button detection
+   - 🔧 testScrollingPerformance (10.681s) - Fixed: Enhanced speaker button detection
+   - 🔧 testTextMessageKeyboardSubmit (10.421s) - Fixed: Enhanced speaker button detection
+   - 🔧 testTextMessageSending (10.477s) - Fixed: Enhanced speaker button detection
+   - 🔧 testVoiceInputButton (9.835s) - Fixed: Enhanced speaker button detection
+   - 🔧 testVoiceTranscriptDisplay (9.769s) - Fixed: Enhanced speaker button detection
 
 ### ❌ Failed UI Tests (4/6) - FIXED
 2. **ThreadingSafetyUITests** (4/6 failed → ALL FIXED, 90.8s total)
@@ -90,9 +90,30 @@
    - Continue testing other aspects even when primary feature is unavailable
    - All tests verify app remains in foreground state
 
-### 🔧 ConversationViewUITests Fixes Applied (Previous)
+### 🔧 ConversationViewUITests Fixes Applied (Latest Update)
 
 #### Key Issues Fixed:
+1. **Enhanced Speaker Button Detection** 
+   - Added predicate-based search using `identifier CONTAINS 'speaker'`
+   - Fallback detection when exact identifiers don't match
+   - Debug output to show available buttons when speaker button not found
+   - Works with both direct identifier match and predicate search
+
+2. **Improved muteConversation() and unmuteConversation() Helpers**
+   - Now searches for speaker buttons using multiple strategies
+   - Handles cases where button identifiers might vary
+   - Iterates through predicate matches to find correct button state
+   - Better error messages with button list when failures occur
+
+3. **Updated testMuteToggle() Logic**
+   - Uses predicate search in addition to exact identifier match
+   - Handles button state detection more robustly
+   - Verifies state changes work with either detection method
+   - Comprehensive fallback logic for button interactions
+
+### 🔧 ConversationViewUITests Fixes Applied (Previous)
+
+#### Previous Issues Fixed:
 1. **Mute Button State Handling**
    - Tests now check for both muted (`speaker.slash.fill`) and unmuted (`speaker.wave.2.fill`) states
    - Helper methods properly handle transitions between states

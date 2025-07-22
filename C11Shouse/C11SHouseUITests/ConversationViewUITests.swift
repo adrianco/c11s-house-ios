@@ -114,38 +114,79 @@ class ConversationViewUITests: XCTestCase {
         let muteButton = app.buttons["speaker.wave.2.fill"]
         let mutedButton = app.buttons["speaker.slash.fill"]
         
+        // Also try finding by predicate in case identifier doesn't match exactly
+        let speakerButtonPredicate = NSPredicate(format: "identifier CONTAINS 'speaker'")
+        let speakerButtons = app.buttons.matching(speakerButtonPredicate)
+        
         // Wait for either state to exist
-        let buttonExists = muteButton.waitForExistence(timeout: 5) || mutedButton.waitForExistence(timeout: 1)
+        let buttonExists = muteButton.waitForExistence(timeout: 5) || 
+                          mutedButton.waitForExistence(timeout: 1) ||
+                          speakerButtons.count > 0
+        
+        if !buttonExists {
+            // Debug: print all available buttons
+            print("🧪 testMuteToggle: No speaker button found. Available buttons:")
+            let allButtons = app.buttons.allElementsBoundByIndex
+            for i in 0..<min(allButtons.count, 10) {
+                let button = allButtons[i]
+                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            }
+        }
+        
         XCTAssertTrue(buttonExists, "Mute/unmute button should exist")
         
         // Determine current state and toggle
-        if muteButton.exists {
+        if muteButton.exists || (speakerButtons.count > 0 && speakerButtons.firstMatch.identifier.contains("wave")) {
             // Currently unmuted, tap to mute
-            muteButton.tap()
+            if muteButton.exists {
+                muteButton.tap()
+            } else {
+                speakerButtons.firstMatch.tap()
+            }
             
             // Then - should show muted state and text input
-            XCTAssertTrue(app.buttons["speaker.slash.fill"].waitForExistence(timeout: 3), "Should show muted state")
+            let mutedStateExists = app.buttons["speaker.slash.fill"].waitForExistence(timeout: 3) ||
+                                  (speakerButtons.count > 0 && speakerButtons.firstMatch.identifier.contains("slash"))
+            XCTAssertTrue(mutedStateExists, "Should show muted state")
             XCTAssertTrue(app.textFields["Type a message..."].waitForExistence(timeout: 3), "Text input should appear when muted")
             
             // When - tap to unmute
-            app.buttons["speaker.slash.fill"].tap()
+            if app.buttons["speaker.slash.fill"].exists {
+                app.buttons["speaker.slash.fill"].tap()
+            } else if speakerButtons.count > 0 {
+                speakerButtons.firstMatch.tap()
+            }
             
             // Then - should show unmuted state and voice input
-            XCTAssertTrue(app.buttons["speaker.wave.2.fill"].waitForExistence(timeout: 3), "Should show unmuted state")
+            let unmutedStateExists = app.buttons["speaker.wave.2.fill"].waitForExistence(timeout: 3) ||
+                                    (speakerButtons.count > 0 && speakerButtons.firstMatch.identifier.contains("wave"))
+            XCTAssertTrue(unmutedStateExists, "Should show unmuted state")
             XCTAssertTrue(app.buttons["mic.circle.fill"].waitForExistence(timeout: 3), "Voice input button should appear when unmuted")
-        } else {
+        } else if mutedButton.exists || (speakerButtons.count > 0 && speakerButtons.firstMatch.identifier.contains("slash")) {
             // Currently muted, tap to unmute first
-            mutedButton.tap()
+            if mutedButton.exists {
+                mutedButton.tap()
+            } else {
+                speakerButtons.firstMatch.tap()
+            }
             
             // Then - should show unmuted state
-            XCTAssertTrue(app.buttons["speaker.wave.2.fill"].waitForExistence(timeout: 3), "Should show unmuted state")
+            let unmutedStateExists = app.buttons["speaker.wave.2.fill"].waitForExistence(timeout: 3) ||
+                                    (speakerButtons.count > 0 && speakerButtons.firstMatch.identifier.contains("wave"))
+            XCTAssertTrue(unmutedStateExists, "Should show unmuted state")
             XCTAssertTrue(app.buttons["mic.circle.fill"].waitForExistence(timeout: 3), "Voice input button should appear when unmuted")
             
             // When - tap to mute
-            app.buttons["speaker.wave.2.fill"].tap()
+            if app.buttons["speaker.wave.2.fill"].exists {
+                app.buttons["speaker.wave.2.fill"].tap()
+            } else if speakerButtons.count > 0 {
+                speakerButtons.firstMatch.tap()
+            }
             
             // Then - should show muted state and text input
-            XCTAssertTrue(app.buttons["speaker.slash.fill"].waitForExistence(timeout: 3), "Should show muted state")
+            let mutedStateExists = app.buttons["speaker.slash.fill"].waitForExistence(timeout: 3) ||
+                                  (speakerButtons.count > 0 && speakerButtons.firstMatch.identifier.contains("slash"))
+            XCTAssertTrue(mutedStateExists, "Should show muted state")
             XCTAssertTrue(app.textFields["Type a message..."].waitForExistence(timeout: 3), "Text input should appear when muted")
         }
     }
@@ -427,10 +468,25 @@ class ConversationViewUITests: XCTestCase {
         let unmuteButton = app.buttons["speaker.wave.2.fill"]
         let muteButton = app.buttons["speaker.slash.fill"]
         
+        // Also try finding by predicate
+        let speakerButtonPredicate = NSPredicate(format: "identifier CONTAINS 'speaker'")
+        let speakerButtons = app.buttons.matching(speakerButtonPredicate)
+        
         // If already muted, return early
         if muteButton.exists {
             print("🧪 muteConversation: Already muted")
             return
+        }
+        
+        // Check if muted button exists via predicate
+        if speakerButtons.count > 0 {
+            for i in 0..<speakerButtons.count {
+                let button = speakerButtons.element(boundBy: i)
+                if button.identifier.contains("slash") {
+                    print("🧪 muteConversation: Already muted (found via predicate)")
+                    return
+                }
+            }
         }
         
         // Otherwise, wait for unmute button and tap it
@@ -441,7 +497,30 @@ class ConversationViewUITests: XCTestCase {
             // Wait for text input to appear
             let textFieldAppeared = app.textFields["Type a message..."].waitForExistence(timeout: 5)
             XCTAssertTrue(textFieldAppeared, "Text field should appear after muting")
+        } else if speakerButtons.count > 0 {
+            // Try to find and tap the unmuted button via predicate
+            for i in 0..<speakerButtons.count {
+                let button = speakerButtons.element(boundBy: i)
+                if button.identifier.contains("wave") && !button.identifier.contains("slash") {
+                    print("🧪 muteConversation: Tapping speaker button found via predicate")
+                    button.tap()
+                    
+                    // Wait for text input to appear
+                    let textFieldAppeared = app.textFields["Type a message..."].waitForExistence(timeout: 5)
+                    XCTAssertTrue(textFieldAppeared, "Text field should appear after muting")
+                    print("🧪 muteConversation: Completed")
+                    return
+                }
+            }
+            XCTFail("Found speaker buttons but none were unmuted")
         } else {
+            // Debug output
+            print("🧪 muteConversation: No speaker buttons found. Available buttons:")
+            let allButtons = app.buttons.allElementsBoundByIndex
+            for i in 0..<min(allButtons.count, 10) {
+                let button = allButtons[i]
+                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            }
             XCTFail("Could not find unmute button to mute the conversation")
         }
         print("🧪 muteConversation: Completed")
@@ -453,10 +532,25 @@ class ConversationViewUITests: XCTestCase {
         let muteButton = app.buttons["speaker.slash.fill"]
         let unmuteButton = app.buttons["speaker.wave.2.fill"]
         
+        // Also try finding by predicate
+        let speakerButtonPredicate = NSPredicate(format: "identifier CONTAINS 'speaker'")
+        let speakerButtons = app.buttons.matching(speakerButtonPredicate)
+        
         // If already unmuted, return early
         if unmuteButton.exists {
             print("🧪 unmuteConversation: Already unmuted")
             return
+        }
+        
+        // Check if unmuted button exists via predicate
+        if speakerButtons.count > 0 {
+            for i in 0..<speakerButtons.count {
+                let button = speakerButtons.element(boundBy: i)
+                if button.identifier.contains("wave") && !button.identifier.contains("slash") {
+                    print("🧪 unmuteConversation: Already unmuted (found via predicate)")
+                    return
+                }
+            }
         }
         
         // Otherwise, wait for mute button and tap it
@@ -467,7 +561,30 @@ class ConversationViewUITests: XCTestCase {
             // Wait for voice input to appear
             let micButtonAppeared = app.buttons["mic.circle.fill"].waitForExistence(timeout: 5)
             XCTAssertTrue(micButtonAppeared, "Microphone button should appear after unmuting")
+        } else if speakerButtons.count > 0 {
+            // Try to find and tap the muted button via predicate
+            for i in 0..<speakerButtons.count {
+                let button = speakerButtons.element(boundBy: i)
+                if button.identifier.contains("slash") {
+                    print("🧪 unmuteConversation: Tapping speaker button found via predicate")
+                    button.tap()
+                    
+                    // Wait for voice input to appear
+                    let micButtonAppeared = app.buttons["mic.circle.fill"].waitForExistence(timeout: 5)
+                    XCTAssertTrue(micButtonAppeared, "Microphone button should appear after unmuting")
+                    print("🧪 unmuteConversation: Completed")
+                    return
+                }
+            }
+            XCTFail("Found speaker buttons but none were muted")
         } else {
+            // Debug output
+            print("🧪 unmuteConversation: No speaker buttons found. Available buttons:")
+            let allButtons = app.buttons.allElementsBoundByIndex
+            for i in 0..<min(allButtons.count, 10) {
+                let button = allButtons[i]
+                print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
+            }
             XCTFail("Could not find mute button to unmute the conversation")
         }
         print("🧪 unmuteConversation: Completed")
