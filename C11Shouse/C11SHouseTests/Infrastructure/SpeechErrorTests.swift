@@ -120,9 +120,9 @@ class SpeechErrorTests: XCTestCase {
         XCTAssertNotEqual(SpeechError.noSpeechDetected, SpeechError.cancelled)
         
         let error1 = NSError(domain: "test", code: 1101, userInfo: nil)
-        let error2 = NSError(domain: "test", code: 1101, userInfo: nil)
+        let error2 = NSError(domain: "test", code: 1102, userInfo: nil) // Different code
         
-        // Note: NSError equality is reference-based, so these won't be equal
+        // NSError implements value equality, so errors with same domain/code are equal
         XCTAssertNotEqual(SpeechError.recordingError(error1), SpeechError.recordingError(error2))
     }
 }

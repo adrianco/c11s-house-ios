@@ -52,10 +52,20 @@ final class ThreadingVerificationTests: XCTestCase {
             .store(in: &cancellables)
         
         // Trigger audio level update
-        try? await audioEngine.prepareForRecording()
-        try? await audioEngine.startRecording()
+        // Wrap in do-catch to handle audio format mismatch in test environment
+        do {
+            try await audioEngine.prepareForRecording()
+            try await audioEngine.startRecording()
+        } catch {
+            // In test environment, audio hardware might not be available or have format mismatch
+            // This is expected, we're just testing threading behavior
+            print("Audio engine error in test (expected): \(error)")
+        }
         
-        await fulfillment(of: [expectation], timeout: 2.0)
+        // Still wait for any potential updates
+        await fulfillment(of: [expectation], timeout: 2.0, enforceOrder: false)
+        
+        // Stop recording if it was started
         await audioEngine.stopRecording()
     }
     

@@ -1,29 +1,8 @@
-CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 15:30:27.157.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:30:27.157.
-Test Suite 'OnboardingUITests' started at 2025-07-22 15:30:27.157.
-Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' started.
-    t =     0.00s Start Test at 2025-07-22 15:30:27.157
-    t =     0.03s Set Up
-    t =     0.04s     Open com.c11s.house
-    t =     0.04s         Launch com.c11s.house
-    t =     3.44s             Setting up automation session
-    t =     4.71s             Wait for com.c11s.house to idle
-    t =     6.07s Checking existence of `"Back" Button`
-    t =     7.62s Checking existence of `"House Chat" NavigationBar`
-    t =     7.65s Checking existence of `"Mute" Button`
-    t =     7.67s Checking existence of `"Microphone" Button`
-    t =     7.69s Checking existence of `"StartConversation" Button`
-    t =     7.71s Checking existence of `"StartConversation" Button`
-    t =     7.73s Checking existence of `"StartConversation" Button`
-    t =     7.74s Find the "StartConversation" Button
-    t =     7.76s Tear Down
-Test Case '-[C11SHouseUITests.OnboardingUITests testWelcomeScreenAppearance]' passed (8.050 seconds).
-Test Suite 'OnboardingUITests' passed at 2025-07-22 15:30:35.209.
-	 Executed 1 test, with 0 failures (0 unexpected) in 8.050 (8.052) seconds
-Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 15:30:35.211.
-	 Executed 1 test, with 0 failures (0 unexpected) in 8.050 (8.054) seconds
-Test Suite 'Selected tests' passed at 2025-07-22 15:30:35.212.
-	 Executed 1 test, with 0 failures (0 unexpected) in 8.050 (8.055) seconds
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Infrastructure/SpeechErrorTests.swift:126 testEquality(): XCTAssertNotEqual failed: ("recordingError(Error Domain=test Code=1101 "(null)")") is equal to ("recordingError(Error Domain=test Code=1101 "(null)")")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:377 testSaveAnswerWithFullIntegration(): XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:473 testSaveAnswerBasicWithValidData(): XCTAssertEqual failed: ("0") is not equal to ("1")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:433 testSaveAnswerForHouseNameQuestion(): XCTAssertEqual failed: ("nil") is not equal to ("Optional("Maple House")")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:474 testSaveAnswerBasicWithValidData(): XCTAssertNil failed: "Question(id: F71D1E22-EF16-4CD6-BD2E-566CFCB6D2A9, text: "What should I call this house?", category: C11SHouse.QuestionCategory.houseInfo, displayOrder: 1, isRequired: true, hint: Optional("Give your house a name (e.g., \'Maple House\', \'The Smith Home\')"), createdAt: 2025-07-22 22:31:22 +0000)"
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:596 testHandleQuestionChangeWithNoQuestion(): XCTAssertFalse failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:616 testHandleQuestionChangeForAddressQuestionWithoutAnswer(): XCTAssertEqual failed: ("123 Main St, Springfield, IL 62701") is not equal to ("123 Main St, Springfield, IL, 62701, USA")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:691 testHandleQuestionChangeWithExistingAnswer(): XCTAssertTrue failed
