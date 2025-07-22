@@ -1,355 +1,204 @@
 CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
 Running tests...
     t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 14:55:26.217.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 14:55:26.217.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 14:55:26.217.
+Test Suite 'Selected tests' started at 2025-07-22 15:00:00.306.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:00:00.307.
+Test Suite 'ConversationViewUITests' started at 2025-07-22 15:00:00.307.
 Test Case '-[C11SHouseUITests.ConversationViewUITests testTextMessageSending]' started.
-    t =     0.00s Start Test at 2025-07-22 14:55:26.218
+    t =     0.00s Start Test at 2025-07-22 15:00:00.307
     t =     0.01s Set Up
 🧪 ConversationViewUITests: Starting test setup
 🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
     t =     0.01s     Open com.c11s.house
     t =     0.01s         Launch com.c11s.house
-    t =     2.81s             Setting up automation session
-    t =     5.11s             Wait for com.c11s.house to idle
-    t =     6.59s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     7.62s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.62s             Checking existence of `"StartConversation" Button`
-    t =     8.85s             Capturing element debug description
-    t =     8.85s         Checking existence of `"StartConversation" Button`
-    t =    10.87s     Find the "StartConversation" Button
-    t =    10.91s     Tap "StartConversation" Button
-    t =    10.91s         Wait for com.c11s.house to idle
-    t =    10.92s         Find the "StartConversation" Button
-    t =    10.94s         Check for interrupting elements affecting "StartConversation" Button
-    t =    10.96s         Synthesize event
-    t =    11.26s         Wait for com.c11s.house to idle
-    t =    11.41s     Waiting 5.0s for "Back" Button to exist
-    t =    12.42s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    12.42s             Checking existence of `"Back" Button`
+    t =     3.02s             Setting up automation session
+    t =     5.08s             Wait for com.c11s.house to idle
+    t =     6.65s     Waiting 2.0s for "StartConversation" Button to exist
+    t =     7.67s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =     7.67s             Checking existence of `"StartConversation" Button`
+    t =     9.00s             Capturing element debug description
+    t =     9.00s         Checking existence of `"StartConversation" Button`
+    t =    10.69s     Find the "StartConversation" Button
+    t =    10.73s     Tap "StartConversation" Button
+    t =    10.73s         Wait for com.c11s.house to idle
+    t =    10.73s         Find the "StartConversation" Button
+    t =    10.75s         Check for interrupting elements affecting "StartConversation" Button
+    t =    10.78s         Synthesize event
+    t =    11.07s         Wait for com.c11s.house to idle
+    t =    11.18s     Waiting 5.0s for "Back" Button to exist
+    t =    12.20s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
+    t =    12.20s             Checking existence of `"Back" Button`
 🧪 ConversationViewUITests: testTextMessageSending started
 🧪 muteConversation: Starting
-    t =    12.50s Checking existence of `"speaker.slash.fill" Button`
-    t =    12.53s Checking existence of `"Unmute" Button`
-    t =    12.55s Checking existence of `"Type a message..." TextField`
-    t =    12.57s Waiting 3.0s for "speaker.wave.2.fill" Button to exist
-    t =    13.60s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    13.60s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    13.65s         Capturing element debug description
-    t =    14.57s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    14.57s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    14.63s         Capturing element debug description
-    t =    15.57s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
-    t =    15.57s         Checking existence of `"speaker.wave.2.fill" Button`
-    t =    15.63s         Capturing element debug description
-    t =    15.63s     Checking existence of `"speaker.wave.2.fill" Button`
-    t =    15.66s Collecting debug information to assist test failure triage
-    t =    15.67s     Requesting snapshot of accessibility hierarchy for app with pid 52396
-    t =    15.73s Waiting 2.0s for "Mute" Button to exist
-    t =    16.75s     Checking `Expect predicate `existsNoRetry == 1` for object "Mute" Button`
-    t =    16.75s         Checking existence of `"Mute" Button`
+    t =    12.23s Checking existence of `"speaker.slash.fill" Button`
+    t =    12.25s Checking existence of `"Unmute" Button`
+    t =    12.27s Checking existence of `"Type a message..." TextField`
+    t =    12.29s Waiting 3.0s for "speaker.wave.2.fill" Button to exist
+    t =    13.30s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
+    t =    13.31s         Checking existence of `"speaker.wave.2.fill" Button`
+    t =    13.35s         Capturing element debug description
+    t =    14.37s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
+    t =    14.37s         Checking existence of `"speaker.wave.2.fill" Button`
+    t =    14.41s         Capturing element debug description
+    t =    15.29s     Checking `Expect predicate `existsNoRetry == 1` for object "speaker.wave.2.fill" Button`
+    t =    15.29s         Checking existence of `"speaker.wave.2.fill" Button`
+    t =    15.34s         Capturing element debug description
+    t =    15.34s     Checking existence of `"speaker.wave.2.fill" Button`
+    t =    15.37s Collecting debug information to assist test failure triage
+    t =    15.37s     Requesting snapshot of accessibility hierarchy for app with pid 52437
+    t =    15.43s Waiting 2.0s for "Mute" Button to exist
+    t =    16.45s     Checking `Expect predicate `existsNoRetry == 1` for object "Mute" Button`
+    t =    16.45s         Checking existence of `"Mute" Button`
 🧪 muteConversation: Tapping mute button (by label)
-    t =    16.78s Tap "Mute" Button
-    t =    16.78s     Wait for com.c11s.house to idle
-    t =    16.78s     Find the "Mute" Button
-    t =    16.81s     Check for interrupting elements affecting "ConversationView" Button
-    t =    16.83s     Synthesize event
-    t =    17.13s     Wait for com.c11s.house to idle
-    t =    17.48s Waiting 5.0s for "Type a message..." TextField to exist
-    t =    18.51s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    18.51s         Checking existence of `"Type a message..." TextField`
+    t =    16.50s Tap "Mute" Button
+    t =    16.50s     Wait for com.c11s.house to idle
+    t =    16.51s     Find the "Mute" Button
+    t =    16.55s     Check for interrupting elements affecting "ConversationView" Button
+    t =    16.58s     Synthesize event
+    t =    16.88s     Wait for com.c11s.house to idle
+    t =    16.89s Waiting 5.0s for "Type a message..." TextField to exist
+    t =    17.92s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
+    t =    17.92s         Checking existence of `"Type a message..." TextField`
 🧪 muteConversation: Completed
-    t =    21.24s Waiting 5.0s for "Type a message..." TextField to exist
-    t =    22.25s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
-    t =    22.25s         Checking existence of `"Type a message..." TextField`
-    t =    22.32s Tap "Type a message..." TextField
-    t =    22.32s     Wait for com.c11s.house to idle
-    t =    22.33s     Find the "Type a message..." TextField
-    t =    22.36s     Check for interrupting elements affecting "ConversationView" TextField
-    t =    22.41s     Synthesize event
-    t =    22.71s     Wait for com.c11s.house to idle
-    t =    22.71s Type 'Hello from UI test' into "ConversationView" TextField
-    t =    22.71s     Wait for com.c11s.house to idle
-    t =    22.72s     Find the "ConversationView" TextField
-    t =    22.75s     Check for interrupting elements affecting "ConversationView" TextField
-    t =    22.79s     Synthesize event
-    t =    23.30s     Wait for com.c11s.house to idle
-    t =    23.81s Checking existence of `"arrow.up.circle.fill" Button`
-    t =    23.88s Checking existence of `"Send" Button`
-    t =    23.92s Get all elements bound by index for: Descendants matching type Button
-    t =    23.94s Find the Button (Element at index 0)
-    t =    23.97s Find the "Emoji" Button
-    t =    24.00s Find the "ConversationView" TextField
-    t =    24.04s Find the Button (Element at index 1)
-    t =    24.07s Find the "dictation" Button
-    t =    24.10s Find the "ConversationView" TextField
-    t =    24.14s Find the "dictation" Button
-    t =    24.16s Find the Button (Element at index 2)
-    t =    24.19s Find the "shift" Button
+    t =    18.08s Waiting 5.0s for "Type a message..." TextField to exist
+    t =    19.11s     Checking `Expect predicate `existsNoRetry == 1` for object "Type a message..." TextField`
+    t =    19.12s         Checking existence of `"Type a message..." TextField`
+    t =    19.17s Tap "Type a message..." TextField
+    t =    19.17s     Wait for com.c11s.house to idle
+    t =    19.18s     Find the "Type a message..." TextField
+    t =    19.21s     Check for interrupting elements affecting "ConversationView" TextField
+    t =    19.25s     Synthesize event
+    t =    19.55s     Wait for com.c11s.house to idle
+    t =    19.93s Type 'Hello from UI test' into "ConversationView" TextField
+    t =    19.93s     Wait for com.c11s.house to idle
+    t =    20.47s     Find the "ConversationView" TextField
+    t =    20.51s     Check for interrupting elements affecting "ConversationView" TextField
+    t =    20.54s     Synthesize event
+    t =    21.06s     Wait for com.c11s.house to idle
+    t =    21.95s Checking existence of `"arrow.up.circle.fill" Button`
+    t =    24.10s Checking existence of `"Send" Button`
+    t =    24.14s Get all elements bound by index for: Descendants matching type Button
+    t =    24.17s Find the Button (Element at index 0)
+    t =    24.20s Find the "Emoji" Button
     t =    24.22s Find the "ConversationView" TextField
-    t =    24.25s Find the Button (Element at index 3)
-    t =    24.28s Find the "Return" Button
+    t =    24.26s Find the Button (Element at index 1)
+    t =    24.28s Find the "dictation" Button
     t =    24.31s Find the "ConversationView" TextField
-    t =    24.35s Find the "Return" Button
-    t =    24.37s Find the "Return" Button
-    t =    24.40s Find the "Return" Button
-    t =    24.43s Checking existence of `"Return" Button`
-    t =    24.45s Checking existence of `"Return" Button`
-    t =    24.48s Find the "Return" Button
-    t =    24.51s Find the "Return" Button
-    t =    24.54s Tap "Return" Button
-    t =    24.54s     Wait for com.c11s.house to idle
-    t =    24.55s     Find the "Return" Button
-    t =    24.58s     Check for interrupting elements affecting "Return" Button
-    t =    24.61s     Synthesize event
-    t =    24.92s     Wait for com.c11s.house to idle
-    t =    25.40s Waiting 3.0s for "Hello from UI test" StaticText to exist
-    t =    26.43s     Checking `Expect predicate `existsNoRetry == 1` for object "Hello from UI test" StaticText`
-    t =    26.43s         Checking existence of `"Hello from UI test" StaticText`
-    t =    26.49s         Capturing element debug description
-    t =    27.41s     Checking `Expect predicate `existsNoRetry == 1` for object "Hello from UI test" StaticText`
-    t =    27.41s         Checking existence of `"Hello from UI test" StaticText`
-    t =    27.46s         Capturing element debug description
-    t =    28.40s     Checking `Expect predicate `existsNoRetry == 1` for object "Hello from UI test" StaticText`
-    t =    28.40s         Checking existence of `"Hello from UI test" StaticText`
-    t =    28.46s         Capturing element debug description
-    t =    28.46s     Checking existence of `"Hello from UI test" StaticText`
-    t =    28.50s Collecting debug information to assist test failure triage
-    t =    28.50s     Requesting snapshot of accessibility hierarchy for app with pid 52396
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:319: error: -[C11SHouseUITests.ConversationViewUITests testTextMessageSending] : XCTAssertTrue failed - Sent message should appear in chat
-    t =    28.74s Tear Down
+    t =    24.34s Find the "dictation" Button
+    t =    24.60s Find the Button (Element at index 2)
+    t =    24.74s Find the "shift" Button
+    t =    24.80s Find the "ConversationView" TextField
+    t =    24.84s Find the Button (Element at index 3)
+    t =    24.97s Find the "Return" Button
+    t =    25.02s Find the "ConversationView" TextField
+    t =    25.06s Find the "Return" Button
+    t =    25.08s Find the "Return" Button
+    t =    25.11s Find the "Return" Button
+    t =    25.13s Find the "Return" Button
+    t =    25.16s Find the "Return" Button
+    t =    25.18s Find the Button (Element at index 4)
+    t =    25.31s Find the "ConversationView" Button
+    t =    25.35s Find the "ConversationView" TextField
+    t =    25.39s Find the "ConversationView" Button
+    t =    25.42s Find the "ConversationView" Button
+    t =    25.45s Find the "ConversationView" Button
+    t =    25.47s Find the "ConversationView" Button
+    t =    25.50s Find the "ConversationView" Button
+    t =    25.52s Find the "ConversationView" Button
+    t =    25.55s Find the "ConversationView" Button
+    t =    25.58s Find the "ConversationView" Button
+    t =    25.60s Find the "ConversationView" Button
+    t =    25.63s Checking existence of `"ConversationView" Button`
+    t =    25.65s Find the "ConversationView" Button
+🧪 testTextMessageSending: No send button found, using keyboard return
+    t =    25.68s Type '
+' into "ConversationView" TextField
+    t =    25.68s     Wait for com.c11s.house to idle
+    t =    25.68s     Find the "ConversationView" TextField
+    t =    25.71s     Check for interrupting elements affecting "ConversationView" TextField
+    t =    25.75s     Synthesize event
+    t =    25.98s     Wait for com.c11s.house to idle
+    t =    26.42s Waiting 3.0s for "Hello from UI test" StaticText to exist
+    t =    27.45s     Checking `Expect predicate `existsNoRetry == 1` for object "Hello from UI test" StaticText`
+    t =    27.45s         Checking existence of `"Hello from UI test" StaticText`
+    t =    27.51s Find the "ConversationView" TextField
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:329: error: -[C11SHouseUITests.ConversationViewUITests testTextMessageSending] : XCTAssertEqual failed: ("Optional("Hello from UI test")") is not equal to ("Optional("")") - Text field should be cleared after sending
+    t =    27.72s Tear Down
 🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testTextMessageSending]' failed (29.002 seconds).
-Test Suite 'ConversationViewUITests' failed at 2025-07-22 14:55:55.220.
-	 Executed 1 test, with 1 failure (0 unexpected) in 29.002 (29.003) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 14:55:55.222.
-	 Executed 1 test, with 1 failure (0 unexpected) in 29.002 (29.004) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 14:55:55.223.
-	 Executed 1 test, with 1 failure (0 unexpected) in 29.002 (29.006) seconds
+Test Case '-[C11SHouseUITests.ConversationViewUITests testTextMessageSending]' failed (27.954 seconds).
+Test Suite 'ConversationViewUITests' failed at 2025-07-22 15:00:28.262.
+	 Executed 1 test, with 1 failure (0 unexpected) in 27.954 (27.956) seconds
+Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 15:00:28.263.
+	 Executed 1 test, with 1 failure (0 unexpected) in 27.954 (27.957) seconds
+Test Suite 'Selected tests' failed at 2025-07-22 15:00:28.264.
+	 Executed 1 test, with 1 failure (0 unexpected) in 27.954 (27.958) seconds
 
      CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
 Running tests...
     t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 14:56:29.286.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 14:56:29.286.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 14:56:29.286.
+Test Suite 'Selected tests' started at 2025-07-22 15:00:53.663.
+Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 15:00:53.663.
+Test Suite 'ConversationViewUITests' started at 2025-07-22 15:00:53.663.
 Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceInputButton]' started.
-    t =     0.00s Start Test at 2025-07-22 14:56:29.286
+    t =     0.00s Start Test at 2025-07-22 15:00:53.664
     t =     0.01s Set Up
 🧪 ConversationViewUITests: Starting test setup
 🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
     t =     0.01s     Open com.c11s.house
     t =     0.01s         Launch com.c11s.house
-    t =     2.40s             Setting up automation session
-    t =     4.69s             Wait for com.c11s.house to idle
-    t =     6.01s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     7.03s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.03s             Checking existence of `"StartConversation" Button`
-    t =     8.27s             Capturing element debug description
-    t =     8.27s         Checking existence of `"StartConversation" Button`
-    t =    10.21s     Find the "StartConversation" Button
-    t =    10.26s     Tap "StartConversation" Button
-    t =    10.26s         Wait for com.c11s.house to idle
-    t =    10.26s         Find the "StartConversation" Button
-    t =    10.28s         Check for interrupting elements affecting "StartConversation" Button
-    t =    10.30s         Synthesize event
-    t =    10.59s         Wait for com.c11s.house to idle
-    t =    10.72s     Waiting 5.0s for "Back" Button to exist
-    t =    11.73s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    11.73s             Checking existence of `"Back" Button`
+    t =     2.34s             Setting up automation session
+    t =     4.64s             Wait for com.c11s.house to idle
+    t =     5.91s     Waiting 2.0s for "StartConversation" Button to exist
+    t =     6.92s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
+    t =     6.92s             Checking existence of `"StartConversation" Button`
+    t =     8.25s             Capturing element debug description
+    t =     8.25s         Checking existence of `"StartConversation" Button`
+    t =     9.83s     Find the "StartConversation" Button
+    t =     9.87s     Tap "StartConversation" Button
+    t =     9.87s         Wait for com.c11s.house to idle
+    t =     9.88s         Find the "StartConversation" Button
+    t =     9.89s         Check for interrupting elements affecting "StartConversation" Button
+    t =     9.92s         Synthesize event
+    t =    10.21s         Wait for com.c11s.house to idle
+    t =    10.33s     Waiting 5.0s for "Back" Button to exist
+    t =    11.36s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
+    t =    11.36s             Checking existence of `"Back" Button`
 🧪 ConversationViewUITests: testVoiceInputButton started
 🧪 unmuteConversation: Starting
-    t =    11.76s Waiting 1.0s for "mic.circle.fill" Button to exist
-    t =    12.77s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    12.77s         Checking existence of `"mic.circle.fill" Button`
-    t =    12.82s         Capturing element debug description
-    t =    12.82s     Checking existence of `"mic.circle.fill" Button`
-    t =    12.85s Collecting debug information to assist test failure triage
-    t =    12.85s     Requesting snapshot of accessibility hierarchy for app with pid 52407
-    t =    12.91s Checking existence of `"Type a message..." TextField`
-    t =    12.93s Checking existence of `"Mute" Button`
-🧪 unmuteConversation: Already unmuted (mute button exists)
-    t =    13.46s Checking existence of `"mic.circle.fill" Button`
-    t =    13.51s Get number of matches for: Elements matching predicate 'identifier CONTAINS "mic.circle"'
-    t =    13.53s Checking existence of `"mic.circle.fill" Button`
-    t =    13.56s Checking existence of `"Confirm" Button`
-    t =    13.58s Checking existence of `"Cancel" Button`
-    t =    13.60s Checking existence of `"mic.circle.fill" Button`
-    t =    13.62s Get all elements bound by index for: Descendants matching type Button
-    t =    13.64s Find the Button (Element at index 0)
-    t =    13.66s Find the Target Application 'com.c11s.house'
-    t =    13.68s Find the "ConversationView" Button
-    t =    13.70s Find the "ConversationView" Button
-🧪 Found potential mic button: ConversationView, 
-    t =    13.72s Find the "ConversationView" Button
-    t =    13.74s Find the "ConversationView" Button
-    t =    13.76s Find the Button (Element at index 1)
-    t =    13.78s Find the Target Application 'com.c11s.house'
-    t =    13.80s Find the Button (Element at index 2)
-    t =    13.82s Find the Target Application 'com.c11s.house'
-    t =    13.84s Find the Button (Element at index 3)
-    t =    13.86s Find the Target Application 'com.c11s.house'
-    t =    13.88s Find the "ConversationView" Button
-    t =    13.90s Find the "ConversationView" Button
-🧪 Found potential mic button: ConversationView, Microphone
-    t =    13.92s Find the "ConversationView" Button
-    t =    13.94s Find the "ConversationView" Button
-    t =    13.96s Find the Button (Element at index 4)
-    t =    13.98s Find the Target Application 'com.c11s.house'
-    t =    14.00s Find the Button (Element at index 5)
-    t =    14.02s Find the Target Application 'com.c11s.house'
-    t =    14.03s Find the Button (Element at index 6)
-    t =    14.05s Find the Target Application 'com.c11s.house'
-    t =    14.07s Find the Button (Element at index 7)
-    t =    14.09s Find the Target Application 'com.c11s.house'
-    t =    14.11s Find the Button (Element at index 8)
-    t =    14.13s Find the Target Application 'com.c11s.house'
-    t =    14.15s Find the Button (Element at index 9)
-    t =    14.17s Find the Target Application 'com.c11s.house'
-    t =    14.19s Find the Button (Element at index 10)
-    t =    14.21s Find the Target Application 'com.c11s.house'
-    t =    14.23s Find the Button (Element at index 11)
-    t =    14.25s Find the Target Application 'com.c11s.house'
-    t =    14.27s Checking existence of `"mic.circle.fill" Button`
-🧪 Debug: Current view hierarchy
-  Buttons:
-    t =    14.29s Get all elements bound by index for: Descendants matching type Button
-    t =    14.31s Find the Button (Element at index 0)
-    t =    14.33s Find the "ConversationView" Button
-    t =    14.35s Find the "ConversationView" Button
-    t =    14.48s Find the "ConversationView" Button
-    Button 0: id='ConversationView' label='' enabled=true hittable=false
-    t =    14.51s Find the Button (Element at index 1)
-    t =    14.53s Find the "ConversationView" Button
-    t =    14.56s Find the "ConversationView" Button
-    t =    14.58s Find the "ConversationView" Button
-    Button 1: id='ConversationView' label='Back' enabled=true hittable=true
-    t =    14.61s Find the Button (Element at index 2)
-    t =    14.63s Find the "ConversationView" Button
-    t =    14.65s Find the "ConversationView" Button
-    t =    14.67s Find the "ConversationView" Button
-    Button 2: id='ConversationView' label='Mute' enabled=true hittable=true
-    t =    14.70s Find the Button (Element at index 3)
-    t =    14.72s Find the "ConversationView" Button
-    t =    14.74s Find the "ConversationView" Button
-    t =    14.87s Find the "ConversationView" Button
-    Button 3: id='ConversationView' label='Microphone' enabled=true hittable=true
-    t =    14.92s Find the Button (Element at index 4)
-    t =    14.94s Find the "pencil.circle.fill" Button
-    t =    14.97s Find the "pencil.circle.fill" Button
-    t =    14.99s Find the "pencil.circle.fill" Button
-    Button 4: id='pencil.circle.fill' label='Edit' enabled=true hittable=false
-    t =    15.01s Find the Button (Element at index 5)
-    t =    15.03s Find the "Yes, this is correct" Button
-    t =    15.16s Find the "Yes, this is correct" Button
-    t =    15.19s Find the "Yes, this is correct" Button
-    Button 5: id='' label='Yes, this is correct' enabled=true hittable=false
-    t =    15.22s Find the Button (Element at index 6)
-    t =    15.24s Find the "pencil.circle.fill" Button
-    t =    15.27s Find the "pencil.circle.fill" Button
-    t =    15.29s Find the "pencil.circle.fill" Button
-    Button 6: id='pencil.circle.fill' label='Edit' enabled=true hittable=false
-    t =    15.31s Find the Button (Element at index 7)
-    t =    15.33s Find the "Yes, this is correct" Button
-    t =    15.36s Find the "Yes, this is correct" Button
-    t =    15.48s Find the "Yes, this is correct" Button
-    Button 7: id='' label='Yes, this is correct' enabled=true hittable=false
-    t =    15.52s Find the Button (Element at index 8)
-    t =    15.54s Find the "pencil.circle.fill" Button
-    t =    15.57s Find the "pencil.circle.fill" Button
-    t =    15.59s Find the "pencil.circle.fill" Button
-    Button 8: id='pencil.circle.fill' label='Edit' enabled=true hittable=false
-    t =    15.62s Find the Button (Element at index 9)
-    t =    15.65s Find the "Yes, this is correct" Button
-    t =    15.67s Find the "Yes, this is correct" Button
-    t =    15.69s Find the "Yes, this is correct" Button
-    Button 9: id='' label='Yes, this is correct' enabled=true hittable=true
-    t =    15.72s Find the Button (Element at index 10)
-    t =    15.74s Find the "pencil.circle.fill" Button
-    t =    15.76s Find the "pencil.circle.fill" Button
-    t =    15.78s Find the "pencil.circle.fill" Button
-    Button 10: id='pencil.circle.fill' label='Edit' enabled=true hittable=true
-    t =    15.82s Find the Button (Element at index 11)
-    t =    15.84s Find the "Yes, this is correct" Button
-    t =    15.86s Find the "Yes, this is correct" Button
-    t =    15.88s Find the "Yes, this is correct" Button
-    Button 11: id='' label='Yes, this is correct' enabled=true hittable=true
-  TextFields:
-    t =    15.91s Get all elements bound by index for: Descendants matching type TextField
-    t =    15.93s Checking existence of `"mic.circle.fill" Button`
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseUITests/ConversationViewUITests.swift:410: error: -[C11SHouseUITests.ConversationViewUITests testVoiceInputButton] : XCTAssertTrue failed - Microphone button should be visible when unmuted
-    t =    16.11s Tear Down
+    t =    11.39s Checking existence of `"mic.circle.fill" Button`
+    t =    11.41s Waiting 1.0s for "Microphone" Button to exist
+    t =    12.41s     Checking `Expect predicate `existsNoRetry == 1` for object "Microphone" Button`
+    t =    12.41s         Checking existence of `"Microphone" Button`
+    t =    12.44s     Checking existence of `"Microphone" Button`
+🧪 unmuteConversation: Already unmuted (mic button exists)
+    t =    12.97s Checking existence of `"mic.circle.fill" Button`
+    t =    13.01s Checking existence of `"Microphone" Button`
+    t =    13.04s Checking existence of `"Microphone" Button`
+    t =    13.06s Checking existence of `"Microphone" Button`
+    t =    13.08s Checking existence of `"Microphone" Button`
+    t =    13.10s Checking existence of `"Microphone" Button`
+    t =    13.12s Waiting 2.0s for "Tap to speak" StaticText to exist
+    t =    14.13s     Checking `Expect predicate `existsNoRetry == 1` for object "Tap to speak" StaticText`
+    t =    14.13s         Checking existence of `"Tap to speak" StaticText`
+    t =    14.18s Find the "Microphone" Button
+    t =    14.21s Tap "ConversationView" Button
+    t =    14.21s     Wait for com.c11s.house to idle
+    t =    14.22s     Find the "ConversationView" Button
+    t =    14.24s     Check for interrupting elements affecting "ConversationView" Button
+    t =    14.28s     Synthesize event
+    t =    14.58s     Wait for com.c11s.house to idle
+    t =    15.07s Waiting 3.0s for "stop.circle.fill" Button to exist
+    t =    16.10s     Checking `Expect predicate `existsNoRetry == 1` for object "stop.circle.fill" Button`
+    t =    16.11s         Checking existence of `"stop.circle.fill" Button`
+    t =    16.15s Waiting 2.0s for "Recording..." StaticText to exist
+    t =    17.19s     Checking `Expect predicate `existsNoRetry == 1` for object "Recording..." StaticText`
+    t =    17.19s         Checking existence of `"Recording..." StaticText`
+    t =    17.23s Tear Down
 🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceInputButton]' failed (16.350 seconds).
-Test Suite 'ConversationViewUITests' failed at 2025-07-22 14:56:45.637.
-	 Executed 1 test, with 1 failure (0 unexpected) in 16.350 (16.351) seconds
-Test Suite 'C11SHouseUITests.xctest' failed at 2025-07-22 14:56:45.638.
-	 Executed 1 test, with 1 failure (0 unexpected) in 16.350 (16.352) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 14:56:45.639.
-	 Executed 1 test, with 1 failure (0 unexpected) in 16.350 (16.353) seconds
-
-     CLIENT OF UIKIT REQUIRES UPDATE: This process does not adopt UIScene lifecycle. This will become an assert in a future version.
-Running tests...
-    t =      nans Interface orientation changed to Portrait
-Test Suite 'Selected tests' started at 2025-07-22 14:57:16.170.
-Test Suite 'C11SHouseUITests.xctest' started at 2025-07-22 14:57:16.171.
-Test Suite 'ConversationViewUITests' started at 2025-07-22 14:57:16.171.
-Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceTranscriptDisplay]' started.
-    t =     0.00s Start Test at 2025-07-22 14:57:16.171
-    t =     0.01s Set Up
-🧪 ConversationViewUITests: Starting test setup
-🧪 ConversationViewUITests: Launching app with arguments: ["UI_TESTING", "--skip-onboarding"]
-    t =     0.01s     Open com.c11s.house
-    t =     0.01s         Launch com.c11s.house
-    t =     2.54s             Setting up automation session
-    t =     4.69s             Wait for com.c11s.house to idle
-    t =     5.99s     Waiting 2.0s for "StartConversation" Button to exist
-    t =     7.00s         Checking `Expect predicate `existsNoRetry == 1` for object "StartConversation" Button`
-    t =     7.01s             Checking existence of `"StartConversation" Button`
-    t =     8.33s             Capturing element debug description
-    t =     8.33s         Checking existence of `"StartConversation" Button`
-    t =    11.05s     Find the "StartConversation" Button
-    t =    11.10s     Tap "StartConversation" Button
-    t =    11.10s         Wait for com.c11s.house to idle
-    t =    11.10s         Find the "StartConversation" Button
-    t =    11.12s         Check for interrupting elements affecting "StartConversation" Button
-    t =    11.15s         Synthesize event
-    t =    11.44s         Wait for com.c11s.house to idle
-    t =    11.56s     Waiting 5.0s for "Back" Button to exist
-    t =    12.58s         Checking `Expect predicate `existsNoRetry == 1` for object "Back" Button`
-    t =    12.58s             Checking existence of `"Back" Button`
-🧪 unmuteConversation: Starting
-    t =    12.61s Waiting 1.0s for "mic.circle.fill" Button to exist
-    t =    13.62s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    13.62s         Checking existence of `"mic.circle.fill" Button`
-    t =    13.67s         Capturing element debug description
-    t =    13.67s     Checking existence of `"mic.circle.fill" Button`
-    t =    13.70s Collecting debug information to assist test failure triage
-    t =    13.70s     Requesting snapshot of accessibility hierarchy for app with pid 52417
-    t =    13.77s Checking existence of `"Type a message..." TextField`
-    t =    13.79s Checking existence of `"Mute" Button`
-🧪 unmuteConversation: Already unmuted (mute button exists)
-    t =    14.31s Waiting 2.0s for "mic.circle.fill" Button to exist
-    t =    15.34s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    15.34s         Checking existence of `"mic.circle.fill" Button`
-    t =    15.39s         Capturing element debug description
-    t =    16.31s     Checking `Expect predicate `existsNoRetry == 1` for object "mic.circle.fill" Button`
-    t =    16.31s         Checking existence of `"mic.circle.fill" Button`
-    t =    16.37s         Capturing element debug description
-    t =    16.37s     Checking existence of `"mic.circle.fill" Button`
-    t =    16.40s Collecting debug information to assist test failure triage
-    t =    16.40s     Requesting snapshot of accessibility hierarchy for app with pid 52417
-    t =    16.46s Checking existence of `"Microphone" Button`
-    t =    16.49s Checking existence of `"Microphone" Button`
-    t =    16.50s Checking existence of `"Microphone" Button`
-    t =    16.52s Checking existence of `"Microphone" Button`
-    t =    16.55s Tear Down
-🧪 ConversationViewUITests: Test teardown
-Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceTranscriptDisplay]' passed (16.815 seconds).
-Test Suite 'ConversationViewUITests' passed at 2025-07-22 14:57:32.987.
-	 Executed 1 test, with 0 failures (0 unexpected) in 16.815 (16.816) seconds
-Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 14:57:32.988.
-	 Executed 1 test, with 0 failures (0 unexpected) in 16.815 (16.817) seconds
-Test Suite 'Selected tests' passed at 2025-07-22 14:57:32.989.
-	 Executed 1 test, with 0 failures (0 unexpected) in 16.815 (16.819) seconds
+Test Case '-[C11SHouseUITests.ConversationViewUITests testVoiceInputButton]' passed (17.478 seconds).
+Test Suite 'ConversationViewUITests' passed at 2025-07-22 15:01:11.142.
+	 Executed 1 test, with 0 failures (0 unexpected) in 17.478 (17.479) seconds
+Test Suite 'C11SHouseUITests.xctest' passed at 2025-07-22 15:01:11.143.
+	 Executed 1 test, with 0 failures (0 unexpected) in 17.478 (17.480) seconds
+Test Suite 'Selected tests' passed at 2025-07-22 15:01:11.144.
+	 Executed 1 test, with 0 failures (0 unexpected) in 17.478 (17.481) seconds
