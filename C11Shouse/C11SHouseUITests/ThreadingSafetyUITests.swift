@@ -253,10 +253,12 @@ final class ThreadingSafetyUITests: XCTestCase {
         
         // Rapidly toggle edit mode
         for _ in 0..<10 {
-            if let editButton = app.navigationBars.buttons["Edit"].firstMatch, editButton.exists {
+            let editButton = app.navigationBars.buttons["Edit"].firstMatch
+            if editButton.exists {
                 editButton.tap()
                 // Don't wait - immediate next action
-                if let doneButton = app.navigationBars.buttons["Done"].firstMatch, doneButton.exists {
+                let doneButton = app.navigationBars.buttons["Done"].firstMatch
+                if doneButton.exists {
                     doneButton.tap()
                 }
             }
@@ -364,7 +366,8 @@ extension ThreadingSafetyUITests {
     func rapidNavigate(between buttons: [(String, String)], iterations: Int = 5) {
         for _ in 0..<iterations {
             for (buttonName, _) in buttons {
-                if let button = app.buttons[buttonName].firstMatch, button.exists {
+                let button = app.buttons[buttonName].firstMatch
+                if button.exists {
                     button.tap()
                 }
             }

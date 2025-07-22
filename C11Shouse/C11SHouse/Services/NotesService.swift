@@ -124,6 +124,9 @@ class NotesServiceImpl: NotesServiceProtocol {
     // MARK: - Public Methods
     
     func loadNotesStore() async throws -> NotesStoreData {
+        saveLock.lock()
+        defer { saveLock.unlock() }
+        
         let store = try await loadFromUserDefaults()
         await MainActor.run {
             notesStoreSubject.send(store)
