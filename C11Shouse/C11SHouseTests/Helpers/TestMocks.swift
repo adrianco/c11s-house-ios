@@ -198,9 +198,7 @@ class SharedMockNotesService: NotesServiceProtocol {
         savedNotes.append(note)
         mockNotesStore.notes[note.questionId] = note
         await MainActor.run {
-            await MainActor.run {
             notesStoreSubject.send(mockNotesStore)
-        }
         }
     }
     
