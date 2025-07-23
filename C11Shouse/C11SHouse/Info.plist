@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>NSHomeKitUsageDescription</key>
+	<string>C11S House would like to access your HomeKit data to find existing named rooms and devices, making it easier to set up your conscious house.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>C11S House needs speech recognition to understand your voice commands and make your house truly interactive.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>C11S House needs access to your microphone to hear your voice commands and respond to you.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.</string>
+</dict>
 </plist>

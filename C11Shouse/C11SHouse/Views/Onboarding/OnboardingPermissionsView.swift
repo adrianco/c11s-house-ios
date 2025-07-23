@@ -11,6 +11,13 @@
  *   - Recovery options for denied permissions
  *   - Skip option for non-essential permissions
  *
+ * - 2025-01-23: Added HomeKit permission support
+ *   - Added HomeKit permission card with house icon
+ *   - HomeKit description: "To find existing named rooms and devices"
+ *   - Added HomeKitExplanationSheet for detailed explanation
+ *   - HomeKit is optional permission (not required to continue)
+ *   - Updated skip button text to "Skip Optional Permissions"
+ *
  * FUTURE UPDATES:
  * - [Placeholder for future changes - update when modifying the file]
  */
@@ -24,6 +31,7 @@ struct OnboardingPermissionsView: View {
     
     @State private var isRequestingPermissions = false
     @State private var showLocationExplanation = false
+    @State private var showHomeKitExplanation = false
     
     private var canContinue: Bool {
         // Microphone and speech are required, location is optional
@@ -81,6 +89,17 @@ struct OnboardingPermissionsView: View {
                     isRequired: false
                 ) {
                     showLocationExplanation = true
+                }
+                
+                PermissionCard(
+                    icon: "house.fill",
+                    title: "HomeKit",
+                    description: "To find existing named rooms and devices",
+                    status: permissionManager.isHomeKitGranted ? .granted : 
+                            (permissionManager.homeKitPermissionStatus == .denied || permissionManager.homeKitPermissionStatus == .restricted ? .denied : .notDetermined),
+                    isRequired: false
+                ) {
+                    showHomeKitExplanation = true
                 }
             }
             .padding(.horizontal, 30)
@@ -148,10 +167,10 @@ struct OnboardingPermissionsView: View {
                     }
                 }
                 
-                // Skip location permission if not granted
-                if !permissionManager.hasLocationPermission && canContinue {
+                // Skip optional permissions if not granted
+                if (!permissionManager.hasLocationPermission || !permissionManager.isHomeKitGranted) && canContinue {
                     Button(action: onContinue) {
-                        Text("Skip Location Setup")
+                        Text("Skip Optional Permissions")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -162,6 +181,9 @@ struct OnboardingPermissionsView: View {
         }
         .sheet(isPresented: $showLocationExplanation) {
             LocationExplanationSheet()
+        }
+        .sheet(isPresented: $showHomeKitExplanation) {
+            HomeKitExplanationSheet()
         }
     }
     
@@ -175,6 +197,11 @@ struct OnboardingPermissionsView: View {
             // Location is optional, so request it separately
             if !permissionManager.hasLocationPermission {
                 await permissionManager.requestLocationPermission()
+            }
+            
+            // HomeKit is optional, so request it separately
+            if !permissionManager.isHomeKitGranted {
+                await permissionManager.requestHomeKitPermission()
             }
             
             // Background address lookup if location permission granted
@@ -365,6 +392,60 @@ struct ExplanationRow: View {
                 .font(.body)
             
             Spacer()
+        }
+    }
+}
+
+// MARK: - HomeKit Explanation
+
+struct HomeKitExplanationSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Image(systemName: "house.circle.fill")
+                    .font(.system(size: 80))
+                    .foregroundColor(.blue)
+                    .padding(.top, 40)
+                
+                Text("Why HomeKit Access?")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                VStack(alignment: .leading, spacing: 16) {
+                    ExplanationRow(
+                        icon: "lightbulb.fill",
+                        text: "Discover existing room names in your home"
+                    )
+                    
+                    ExplanationRow(
+                        icon: "tv.and.hifispeaker.fill",
+                        text: "Find your smart devices automatically"
+                    )
+                    
+                    ExplanationRow(
+                        icon: "gearshape.2.fill",
+                        text: "Simplify setup with pre-configured rooms"
+                    )
+                    
+                    ExplanationRow(
+                        icon: "lock.shield.fill",
+                        text: "Read-only access - we won't control devices"
+                    )
+                }
+                .padding(.horizontal, 30)
+                
+                Spacer()
+                
+                Text("You can always set up rooms manually if you prefer")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 20)
+            }
+            .navigationBarItems(trailing: Button("Done") { dismiss() })
         }
     }
 }
