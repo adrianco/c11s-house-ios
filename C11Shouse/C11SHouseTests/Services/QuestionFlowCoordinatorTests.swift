@@ -433,10 +433,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut.currentQuestion = houseQuestion
         mockStateManager.persistentTranscriptValue = "Maple House"
         
-        // Create a mock service container with our mock notes service
-        let mockContainer = ServiceContainer()
-        mockContainer.notesService = mockNotesService
-        sut.serviceContainer = mockContainer
+        // Set serviceContainer to nil - the coordinator should use its own notesService
+        sut.serviceContainer = nil
         
         // When: Saving answer
         await sut.saveAnswer()

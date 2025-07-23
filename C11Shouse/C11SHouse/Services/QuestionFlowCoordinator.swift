@@ -171,6 +171,9 @@ class QuestionFlowCoordinator: ObservableObject {
                 print("[QuestionFlowCoordinator] Saving house name")
                 if let container = serviceContainer {
                     await container.notesService.saveHouseName(trimmedAnswer)
+                } else {
+                    // Fall back to using coordinator's own notesService if no container
+                    await notesService.saveHouseName(trimmedAnswer)
                 }
             }
             
