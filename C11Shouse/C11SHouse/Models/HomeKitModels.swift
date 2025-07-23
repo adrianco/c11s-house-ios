@@ -210,7 +210,7 @@ struct HomeKitAccessory: Codable {
             return "Fans"
         case HMAccessoryCategoryTypeGarageDoorOpener:
             return "Garage Doors"
-        case HMAccessoryCategoryTypeLock:
+        case HMAccessoryCategoryTypeDoorLock:
             return "Locks"
         case HMAccessoryCategoryTypeOutlet:
             return "Outlets"
@@ -218,7 +218,7 @@ struct HomeKitAccessory: Codable {
             return "TVs"
         case HMAccessoryCategoryTypeSpeaker:
             return "Speakers"
-        case HMAccessoryCategoryTypeVideoCamera:
+        case HMAccessoryCategoryTypeIPCamera:
             return "Cameras"
         case HMAccessoryCategoryTypeVideoDoorbell:
             return "Video Doorbells"
