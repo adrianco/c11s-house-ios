@@ -139,7 +139,7 @@ final class AudioRecorderServiceImpl: NSObject, AudioRecorderService, @unchecked
         
         do {
             try audioEngine.start()
-            Task { @MainActor [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 self?.isRecordingSubject.send(true)
             }
         } catch {
@@ -156,7 +156,7 @@ final class AudioRecorderServiceImpl: NSObject, AudioRecorderService, @unchecked
         // Stop recording
         audioEngine.stop()
         inputNode?.removeTap(onBus: 0)
-        Task { @MainActor [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.isRecordingSubject.send(false)
             self?.audioLevelSubject.send(.silent)
         }
@@ -188,7 +188,7 @@ final class AudioRecorderServiceImpl: NSObject, AudioRecorderService, @unchecked
         }
         
         inputNode?.removeTap(onBus: 0)
-        Task { @MainActor [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.isRecordingSubject.send(false)
             self?.audioLevelSubject.send(.silent)
         }
@@ -248,7 +248,7 @@ final class AudioRecorderServiceImpl: NSObject, AudioRecorderService, @unchecked
             averageLevel: averageLevel
         )
         
-        Task { @MainActor [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.audioLevelSubject.send(audioLevel)
         }
     }
