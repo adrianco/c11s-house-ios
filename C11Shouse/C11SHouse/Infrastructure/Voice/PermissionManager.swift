@@ -47,6 +47,7 @@ import AVFAudio
 import Combine
 import UIKit
 import CoreLocation
+import HomeKit
 
 /// Manages permissions for microphone and speech recognition
 @MainActor
@@ -63,6 +64,9 @@ public final class PermissionManager: ObservableObject {
     /// Current location permission status
     @Published public private(set) var locationPermissionStatus: CLAuthorizationStatus = .notDetermined
     
+    /// Current HomeKit permission status
+    @Published public private(set) var homeKitPermissionStatus: HMHomeManagerAuthorizationStatus = .determined
+    
     /// Combined status indicating if all permissions are granted
     @Published public private(set) var allPermissionsGranted: Bool = false
     
@@ -77,6 +81,7 @@ public final class PermissionManager: ObservableObject {
     // MARK: - Private Properties
     
     private var cancellables = Set<AnyCancellable>()
+    private let homeManager = HMHomeManager()
     
     // MARK: - Initialization
     
@@ -164,6 +169,24 @@ public final class PermissionManager: ObservableObject {
         updateAllPermissionsStatus()
     }
     
+    /// Request HomeKit permission
+    public func requestHomeKitPermission() async {
+        // HomeKit permission is requested automatically when accessing homes
+        // We just need to check the current status
+        homeKitPermissionStatus = homeManager.authorizationStatus
+        
+        // If it's determined (not asked yet), accessing homes will trigger the permission dialog
+        if homeManager.authorizationStatus == .determined {
+            // Access homes to trigger permission dialog
+            _ = homeManager.homes
+            // Wait a moment for the permission dialog to be handled
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            homeKitPermissionStatus = homeManager.authorizationStatus
+        }
+        
+        updateAllPermissionsStatus()
+    }
+    
     /// Check if a specific permission is granted
     public func isPermissionGranted(_ permission: PermissionType) -> Bool {
         switch permission {
@@ -173,6 +196,8 @@ public final class PermissionManager: ObservableObject {
             return speechRecognitionPermissionStatus == .authorized
         case .location:
             return locationPermissionStatus == .authorizedWhenInUse || locationPermissionStatus == .authorizedAlways
+        case .homeKit:
+            return homeKitPermissionStatus == .authorized
         }
     }
     
@@ -201,6 +226,7 @@ public final class PermissionManager: ObservableObject {
         microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         locationPermissionStatus = CLLocationManager().authorizationStatus
+        homeKitPermissionStatus = homeManager.authorizationStatus
         updateAllPermissionsStatus()
     }
     
@@ -223,6 +249,7 @@ public enum PermissionType {
     case microphone
     case speechRecognition
     case location
+    case homeKit
 }
 
 // MARK: - Extensions
@@ -239,6 +266,10 @@ extension PermissionManager {
     
     public var hasLocationPermission: Bool {
         locationPermissionStatus == .authorizedWhenInUse || locationPermissionStatus == .authorizedAlways
+    }
+    
+    public var isHomeKitGranted: Bool {
+        homeKitPermissionStatus == .authorized
     }
     
     /// Human-readable permission status descriptions
