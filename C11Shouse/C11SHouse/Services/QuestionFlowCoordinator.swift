@@ -425,9 +425,10 @@ class QuestionFlowCoordinator: ObservableObject {
         do {
             let store = try await notesService.loadNotesStore()
             let homeKitNotes = store.customNotes.filter { note in
-                note.category == "homekit_summary" || 
-                note.category == "homekit_room" || 
-                note.category == "homekit_device"
+                let category = note.category
+                return category == "homekit_summary" || 
+                       category == "homekit_room" || 
+                       category == "homekit_device"
             }
             
             if !homeKitNotes.isEmpty {
@@ -440,17 +441,25 @@ class QuestionFlowCoordinator: ObservableObject {
                     var deviceCount = 0
                     
                     // Simple parsing of the summary content
-                    if let homesRange = content.range(of: "Found (\\d+) home", options: .regularExpression) {
-                        let numberString = content[homesRange].components(separatedBy: " ")[1]
-                        homeCount = Int(numberString) ?? 0
+                    let homesRegex = try? NSRegularExpression(pattern: "Found (\\d+) home", options: [])
+                    if let match = homesRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+                        if let range = Range(match.range(at: 1), in: content) {
+                            homeCount = Int(content[range]) ?? 0
+                        }
                     }
-                    if let roomsRange = content.range(of: "Total Rooms: (\\d+)", options: .regularExpression) {
-                        let numberString = content[roomsRange].components(separatedBy: ": ")[1]
-                        roomCount = Int(numberString) ?? 0
+                    
+                    let roomsRegex = try? NSRegularExpression(pattern: "Total Rooms: (\\d+)", options: [])
+                    if let match = roomsRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+                        if let range = Range(match.range(at: 1), in: content) {
+                            roomCount = Int(content[range]) ?? 0
+                        }
                     }
-                    if let devicesRange = content.range(of: "Total Accessories: (\\d+)", options: .regularExpression) {
-                        let numberString = content[devicesRange].components(separatedBy: ": ")[1]
-                        deviceCount = Int(numberString) ?? 0
+                    
+                    let devicesRegex = try? NSRegularExpression(pattern: "Total Accessories: (\\d+)", options: [])
+                    if let match = devicesRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+                        if let range = Range(match.range(at: 1), in: content) {
+                            deviceCount = Int(content[range]) ?? 0
+                        }
                     }
                     
                     // Create an acknowledgment thought
