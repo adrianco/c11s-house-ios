@@ -576,7 +576,7 @@ class MockHomeKitService: HomeKitServiceProtocol {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
     
-    private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.notDetermined)
+    private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.determined)
     
     var requestAuthorizationCalled = false
     var discoverHomesCalled = false

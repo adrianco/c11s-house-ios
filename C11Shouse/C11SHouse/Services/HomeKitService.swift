@@ -62,7 +62,7 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
     private let notesService: NotesServiceProtocol
     private var discoveredHomes: [HomeKitHome] = []
     
-    private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.notDetermined)
+    private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.determined)
     var authorizationStatusPublisher: AnyPublisher<HMHomeManagerAuthorizationStatus, Never> {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
