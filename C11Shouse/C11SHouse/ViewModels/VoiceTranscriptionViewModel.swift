@@ -264,39 +264,38 @@ class VoiceTranscriptionViewModel: ObservableObject {
     // MARK: - Timer Management
     
     private func startTimers() {
-        // Recording duration timer
-        recordingTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        // Ensure timers are scheduled on main thread's run loop
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            Task { @MainActor in
+            
+            // Recording duration timer
+            self.recordingTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+                guard let self = self else { return }
                 self.recordingDuration += 0.1
                 self.updateState(.recording(duration: self.recordingDuration))
                 
                 // Check maximum duration
                 if self.recordingDuration >= self.configuration.maxRecordingDuration {
-                    await self.handleStopRecording()
+                    Task { await self.handleStopRecording() }
                 }
             }
-        }
-        
-        // Audio level monitoring timer
-        audioLevelTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
-            Task { @MainActor in
+            
+            // Audio level monitoring timer
+            self.audioLevelTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
                 self?.audioRecorder.updateAudioLevel()
             }
-        }
-        
-        // Silence detection timer
-        if configuration.silenceThreshold > 0 {
-            silenceDetectionTimer = Timer.scheduledTimer(
-                withTimeInterval: configuration.silenceThreshold,
-                repeats: false
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                Task { @MainActor in
+            
+            // Silence detection timer
+            if self.configuration.silenceThreshold > 0 {
+                self.silenceDetectionTimer = Timer.scheduledTimer(
+                    withTimeInterval: self.configuration.silenceThreshold,
+                    repeats: false
+                ) { [weak self] _ in
+                    guard let self = self else { return }
                     if self.hasDetectedSpeech && 
                        Date().timeIntervalSince(self.lastSoundTime) >= self.configuration.silenceThreshold {
                         // Auto-stop after silence
-                        await self.handleStopRecording()
+                        Task { await self.handleStopRecording() }
                     }
                 }
             }
