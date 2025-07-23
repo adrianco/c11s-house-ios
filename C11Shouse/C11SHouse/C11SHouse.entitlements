@@ -5,6 +5,9 @@
     <key>com.apple.developer.weatherkit</key>
     <true/>
     
+    <key>com.apple.developer.homekit</key>
+    <true/>
+    
     <key>com.apple.security.app-sandbox</key>
     <true/>
     
