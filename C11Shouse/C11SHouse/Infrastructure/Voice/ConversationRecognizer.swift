@@ -463,6 +463,14 @@ class ConversationRecognizer: ObservableObject {
             category = .question
             thought = "I notice you mentioned lighting. Are you looking to adjust the ambiance?"
         }
+        // HomeKit / Rooms / Devices
+        else if lowercasedTranscript.contains("room") || lowercasedTranscript.contains("device") ||
+                lowercasedTranscript.contains("homekit") || lowercasedTranscript.contains("accessory") {
+            emotion = .thoughtful
+            category = .observation
+            thought = "I have information about your HomeKit configuration. Would you like me to tell you about your rooms or devices?"
+            suggestion = "Ask me about specific rooms or device types"
+        }
         // Questions
         else if lowercasedTranscript.contains("?") || lowercasedTranscript.contains("what") ||
                 lowercasedTranscript.contains("how") || lowercasedTranscript.contains("when") {

@@ -80,6 +80,11 @@ class ServiceContainer: ObservableObject {
         WeatherKitServiceImpl()
     }()
     
+    @MainActor
+    private(set) lazy var homeKitService: HomeKitServiceProtocol = {
+        HomeKitService(notesService: notesService)
+    }()
+    
     // MARK: - Configuration
     
     private(set) var configuration = TranscriptionConfiguration.default
@@ -111,6 +116,11 @@ class ServiceContainer: ObservableObject {
             locationService: locationService,
             weatherCoordinator: weatherCoordinator
         )
+    }()
+    
+    @MainActor
+    private(set) lazy var homeKitCoordinator: HomeKitCoordinator = {
+        HomeKitCoordinator(homeKitService: homeKitService, notesService: notesService)
     }()
     
     // MARK: - ViewModel Factory

@@ -34,6 +34,36 @@ class OnboardingUITests: XCTestCase {
         app = nil
     }
     
+    // MARK: - Splash Screen Tests
+    
+    func testSplashScreenAnimation() throws {
+        // Verify splash screen appears on launch
+        // Note: The splash screen animation happens very quickly
+        let brainIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'brain'")).firstMatch
+        let houseIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'house'")).firstMatch
+        
+        // The splash view uses SF Symbols which appear as static texts in UI tests
+        let brainSymbol = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'brain'")).firstMatch
+        let houseSymbol = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'house'")).firstMatch
+        
+        // Check if either representation exists (icon or SF symbol)
+        let splashElementsExist = brainIcon.exists || houseIcon.exists || brainSymbol.exists || houseSymbol.exists
+        
+        if splashElementsExist {
+            // Splash screen is visible
+            XCTAssertTrue(splashElementsExist, "Splash screen elements should be visible")
+            
+            // Wait for animation to complete (approximately 1.7 seconds based on SplashView timing)
+            Thread.sleep(forTimeInterval: 2.0)
+        }
+        
+        // After splash, should transition to welcome or conversation screen
+        let welcomeScreenVisible = app.buttons["StartConversation"].exists || app.buttons["Start Conversation"].exists
+        let conversationScreenVisible = app.buttons["Back"].exists || app.navigationBars["House Chat"].exists
+        
+        XCTAssertTrue(welcomeScreenVisible || conversationScreenVisible, "Should transition from splash to main app")
+    }
+    
     // MARK: - Welcome Flow Tests
     
     func testWelcomeScreenAppearance() throws {
@@ -129,6 +159,205 @@ class OnboardingUITests: XCTestCase {
         }
     }
     
+    // MARK: - HomeKit Permission Tests
+    
+    func testHomeKitPermissionCardPresence() throws {
+        // Navigate to permissions screen
+        let startButton = app.buttons["StartConversation"]
+        if !startButton.waitForExistence(timeout: 3) {
+            let startButtonAlt = app.buttons["Start Conversation"]
+            guard startButtonAlt.waitForExistence(timeout: 1) else {
+                XCTFail("Start Conversation button not found")
+                return
+            }
+            startButtonAlt.tap()
+        } else {
+            startButton.tap()
+        }
+        
+        // Check if permissions screen is shown
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        if grantPermissionsButton.waitForExistence(timeout: 2) {
+            // Verify HomeKit permission card is present
+            let homeKitTitle = app.staticTexts["HomeKit"]
+            XCTAssertTrue(homeKitTitle.waitForExistence(timeout: 1), "HomeKit permission card should be visible")
+            
+            // Verify HomeKit description
+            let homeKitDescription = app.staticTexts["To find existing named rooms and devices"]
+            XCTAssertTrue(homeKitDescription.exists, "HomeKit description should be visible")
+            
+            // Verify house icon is shown
+            let houseIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'house'")).firstMatch
+            XCTAssertTrue(houseIcon.exists || app.staticTexts["house.fill"].exists, "House icon should be visible for HomeKit")
+            
+            // Verify it's marked as optional (not required)
+            let optionalLabel = app.staticTexts["Optional"].allElementsBoundByIndex
+            XCTAssertTrue(optionalLabel.count >= 2, "HomeKit should be marked as optional along with Location")
+        }
+    }
+    
+    func testHomeKitPermissionGrant() throws {
+        // Navigate to permissions screen
+        navigateToPermissions()
+        
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        guard grantPermissionsButton.waitForExistence(timeout: 2) else {
+            // Permissions might already be granted
+            return
+        }
+        
+        grantPermissionsButton.tap()
+        
+        // Handle system permission alerts including HomeKit
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        
+        // Grant all permissions when they appear (including HomeKit)
+        for _ in 0..<4 { // Up to 4 permissions now (mic, speech, location, homekit)
+            let alert = springboard.alerts.firstMatch
+            if alert.waitForExistence(timeout: 2) {
+                // Check if this is the HomeKit permission alert
+                if alert.label.contains("Would Like to Access Your Home Data") {
+                    // Grant HomeKit permission
+                    if alert.buttons["OK"].exists {
+                        alert.buttons["OK"].tap()
+                    } else if alert.buttons["Allow"].exists {
+                        alert.buttons["Allow"].tap()
+                    }
+                } else {
+                    // Grant other permissions
+                    if alert.buttons["OK"].exists {
+                        alert.buttons["OK"].tap()
+                    } else if alert.buttons["Allow"].exists {
+                        alert.buttons["Allow"].tap()
+                    }
+                }
+            }
+        }
+        
+        // Verify HomeKit permission is marked as granted
+        let homeKitGrantedIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'checkmark'")).allElementsBoundByIndex
+        XCTAssertTrue(homeKitGrantedIcon.count >= 3, "HomeKit should show granted status along with other permissions")
+    }
+    
+    func testHomeKitPermissionDenial() throws {
+        // Navigate to permissions screen
+        navigateToPermissions()
+        
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        guard grantPermissionsButton.waitForExistence(timeout: 2) else {
+            // Permissions might already be granted
+            return
+        }
+        
+        grantPermissionsButton.tap()
+        
+        // Handle system permission alerts
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        
+        // Process each permission alert
+        for _ in 0..<4 { // Up to 4 permissions
+            let alert = springboard.alerts.firstMatch
+            if alert.waitForExistence(timeout: 2) {
+                if alert.label.contains("Would Like to Access Your Home Data") {
+                    // Deny HomeKit permission
+                    if alert.buttons["Don't Allow"].exists {
+                        alert.buttons["Don't Allow"].tap()
+                    }
+                } else {
+                    // Grant other required permissions (mic and speech)
+                    if alert.label.contains("Microphone") || alert.label.contains("Speech Recognition") {
+                        if alert.buttons["OK"].exists {
+                            alert.buttons["OK"].tap()
+                        } else if alert.buttons["Allow"].exists {
+                            alert.buttons["Allow"].tap()
+                        }
+                    } else {
+                        // Deny optional permissions
+                        if alert.buttons["Don't Allow"].exists {
+                            alert.buttons["Don't Allow"].tap()
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Since HomeKit is optional, Continue button should still be enabled
+        let continueButton = app.buttons["Continue"]
+        if continueButton.waitForExistence(timeout: 2) {
+            XCTAssertTrue(continueButton.isEnabled, "Continue should be enabled even with HomeKit denied")
+            continueButton.tap()
+            
+            // Should reach completion screen
+            let completionText = app.staticTexts["Setup Complete!"]
+            XCTAssertTrue(completionText.waitForExistence(timeout: 2), "Should complete setup without HomeKit permission")
+        }
+    }
+    
+    func testHomeKitDiscoveryAfterPermissionGrant() throws {
+        // Complete onboarding with all permissions granted
+        completeOnboardingWithAllPermissions()
+        
+        // In conversation view, HomeKit discovery should happen automatically
+        // Look for any HomeKit-related messages in the conversation
+        let homeKitMessage = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'HomeKit' OR label CONTAINS 'rooms' OR label CONTAINS 'devices'")).firstMatch
+        
+        // Give some time for HomeKit discovery to complete and message to appear
+        if homeKitMessage.waitForExistence(timeout: 5) {
+            XCTAssertTrue(homeKitMessage.exists, "HomeKit discovery information should appear in conversation")
+        } else {
+            // HomeKit might not have any homes configured, which is fine
+            // Just verify we're in conversation view
+            let conversationActive = app.staticTexts["House Chat"].exists ||
+                                    app.buttons["Back"].exists ||
+                                    app.buttons["mic.circle.fill"].exists
+            
+            XCTAssertTrue(conversationActive, "Should be in conversation view after HomeKit permission grant")
+        }
+    }
+    
+    func testSkipOptionalPermissionsIncludingHomeKit() throws {
+        // Navigate to permissions screen
+        navigateToPermissions()
+        
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        guard grantPermissionsButton.waitForExistence(timeout: 2) else {
+            // Permissions might already be granted
+            return
+        }
+        
+        // Look for skip button
+        let skipButton = app.buttons["Skip Optional Permissions"]
+        if skipButton.waitForExistence(timeout: 1) {
+            skipButton.tap()
+            
+            // Should still need to grant required permissions
+            grantPermissionsButton.tap()
+            
+            // Handle only required permission alerts (mic and speech)
+            let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            for _ in 0..<2 { // Only 2 required permissions
+                let alert = springboard.alerts.firstMatch
+                if alert.waitForExistence(timeout: 2) {
+                    if alert.buttons["OK"].exists {
+                        alert.buttons["OK"].tap()
+                    } else if alert.buttons["Allow"].exists {
+                        alert.buttons["Allow"].tap()
+                    }
+                }
+            }
+            
+            // Continue button should appear
+            let continueButton = app.buttons["Continue"]
+            if continueButton.waitForExistence(timeout: 2) {
+                continueButton.tap()
+            }
+            
+            // Should reach completion without HomeKit or Location permissions
+            let completionText = app.staticTexts["Setup Complete!"]
+            XCTAssertTrue(completionText.waitForExistence(timeout: 2), "Should complete setup without optional permissions")
+        }
+    }
+    
     // MARK: - Permission Flow Tests
     
     func testPermissionHandlingInConversation() throws {
@@ -211,7 +440,7 @@ class OnboardingUITests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         
         // Grant all permissions when they appear
-        for _ in 0..<3 { // Up to 3 permissions
+        for _ in 0..<4 { // Up to 4 permissions (mic, speech, location, homekit)
             let alert = springboard.alerts.firstMatch
             if alert.waitForExistence(timeout: 2) {
                 if alert.buttons["OK"].exists {
@@ -533,6 +762,54 @@ class OnboardingUITests: XCTestCase {
     
     // MARK: - Helper Methods
     
+    private func navigateToPermissions() {
+        // Navigate to permissions screen
+        let startButton = app.buttons["StartConversation"]
+        if startButton.waitForExistence(timeout: 1) {
+            startButton.tap()
+        } else {
+            let startButtonAlt = app.buttons["Start Conversation"]
+            if startButtonAlt.waitForExistence(timeout: 1) {
+                startButtonAlt.tap()
+            }
+        }
+    }
+    
+    private func completeOnboardingWithAllPermissions() {
+        // Navigate through onboarding and grant all permissions including HomeKit
+        navigateToPermissions()
+        
+        let grantPermissionsButton = app.buttons["Grant Permissions"]
+        if grantPermissionsButton.waitForExistence(timeout: 2) {
+            grantPermissionsButton.tap()
+            
+            // Grant all permissions including HomeKit
+            let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            for _ in 0..<4 { // Up to 4 permissions
+                let alert = springboard.alerts.firstMatch
+                if alert.waitForExistence(timeout: 2) {
+                    if alert.buttons["OK"].exists {
+                        alert.buttons["OK"].tap()
+                    } else if alert.buttons["Allow"].exists {
+                        alert.buttons["Allow"].tap()
+                    }
+                }
+            }
+            
+            // Continue
+            let continueButton = app.buttons["Continue"]
+            if continueButton.waitForExistence(timeout: 2) {
+                continueButton.tap()
+            }
+            
+            // Complete setup
+            let startChattingButton = app.buttons["Start Chatting"]
+            if startChattingButton.waitForExistence(timeout: 2) {
+                startChattingButton.tap()
+            }
+        }
+    }
+    
     private func navigateToConversation() {
         // Try accessibility identifier first
         let startButton = app.buttons["StartConversation"]
@@ -553,7 +830,8 @@ class OnboardingUITests: XCTestCase {
         let permissionAlerts = [
             "Would Like to Access the Microphone",
             "Would Like to Access Speech Recognition",
-            "Would Like to Use Your Current Location"
+            "Would Like to Use Your Current Location",
+            "Would Like to Access Your Home Data"
         ]
         
         for alertText in permissionAlerts {

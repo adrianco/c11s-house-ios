@@ -22,7 +22,8 @@ import OSLog
 enum OnboardingPhase: Int, CaseIterable {
     case welcome = 0
     case permissions = 1
-    case completion = 2
+    case homeKitImport = 2
+    case completion = 3
     
     var title: String {
         switch self {
@@ -30,6 +31,8 @@ enum OnboardingPhase: Int, CaseIterable {
             return "Welcome"
         case .permissions:
             return "Setup"
+        case .homeKitImport:
+            return "Importing HomeKit"
         case .completion:
             return "Complete Setup"
         }
@@ -43,12 +46,16 @@ class OnboardingCoordinator: ObservableObject {
     @Published var currentPhase: OnboardingPhase = .welcome
     @Published var isOnboardingComplete = false
     @Published var showOnboarding = false
+    @Published var isImportingHomeKit = false
+    @Published var homeKitImportStatus: String = ""
+    @Published var homeKitDiscoverySummary: HomeKitDiscoverySummary?
     
     // MARK: - Private Properties
     
     private let notesService: NotesServiceProtocol
     private let permissionManager: PermissionManager
     private let addressManager: AddressManager
+    private let homeKitCoordinator: HomeKitCoordinator?
     private var cancellables = Set<AnyCancellable>()
     private var isInitializingOnboarding = false
     
@@ -60,10 +67,12 @@ class OnboardingCoordinator: ObservableObject {
     
     init(notesService: NotesServiceProtocol,
          permissionManager: PermissionManager,
-         addressManager: AddressManager) {
+         addressManager: AddressManager,
+         homeKitCoordinator: HomeKitCoordinator? = nil) {
         self.notesService = notesService
         self.permissionManager = permissionManager
         self.addressManager = addressManager
+        self.homeKitCoordinator = homeKitCoordinator
         
         checkOnboardingStatus()
     }
@@ -136,6 +145,13 @@ class OnboardingCoordinator: ObservableObject {
         
         // Log phase transition
         OnboardingLogger.shared.logPhaseTransition(from: oldPhase, to: nextPhase.title)
+        
+        // If we're entering HomeKit import phase and user has granted permission, start the import
+        if nextPhase == .homeKitImport {
+            Task {
+                await performHomeKitImport()
+            }
+        }
     }
     
     /// Skip to a specific phase (for testing or recovery)
@@ -202,6 +218,11 @@ class OnboardingCoordinator: ObservableObject {
             await permissionManager.requestLocationPermission()
             OnboardingLogger.shared.logPermissionRequest("location", granted: permissionManager.hasLocationPermission)
         }
+        
+        if !permissionManager.isHomeKitGranted {
+            await permissionManager.requestHomeKitPermission()
+            OnboardingLogger.shared.logPermissionRequest("homekit", granted: permissionManager.isHomeKitGranted)
+        }
     }
     
     // MARK: - Logging Methods
@@ -240,6 +261,84 @@ class OnboardingCoordinator: ObservableObject {
         //     "duration": duration
         // ])
     }
+    
+    // MARK: - HomeKit Import
+    
+    private func performHomeKitImport() async {
+        // Skip HomeKit import phase if permission not granted or no coordinator
+        guard permissionManager.isHomeKitGranted, let coordinator = homeKitCoordinator else {
+            nextPhase() // Skip to completion
+            return
+        }
+        
+        await MainActor.run {
+            isImportingHomeKit = true
+            homeKitImportStatus = "Discovering HomeKit configuration..."
+        }
+        
+        logAction("homekit_import_started")
+        
+        // Observe coordinator status
+        coordinator.$discoveryStatus
+            .sink { [weak self] status in
+                Task { @MainActor in
+                    self?.handleHomeKitDiscoveryStatus(status)
+                }
+            }
+            .store(in: &cancellables)
+        
+        // Start discovery
+        await coordinator.discoverAndSaveConfiguration()
+    }
+    
+    private func handleHomeKitDiscoveryStatus(_ status: HomeKitDiscoveryStatus) {
+        switch status {
+        case .idle:
+            break
+            
+        case .checkingAuthorization:
+            homeKitImportStatus = "Checking HomeKit authorization..."
+            
+        case .discovering:
+            homeKitImportStatus = "Discovering homes and devices..."
+            
+        case .savingNotes:
+            homeKitImportStatus = "Saving configuration..."
+            
+        case .completed(let summary):
+            homeKitDiscoverySummary = summary
+            homeKitImportStatus = "Import complete!"
+            isImportingHomeKit = false
+            
+            logAction("homekit_import_completed", details: [
+                "homes_count": summary.homes.count,
+                "total_rooms": summary.totalRooms,
+                "total_accessories": summary.totalAccessories
+            ])
+            
+            // Auto-advance to completion after a brief delay
+            Task {
+                try? await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
+                await MainActor.run {
+                    nextPhase()
+                }
+            }
+            
+        case .failed(let error):
+            homeKitImportStatus = "Import failed: \(error.localizedDescription)"
+            isImportingHomeKit = false
+            
+            logError(error, recovery: "User can manually add rooms and devices later")
+            
+            // Auto-advance to completion after showing error
+            Task {
+                try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+                await MainActor.run {
+                    nextPhase()
+                }
+            }
+        }
+    }
 }
 
 // MARK: - SwiftUI View Modifier
@@ -253,7 +352,8 @@ struct OnboardingModifier: ViewModifier {
         _coordinator = StateObject(wrappedValue: OnboardingCoordinator(
             notesService: serviceContainer.notesService,
             permissionManager: serviceContainer.permissionManager,
-            addressManager: serviceContainer.addressManager
+            addressManager: serviceContainer.addressManager,
+            homeKitCoordinator: serviceContainer.homeKitCoordinator
         ))
     }
     

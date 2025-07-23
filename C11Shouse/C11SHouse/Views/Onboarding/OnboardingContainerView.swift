@@ -76,6 +76,14 @@ struct OnboardingContainerView: View {
                             removal: .move(edge: .leading).combined(with: .opacity)
                         ))
                         
+                    case .homeKitImport:
+                        OnboardingHomeKitImportView()
+                        .environmentObject(coordinator)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .trailing).combined(with: .opacity),
+                            removal: .move(edge: .leading).combined(with: .opacity)
+                        ))
+                        
                     case .completion:
                         OnboardingCompletionView {
                             withAnimation(.easeInOut(duration: 0.3)) {

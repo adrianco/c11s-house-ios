@@ -15,6 +15,7 @@ import Combine
 import CoreLocation
 import AVFoundation
 import Speech
+import HomeKit
 @testable import C11SHouse
 
 // MARK: - Supporting Types
@@ -565,5 +566,84 @@ enum WeatherError: LocalizedError {
         case .sandboxRestriction:
             return "Weather service not available in simulator"
         }
+    }
+}
+
+// MARK: - HomeKit Service Mock
+
+class MockHomeKitService: HomeKitServiceProtocol {
+    var authorizationStatusPublisher: AnyPublisher<HMHomeManagerAuthorizationStatus, Never> {
+        authorizationStatusSubject.eraseToAnyPublisher()
+    }
+    
+    private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.notDetermined)
+    
+    var requestAuthorizationCalled = false
+    var discoverHomesCalled = false
+    var saveConfigurationAsNotesCalled = false
+    var mockAuthorizationResult = true
+    var mockDiscoverySummary: HomeKitDiscoverySummary?
+    var shouldThrowError = false
+    
+    func requestAuthorization() async -> Bool {
+        requestAuthorizationCalled = true
+        if mockAuthorizationResult {
+            authorizationStatusSubject.send(.authorized)
+        }
+        return mockAuthorizationResult
+    }
+    
+    func discoverHomes() async throws -> HomeKitDiscoverySummary {
+        discoverHomesCalled = true
+        
+        if shouldThrowError {
+            throw HomeKitError.discoveryFailed("Mock error")
+        }
+        
+        return mockDiscoverySummary ?? HomeKitDiscoverySummary(
+            homes: [
+                HomeKitHome(
+                    id: UUID(),
+                    name: "Test Home",
+                    isPrimary: true,
+                    rooms: [
+                        HomeKitRoom(id: UUID(), name: "Living Room"),
+                        HomeKitRoom(id: UUID(), name: "Kitchen")
+                    ],
+                    accessories: [
+                        HomeKitAccessory(
+                            id: UUID(),
+                            name: "Test Light",
+                            roomId: nil,
+                            category: "Lights",
+                            manufacturer: "Test Manufacturer",
+                            model: "Test Model",
+                            isReachable: true,
+                            isBridged: false,
+                            currentState: "On",
+                            services: ["Lightbulb"]
+                        )
+                    ],
+                    createdAt: Date()
+                )
+            ],
+            discoveredAt: Date()
+        )
+    }
+    
+    func saveConfigurationAsNotes(summary: HomeKitDiscoverySummary) async throws {
+        saveConfigurationAsNotesCalled = true
+        
+        if shouldThrowError {
+            throw HomeKitError.discoveryFailed("Failed to save notes")
+        }
+    }
+    
+    func getHome(named name: String) async -> HomeKitHome? {
+        return mockDiscoverySummary?.homes.first { $0.name.lowercased() == name.lowercased() }
+    }
+    
+    func getAllHomes() async -> [HomeKitHome] {
+        return mockDiscoverySummary?.homes ?? []
     }
 }

@@ -18,6 +18,7 @@ import SwiftUI
 
 struct OnboardingCompletionView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
+    @EnvironmentObject private var coordinator: OnboardingCoordinator
     let onComplete: () -> Void
     
     var body: some View {
@@ -47,6 +48,26 @@ struct OnboardingCompletionView: View {
                 Text("Your house consciousness is ready to help you.")
                     .font(.title3)
                     .multilineTextAlignment(.center)
+                
+                // Show HomeKit import results if available
+                if let summary = coordinator.homeKitDiscoverySummary, !summary.homes.isEmpty {
+                    VStack(spacing: 8) {
+                        Text("Successfully imported:")
+                            .font(.headline)
+                            .foregroundColor(.green)
+                        
+                        HStack(spacing: 20) {
+                            ImportSummaryItem(count: summary.homes.count, label: "Home\(summary.homes.count == 1 ? "" : "s")")
+                            ImportSummaryItem(count: summary.totalRooms, label: "Room\(summary.totalRooms == 1 ? "" : "s")")
+                            ImportSummaryItem(count: summary.totalAccessories, label: "Device\(summary.totalAccessories == 1 ? "" : "s")")
+                        }
+                        .padding(.horizontal, 40)
+                    }
+                    .padding(.vertical, 12)
+                    .background(Color.green.opacity(0.1))
+                    .cornerRadius(12)
+                    .padding(.horizontal, 30)
+                }
                 
                 Text("You can now:")
                     .font(.headline)
@@ -95,6 +116,24 @@ struct OnboardingCompletionView: View {
 }
 
 // MARK: - Supporting Views
+
+struct ImportSummaryItem: View {
+    let count: Int
+    let label: String
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            Text("\(count)")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.green)
+            
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+}
 
 struct CompletionFeatureRow: View {
     let icon: String

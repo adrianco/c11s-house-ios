@@ -91,6 +91,9 @@ class QuestionFlowCoordinator: ObservableObject {
                 print("[QuestionFlowCoordinator] Posting AllQuestionsComplete notification")
                 print("[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)")
                 NotificationCenter.default.post(name: Notification.Name("AllQuestionsComplete"), object: nil)
+                
+                // Check if we have HomeKit configuration to acknowledge
+                await checkForHomeKitConfiguration()
             }
         } catch {
             print("[QuestionFlowCoordinator] Error loading questions: \(error)")
@@ -412,6 +415,64 @@ class QuestionFlowCoordinator: ObservableObject {
         // NOTE: Removed AllQuestionsComplete listener to prevent infinite loop
         // The notification is posted when all questions are complete, but we don't need to reload
         print("[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)")
+    }
+    
+    private func checkForHomeKitConfiguration() async {
+        guard let container = serviceContainer,
+              let recognizer = conversationRecognizer else { return }
+        
+        // Check if we have any HomeKit configuration notes
+        do {
+            let store = try await notesService.loadNotesStore()
+            let homeKitNotes = store.customNotes.filter { note in
+                note.category == "homekit_summary" || 
+                note.category == "homekit_room" || 
+                note.category == "homekit_device"
+            }
+            
+            if !homeKitNotes.isEmpty {
+                // Find the summary note
+                if let summaryNote = homeKitNotes.first(where: { $0.category == "homekit_summary" }) {
+                    // Parse the summary to get counts
+                    let content = summaryNote.content
+                    var homeCount = 0
+                    var roomCount = 0
+                    var deviceCount = 0
+                    
+                    // Simple parsing of the summary content
+                    if let homesRange = content.range(of: "Found (\\d+) home", options: .regularExpression) {
+                        let numberString = content[homesRange].components(separatedBy: " ")[1]
+                        homeCount = Int(numberString) ?? 0
+                    }
+                    if let roomsRange = content.range(of: "Total Rooms: (\\d+)", options: .regularExpression) {
+                        let numberString = content[roomsRange].components(separatedBy: ": ")[1]
+                        roomCount = Int(numberString) ?? 0
+                    }
+                    if let devicesRange = content.range(of: "Total Accessories: (\\d+)", options: .regularExpression) {
+                        let numberString = content[devicesRange].components(separatedBy: ": ")[1]
+                        deviceCount = Int(numberString) ?? 0
+                    }
+                    
+                    // Create an acknowledgment thought
+                    let thought = HouseThought(
+                        thought: "I've imported your HomeKit configuration! I found \(homeCount) home\(homeCount == 1 ? "" : "s") with \(roomCount) room\(roomCount == 1 ? "" : "s") and \(deviceCount) device\(deviceCount == 1 ? "" : "s"). You can now ask me about any of your rooms or devices.",
+                        emotion: .proud,
+                        category: .celebration,
+                        confidence: 1.0,
+                        context: "HomeKit import complete",
+                        suggestion: "Try asking 'What devices are in the living room?' or 'Tell me about my lights'"
+                    )
+                    
+                    await MainActor.run {
+                        recognizer.currentHouseThought = thought
+                    }
+                    
+                    print("[QuestionFlowCoordinator] Acknowledged HomeKit configuration import")
+                }
+            }
+        } catch {
+            print("[QuestionFlowCoordinator] Error checking for HomeKit configuration: \(error)")
+        }
     }
 }
 
