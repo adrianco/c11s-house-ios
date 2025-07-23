@@ -197,7 +197,11 @@ class SharedMockNotesService: NotesServiceProtocol {
     func saveNote(_ note: Note) async throws {
         savedNotes.append(note)
         mockNotesStore.notes[note.questionId] = note
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
+        }
     }
     
     func updateNote(_ note: Note) async throws {
@@ -212,24 +216,32 @@ class SharedMockNotesService: NotesServiceProtocol {
             print("[MockNotesService] Updated mockHouseName to: \(note.answer)")
         }
         
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func deleteNote(for questionId: UUID) async throws {
         savedNotes.removeAll { $0.questionId == questionId }
         mockNotesStore.notes.removeValue(forKey: questionId)
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func addQuestion(_ question: Question) async throws {
         mockNotesStore.questions.append(question)
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func deleteQuestion(_ questionId: UUID) async throws {
         mockNotesStore.questions.removeAll { $0.id == questionId }
         mockNotesStore.notes.removeValue(forKey: questionId)
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func resetToDefaults() async throws {
@@ -238,12 +250,16 @@ class SharedMockNotesService: NotesServiceProtocol {
             notes: [:],
             version: 1
         )
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func clearAllData() async throws {
         mockNotesStore.notes.removeAll()
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func getHouseName() async -> String? {

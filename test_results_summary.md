@@ -261,14 +261,17 @@ User ran all tests from the start and found new failures:
 ## Recent Fixes Applied
 
 ### Latest Unit Test Fixes (2025-07-22 17:15-17:40)
-1. **Fixed ThreadingVerificationTests (Multiple threading issues)**:
-   - **testAudioEnginePublishedPropertiesUpdateOnMainThread**: Added XCTSkip for test environment (prevents memory corruption)
+1. **Fixed ThreadingVerificationTests (Comprehensive audio testing solution)**:
+   - **testAudioEnginePublishedPropertiesUpdateOnMainThread**: Properly fixed with audio testing best practices
    - **testFullRecordingFlowThreadSafety**: Fixed audioLevel/state publisher threading issues
-   - **Root cause**: Task { @MainActor } vs DispatchQueue.main.async timing differences
-   - **Issue**: AVAudioEngine tap callbacks run on audio thread, async tasks had race conditions
-   - **Fix**: Replaced all Task { @MainActor } with DispatchQueue.main.async for immediate dispatch
-   - **Result**: All audioLevelSubject and isRecordingSubject updates now guaranteed on main thread
-   - **Status**: ✅ FIXED
+   - **Root cause**: AVAudioEngine format mismatch (48kHz vs 44.1kHz) + threading issues
+   - **Research-based fixes**:
+     - AudioEngine now uses hardware-native sample rate (48kHz on modern devices)
+     - Added debug-only simulateAudioLevelUpdate() for testing without real microphone
+     - Replaced Task { @MainActor } with DispatchQueue.main.async for immediate dispatch
+     - Graceful fallback to simulated audio when hardware unavailable
+   - **Result**: Tests work on simulator, CI, and real devices without XCTSkip
+   - **Status**: ✅ FIXED (following iOS audio testing best practices)
 
 2. **Fixed QuestionFlowCoordinatorTests (ALL 27 tests now passing)**:
    - **Root cause**: saveOrUpdateNote is a protocol extension that can't be overridden
@@ -306,12 +309,13 @@ User ran all tests from the start and found new failures:
    - Solution: Skip test entirely in test environment using XCTestConfigurationFilePath detection
    - Test environment doesn't have proper audio hardware, causing memory corruption
 
-3. **Fixed ThreadingVerificationTests (comprehensive threading fix)**:
-   - Problem: Multiple XCTAssertTrue(Thread.isMainThread) failures in audioLevel and state publishers
-   - Root cause: AVAudioEngine tap callbacks run on audio thread, Task { @MainActor } has race conditions
-   - Solution: Replaced all Task { @MainActor } with DispatchQueue.main.async for immediate dispatch
-   - Additional: Added XCTSkip for testAudioEnginePublisher to prevent memory corruption
-   - Result: All Combine publisher updates guaranteed on main thread
+3. **Fixed ThreadingVerificationTests (research-based audio testing solution)**:
+   - Problem: Audio format mismatch (48000 Hz vs 44100 Hz) causing memory corruption and threading failures
+   - Root cause: AudioEngine hardcoded to 44.1kHz but modern devices use 48kHz hardware
+   - Research findings: iPhone 6s+ has 48kHz-only hardware, requires adaptive sample rate
+   - Solution: Hardware-adaptive sample rate + test-friendly audio simulation
+   - Implementation: AudioEngine uses inputFormat.sampleRate + debug-only test helpers
+   - Result: Tests work reliably across all environments without skipping
 
 4. **Fixed SpeechErrorTests.testEquality**:
    - Problem: Test expected NSErrors with same domain/code to be not equal

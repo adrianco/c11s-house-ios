@@ -82,6 +82,7 @@ class VoiceTranscriptionViewModel: ObservableObject {
     // Audio monitoring
     private var lastSoundTime: Date = Date()
     private var hasDetectedSpeech: Bool = false
+    private var isStartingRecording: Bool = false
     
     // MARK: - Initialization
     
@@ -109,8 +110,15 @@ class VoiceTranscriptionViewModel: ObservableObject {
             return
         }
         
+        guard !isStartingRecording else {
+            print("Already starting recording, ignoring duplicate call")
+            return
+        }
+        
+        isStartingRecording = true
         Task {
             await handleStartRecording()
+            isStartingRecording = false
         }
     }
     

@@ -17,27 +17,89 @@ Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[ContentViewModel] 🌤️ refreshWeather() called
+[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Current weather before fetch: nil
 [WeatherCoordinator] Weather question already exists
-Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: F5CC8544-7950-4F56-8211-06934339BD60
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 PHASE TRANSITION: Start → welcome
-👆 USER ACTION: view_appeared in welcome
-Test Suite 'Selected tests' started at 2025-07-22 17:14:49.939.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 17:14:49.939.
-Test Suite 'ThreadingVerificationTests' started at 2025-07-22 17:14:49.939.
+Test Suite 'Selected tests' started at 2025-07-22 17:27:10.658.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 17:27:10.658.
+Test Suite 'ThreadingVerificationTests' started at 2025-07-22 17:27:10.658.
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testAudioEnginePublishedPropertiesUpdateOnMainThread]' started.
+[ContentViewModel] 🌤️ refreshWeather() called
+[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Current weather before fetch: nil
+[ContentViewModel] 🌤️ refreshWeather() called
+[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Current weather before fetch: nil
+App is being debugged, do not track this hang
+Hang detected: 0.25s (debugger attached, not reporting)
+[ContentViewModel] Weather update received: partlyCloudy
+[ContentViewModel] Weather update received: partlyCloudy
+[ContentViewModel] Weather update received: partlyCloudy
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
+[ContentViewModel] Temperature: 73°F
+[ContentViewModel] Current weather after fetch: exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
+[ContentViewModel] Temperature: 73°F
+[ContentViewModel] Current weather after fetch: exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
+[ContentViewModel] Temperature: 73°F
+[ContentViewModel] Current weather after fetch: exists
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testAudioEnginePublishedPropertiesUpdateOnMainThread]' passed (0.854 seconds).
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testConcurrentAudioBufferOperations]' started.
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testConcurrentAudioBufferOperations]' passed (0.005 seconds).
 Test Case '-[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety]' started.
 TranscriptionServiceImpl: Using device locale en_US
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:234: error: -[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:250: error: -[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety] : XCTAssertTrue failed
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety]' failed (1.444 seconds).
-Test Suite 'ThreadingVerificationTests' failed at 2025-07-22 17:14:51.384.
-	 Executed 1 test, with 2 failures (0 unexpected) in 1.444 (1.445) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-22 17:14:51.384.
-	 Executed 1 test, with 2 failures (0 unexpected) in 1.444 (1.445) seconds
-Test Suite 'Selected tests' failed at 2025-07-22 17:14:51.385.
-	 Executed 1 test, with 2 failures (0 unexpected) in 1.444 (1.446) seconds
+[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:243: error: -[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:259: error: -[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety] : XCTAssertTrue failed
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety]' failed (1.455 seconds).
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testMainThreadPerformance]' started.
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:274: Test Case '-[C11SHouseTests.ThreadingVerificationTests testMainThreadPerformance]' measured [Time, seconds] average: 0.104, relative standard deviation: 1.508%, values: [0.103346, 0.104244, 0.105290, 0.106098, 0.103683, 0.102272, 0.106329, 0.101641, 0.106260, 0.104787], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testMainThreadPerformance]' passed (1.050 seconds).
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testNoRetainCyclesInTimers]' started.
+Cannot start recording in current state: idle
+Not currently recording
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testNoRetainCyclesInTimers]' passed (0.206 seconds).
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testNotesServicePublisherUpdatesOnMainThread]' started.
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:126: error: -[C11SHouseTests.ThreadingVerificationTests testNotesServicePublisherUpdatesOnMainThread] : Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: "Notes updates on main thread".
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testNotesServicePublisherUpdatesOnMainThread]' failed (2.024 seconds).
+Test Case '-[C11SHouseTests.ThreadingVerificationTests testRapidStateChangesThreadSafety]' started.
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+Cannot start recording in current state: idle
+           AVAEInternal.h:71    required condition is false: [AVAEGraphNode.mm:828:CreateRecordingTap: (nullptr == Tap())]
+<unknown>:0: error: -[C11SHouseTests.ThreadingVerificationTests testRapidStateChangesThreadSafety] : required condition is false: nullptr == Tap() (com.apple.coreaudio.avfaudio)
+*** Terminating app due to uncaught exception 'com.apple.coreaudio.avfaudio', reason: 'required condition is false: nullptr == Tap()'
+*** First throw call stack:
+(0x1a2bbb21c 0x1a0055abc 0x1a2c19ea0 0x1be505ec0 0x1be5b4e10 0x1be58a8dc 0x103eb8eb0 0x103ebcc71 0x103e77d9d 0x103e75d21 0x103e77325 0x103c7315d 0x103c73605 0x1ae685241)
+libc++abi: terminating due to uncaught exception of type NSException
+*** Terminating app due to uncaught exception 'com.apple.coreaudio.avfaudio', reason: 'required condition is false: nullptr == Tap()'
+*** First throw call stack:
+(0x1a2bbb21c 0x1a0055abc 0x1a2c19ea0 0x1be505ec0 0x1be5b4e10 0x1be58a8dc 0x103eb8eb0 0x103ebcc71 0x103e77d9d 0x103e75d21 0x103e77325 0x103c7315d 0x103c73605 0x1ae685241)
+terminating due to uncaught exception of type NSException

@@ -56,7 +56,7 @@ This document outlines the comprehensive user experience plan for onboarding new
    -- Background lookup of location address, populating Address Note
 
 NEW: 3. **HomeKit**
-   -- Obtain the entire HomeKit configuration and format it as a summary in a single note, once this works create rooms and devices as individual notes.
+   -- Obtain the entire HomeKit configuration and format it as a summary in a single note, also create rooms and devices as individual notes. Just store the configuration information in individual notes, not the current state or things that change like settings.
 
 
 ### Phase 3: Personalization (2-4 minutes)
