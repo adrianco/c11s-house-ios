@@ -128,10 +128,12 @@ final class AudioEngine: ObservableObject {
             throw AudioEngineError.invalidAudioFormat
         }
         
-        // Create standard recording format (mono, 44.1kHz)
+        // Create recording format that matches hardware capabilities
+        // Modern iOS devices (iPhone 6s+) use 48kHz, older devices use 44.1kHz
+        let hardwareSampleRate = inputFormat.sampleRate
         recordingFormat = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
-            sampleRate: 44100.0,
+            sampleRate: hardwareSampleRate,
             channels: 1,
             interleaved: false
         )
@@ -382,6 +384,16 @@ final class AudioEngine: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Testing Support
+    
+    #if DEBUG
+    /// Simulates audio level update for testing purposes
+    /// This method is only available in debug builds for unit testing
+    func simulateAudioLevelUpdate(_ level: Float) {
+        audioLevel = max(0.0, min(1.0, level))
+    }
+    #endif
 }
 
 // MARK: - AudioBuffer

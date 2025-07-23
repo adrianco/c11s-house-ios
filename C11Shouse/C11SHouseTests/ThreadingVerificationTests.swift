@@ -40,11 +40,6 @@ final class ThreadingVerificationTests: XCTestCase {
     // MARK: - Main Thread Verification Tests
     
     func testAudioEnginePublishedPropertiesUpdateOnMainThread() async {
-        // Skip this test in test environment due to audio hardware issues
-        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else {
-            throw XCTSkip("Skipping audio engine test in test environment - causes memory corruption")
-        }
-        
         let expectation = XCTestExpectation(description: "Audio level updates on main thread")
         
         // Create AudioEngine on main actor since it's @MainActor
@@ -52,6 +47,7 @@ final class ThreadingVerificationTests: XCTestCase {
             AudioEngine()
         }
         
+        // Monitor audioLevel publisher - this should always update on main thread
         await audioEngine.$audioLevel
             .dropFirst() // Skip initial value
             .sink { _ in
@@ -60,7 +56,7 @@ final class ThreadingVerificationTests: XCTestCase {
             }
             .store(in: &cancellables)
         
-        // Try to trigger audio level update
+        // Try to trigger audio level update with graceful error handling
         do {
             try await audioEngine.prepareForRecording()
             try await audioEngine.startRecording()
@@ -72,10 +68,18 @@ final class ThreadingVerificationTests: XCTestCase {
             await audioEngine.stopRecording()
             
         } catch {
-            print("Audio engine setup failed: \(error)")
-            // Test still passes if setup fails - we're testing threading behavior
+            // If audio hardware is not available (simulator, CI, etc.),
+            // use the test helper method to trigger an audio level update
+            print("Audio hardware not available: \(error)")
+            
+            await MainActor.run {
+                // Use the debug-only test helper to simulate audio input
+                // This tests that @Published property updates happen on main thread
+                audioEngine.simulateAudioLevelUpdate(0.5)
+            }
         }
         
+        // Give some time for the publisher to emit
         await fulfillment(of: [expectation], timeout: 2.0, enforceOrder: false)
     }
     
