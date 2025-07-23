@@ -385,7 +385,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         // Then: Should follow full save flow
         XCTAssertEqual(mockStateManager.beginSavingAnswerCallCount, 1)
         XCTAssertEqual(mockRecognizer.clearHouseThoughtCallCount, 1)
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 1)
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 1) // Protocol extension calls saveNote for new notes
         XCTAssertEqual(mockStateManager.clearTranscriptCallCount, 1)
         XCTAssertEqual(mockStateManager.endSavingAnswerCallCount, 1)
         
@@ -433,8 +433,10 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut.currentQuestion = houseQuestion
         mockStateManager.persistentTranscriptValue = "Maple House"
         
-        // Use shared service container
-        sut.serviceContainer = ServiceContainer.shared
+        // Create a mock service container with our mock notes service
+        let mockContainer = ServiceContainer()
+        mockContainer.notesService = mockNotesService
+        sut.serviceContainer = mockContainer
         
         // When: Saving answer
         await sut.saveAnswer()
@@ -481,8 +483,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         try await sut.saveAnswer("Test answer", metadata: ["key": "value"])
         
         // Then: Should save and load next question
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 1)
-        XCTAssertNil(sut.currentQuestion)
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 1) // Protocol extension calls saveNote for new notes
+        XCTAssertNotNil(sut.currentQuestion) // Next question should be loaded
         
         let savedNote = mockNotesService.mockNotesStore.notes[question.id]
         XCTAssertEqual(savedNote?.answer, "Test answer")
@@ -680,8 +682,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     }
     
     func testHandleQuestionChangeWithExistingAnswer() async {
-        // Given: Question with existing answer
-        let question = mockNotesService.mockNotesStore.questions.first!
+        // Given: Question with existing answer (use name question which gets general handling)
+        let question = mockNotesService.mockNotesStore.questions.first(where: { $0.text == "What's your name?" })!
         mockNotesService.mockNotesStore.notes[question.id] = Note(
             questionId: question.id,
             answer: "Existing answer"
