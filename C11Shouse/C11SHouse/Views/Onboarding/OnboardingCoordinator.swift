@@ -73,6 +73,21 @@ class OnboardingCoordinator: ObservableObject {
     /// Check if onboarding should be shown
     func checkOnboardingStatus() {
         Task {
+            // Check if we're in UI testing mode and should skip onboarding
+            let isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING") ||
+                              ProcessInfo.processInfo.arguments.contains("--uitesting")
+            let shouldSkipOnboarding = ProcessInfo.processInfo.arguments.contains("--skip-onboarding")
+            let shouldResetOnboarding = ProcessInfo.processInfo.arguments.contains("--reset-onboarding")
+            
+            if isUITesting && (shouldSkipOnboarding || !shouldResetOnboarding) {
+                // Skip onboarding for UI tests that don't explicitly need it
+                await MainActor.run {
+                    isOnboardingComplete = true
+                    showOnboarding = false
+                }
+                return
+            }
+            
             // Check if required questions are answered
             let requiredComplete = await notesService.areAllRequiredQuestionsAnswered()
             

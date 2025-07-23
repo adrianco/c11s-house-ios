@@ -86,44 +86,47 @@ class AddressManager: ObservableObject {
     
     /// Store detected address without marking question as answered
     func storeDetectedAddress(_ address: Address) async {
-        // Save to UserDefaults for quick access
-        if let encoded = try? JSONEncoder().encode(address) {
-            UserDefaults.standard.set(encoded, forKey: "detectedHomeAddress")
-        }
+        // Only store in memory - do not persist to UserDefaults
+        // Address should only be persisted through NotesService
         
         // Store in detectedAddress property
         await MainActor.run {
             detectedAddress = address
         }
         
-        print("[AddressManager] Stored detected address (not marked as answered): \(address.fullAddress)")
+        print("[AddressManager] Stored detected address in memory (not marked as answered): \(address.fullAddress)")
     }
     
     /// Save address to persistent storage
     func saveAddress(_ address: Address) async throws {
-        // Save to UserDefaults for quick access
-        if let encoded = try? JSONEncoder().encode(address) {
-            UserDefaults.standard.set(encoded, forKey: "confirmedHomeAddress")
-        }
+        // Do not save to UserDefaults - only persist through NotesService
         
         // Save to LocationService
         try await locationService.confirmAddress(address)
         
-        // Save to NotesService
+        // Save to NotesService (this is the only persistent storage)
         await saveAddressToNotes(address)
+        
+        // Update in-memory property
+        await MainActor.run {
+            detectedAddress = address
+        }
         
         print("[AddressManager] User confirmed address, now saving as answered: \(address.fullAddress)")
     }
     
     /// Save address as a note answer
     func saveAddressToNotes(_ address: Address) async {
+        print("[AddressManager] saveAddressToNotes called with address: \(address.fullAddress)")
         do {
             let notesStore = try await notesService.loadNotesStore()
+            print("[AddressManager] Loaded notes store with \(notesStore.questions.count) questions")
             
             // Find the address question (supporting both old and new text)
             if let addressQuestion = notesStore.questions.first(where: { 
                 $0.text == "Is this the right address?" || $0.text == "What's your home address?" 
             }) {
+                print("[AddressManager] Found address question: \(addressQuestion.text)")
                 try await notesService.saveOrUpdateNote(
                     for: addressQuestion.id,
                     answer: address.fullAddress,
@@ -133,21 +136,31 @@ class AddressManager: ObservableObject {
                         "longitude": "\(address.coordinate.longitude)"
                     ]
                 )
+                print("[AddressManager] Saved address note")
+            } else {
+                print("[AddressManager] Address question not found")
             }
             
             // Also save the house name if we can generate it
             if let houseNameQuestion = notesStore.questions.first(where: { 
                 $0.text == "What should I call this house?" 
             }) {
+                print("[AddressManager] Found house name question: \(houseNameQuestion.text)")
                 // Only save if not already answered
                 if notesStore.notes[houseNameQuestion.id] == nil {
                     let houseName = generateHouseNameFromStreet(address.street)
+                    print("[AddressManager] Generated house name: \(houseName)")
                     try await notesService.saveOrUpdateNote(
                         for: houseNameQuestion.id,
                         answer: houseName,
                         metadata: ["generated_from_address": "true"]
                     )
+                    print("[AddressManager] Saved house name note")
+                } else {
+                    print("[AddressManager] House name question already answered")
                 }
+            } else {
+                print("[AddressManager] House name question not found")
             }
         } catch {
             print("Error saving address to notes: \(error)")
@@ -155,21 +168,33 @@ class AddressManager: ObservableObject {
     }
     
     /// Load saved address from storage
-    func loadSavedAddress() -> Address? {
-        guard let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
-              let address = try? JSONDecoder().decode(Address.self, from: addressData) else {
-            return nil
+    func loadSavedAddress() async -> Address? {
+        // Load from NotesService instead of UserDefaults
+        do {
+            let notesStore = try await notesService.loadNotesStore()
+            
+            // Find the address question
+            if let addressQuestion = notesStore.questions.first(where: { 
+                $0.text == "Is this the right address?" || $0.text == "What's your home address?" 
+            }) {
+                // Get the saved answer
+                if let note = notesStore.notes[addressQuestion.id],
+                   !note.answer.isEmpty {
+                    // Parse the saved address text
+                    return parseAddress(note.answer)
+                }
+            }
+        } catch {
+            print("[AddressManager] Error loading saved address: \(error)")
         }
-        return address
+        return nil
     }
     
     /// Load detected but unconfirmed address from storage
     func loadDetectedAddress() -> Address? {
-        guard let addressData = UserDefaults.standard.data(forKey: "detectedHomeAddress"),
-              let address = try? JSONDecoder().decode(Address.self, from: addressData) else {
-            return nil
-        }
-        return address
+        // Return the in-memory detected address
+        // Do not persist detected addresses - they should only be saved when confirmed
+        return detectedAddress
     }
 }
 

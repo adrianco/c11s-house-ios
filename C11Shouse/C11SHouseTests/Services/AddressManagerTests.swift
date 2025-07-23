@@ -25,10 +25,131 @@ import CoreLocation
 import Combine
 @testable import C11SHouse
 
+// MARK: - Mock NotesService Extension for AddressManagerTests
+
+extension SharedMockNotesService {
+    // Helper methods for AddressManagerTests
+    func getCurrentQuestion() async -> Question? {
+        return mockNotesStore.questionsNeedingReview().first
+    }
+    
+    func getNextUnansweredQuestion() async -> Question? {
+        return mockNotesStore.questions.first { question in
+            mockNotesStore.notes[question.id] == nil
+        }
+    }
+    
+    func getNote(for questionId: UUID) async throws -> Note? {
+        return mockNotesStore.notes[questionId]
+    }
+    
+    func getNote(forQuestionText questionText: String) async -> Note? {
+        if let question = mockNotesStore.questions.first(where: { $0.text == questionText }) {
+            return mockNotesStore.notes[question.id]
+        }
+        return nil
+    }
+    
+    func getUnansweredQuestions() async throws -> [Question] {
+        return mockNotesStore.questions.filter { question in
+            mockNotesStore.notes[question.id] == nil
+        }
+    }
+    
+    func exportData() async throws -> Data {
+        return try JSONEncoder().encode(mockNotesStore)
+    }
+    
+    func importData(_ data: Data) async throws {
+        mockNotesStore = try JSONDecoder().decode(NotesStoreData.self, from: data)
+        notesStoreSubject.send(mockNotesStore)
+    }
+    
+    func saveWeatherSummary(_ weather: Weather) async {
+        // Not implemented for tests
+    }
+}
+
+// MARK: - Test-specific MockNotesService
+
+class MockNotesServiceWithTracking: SharedMockNotesService {
+    var saveNoteCallCount = 0
+    var saveOrUpdateNoteCallCount = 0
+    var shouldThrowError = false
+    var errorToThrow: Error?
+    
+    override func loadNotesStore() async throws -> NotesStoreData {
+        print("[MockNotesServiceWithTracking] loadNotesStore called")
+        if shouldThrowError {
+            throw errorToThrow ?? NotesError.decodingFailed(NSError(domain: "test", code: 1))
+        }
+        let notesStore = try await super.loadNotesStore()
+        print("[MockNotesServiceWithTracking] Returning notes store with \(notesStore.questions.count) questions")
+        for question in notesStore.questions {
+            print("[MockNotesServiceWithTracking] Question: \(question.text)")
+        }
+        return notesStore
+    }
+    
+    override func saveNote(_ note: Note) async throws {
+        print("[MockNotesServiceWithTracking] saveNote called with questionId: \(note.questionId), answer: \(note.answer)")
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
+        }
+        saveNoteCallCount += 1
+        print("[MockNotesServiceWithTracking] Incremented saveNoteCallCount to: \(saveNoteCallCount)")
+        try await super.saveNote(note)
+    }
+    
+    override func updateNote(_ note: Note) async throws {
+        print("[MockNotesServiceWithTracking] updateNote called with questionId: \(note.questionId), answer: \(note.answer)")
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
+        }
+        try await super.updateNote(note)
+    }
+    
+    // Override the parent class implementation
+    override func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+        print("[MockNotesServiceWithTracking] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
+        saveOrUpdateNoteCallCount += 1
+        print("[MockNotesServiceWithTracking] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
+        
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
+        }
+        
+        // Check if note exists to decide between save and update
+        let store = try await loadNotesStore()
+        if var existingNote = store.notes[questionId] {
+            // Update existing note
+            existingNote.updateAnswer(answer)
+            if let metadata = metadata {
+                for (key, value) in metadata {
+                    existingNote.setMetadata(key: key, value: value)
+                }
+            }
+            try await updateNote(existingNote)
+        } else {
+            // Create new note
+            let note = Note(
+                questionId: questionId,
+                answer: answer,
+                metadata: metadata
+            )
+            try await saveNote(note)
+        }
+    }
+}
+
 // MARK: - Mock Location Service
 
 class MockLocationServiceForAddressManager: LocationServiceProtocol {
-    var authorizationStatus: CLAuthorizationStatus = .authorizedWhenInUse
+    var authorizationStatus: CLAuthorizationStatus = .authorizedWhenInUse {
+        didSet {
+            authorizationStatusSubject.send(authorizationStatus)
+        }
+    }
     var authorizationStatusPublisher: AnyPublisher<CLAuthorizationStatus, Never> {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
@@ -53,6 +174,11 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     var mockLocation: CLLocation?
     var mockAddress: Address?
     
+    init() {
+        // Initialize with the default authorization status
+        authorizationStatusSubject.send(authorizationStatus)
+    }
+    
     func requestLocationPermission() async {
         requestLocationPermissionCallCount += 1
         authorizationStatusSubject.send(authorizationStatus)
@@ -67,7 +193,7 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCallCount += 1
         if shouldThrowLocationError {
-            throw LocationError.locationServicesDisabled
+            throw LocationError.notAuthorized
         }
         return mockLocation ?? CLLocation(latitude: 37.7749, longitude: -122.4194)
     }
@@ -75,7 +201,7 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     func lookupAddress(for location: CLLocation) async throws -> Address {
         lookupAddressCallCount += 1
         if shouldThrowLookupError {
-            throw LocationError.geocodingFailed(NSError(domain: "test", code: 1))
+            throw LocationError.geocodingFailed
         }
         return mockAddress ?? Address(
             street: "1 Market Street",
@@ -96,13 +222,31 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
 
 class AddressManagerTests: XCTestCase {
     var sut: AddressManager!
-    var mockNotesService: MockNotesService!
+    var mockNotesService: MockNotesServiceWithTracking!
     var mockLocationService: MockLocationServiceForAddressManager!
     
     override func setUp() {
         super.setUp()
-        mockNotesService = MockNotesService()
+        mockNotesService = MockNotesServiceWithTracking()
         mockLocationService = MockLocationServiceForAddressManager()
+        
+        // Clear any leftover UserDefaults data from old code
+        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        
+        // Ensure MockNotesService has predefined questions
+        mockNotesService.mockNotesStore = NotesStoreData(
+            questions: Question.predefinedQuestions,
+            notes: [:],
+            version: 1
+        )
+        
+        // Explicitly reset error flags and call counts to ensure clean state
+        mockNotesService.shouldThrowError = false
+        mockNotesService.errorToThrow = nil
+        mockNotesService.saveNoteCallCount = 0
+        mockNotesService.saveOrUpdateNoteCallCount = 0
+        
         sut = AddressManager(
             notesService: mockNotesService,
             locationService: mockLocationService
@@ -110,8 +254,10 @@ class AddressManagerTests: XCTestCase {
     }
     
     override func tearDown() {
-        // Clear UserDefaults
+        // Clear UserDefaults to ensure clean state for next test
         UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        UserDefaults.standard.synchronize()
         
         sut = nil
         mockNotesService = nil
@@ -132,7 +278,7 @@ class AddressManagerTests: XCTestCase {
             state: "NY",
             postalCode: "10007",
             country: "USA",
-            coordinate: expectedLocation.coordinate
+            coordinate: Coordinate(latitude: expectedLocation.coordinate.latitude, longitude: expectedLocation.coordinate.longitude)
         )
         
         // When: Detecting current address
@@ -170,6 +316,15 @@ class AddressManagerTests: XCTestCase {
             XCTFail("Wrong error type: \(error)")
         }
         
+        // Wait for the flag to be reset asynchronously
+        let expectation = XCTestExpectation(description: "isDetectingAddress should be false")
+        let cancellable = sut.$isDetectingAddress.sink { isDetecting in
+            if !isDetecting {
+                expectation.fulfill()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+        cancellable.cancel()
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -188,7 +343,7 @@ class AddressManagerTests: XCTestCase {
         }
     }
     
-    func testDetectCurrentAddressHandlesLocationError() async {
+    func testDetectCurrentAddressHandlesLocationError() async throws {
         // Given: Location service will fail
         mockLocationService.authorizationStatus = .authorizedAlways
         mockLocationService.shouldThrowLocationError = true
@@ -201,10 +356,19 @@ class AddressManagerTests: XCTestCase {
             // Success - error propagated
         }
         
+        // Wait for the flag to be reset asynchronously
+        let expectation = XCTestExpectation(description: "isDetectingAddress should be false")
+        let cancellable = sut.$isDetectingAddress.sink { isDetecting in
+            if !isDetecting {
+                expectation.fulfill()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+        cancellable.cancel()
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
-    func testDetectCurrentAddressHandlesGeocodeError() async {
+    func testDetectCurrentAddressHandlesGeocodeError() async throws {
         // Given: Geocoding will fail
         mockLocationService.authorizationStatus = .authorizedWhenInUse
         mockLocationService.shouldThrowLookupError = true
@@ -217,6 +381,15 @@ class AddressManagerTests: XCTestCase {
             // Success - error propagated
         }
         
+        // Wait for the flag to be reset asynchronously
+        let expectation = XCTestExpectation(description: "isDetectingAddress should be false")
+        let cancellable = sut.$isDetectingAddress.sink { isDetecting in
+            if !isDetecting {
+                expectation.fulfill()
+            }
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+        cancellable.cancel()
         XCTAssertFalse(sut.isDetectingAddress)
     }
     
@@ -256,7 +429,7 @@ class AddressManagerTests: XCTestCase {
             state: "OR",
             postalCode: "97201",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
+            coordinate: Coordinate(latitude: 45.5152, longitude: -122.6784)
         )
         
         // When: Parsing new address text
@@ -268,8 +441,8 @@ class AddressManagerTests: XCTestCase {
         XCTAssertEqual(parsed?.city, "Seattle")
         XCTAssertEqual(parsed?.state, "WA")
         XCTAssertEqual(parsed?.postalCode, "98101")
-        XCTAssertEqual(parsed?.coordinate.latitude, 45.5152, accuracy: 0.0001)
-        XCTAssertEqual(parsed?.coordinate.longitude, -122.6784, accuracy: 0.0001)
+        XCTAssertEqual(parsed?.coordinate.latitude ?? 0, 45.5152, accuracy: 0.0001)
+        XCTAssertEqual(parsed?.coordinate.longitude ?? 0, -122.6784, accuracy: 0.0001)
     }
     
     func testParseAddressWithoutDetectedCoordinates() {
@@ -333,17 +506,15 @@ class AddressManagerTests: XCTestCase {
             state: "IL",
             postalCode: "60601",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 41.8781, longitude: -87.6298)
+            coordinate: Coordinate(latitude: 41.8781, longitude: -87.6298)
         )
         
         // When: Saving address
         try await sut.saveAddress(address)
         
-        // Then: Should save to UserDefaults
+        // Then: Should NOT save to UserDefaults (addresses only persisted via NotesService)
         let savedData = UserDefaults.standard.data(forKey: "confirmedHomeAddress")
-        XCTAssertNotNil(savedData)
-        let decodedAddress = try JSONDecoder().decode(Address.self, from: savedData!)
-        XCTAssertEqual(decodedAddress.street, "789 Elm Street")
+        XCTAssertNil(savedData, "Address should not be saved to UserDefaults")
         
         // Then: Should save to LocationService
         XCTAssertEqual(mockLocationService.confirmAddressCallCount, 1)
@@ -370,7 +541,7 @@ class AddressManagerTests: XCTestCase {
             state: "OR",
             postalCode: "97201",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 45.5152, longitude: -122.6784)
+            coordinate: Coordinate(latitude: 45.5152, longitude: -122.6784)
         )
         
         // When: Saving address
@@ -405,7 +576,7 @@ class AddressManagerTests: XCTestCase {
             state: "WA",
             postalCode: "98101",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
+            coordinate: Coordinate(latitude: 47.6062, longitude: -122.3321)
         )
         
         // When: Saving address
@@ -422,52 +593,97 @@ class AddressManagerTests: XCTestCase {
     
     // MARK: - loadSavedAddress Tests
     
-    func testLoadSavedAddressWhenExists() {
-        // Given: Saved address in UserDefaults
-        let savedAddress = Address(
-            street: "321 Saved Street",
-            city: "Boston",
-            state: "MA",
-            postalCode: "02101",
-            country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589)
+    func testLoadSavedAddressWhenExists() async {
+        // Given: Address saved in NotesService
+        let addressQuestion = Question(
+            text: "Is this the right address?",
+            category: .houseInfo,
+            displayOrder: 0,
+            isRequired: true
         )
-        let encodedData = try! JSONEncoder().encode(savedAddress)
-        UserDefaults.standard.set(encodedData, forKey: "confirmedHomeAddress")
+        var notesStore = mockNotesService.mockNotesStore
+        notesStore.questions = [addressQuestion]
+        notesStore.notes[addressQuestion.id] = Note(
+            questionId: addressQuestion.id,
+            answer: "321 Saved Street, Boston, MA 02101",
+            createdAt: Date(),
+            lastModified: Date()
+        )
+        mockNotesService.mockNotesStore = notesStore
         
         // When: Loading saved address
-        let loaded = sut.loadSavedAddress()
+        let loaded = await sut.loadSavedAddress()
         
         // Then: Should load correctly
         XCTAssertNotNil(loaded)
         XCTAssertEqual(loaded?.street, "321 Saved Street")
         XCTAssertEqual(loaded?.city, "Boston")
-        XCTAssertEqual(loaded?.coordinate.latitude, 42.3601, accuracy: 0.0001)
     }
     
-    func testLoadSavedAddressWhenNotExists() {
-        // Given: No saved address
-        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+    func testLoadSavedAddressWhenNotExists() async {
+        // Given: No saved address in NotesService
+        // mockNotesService.mockNotesStore already has empty notes
         
         // When: Loading saved address
-        let loaded = sut.loadSavedAddress()
+        let loaded = await sut.loadSavedAddress()
         
         // Then: Should return nil
         XCTAssertNil(loaded)
     }
     
-    func testLoadSavedAddressWithCorruptData() {
-        // Given: Corrupt data in UserDefaults
-        UserDefaults.standard.set("corrupt data", forKey: "confirmedHomeAddress")
+    func testLoadSavedAddressWithCorruptData() async {
+        // Given: Invalid address answer in NotesService
+        let addressQuestion = Question(
+            text: "Is this the right address?",
+            category: .houseInfo,
+            displayOrder: 0,
+            isRequired: true
+        )
+        var notesStore = mockNotesService.mockNotesStore
+        notesStore.questions = [addressQuestion]
+        notesStore.notes[addressQuestion.id] = Note(
+            questionId: addressQuestion.id,
+            answer: "invalid address data",
+            createdAt: Date(),
+            lastModified: Date()
+        )
+        mockNotesService.mockNotesStore = notesStore
         
         // When: Loading saved address
-        let loaded = sut.loadSavedAddress()
+        let loaded = await sut.loadSavedAddress()
         
-        // Then: Should return nil
+        // Then: Should return nil (unparseable address)
         XCTAssertNil(loaded)
     }
     
     // MARK: - saveAddressToNotes Tests
+    
+    func testSaveAddressToNotesBasicFunctionality() async throws {
+        // Given: A valid address
+        let address = Address(
+            street: "123 Test Street",
+            city: "Test City",
+            state: "TC",
+            postalCode: "12345",
+            country: "USA",
+            coordinate: Coordinate(latitude: 40.7128, longitude: -74.0060)
+        )
+        
+        // When: Saving address to notes
+        await sut.saveAddressToNotes(address)
+        
+        // Then: Should call saveNote for both address and house name
+        print("Debug test: saveNoteCallCount = \(mockNotesService.saveNoteCallCount)")
+        print("Debug test: mockNotesService instance = \(ObjectIdentifier(mockNotesService))")
+        
+        // Check that notes were actually saved
+        let notesStore = try await mockNotesService.loadNotesStore()
+        print("Debug test: notes count = \(notesStore.notes.count)")
+        
+        // Expected: 2 calls (address + house name)
+        // Since saveOrUpdateNote is a protocol extension, it calls saveNote internally
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote")
+    }
     
     func testSaveAddressToNotesHandlesError() async {
         // Given: NotesService will fail
@@ -478,7 +694,7 @@ class AddressManagerTests: XCTestCase {
             state: "ER",
             postalCode: "00000",
             country: "USA",
-            coordinate: CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            coordinate: Coordinate(latitude: 0, longitude: 0)
         )
         
         // When: Saving address to notes
@@ -542,15 +758,40 @@ class AddressManagerTests: XCTestCase {
         XCTAssertEqual(houseName, "Universal City House")
         
         // 5. Save the address
+        print("Debug: saveNoteCallCount before saveAddress = \(mockNotesService.saveNoteCallCount)")
         try await sut.saveAddress(parsedAddress!)
+        print("Debug: saveNoteCallCount after saveAddress = \(mockNotesService.saveNoteCallCount)")
         
-        // 6. Verify all storage locations updated
-        XCTAssertNotNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"))
+        // 6. Verify storage locations updated (NOT UserDefaults)
+        XCTAssertNil(UserDefaults.standard.data(forKey: "confirmedHomeAddress"), "Should not save to UserDefaults")
         XCTAssertEqual(mockLocationService.confirmAddressCallCount, 1)
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 2) // Address + house name
+        
+        // Check if the questions exist in the mock service
+        let notesStore = try await mockNotesService.loadNotesStore()
+        let addressQuestion = notesStore.questions.first(where: { 
+            $0.text == "Is this the right address?" || $0.text == "What's your home address?" 
+        })
+        let houseNameQuestion = notesStore.questions.first(where: { 
+            $0.text == "What should I call this house?" 
+        })
+        
+        XCTAssertNotNil(addressQuestion, "Address question should exist")
+        XCTAssertNotNil(houseNameQuestion, "House name question should exist")
+        
+        // Debug: Print the state of the mock service
+        print("Debug: saveNoteCallCount = \(mockNotesService.saveNoteCallCount)")
+        print("Debug: saveOrUpdateNoteCallCount = \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("Debug: shouldThrowError = \(mockNotesService.shouldThrowError)")
+        print("Debug: questions count = \(notesStore.questions.count)")
+        print("Debug: notes count = \(notesStore.notes.count)")
+        
+        // We expect 2 calls: one for address, one for house name (if house name not already answered)
+        // Since saveOrUpdateNote is a protocol extension method, it calls saveNote internally
+        // So we need to check saveNoteCallCount instead
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 2, "Expected 2 calls to saveNote (address + house name)")
         
         // 7. Load saved address
-        let loadedAddress = sut.loadSavedAddress()
+        let loadedAddress = await sut.loadSavedAddress()
         XCTAssertNotNil(loadedAddress)
         XCTAssertEqual(loadedAddress?.street, "100 Universal City Plaza")
     }

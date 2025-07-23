@@ -47,6 +47,12 @@
 import Foundation
 import Combine
 
+/// Actor for coordinating thread-safe save operations
+@globalActor
+actor NotesStoreActor {
+    static let shared = NotesStoreActor()
+}
+
 /// Type alias for backward compatibility
 typealias NotesService = NotesServiceProtocol
 
@@ -98,6 +104,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     private let userDefaults: UserDefaults
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    // NSLock removed - actor isolation provides thread safety
     
     // MARK: - Initialization
     
@@ -117,6 +124,7 @@ class NotesServiceImpl: NotesServiceProtocol {
     // MARK: - Public Methods
     
     func loadNotesStore() async throws -> NotesStoreData {
+        // Actor isolation ensures thread safety - no lock needed
         let store = try await loadFromUserDefaults()
         await MainActor.run {
             notesStoreSubject.send(store)
@@ -124,7 +132,9 @@ class NotesServiceImpl: NotesServiceProtocol {
         return store
     }
     
+    @NotesStoreActor
     func saveNote(_ note: Note) async throws {
+        // Actor isolation ensures thread safety - no lock needed
         var store = try await loadFromUserDefaults()
         
         // Ensure the question exists
@@ -138,6 +148,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         try await save(store)
     }
     
+    @NotesStoreActor
     func updateNote(_ note: Note) async throws {
         var store = try await loadFromUserDefaults()
         
@@ -154,12 +165,14 @@ class NotesServiceImpl: NotesServiceProtocol {
         try await save(store)
     }
     
+    @NotesStoreActor
     func deleteNote(for questionId: UUID) async throws {
         var store = try await loadFromUserDefaults()
         store.notes.removeValue(forKey: questionId)
         try await save(store)
     }
     
+    @NotesStoreActor
     func addQuestion(_ question: Question) async throws {
         var store = try await loadFromUserDefaults()
         
@@ -172,6 +185,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         try await save(store)
     }
     
+    @NotesStoreActor
     func deleteQuestion(_ questionId: UUID) async throws {
         var store = try await loadFromUserDefaults()
         
@@ -184,6 +198,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         try await save(store)
     }
     
+    @NotesStoreActor
     func resetToDefaults() async throws {
         var store = try await loadFromUserDefaults()
         
@@ -205,6 +220,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         try await save(store)
     }
     
+    @NotesStoreActor
     func clearAllData() async throws {
         print("[NotesService] Clearing all data...")
         let emptyStore = NotesStoreData(
@@ -235,6 +251,7 @@ class NotesServiceImpl: NotesServiceProtocol {
         }
     }
     
+    @NotesStoreActor
     private func loadFromUserDefaults() async throws -> NotesStoreData {
         guard let data = userDefaults.data(forKey: userDefaultsKey) else {
             // Return default store if no data exists
@@ -259,7 +276,9 @@ class NotesServiceImpl: NotesServiceProtocol {
         }
     }
     
+    @NotesStoreActor
     private func save(_ store: NotesStoreData) async throws {
+        // Actor isolation ensures thread safety
         do {
             let data = try encoder.encode(store)
             userDefaults.set(data, forKey: userDefaultsKey)

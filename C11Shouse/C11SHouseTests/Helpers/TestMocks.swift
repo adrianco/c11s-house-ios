@@ -60,12 +60,6 @@ class MockLocationService: LocationServiceProtocol {
         authorizationStatusSubject.send(.authorizedWhenInUse)
     }
     
-    func requestLocationPermission() async -> CLAuthorizationStatus {
-        requestLocationPermissionCalled = true
-        authorizationStatusSubject.send(.authorizedWhenInUse)
-        return .authorizedWhenInUse
-    }
-    
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCalled = true
         switch getCurrentLocationResult {
@@ -174,7 +168,7 @@ class SharedMockNotesService: NotesServiceProtocol {
         notesStoreSubject.eraseToAnyPublisher()
     }
     
-    private let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
+    internal let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
         questions: Question.predefinedQuestions,
         notes: [:],
         version: 1
@@ -203,7 +197,9 @@ class SharedMockNotesService: NotesServiceProtocol {
     func saveNote(_ note: Note) async throws {
         savedNotes.append(note)
         mockNotesStore.notes[note.questionId] = note
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func updateNote(_ note: Note) async throws {
@@ -211,24 +207,39 @@ class SharedMockNotesService: NotesServiceProtocol {
             savedNotes[index] = note
         }
         mockNotesStore.notes[note.questionId] = note
-        notesStoreSubject.send(mockNotesStore)
+        
+        // Check if this is a house name question and update mockHouseName
+        if let question = mockNotesStore.questions.first(where: { $0.id == note.questionId && $0.text == "What should I call this house?" }) {
+            mockHouseName = note.answer
+            print("[MockNotesService] Updated mockHouseName to: \(note.answer)")
+        }
+        
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func deleteNote(for questionId: UUID) async throws {
         savedNotes.removeAll { $0.questionId == questionId }
         mockNotesStore.notes.removeValue(forKey: questionId)
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func addQuestion(_ question: Question) async throws {
         mockNotesStore.questions.append(question)
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func deleteQuestion(_ questionId: UUID) async throws {
         mockNotesStore.questions.removeAll { $0.id == questionId }
         mockNotesStore.notes.removeValue(forKey: questionId)
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func resetToDefaults() async throws {
@@ -237,12 +248,16 @@ class SharedMockNotesService: NotesServiceProtocol {
             notes: [:],
             version: 1
         )
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func clearAllData() async throws {
         mockNotesStore.notes.removeAll()
-        notesStoreSubject.send(mockNotesStore)
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
     }
     
     func getHouseName() async -> String? {
@@ -394,7 +409,7 @@ enum PermissionStatus {
 // MARK: - Permission Manager Mock
 
 class MockPermissionManager: ObservableObject {
-    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = .denied
     @Published var speechRecognitionPermissionStatus: SFSpeechRecognizerAuthorizationStatus = .notDetermined
     @Published var allPermissionsGranted: Bool = false
     @Published var permissionError: String?

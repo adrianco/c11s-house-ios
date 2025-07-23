@@ -140,7 +140,7 @@ class QuestionFlowCoordinator: ObservableObject {
             print("[QuestionFlowCoordinator] Answer: '\(trimmedAnswer)'")
             
             // Clear any existing house thought to prevent duplicate speech
-            await recognizer.clearHouseThought()
+            recognizer.clearHouseThought()
             
             // Save the answer using the existing method
             try await saveAnswer(trimmedAnswer)
@@ -160,15 +160,9 @@ class QuestionFlowCoordinator: ObservableObject {
                     print("[QuestionFlowCoordinator] User confirmed address, now saving as answered")
                     try await manager.saveAddress(address)
                     
-                    // Trigger weather fetch after address confirmation
-                    if let suggestionService = addressSuggestionService {
-                        print("[QuestionFlowCoordinator] 🌤️ Triggering weather fetch for confirmed address")
-                        print("[QuestionFlowCoordinator] Address details: \(address.fullAddress)")
-                        await suggestionService.fetchWeatherForConfirmedAddress(address)
-                        print("[QuestionFlowCoordinator] Weather fetch initiated")
-                    } else {
-                        print("[QuestionFlowCoordinator] ⚠️ No addressSuggestionService available for weather fetch")
-                    }
+                    // Weather fetch is handled by ContentViewModel when it detects the address update
+                    // This prevents duplicate weather fetches
+                    print("[QuestionFlowCoordinator] Address saved - ContentViewModel will fetch weather")
                 }
             }
             
@@ -177,6 +171,9 @@ class QuestionFlowCoordinator: ObservableObject {
                 print("[QuestionFlowCoordinator] Saving house name")
                 if let container = serviceContainer {
                     await container.notesService.saveHouseName(trimmedAnswer)
+                } else {
+                    // Fall back to using coordinator's own notesService if no container
+                    await notesService.saveHouseName(trimmedAnswer)
                 }
             }
             
@@ -192,23 +189,29 @@ class QuestionFlowCoordinator: ObservableObject {
     
     /// Save an answer for the current question (basic version)
     func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
+        print("[QuestionFlowCoordinator] saveAnswer called with answer: '\(answer)'")
         guard let question = currentQuestion else {
+            print("[QuestionFlowCoordinator] Error: No current question")
             throw QuestionFlowError.noCurrentQuestion
         }
         
         let trimmedAnswer = answer.trimmingCharacters(in: .whitespacesAndNewlines)
+        print("[QuestionFlowCoordinator] Trimmed answer: '\(trimmedAnswer)'")
         guard !trimmedAnswer.isEmpty else {
+            print("[QuestionFlowCoordinator] Error: Empty answer after trimming")
             throw QuestionFlowError.emptyAnswer
         }
         
         var finalMetadata = metadata ?? [:]
         finalMetadata["updated_via_conversation"] = "true"
         
+        print("[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: \(question.id)")
         try await notesService.saveOrUpdateNote(
             for: question.id,
             answer: trimmedAnswer,
             metadata: finalMetadata
         )
+        print("[QuestionFlowCoordinator] saveOrUpdateNote completed successfully")
         
         // Clear current question after saving
         await MainActor.run {
@@ -274,9 +277,10 @@ class QuestionFlowCoordinator: ObservableObject {
         guard let question = newQuestion else {
             // No more questions
             if hasCompletedAllQuestions {
-                await conversationRecognizer?.setThankYouThought()
+                conversationRecognizer?.setThankYouThought()
             }
-            return isInitializing
+            // Always return false when there's no question (initialization is complete)
+            return false
         }
         
         // Mark initialization as complete
@@ -332,12 +336,12 @@ class QuestionFlowCoordinator: ObservableObject {
                     print("[QuestionFlowCoordinator] Formatted address question with detected address")
                 } else {
                     // No address available, just ask the question
-                    await recognizer.setQuestionThought(question.text)
+                    recognizer.setQuestionThought(question.text)
                 }
             } else {
                 // Pre-populate with existing answer
                 stateManager.persistentTranscript = currentAnswer
-                await recognizer.setQuestionThought(question.text)
+                recognizer.setQuestionThought(question.text)
             }
         } else if question.text == "What should I call this house?" {
             if currentAnswer.isEmpty {
@@ -374,15 +378,15 @@ class QuestionFlowCoordinator: ObservableObject {
                         recognizer.currentHouseThought = thought
                     }
                 } else {
-                    await recognizer.setQuestionThought(question.text)
+                    recognizer.setQuestionThought(question.text)
                 }
             } else {
                 stateManager.persistentTranscript = currentAnswer
-                await recognizer.setQuestionThought(question.text)
+                recognizer.setQuestionThought(question.text)
             }
         } else if currentAnswer.isEmpty {
             // No answer yet, just ask the question
-            await recognizer.setQuestionThought(question.text)
+            recognizer.setQuestionThought(question.text)
         } else {
             // Pre-populate and ask for confirmation with consistent format
             stateManager.persistentTranscript = currentAnswer

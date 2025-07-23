@@ -19,6 +19,7 @@
 
 import Foundation
 import WeatherKit
+import SwiftUI
 
 // MARK: - Main Weather Model
 
@@ -41,33 +42,51 @@ struct Weather: Codable {
 
 struct Temperature: Codable {
     let value: Double
-    let unit: TemperatureUnit
+    let unit: Foundation.UnitTemperature
     
     var formatted: String {
-        switch unit {
-        case .celsius:
-            return String(format: "%.0f°C", value)
-        case .fahrenheit:
-            return String(format: "%.0f°F", value)
-        @unknown default:
-            return String(format: "%.0f°", value)
+        let measurement = Measurement(value: value, unit: unit)
+        let formatter = MeasurementFormatter()
+        formatter.numberFormatter.maximumFractionDigits = 0
+        return formatter.string(from: measurement)
+    }
+    
+    init(value: Double, unit: Foundation.UnitTemperature) {
+        self.value = value
+        self.unit = unit
+    }
+    
+    // Codable conformance
+    enum CodingKeys: String, CodingKey {
+        case value
+        case unit
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        value = try container.decode(Double.self, forKey: .value)
+        let unitString = try container.decode(String.self, forKey: .unit)
+        switch unitString {
+        case "celsius":
+            unit = .celsius
+        case "fahrenheit":
+            unit = .fahrenheit
+        default:
+            unit = .celsius
         }
     }
     
-    init(value: Double, unit: TemperatureUnit) {
-        self.value = value
-        self.unit = unit
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(value, forKey: .value)
+        let unitString = unit == .celsius ? "celsius" : "fahrenheit"
+        try container.encode(unitString, forKey: .unit)
     }
     
     init(from measurement: Measurement<UnitTemperature>) {
         self.value = measurement.value
         self.unit = measurement.unit == .celsius ? .celsius : .fahrenheit
     }
-}
-
-enum TemperatureUnit: String, Codable {
-    case celsius
-    case fahrenheit
 }
 
 // MARK: - Weather Conditions
@@ -188,6 +207,37 @@ enum WeatherCondition: String, Codable {
             return "sun.dust.fill"
         }
     }
+    
+    var iconColor: Color {
+        switch self {
+        case .clear, .mostlyClear:
+            return .yellow
+        case .cloudy, .mostlyCloudy, .partlyCloudy:
+            return .gray
+        case .rain, .drizzle, .heavyRain, .sunShowers:
+            return .blue
+        case .snow, .flurries, .heavySnow, .blizzard, .blowingSnow:
+            return .white
+        case .thunderstorms, .isolatedThunderstorms, .scatteredThunderstorms, .strongStorms:
+            return .purple
+        case .foggy, .haze, .smoky:
+            return .gray
+        case .windy, .breezy:
+            return .mint
+        case .sleet, .freezingRain, .freezingDrizzle, .wintryMix:
+            return .cyan
+        case .hail:
+            return .white
+        case .hot:
+            return .red
+        case .frigid:
+            return .blue
+        case .tropicalStorm, .hurricane:
+            return .red
+        case .blowingDust:
+            return .brown
+        }
+    }
 }
 
 // MARK: - Forecast Models
@@ -198,6 +248,14 @@ struct DailyForecast: Codable {
     let lowTemperature: Temperature
     let condition: WeatherCondition
     let precipitationChance: Double
+    
+    init(date: Date, highTemperature: Temperature, lowTemperature: Temperature, condition: WeatherCondition, precipitationChance: Double) {
+        self.date = date
+        self.highTemperature = highTemperature
+        self.lowTemperature = lowTemperature
+        self.condition = condition
+        self.precipitationChance = precipitationChance
+    }
     
     init(from dayWeather: DayWeather) {
         self.date = dayWeather.date

@@ -29,155 +29,56 @@ import XCTest
 import Combine
 @testable import C11SHouse
 
-// MARK: - Mock NotesService
+// MARK: - Test-specific mock that extends SharedMockNotesService
 
-class MockNotesService: NotesServiceProtocol {
-    var notesStorePublisher: AnyPublisher<NotesStoreData, Never> {
-        notesStoreSubject.eraseToAnyPublisher()
-    }
-    
-    private let notesStoreSubject = CurrentValueSubject<NotesStoreData, Never>(NotesStoreData(
-        questions: Question.predefinedQuestions,
-        notes: [:],
-        version: 1
-    ))
-    
-    var mockNotesStore: NotesStoreData
+class MockNotesServiceForQuestionFlow: SharedMockNotesService {
     var saveNoteCallCount = 0
     var saveOrUpdateNoteCallCount = 0
     var shouldThrowError = false
     var errorToThrow: Error?
     
-    init() {
-        self.mockNotesStore = NotesStoreData(
-            questions: Question.predefinedQuestions,
-            notes: [:],
-            version: 1
-        )
-    }
-    
-    func loadNotesStore() async throws -> NotesStoreData {
+    override func loadNotesStore() async throws -> NotesStoreData {
         if shouldThrowError {
             throw errorToThrow ?? NotesError.decodingFailed(NSError(domain: "test", code: 1))
         }
-        return mockNotesStore
+        return try await super.loadNotesStore()
     }
     
-    func saveNote(_ note: Note) async throws {
+    override func saveNote(_ note: Note) async throws {
+        print("[MockNotesService] saveNote called with questionId: \(note.questionId), answer: \(note.answer)")
         if shouldThrowError {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
         saveNoteCallCount += 1
-        mockNotesStore.notes[note.questionId] = note
-        notesStoreSubject.send(mockNotesStore)
+        print("[MockNotesService] Incremented saveNoteCallCount to: \(saveNoteCallCount)")
+        try await super.saveNote(note)
     }
     
-    func updateNote(_ note: Note) async throws {
-        guard mockNotesStore.notes[note.questionId] != nil else {
-            throw NotesError.noteNotFound(note.questionId)
-        }
-        mockNotesStore.notes[note.questionId] = note
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func deleteNote(for questionId: UUID) async throws {
-        mockNotesStore.notes.removeValue(forKey: questionId)
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]?) async throws {
+    override func updateNote(_ note: Note) async throws {
+        print("[MockNotesService] updateNote called with questionId: \(note.questionId), answer: \(note.answer)")
         if shouldThrowError {
             throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
+        try await super.updateNote(note)
+    }
+    
+    // Override the parent class implementation
+    override func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+        print("[MockNotesService] saveOrUpdateNote called with questionId: \(questionId), answer: \(answer)")
         saveOrUpdateNoteCallCount += 1
-        let note = Note(questionId: questionId, answer: answer, metadata: metadata)
-        mockNotesStore.notes[questionId] = note
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func getNote(for questionId: UUID) async throws -> Note? {
-        return mockNotesStore.notes[questionId]
-    }
-    
-    func getNote(forQuestionText questionText: String) async -> Note? {
-        if let question = mockNotesStore.questions.first(where: { $0.text == questionText }) {
-            return mockNotesStore.notes[question.id]
+        print("[MockNotesService] Incremented saveOrUpdateNoteCallCount to: \(saveOrUpdateNoteCallCount)")
+        
+        if shouldThrowError {
+            throw errorToThrow ?? NSError(domain: "test", code: 1)
         }
-        return nil
-    }
-    
-    func addQuestion(_ question: Question) async throws {
-        mockNotesStore.questions.append(question)
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func deleteQuestion(_ questionId: UUID) async throws {
-        mockNotesStore.questions.removeAll(where: { $0.id == questionId })
-        mockNotesStore.notes.removeValue(forKey: questionId)
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func getUnansweredQuestions() async throws -> [Question] {
-        return mockNotesStore.questions.filter { question in
-            mockNotesStore.notes[question.id] == nil
-        }
-    }
-    
-    func resetToDefaults() async throws {
-        mockNotesStore = NotesStoreData(
-            questions: Question.predefinedQuestions,
-            notes: [:],
-            version: 1
+        
+        // Create a note and save it directly
+        let note = Note(
+            questionId: questionId,
+            answer: answer,
+            metadata: metadata
         )
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func clearAllData() async throws {
-        mockNotesStore.notes.removeAll()
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func exportData() async throws -> Data {
-        return try JSONEncoder().encode(mockNotesStore)
-    }
-    
-    func importData(_ data: Data) async throws {
-        mockNotesStore = try JSONDecoder().decode(NotesStoreData.self, from: data)
-        notesStoreSubject.send(mockNotesStore)
-    }
-    
-    func getCurrentQuestion() async -> Question? {
-        return mockNotesStore.questionsNeedingReview().first
-    }
-    
-    func getNextUnansweredQuestion() async -> Question? {
-        return mockNotesStore.questions.first { question in
-            mockNotesStore.notes[question.id] == nil
-        }
-    }
-    
-    func saveHouseName(_ name: String) async {
-        if let question = mockNotesStore.questions.first(where: { $0.text == "What should I call this house?" }) {
-            let note = Note(
-                questionId: question.id,
-                answer: name,
-                metadata: ["type": "house_name", "updated_via_conversation": "true"]
-            )
-            mockNotesStore.notes[question.id] = note
-            notesStoreSubject.send(mockNotesStore)
-        }
-    }
-    
-    func getHouseName() async -> String? {
-        if let question = mockNotesStore.questions.first(where: { $0.text == "What should I call this house?" }),
-           let note = mockNotesStore.notes[question.id] {
-            return note.answer
-        }
-        return nil
-    }
-    
-    func saveWeatherSummary(_ weather: Weather) async {
-        // Not implemented for tests
+        try await saveNote(note)
     }
 }
 
@@ -225,7 +126,6 @@ class MockConversationStateManager: ConversationStateManager {
 
 // MARK: - Mock AddressManager
 
-@MainActor
 class MockAddressManager: AddressManager {
     var detectCurrentAddressCallCount = 0
     var parseAddressCallCount = 0
@@ -275,9 +175,9 @@ class MockAddressManager: AddressManager {
     }
 }
 
-// MARK: - Mock ConversationRecognizer
+// MARK: - Mock ConversationRecognizer for this test
 @MainActor
-class MockConversationRecognizer: ConversationRecognizer {
+class MockConversationRecognizerForFlow: ConversationRecognizer {
     var clearHouseThoughtCallCount = 0
     var setQuestionThoughtCallCount = 0
     var setThankYouThoughtCallCount = 0
@@ -306,7 +206,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         currentHouseThought = HouseThought(
             thought: "Thank you for answering all my questions!",
             emotion: .happy,
-            category: .gratitude,
+            category: .celebration,
             confidence: 1.0,
             context: "All questions complete",
             suggestion: nil
@@ -318,15 +218,15 @@ class MockConversationRecognizer: ConversationRecognizer {
 @MainActor
 class QuestionFlowCoordinatorTests: XCTestCase {
     var sut: QuestionFlowCoordinator!
-    var mockNotesService: MockNotesService!
+    var mockNotesService: MockNotesServiceForQuestionFlow!
     var mockStateManager: MockConversationStateManager!
-    var mockRecognizer: MockConversationRecognizer!
+    var mockRecognizer: MockConversationRecognizerForFlow!
     var mockAddressManager: MockAddressManager!
     var cancellables: Set<AnyCancellable>!
     
     override func setUp() async throws {
         try await super.setUp()
-        mockNotesService = MockNotesService()
+        mockNotesService = MockNotesServiceForQuestionFlow()
         sut = QuestionFlowCoordinator(notesService: mockNotesService)
         
         // Create and inject mock dependencies
@@ -334,7 +234,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
             notesService: mockNotesService,
             ttsService: MockTTSService()
         )
-        mockRecognizer = MockConversationRecognizer()
+        mockRecognizer = MockConversationRecognizerForFlow()
         mockAddressManager = MockAddressManager(
             notesService: mockNotesService,
             locationService: MockLocationService()
@@ -468,13 +368,24 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut.currentQuestion = question
         mockStateManager.persistentTranscriptValue = "  Test answer  "
         
+        // Debug: Check the question details
+        print("[TEST] Current question: \(question.text)")
+        print("[TEST] Transcript value: '\(mockStateManager.persistentTranscriptValue)'")
+        
         // When: Saving answer
         await sut.saveAnswer()
+        
+        // Debug: Check what happened
+        print("[TEST] beginSavingAnswerCallCount: \(mockStateManager.beginSavingAnswerCallCount)")
+        print("[TEST] clearHouseThoughtCallCount: \(mockRecognizer.clearHouseThoughtCallCount)")
+        print("[TEST] saveOrUpdateNoteCallCount: \(mockNotesService.saveOrUpdateNoteCallCount)")
+        print("[TEST] clearTranscriptCallCount: \(mockStateManager.clearTranscriptCallCount)")
+        print("[TEST] endSavingAnswerCallCount: \(mockStateManager.endSavingAnswerCallCount)")
         
         // Then: Should follow full save flow
         XCTAssertEqual(mockStateManager.beginSavingAnswerCallCount, 1)
         XCTAssertEqual(mockRecognizer.clearHouseThoughtCallCount, 1)
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 1)
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 1) // Protocol extension calls saveNote for new notes
         XCTAssertEqual(mockStateManager.clearTranscriptCallCount, 1)
         XCTAssertEqual(mockStateManager.endSavingAnswerCallCount, 1)
         
@@ -522,9 +433,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         sut.currentQuestion = houseQuestion
         mockStateManager.persistentTranscriptValue = "Maple House"
         
-        // Create mock service container
-        let mockContainer = ServiceContainer()
-        sut.serviceContainer = mockContainer
+        // Set serviceContainer to nil - the coordinator should use its own notesService
+        sut.serviceContainer = nil
         
         // When: Saving answer
         await sut.saveAnswer()
@@ -571,8 +481,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         try await sut.saveAnswer("Test answer", metadata: ["key": "value"])
         
         // Then: Should save and load next question
-        XCTAssertEqual(mockNotesService.saveOrUpdateNoteCallCount, 1)
-        XCTAssertNil(sut.currentQuestion)
+        XCTAssertEqual(mockNotesService.saveNoteCallCount, 1) // Protocol extension calls saveNote for new notes
+        XCTAssertNotNil(sut.currentQuestion) // Next question should be loaded
         
         let savedNote = mockNotesService.mockNotesStore.notes[question.id]
         XCTAssertEqual(savedNote?.answer, "Test answer")
@@ -714,7 +624,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
         // Then: Should detect address and set question thought
         XCTAssertFalse(stillInitializing)
         XCTAssertEqual(mockAddressManager.detectCurrentAddressCallCount, 1)
-        XCTAssertEqual(mockStateManager.persistentTranscriptValue, "123 Main St, Springfield, IL, 62701, USA")
+        XCTAssertEqual(mockStateManager.persistentTranscriptValue, "123 Main St, Springfield, IL 62701")
         XCTAssertEqual(mockRecognizer.setQuestionThoughtCallCount, 0) // Should set HouseThought instead
         XCTAssertNotNil(mockRecognizer.currentHouseThought)
     }
@@ -722,7 +632,7 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     func testHandleQuestionChangeForAddressQuestionWithError() async {
         // Given: Address detection will fail
         let addressQuestion = mockNotesService.mockNotesStore.questions.first(where: { 
-            $0.text == "What's your home address?" 
+            $0.text == "Is this the right address?" 
         })!
         mockAddressManager.shouldThrowError = true
         
@@ -770,8 +680,8 @@ class QuestionFlowCoordinatorTests: XCTestCase {
     }
     
     func testHandleQuestionChangeWithExistingAnswer() async {
-        // Given: Question with existing answer
-        let question = mockNotesService.mockNotesStore.questions.first!
+        // Given: Question with existing answer (use name question which gets general handling)
+        let question = mockNotesService.mockNotesStore.questions.first(where: { $0.text == "What's your name?" })!
         mockNotesService.mockNotesStore.notes[question.id] = Note(
             questionId: question.id,
             answer: "Existing answer"

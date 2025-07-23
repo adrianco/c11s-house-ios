@@ -1,6 +1,6 @@
 # C11S House iOS App - Onboarding UX Plan
 
-# User flow edited by adrianco 10 July 2025 - do not modify this file
+# User flow edited by adrianco 22 July 2025 - do not modify this file
 
 ## Executive Summary
 
@@ -40,6 +40,8 @@ This document outlines the comprehensive user experience plan for onboarding new
    - Permissions popup on first use
    - Smooth transition to main contentview screen
 
+   NEW: Animate icon by flying the brain+circle into the house, ending up at the same location
+
 ### Phase 2: Permission & Setup (30 seconds - 2 minutes)
 **Goal**: Obtain necessary permissions with clear explanations
 
@@ -48,8 +50,13 @@ This document outlines the comprehensive user experience plan for onboarding new
    - **Speech Recognition**: "To understand your requests"
    - **Location**: "To provide local weather and context"
 
+   NEW: Add HomeKit "To find existing named rooms and devices"
+
 2. **Location**
    -- Background lookup of location address, populating Address Note
+
+NEW: 3. **HomeKit**
+   -- Obtain the entire HomeKit configuration and format it as a summary in a single note, also create rooms and devices as individual notes. Just store the configuration information in individual notes, not the current state or things that change like settings.
 
 
 ### Phase 3: Personalization (2-4 minutes)

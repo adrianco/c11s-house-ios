@@ -33,6 +33,10 @@ class LocationServiceTests: XCTestCase {
     }
     
     override func tearDown() {
+        // Clear UserDefaults to prevent test data from persisting
+        UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+        UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+        
         cancellables = nil
         sut = nil
         super.tearDown()
@@ -56,7 +60,10 @@ class LocationServiceTests: XCTestCase {
         XCTAssertFalse(receivedStatuses.isEmpty)
     }
     
-    func testConfirmAddressSavesToUserDefaults() async throws {
+    func testConfirmAddressDoesNotSaveToUserDefaults() async throws {
+        // This test verifies the new behavior where addresses are NOT saved to UserDefaults
+        // Address persistence is now handled exclusively by NotesService
+        
         let address = Address(
             street: "123 Test Street",
             city: "Test City",
@@ -68,11 +75,12 @@ class LocationServiceTests: XCTestCase {
         
         try await sut.confirmAddress(address)
         
+        // Verify that address is NOT saved to UserDefaults
         let savedData = UserDefaults.standard.data(forKey: "confirmedHomeAddress")
-        XCTAssertNotNil(savedData)
+        XCTAssertNil(savedData, "Address should not be saved to UserDefaults - persistence is handled by NotesService")
         
-        let decodedAddress = try JSONDecoder().decode(Address.self, from: savedData!)
-        XCTAssertEqual(decodedAddress, address)
+        // The method should still complete without errors
+        // (it now only handles location monitoring setup)
     }
     
     func testLocationErrorTypes() {

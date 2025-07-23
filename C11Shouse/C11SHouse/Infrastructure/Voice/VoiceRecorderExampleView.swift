@@ -82,12 +82,12 @@ struct VoiceRecorderExampleView: View {
             } message: {
                 Text("Microphone permission is required to record audio. Please enable it in Settings.")
             }
-            .alert("Recording Error", isPresented: .constant(recorder.errorMessage != nil)) {
+            .alert("Recording Error", isPresented: .constant(recorder.error != nil)) {
                 Button("OK") {
-                    recorder.errorMessage = nil
+                    recorder.error = nil
                 }
             } message: {
-                Text(recorder.errorMessage ?? "")
+                Text(recorder.error?.userFriendlyMessage ?? "")
             }
             .onAppear {
                 checkPermissionAndLoadRecordings()
@@ -385,7 +385,7 @@ struct VoiceRecorderExampleView: View {
             try recorder.deleteRecording(recording)
             loadRecordings()
         } catch {
-            recorder.errorMessage = "Failed to delete recording: \(error.localizedDescription)"
+            recorder.error = AppError.dataCorrupted
         }
     }
     

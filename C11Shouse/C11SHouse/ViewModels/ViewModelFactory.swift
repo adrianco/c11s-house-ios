@@ -12,6 +12,11 @@
  *   - @MainActor for UI thread safety
  *   - Supports easy testing by allowing mock service injection
  *
+ * - 2025-07-15: Updated to use centralized AppState
+ *   - Added AppState reference for centralized state management
+ *   - ViewModels now receive AppState in addition to services
+ *   - Reduces state duplication across ViewModels
+ *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
  */
@@ -35,12 +40,18 @@ class ViewModelFactory: ObservableObject {
     /// Reference to the service container for accessing services
     private let serviceContainer: ServiceContainer
     
+    /// Reference to the centralized app state
+    private let appState: AppState
+    
     // MARK: - Initialization
     
-    /// Initialize with a service container
-    /// - Parameter serviceContainer: The service container to use for dependency injection
-    init(serviceContainer: ServiceContainer = .shared) {
+    /// Initialize with a service container and app state
+    /// - Parameters:
+    ///   - serviceContainer: The service container to use for dependency injection
+    ///   - appState: The centralized app state
+    init(serviceContainer: ServiceContainer, appState: AppState) {
         self.serviceContainer = serviceContainer
+        self.appState = appState
     }
     
     // MARK: - Factory Methods
@@ -60,6 +71,7 @@ class ViewModelFactory: ObservableObject {
     /// - Returns: A configured ContentViewModel instance
     func makeContentViewModel() -> ContentViewModel {
         return ContentViewModel(
+            appState: appState,
             locationService: serviceContainer.locationService,
             weatherCoordinator: serviceContainer.weatherCoordinator,
             notesService: serviceContainer.notesService,
@@ -76,14 +88,14 @@ class ViewModelFactory: ObservableObject {
     // MARK: - Convenience Static Factory
     
     /// Shared factory instance using the default service container
-    static let shared = ViewModelFactory()
+    @MainActor static let shared = ViewModelFactory(serviceContainer: .shared, appState: .shared)
 }
 
 // MARK: - Environment Key
 
 /// Environment key for injecting ViewModel factory
 struct ViewModelFactoryKey: EnvironmentKey {
-    static let defaultValue = ViewModelFactory.shared
+    @MainActor static let defaultValue = ViewModelFactory.shared
 }
 
 extension EnvironmentValues {
@@ -97,7 +109,7 @@ extension EnvironmentValues {
 
 extension View {
     /// Inject ViewModel factory into environment
-    func withViewModelFactory(_ factory: ViewModelFactory = .shared) -> some View {
+    @MainActor func withViewModelFactory(_ factory: ViewModelFactory = ViewModelFactory.shared) -> some View {
         self.environment(\.viewModelFactory, factory)
     }
 }

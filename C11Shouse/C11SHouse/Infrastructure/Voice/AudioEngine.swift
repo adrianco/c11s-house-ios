@@ -67,6 +67,9 @@ final class AudioEngine: ObservableObject {
     /// Timer for updating recording duration
     private var durationTimer: Timer?
     
+    /// Tracks whether audio tap is currently installed
+    private var isTapInstalled = false
+    
     /// Start time of recording
     private var recordingStartTime: Date?
     
@@ -87,7 +90,9 @@ final class AudioEngine: ObservableObject {
     
     deinit {
         // Clean up audio engine without accessing @MainActor properties
-        engine.inputNode.removeTap(onBus: 0)
+        if isTapInstalled {
+            engine.inputNode.removeTap(onBus: 0)
+        }
         engine.stop()
     }
     
@@ -111,16 +116,24 @@ final class AudioEngine: ObservableObject {
         // Reset the engine
         engine.reset()
         
+        // Remove any existing tap before installing new one
+        if isTapInstalled {
+            inputNode.removeTap(onBus: 0)
+            isTapInstalled = false
+        }
+        
         // Configure recording format
         let inputFormat = inputNode.inputFormat(forBus: 0)
         guard inputFormat.sampleRate > 0 && inputFormat.channelCount > 0 else {
             throw AudioEngineError.invalidAudioFormat
         }
         
-        // Create standard recording format (mono, 44.1kHz)
+        // Create recording format that matches hardware capabilities
+        // Modern iOS devices (iPhone 6s+) use 48kHz, older devices use 44.1kHz
+        let hardwareSampleRate = inputFormat.sampleRate
         recordingFormat = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
-            sampleRate: 44100.0,
+            sampleRate: hardwareSampleRate,
             channels: 1,
             interleaved: false
         )
@@ -138,6 +151,7 @@ final class AudioEngine: ObservableObject {
         ) { [weak self] buffer, time in
             self?.processAudioBuffer(buffer, time: time)
         }
+        isTapInstalled = true
         
         // Prepare the engine
         engine.prepare()
@@ -177,8 +191,11 @@ final class AudioEngine: ObservableObject {
         // Stop duration timer
         stopDurationTimer()
         
-        // Remove tap
-        inputNode.removeTap(onBus: 0)
+        // Remove tap if installed
+        if isTapInstalled {
+            inputNode.removeTap(onBus: 0)
+            isTapInstalled = false
+        }
         
         // Stop the engine
         engine.stop()
@@ -367,6 +384,16 @@ final class AudioEngine: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Testing Support
+    
+    #if DEBUG
+    /// Simulates audio level update for testing purposes
+    /// This method is only available in debug builds for unit testing
+    func simulateAudioLevelUpdate(_ level: Float) {
+        audioLevel = max(0.0, min(1.0, level))
+    }
+    #endif
 }
 
 // MARK: - AudioBuffer

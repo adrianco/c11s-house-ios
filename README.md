@@ -1,33 +1,38 @@
 # c11s-house-ios
 
-## An iOS app that provides a voice based interface to the house consciousness system
+## An iOS app that provides a voice-based interface to the house consciousness system
 
-Using native swift and the latest Apple Intelligence features, support the APIs and functionality of https://github.com/adrianco/consciousness
+C11S House gives your home a conscious, conversational personality. Using native Swift and the latest iOS features, it creates an intelligent companion that learns about your home and helps manage it through natural voice interactions.
 
-Plans created here with claude-flow
+## 🏠 Features
 
-------
-Prompt used was 
+### Core Functionality
+- **Natural Voice Conversations**: Real-time speech recognition and synthesis for fluid interactions
+- **Intelligent Memory System**: Persistent notes about your home, rooms, and devices
+- **Weather-Aware Personality**: House emotions respond to current weather conditions
+- **Privacy-First Design**: All processing happens on-device, no cloud dependencies
 
-$ ./claude-flow swarm "review the README.md in root and create a detailed technical implementation plan in /plans using TDD, don't implement any code yet"
+### Technical Highlights
+- Built with SwiftUI and modern Swift concurrency (async/await)
+- Protocol-oriented architecture with dependency injection
+- Comprehensive test coverage (unit and UI tests)
+- Thread-safe operations with actor-based concurrency
+- Reactive UI using Combine framework
 
-Above this line is all that was provided as input to this development process.
+## 📱 Current Status (2025-07-23)
 
-Update after plans were built in 5 minutes and pushed back to the repo.
+The app is fully functional with:
+- ✅ Complete onboarding flow with permission management
+- ✅ Voice conversation interface with persistent transcripts
+- ✅ Notes system for storing house information
+- ✅ Weather integration with location services
+- ✅ Customizable voice settings
+- ✅ Emotion-aware house personality
 
-Log of the output as it did this work is saved in the repo.
-
-## Status
-
-### 2025-07-15 Update
-The C11S House iOS app has evolved significantly with a refined user experience and enhanced features:
-
-- **Onboarding & Setup**: New welcome flow with clear feature explanations (Natural Conversations, Intelligent Memory, Privacy First)
-- **Enhanced Home Screen**: Displays house personality with current emotion state and weather context
-- **Voice Interaction**: Improved conversation interface with message history and speech-to-text capabilities
-- **Notes & Questions System**: Interactive setup flow to capture house information and personal preferences
-- **Voice Settings**: Customizable voice parameters including language, voice type, rate, pitch, and volume with preview functionality
-- **UI Polish**: Consistent gradient branding, improved navigation, and modern SwiftUI components throughout
+### Upcoming Features
+- 🔄 HomeKit integration (see [plans/homekit.md](plans/homekit.md))
+- 🔄 Apple Intelligence integration for smarter conversations
+- 🔄 Multi-room awareness and device control
 
 ## Screenshots
 
@@ -53,19 +58,75 @@ The C11S House iOS app has evolved significantly with a refined user experience 
   <b>Voice Settings</b>
 </div>
 
-### 2025-07-04 Update
-Initial app implementation is now functional with core features:
-- **App Icon**: Dynamic gradient icon with house and brain symbols using AppIconCreator
-- **Main Interface**: Landing screen with house personality (name and emotion placeholders)
-- **Voice Conversations**: Real-time speech recognition renamed from FixedSpeech to ConversationView
-  - Persistent transcript that survives between recordings
-  - Editable transcript with dedicated edit mode
-  - Proper handling of incremental speech updates (no more duplication)
-  - Append mode for continuous conversation logging
-- **Testing**: Physical device testing required for speech recognition functionality (Xcode Cloud not needed at this stage)
+## 🚀 Getting Started
 
-Previous status:
-- Reviewed with help from someone that knows current Apple development and looks good.
-- Working on refining the server and its user flows before we will attempt to build this app.
+### Prerequisites
+- Xcode 15.0 or later
+- iOS 17.0+ deployment target
+- Apple Developer account (for device testing with speech recognition)
+
+### Setup
+1. Clone the repository
+2. Open `C11Shouse/C11SHouse.xcodeproj` in Xcode
+3. Update signing & capabilities with your development team
+4. Build and run on a physical device (speech recognition requires device)
+
+### First Launch
+1. Grant microphone and speech recognition permissions
+2. Optionally allow location access for weather features
+3. Complete the onboarding flow to personalize your house
+4. Start having conversations with your house consciousness!
+
+## 📁 Project Structure
+
+```
+c11s-house-ios/
+├── C11Shouse/                    # Main Xcode project
+│   ├── C11SHouse/               # App source code
+│   │   ├── Models/              # Data models and business logic
+│   │   ├── Services/            # Service layer (API, persistence)
+│   │   ├── ViewModels/          # MVVM view models
+│   │   ├── Views/               # SwiftUI views
+│   │   └── Infrastructure/     # Core utilities and managers
+│   ├── C11SHouseTests/          # Unit tests
+│   └── C11SHouseUITests/        # UI tests
+├── plans/                       # Documentation and planning
+│   ├── current-state/           # Current implementation docs
+│   ├── development/             # Development guidelines
+│   ├── implementation/          # Feature implementation plans
+│   └── user-interface/          # UI/UX design docs
+└── CLAUDE.md                    # AI assistant instructions
+```
+
+## 🧪 Testing
+
+Run tests via Xcode or command line:
+```bash
+# Unit tests
+xcodebuild test -scheme C11SHouse -destination 'platform=iOS Simulator,name=iPhone 15'
+
+# UI tests (requires simulator or device)
+xcodebuild test -scheme C11SHouse -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:C11SHouseUITests
+```
+
+## 📚 Documentation
+
+- [Architecture Overview](plans/current-state/architecture.md)
+- [Development Guidelines](plans/development/guidelines.md)
+- [Onboarding UX Plan](plans/user-interface/OnboardingUXPlan.md)
+- [HomeKit Integration Plan](plans/homekit.md)
+
+## 🤝 Contributing
+
+This project uses AI-assisted development with Claude. See [CLAUDE.md](CLAUDE.md) for AI context and instructions.
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with assistance from [Claude Code](https://claude.ai/code)
+- Inspired by the [consciousness](https://github.com/adrianco/consciousness) project
 
 

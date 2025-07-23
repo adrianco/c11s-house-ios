@@ -25,20 +25,96 @@ import Combine
 
 // MARK: - Weather Service Errors
 
-enum WeatherError: LocalizedError {
+enum WeatherError: UserFriendlyError {
     case sandboxRestriction
     case invalidLocation
     case networkError(Error)
+    case weatherKitUnavailable
     
-    var errorDescription: String? {
+    var userFriendlyTitle: String {
         switch self {
         case .sandboxRestriction:
-            return "Weather service authorization failed. Check WeatherKit configuration in App ID."
+            return "Weather Service Configuration Error"
         case .invalidLocation:
-            return "Invalid location for weather data"
-        case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
+            return "Invalid Location"
+        case .networkError:
+            return "Network Error"
+        case .weatherKitUnavailable:
+            return "Weather Service Unavailable"
         }
+    }
+    
+    var userFriendlyMessage: String {
+        switch self {
+        case .sandboxRestriction:
+            return "The weather service is not properly configured. This is a development setup issue."
+        case .invalidLocation:
+            return "We couldn't get weather data for this location."
+        case .networkError:
+            return "Unable to connect to the weather service. Please check your internet connection."
+        case .weatherKitUnavailable:
+            return "The weather service is temporarily unavailable."
+        }
+    }
+    
+    var recoverySuggestions: [String] {
+        switch self {
+        case .sandboxRestriction:
+            return [
+                "Check WeatherKit is enabled in your App ID configuration",
+                "Verify the provisioning profile includes WeatherKit capability",
+                "Ensure proper entitlements are configured"
+            ]
+        case .invalidLocation:
+            return [
+                "Verify the location coordinates are valid",
+                "Try a different location",
+                "Check location permissions are granted"
+            ]
+        case .networkError:
+            return [
+                "Check your internet connection",
+                "Try again in a few moments",
+                "Toggle Airplane Mode on and off"
+            ]
+        case .weatherKitUnavailable:
+            return [
+                "Wait a few moments and try again",
+                "The service may be undergoing maintenance",
+                "Check Apple's system status page"
+            ]
+        }
+    }
+    
+    var severity: ErrorSeverity {
+        switch self {
+        case .sandboxRestriction:
+            return .critical
+        case .invalidLocation:
+            return .error
+        case .networkError:
+            return .warning
+        case .weatherKitUnavailable:
+            return .warning
+        }
+    }
+    
+    var errorCode: String? {
+        switch self {
+        case .sandboxRestriction:
+            return "WKT-001"
+        case .invalidLocation:
+            return "WKT-002"
+        case .networkError:
+            return "WKT-003"
+        case .weatherKitUnavailable:
+            return "WKT-004"
+        }
+    }
+    
+    // Keep LocalizedError conformance for compatibility
+    var errorDescription: String? {
+        return userFriendlyMessage
     }
 }
 
@@ -71,11 +147,15 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
         print("[WeatherKitService] ✅ Running on real device")
         #endif
         
-        // Log entitlements
+        // Log entitlements (suppress warning in test environment)
+        let isTestEnvironment = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         if let path = Bundle.main.path(forResource: "C11SHouse", ofType: "entitlements") {
             print("[WeatherKitService] Entitlements file found at: \(path)")
-        } else {
+        } else if !isTestEnvironment {
             print("[WeatherKitService] ⚠️ Entitlements file not found in bundle")
+        } else {
+            // In test environment, entitlements not being bundled is expected
+            print("[WeatherKitService] Running in test environment - entitlements not bundled")
         }
     }
     
@@ -146,6 +226,16 @@ class WeatherKitServiceImpl: WeatherServiceProtocol {
                 print("- Proper entitlements in the app")
                 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
                 throw WeatherError.sandboxRestriction
+            } else if let nsError = error as NSError? {
+                // Handle other common WeatherKit errors
+                switch nsError.code {
+                case NSURLErrorNotConnectedToInternet, NSURLErrorNetworkConnectionLost:
+                    throw WeatherError.networkError(error)
+                case NSURLErrorTimedOut:
+                    throw WeatherError.weatherKitUnavailable
+                default:
+                    throw WeatherError.networkError(error)
+                }
             } else {
                 // Re-throw other errors
                 throw error

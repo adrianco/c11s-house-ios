@@ -61,6 +61,7 @@ class ServiceContainer: ObservableObject {
         TranscriptionServiceImpl()
     }()
     
+    @MainActor
     private(set) lazy var permissionManager = PermissionManager.shared
     
     private(set) lazy var notesService: NotesService = {
@@ -117,7 +118,7 @@ class ServiceContainer: ObservableObject {
     /// Factory for creating ViewModels with proper dependency injection
     @MainActor
     private(set) lazy var viewModelFactory: ViewModelFactory = {
-        ViewModelFactory(serviceContainer: self)
+        ViewModelFactory(serviceContainer: self, appState: .shared)
     }()
     
     /// Update configuration

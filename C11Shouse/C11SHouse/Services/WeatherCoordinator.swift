@@ -193,6 +193,9 @@ class WeatherCoordinator: ObservableObject {
             case .networkError(let underlyingError):
                 errorType = "Network Error"
                 errorDetails = underlyingError.localizedDescription
+            case .weatherKitUnavailable:
+                errorType = "WeatherKit Unavailable"
+                errorDetails = "The weather service is temporarily unavailable. Please try again later."
             }
         } else if (error as NSError).domain.contains("weatherkit") {
             errorType = "WeatherKit Error"
@@ -220,7 +223,26 @@ class WeatherCoordinator: ObservableObject {
     }
     
     /// Ensure weather question exists in notes store
+    @MainActor
+    private var isCreatingWeatherQuestion = false
+    
     func ensureWeatherQuestionExists() async {
+        // Prevent concurrent creation attempts
+        guard !isCreatingWeatherQuestion else {
+            print("[WeatherCoordinator] Weather question creation already in progress")
+            return
+        }
+        
+        await MainActor.run {
+            isCreatingWeatherQuestion = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                isCreatingWeatherQuestion = false
+            }
+        }
+        
         do {
             let notesStore = try await notesService.loadNotesStore()
             

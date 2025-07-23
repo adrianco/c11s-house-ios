@@ -23,6 +23,13 @@ import SwiftUI
 struct C11SHouseApp: App {
     @StateObject private var serviceContainer = ServiceContainer.shared
     
+    init() {
+        #if DEBUG
+        // Clean up any test data that might have persisted from unit tests
+        cleanupTestData()
+        #endif
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -43,4 +50,33 @@ struct C11SHouseApp: App {
             await permissionManager.requestAllPermissions()
         }
     }
+    
+    #if DEBUG
+    private func cleanupTestData() {
+        // Check if we have test data persisted from unit tests
+        if let addressData = UserDefaults.standard.data(forKey: "confirmedHomeAddress"),
+           let address = try? JSONDecoder().decode(Address.self, from: addressData) {
+            // Check if this is test data
+            if address.street.contains("Test Street") || 
+               address.city.contains("Test City") ||
+               address.street.contains("Mock") ||
+               address.postalCode == "12345" ||
+               address.state == "TS" ||
+               address.state == "TC" ||
+               address.state == "MC" {
+                print("[C11SHouseApp] Removing test data from UserDefaults: \(address.fullAddress)")
+                UserDefaults.standard.removeObject(forKey: "confirmedHomeAddress")
+                UserDefaults.standard.removeObject(forKey: "detectedHomeAddress")
+            }
+        }
+        
+        // Also check house name for test data
+        if let houseName = UserDefaults.standard.string(forKey: "houseName") {
+            if houseName.contains("Test") || houseName.contains("Mock") {
+                print("[C11SHouseApp] Removing test house name: \(houseName)")
+                UserDefaults.standard.removeObject(forKey: "houseName")
+            }
+        }
+    }
+    #endif
 }
