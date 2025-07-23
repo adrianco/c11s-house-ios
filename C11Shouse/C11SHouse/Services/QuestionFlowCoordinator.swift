@@ -424,18 +424,21 @@ class QuestionFlowCoordinator: ObservableObject {
         // Check if we have any HomeKit configuration notes
         do {
             let store = try await notesService.loadNotesStore()
-            let homeKitNotes = store.customNotes.filter { note in
-                let category = note.category
-                return category == "homekit_summary" || 
-                       category == "homekit_room" || 
-                       category == "homekit_device"
+            let homeKitNotes = store.notes.values.filter { note in
+                if let metadata = note.metadata,
+                   let category = metadata["category"] {
+                    return category == "homekit_summary" || 
+                           category == "homekit_room" || 
+                           category == "homekit_device"
+                }
+                return false
             }
             
             if !homeKitNotes.isEmpty {
                 // Find the summary note
-                if let summaryNote = homeKitNotes.first(where: { $0.category == "homekit_summary" }) {
+                if let summaryNote = homeKitNotes.first(where: { $0.metadata?["category"] == "homekit_summary" }) {
                     // Parse the summary to get counts
-                    let content = summaryNote.content
+                    let content = summaryNote.answer
                     var homeCount = 0
                     var roomCount = 0
                     var deviceCount = 0
