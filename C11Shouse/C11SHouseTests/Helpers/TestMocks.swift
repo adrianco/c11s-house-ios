@@ -205,6 +205,13 @@ class SharedMockNotesService: NotesServiceProtocol {
             savedNotes[index] = note
         }
         mockNotesStore.notes[note.questionId] = note
+        
+        // Check if this is a house name question and update mockHouseName
+        if let question = mockNotesStore.questions.first(where: { $0.id == note.questionId && $0.text == "What should I call this house?" }) {
+            mockHouseName = note.answer
+            print("[MockNotesService] Updated mockHouseName to: \(note.answer)")
+        }
+        
         notesStoreSubject.send(mockNotesStore)
     }
     
