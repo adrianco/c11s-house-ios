@@ -35,9 +35,11 @@ struct OnboardingPermissionsView: View {
         VStack(spacing: 0) {
             // Header
             VStack(spacing: 16) {
-                Image(systemName: "shield.checkered")
-                    .font(.system(size: 60))
-                    .foregroundColor(.blue)
+                Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 80, height: 80)))
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(16)
+                    .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
                     .padding(.top, 40)
                 
                 Text("Quick Setup")
