@@ -196,7 +196,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         } else {
             // Debug output
             print("⚠️ testBackgroundTransitionWhileRecording: Could not find Start Conversation button")
-            let allButtons = app.buttons.allElementsBoundByIndex
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
             for i in 0..<min(allButtons.count, 10) {
                 let button = allButtons[i]
                 print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
@@ -233,7 +233,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         guard recordButton.waitForExistence(timeout: 2) else {
             print("Skipping background transition test - microphone button not available")
             // Debug output
-            let allButtons = app.buttons.allElementsBoundByIndex
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
             print("Available buttons:")
             for i in 0..<min(allButtons.count, 10) {
                 let button = allButtons[i]

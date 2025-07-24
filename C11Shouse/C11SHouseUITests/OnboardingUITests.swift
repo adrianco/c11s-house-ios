@@ -34,34 +34,28 @@ class OnboardingUITests: XCTestCase {
         app = nil
     }
     
-    // MARK: - Splash Screen Tests
+    // MARK: - Welcome Screen Tests (Animation moved here from splash)
     
-    func testSplashScreenAnimation() throws {
-        // Verify splash screen appears on launch
-        // Note: The splash screen animation happens very quickly
-        let brainIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'brain'")).firstMatch
-        let houseIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'house'")).firstMatch
+    func testWelcomeScreenWithAnimation() throws {
+        // The brain animation now happens in the welcome screen, not a separate splash
         
-        // The splash view uses SF Symbols which appear as static texts in UI tests
-        let brainSymbol = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'brain'")).firstMatch
-        let houseSymbol = app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'house'")).firstMatch
-        
-        // Check if either representation exists (icon or SF symbol)
-        let splashElementsExist = brainIcon.exists || houseIcon.exists || brainSymbol.exists || houseSymbol.exists
-        
-        if splashElementsExist {
-            // Splash screen is visible
-            XCTAssertTrue(splashElementsExist, "Splash screen elements should be visible")
+        // For new users, should see welcome screen
+        let welcomeTitle = app.staticTexts["Welcome to C11S House"]
+        if welcomeTitle.waitForExistence(timeout: 3) {
+            XCTAssertTrue(welcomeTitle.exists, "Welcome screen should be visible for new users")
             
-            // Wait for animation to complete (approximately 1.7 seconds based on SplashView timing)
-            Thread.sleep(forTimeInterval: 2.0)
+            // The brain animation happens automatically in OnboardingWelcomeView
+            // Just verify we can proceed
+            let beginSetupButton = app.buttons["Begin Setup"].firstMatch
+            XCTAssertTrue(beginSetupButton.waitForExistence(timeout: 2), "Begin Setup button should be visible")
+        } else {
+            // For existing users, should go directly to conversation screen
+            let conversationScreenVisible = app.buttons["Back"].exists || 
+                                          app.navigationBars["House Chat"].exists ||
+                                          app.textFields["Type a message"].exists
+            
+            XCTAssertTrue(conversationScreenVisible, "Existing users should see conversation screen")
         }
-        
-        // After splash, should transition to welcome or conversation screen
-        let welcomeScreenVisible = app.buttons["StartConversation"].exists || app.buttons["Start Conversation"].exists
-        let conversationScreenVisible = app.buttons["Back"].exists || app.navigationBars["House Chat"].exists
-        
-        XCTAssertTrue(welcomeScreenVisible || conversationScreenVisible, "Should transition from splash to main app")
     }
     
     // MARK: - Welcome Flow Tests
@@ -84,8 +78,8 @@ class OnboardingUITests: XCTestCase {
         }
         
         // Check if we have the Start Conversation button (main welcome indicator)
-        let startButton = app.buttons["StartConversation"]
-        let startButtonAlt = app.buttons["Start Conversation"]
+        let startButton = app.buttons["Begin Setup"]
+        let startButtonAlt = app.buttons["Begin Setup"]
         
         if startButton.exists || startButtonAlt.exists {
             // We're on the welcome screen
@@ -115,11 +109,11 @@ class OnboardingUITests: XCTestCase {
     
     func testStartConversationFlow() throws {
         // Tap Start Conversation button on welcome screen
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if startButton.waitForExistence(timeout: 1) {
             startButton.tap()
         } else {
-            let startButtonAlt = app.buttons["Start Conversation"]
+            let startButtonAlt = app.buttons["Begin Setup"]
             XCTAssertTrue(startButtonAlt.waitForExistence(timeout: 1))
             startButtonAlt.tap()
         }
@@ -163,9 +157,9 @@ class OnboardingUITests: XCTestCase {
     
     func testHomeKitPermissionCardPresence() throws {
         // Navigate to permissions screen
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if !startButton.waitForExistence(timeout: 3) {
-            let startButtonAlt = app.buttons["Start Conversation"]
+            let startButtonAlt = app.buttons["Begin Setup"]
             guard startButtonAlt.waitForExistence(timeout: 1) else {
                 XCTFail("Start Conversation button not found")
                 return
@@ -190,9 +184,9 @@ class OnboardingUITests: XCTestCase {
             let houseIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'house'")).firstMatch
             XCTAssertTrue(houseIcon.exists || app.staticTexts["house.fill"].exists, "House icon should be visible for HomeKit")
             
-            // Verify it's marked as optional (not required)
-            let optionalLabel = app.staticTexts["Optional"].allElementsBoundByIndex
-            XCTAssertTrue(optionalLabel.count >= 2, "HomeKit should be marked as optional along with Location")
+            // Verify it's not marked as required (which means it's optional)
+            let requiredLabels = app.staticTexts.matching(identifier: "Required")
+            XCTAssertEqual(requiredLabels.count, 2, "Only Microphone and Speech Recognition should be marked as Required")
         }
     }
     
@@ -235,7 +229,7 @@ class OnboardingUITests: XCTestCase {
         }
         
         // Verify HomeKit permission is marked as granted
-        let homeKitGrantedIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'checkmark'")).allElementsBoundByIndex
+        let homeKitGrantedIcon = app.images.matching(NSPredicate(format: "label CONTAINS 'checkmark'")).allElementsBoundByAccessibilityElement
         XCTAssertTrue(homeKitGrantedIcon.count >= 3, "HomeKit should show granted status along with other permissions")
     }
     
@@ -362,16 +356,16 @@ class OnboardingUITests: XCTestCase {
     
     func testPermissionHandlingInConversation() throws {
         // Navigate to conversation view where permissions are requested
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if !startButton.waitForExistence(timeout: 3) {
             // Fallback to label-based search
-            let startButtonByLabel = app.buttons["Start Conversation"]
+            let startButtonByLabel = app.buttons["Begin Setup"]
             if startButtonByLabel.waitForExistence(timeout: 2) {
                 startButtonByLabel.tap()
             } else {
                 // Debug output
                 print("⚠️ OnboardingUITests: Could not find Start Conversation button")
-                let allButtons = app.buttons.allElementsBoundByIndex
+                let allButtons = app.buttons.allElementsBoundByAccessibilityElement
                 for i in 0..<min(allButtons.count, 10) {
                     let button = allButtons[i]
                     print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
@@ -401,9 +395,9 @@ class OnboardingUITests: XCTestCase {
     
     func testPermissionGrantFlow() throws {
         // Navigate to conversation which triggers permissions
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if !startButton.waitForExistence(timeout: 3) {
-            let startButtonAlt = app.buttons["Start Conversation"]
+            let startButtonAlt = app.buttons["Begin Setup"]
             guard startButtonAlt.waitForExistence(timeout: 1) else {
                 XCTFail("Start Conversation button not found")
                 return
@@ -464,9 +458,9 @@ class OnboardingUITests: XCTestCase {
     
     func testPermissionDenialRecovery() throws {
         // Navigate to conversation which triggers permissions
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if !startButton.waitForExistence(timeout: 3) {
-            let startButtonAlt = app.buttons["Start Conversation"]
+            let startButtonAlt = app.buttons["Begin Setup"]
             guard startButtonAlt.waitForExistence(timeout: 1) else {
                 XCTFail("Start Conversation button not found")
                 return
@@ -723,7 +717,7 @@ class OnboardingUITests: XCTestCase {
         XCTAssertTrue(firstElement.exists)
         
         // Verify all interactive elements have accessibility labels
-        let buttons = app.buttons.allElementsBoundByIndex
+        let buttons = app.buttons.allElementsBoundByAccessibilityElement
         for i in 0..<min(buttons.count, 10) { // Check first 10 buttons to avoid timeout
             let button = buttons[i]
             if button.exists && button.isHittable {
@@ -754,7 +748,7 @@ class OnboardingUITests: XCTestCase {
             // Verify we reached conversation view
             let conversationActive = app.staticTexts["House Chat"].exists ||
                                     app.buttons["Back"].exists ||
-                                    app.buttons["StartConversation"].exists
+                                    app.buttons["Begin Setup"].exists
             
             XCTAssertTrue(conversationActive, "Should reach conversation area")
         }
@@ -764,11 +758,11 @@ class OnboardingUITests: XCTestCase {
     
     private func navigateToPermissions() {
         // Navigate to permissions screen
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if startButton.waitForExistence(timeout: 1) {
             startButton.tap()
         } else {
-            let startButtonAlt = app.buttons["Start Conversation"]
+            let startButtonAlt = app.buttons["Begin Setup"]
             if startButtonAlt.waitForExistence(timeout: 1) {
                 startButtonAlt.tap()
             }
@@ -812,7 +806,7 @@ class OnboardingUITests: XCTestCase {
     
     private func navigateToConversation() {
         // Try accessibility identifier first
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if startButton.waitForExistence(timeout: 1) {
             startButton.tap()
         } else {
@@ -870,11 +864,11 @@ class OnboardingUITests: XCTestCase {
     
     private func completeOnboardingFlow() {
         // Tap Start Conversation
-        let startButton = app.buttons["StartConversation"]
+        let startButton = app.buttons["Begin Setup"]
         if startButton.waitForExistence(timeout: 1) {
             startButton.tap()
         } else {
-            let startButtonAlt = app.buttons["Start Conversation"]
+            let startButtonAlt = app.buttons["Begin Setup"]
             if startButtonAlt.waitForExistence(timeout: 1) {
                 startButtonAlt.tap()
             }
@@ -1001,8 +995,8 @@ struct WelcomeScreenElements {
     var emotionLabel: XCUIElement { app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Feeling'")).firstMatch }
     var startButton: XCUIElement { 
         // Try accessibility identifier first, then fallback to text
-        let identifierButton = app.buttons["StartConversation"]
-        return identifierButton.exists ? identifierButton : app.buttons["Start Conversation"]
+        let identifierButton = app.buttons["Begin Setup"]
+        return identifierButton.exists ? identifierButton : app.buttons["Begin Setup"]
     }
     var notesButton: XCUIElement { app.buttons["Manage Notes"] }
 }
