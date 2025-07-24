@@ -51,7 +51,7 @@ import HomeKit
 
 /// Manages permissions for microphone and speech recognition
 @MainActor
-public final class PermissionManager: ObservableObject {
+public final class PermissionManager: NSObject, ObservableObject {
     
     // MARK: - Published Properties
     
@@ -85,7 +85,8 @@ public final class PermissionManager: ObservableObject {
     
     // MARK: - Initialization
     
-    private init() {
+    private override init() {
+        super.init()
         setupObservers()
         checkCurrentPermissions()
         // Set HomeKit delegate
