@@ -177,6 +177,11 @@ class ConversationRecognizer: ObservableObject {
     // MARK: - Initialization
     init() {
         setupSpeechRecognizer()
+        // Don't check authorization in init - wait for explicit request
+    }
+    
+    /// Initialize speech recognizer and request permissions if needed
+    func initializeSpeechRecognizer() {
         checkAuthorization()
     }
     

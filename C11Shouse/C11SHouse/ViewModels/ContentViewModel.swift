@@ -81,14 +81,9 @@ class ContentViewModel: ObservableObject {
         self.notesService = notesService
         self.addressManager = addressManager
         
-        // Only setup bindings if onboarding is complete
-        if UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
-            setupBindings()
-            loadSavedData()
-        } else {
-            // Minimal setup for onboarding - don't subscribe to services
-            setupMinimalBindings()
-        }
+        // Always setup bindings and load saved data
+        setupBindings()
+        loadSavedData()
         
         // Log initial state
         print("[ContentViewModel] Init complete - currentWeather: \(currentWeather != nil ? "exists" : "nil")")
@@ -246,17 +241,7 @@ class ContentViewModel: ObservableObject {
         }
     }
     
-    func completeSetupAfterOnboarding() {
-        // If we haven't already setup full bindings, do it now
-        if cancellables.isEmpty {
-            setupBindings()
-            loadSavedData()
-        }
-    }
     
-    func requestLocationPermission() async {
-        await locationService.requestLocationPermission()
-    }
     
     func loadAddressAndWeather() async {
         // Check if required questions are answered

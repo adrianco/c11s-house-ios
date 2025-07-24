@@ -37,38 +37,27 @@ struct C11SHouseApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(serviceContainer)
-                .withOnboarding(serviceContainer: serviceContainer)
                 .task {
-                    // Request permissions through onboarding flow
-                    // The onboarding coordinator will handle permission requests
-                    
-                    // For existing users who already completed onboarding but just granted HomeKit
+                    // For existing users who already have HomeKit permission
                     await checkForHomeKitDiscovery()
                 }
         }
     }
     
-    private func requestPermissionsIfNeeded() async {
-        let permissionManager = serviceContainer.permissionManager
-        
-        // Request permissions if not all granted
-        if !permissionManager.allPermissionsGranted {
-            await permissionManager.requestAllPermissions()
-        }
-    }
     
     @MainActor
     private func checkForHomeKitDiscovery() async {
         // Wait a bit for app to fully initialize
         try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
         
-        // Check if user has completed onboarding and has HomeKit permission
-        let hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+        // Check if user has HomeKit permission but hasn't run discovery
         let hasRunHomeKitDiscovery = UserDefaults.standard.bool(forKey: "hasRunHomeKitDiscovery")
         
-        if hasCompletedOnboarding && !hasRunHomeKitDiscovery {
+        if !hasRunHomeKitDiscovery {
             // Check if HomeKit permission is granted
             let permissionManager = serviceContainer.permissionManager
+            permissionManager.checkCurrentPermissions()
+            
             if permissionManager.isHomeKitGranted {
                 print("[C11SHouseApp] User has HomeKit permission but discovery hasn't run. Running now...")
                 

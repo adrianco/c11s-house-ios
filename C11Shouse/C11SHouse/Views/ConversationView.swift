@@ -35,11 +35,16 @@ struct ConversationView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var inputText = ""
-    @State private var isMuted = false
+    @State private var isMuted = true // Start muted by default
     @State private var scrollToBottom = false
     @State private var pendingVoiceText = ""
     @State private var showVoiceConfirmation = false
     @FocusState private var isTextFieldFocused: Bool
+    
+    private var hasVoicePermissions: Bool {
+        serviceContainer.permissionManager.isMicrophoneGranted &&
+        serviceContainer.permissionManager.isSpeechRecognitionGranted
+    }
     
     init() {
         let conversationStateManager = ViewModelFactory.shared.makeConversationStateManager()
@@ -102,11 +107,17 @@ struct ConversationView: View {
                 
                 // Mute/Unmute button
                 Button(action: {
-                    isMuted.toggle()
-                    if isMuted && recognizer.isRecording {
-                        recognizer.stopRecording()
-                    }
                     if isMuted {
+                        // Try to unmute - this will trigger permission requests if needed
+                        Task {
+                            await tryToUnmute()
+                        }
+                    } else {
+                        // Mute
+                        isMuted = true
+                        if recognizer.isRecording {
+                            recognizer.stopRecording()
+                        }
                         stateManager.stopSpeaking()
                     }
                 }) {
@@ -149,10 +160,12 @@ struct ConversationView: View {
         .accessibilityIdentifier("ConversationView")
         .onAppear {
             print("[ConversationView] onAppear called")
-            print("[ConversationView] hasCompletedPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial"))")
-            print("[ConversationView] isInPhase4Tutorial: \(UserDefaults.standard.bool(forKey: "isInPhase4Tutorial"))")
             Task {
                 await viewModel.setupView()
+                // Check if we have voice permissions to enable voice
+                if hasVoicePermissions {
+                    isMuted = false
+                }
                 // Scroll to bottom after initial setup
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     scrollToBottom = true
@@ -362,6 +375,38 @@ struct ConversationView: View {
         Task {
             await viewModel.processUserInput(address, isMuted: isMuted)
             scrollToBottom = true
+        }
+    }
+    
+    private func tryToUnmute() async {
+        // First check if we already have permissions
+        if hasVoicePermissions {
+            isMuted = false
+            return
+        }
+        
+        // Initialize speech recognizer - this will trigger speech recognition permission if needed
+        recognizer.initializeSpeechRecognizer()
+        
+        // Try to start recording briefly - this will trigger microphone permission if needed
+        do {
+            try recognizer.startRecording()
+            // Immediately stop since we're just triggering permissions
+            recognizer.stopRecording()
+        } catch {
+            // Expected if permissions are denied
+            print("[ConversationView] Permission check failed: \(error)")
+        }
+        
+        // Give iOS time to show permission dialogs
+        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+        
+        // Check permissions again after potential user response
+        serviceContainer.permissionManager.checkCurrentPermissions()
+        
+        // If permissions were granted, unmute
+        if hasVoicePermissions {
+            isMuted = false
         }
     }
 }

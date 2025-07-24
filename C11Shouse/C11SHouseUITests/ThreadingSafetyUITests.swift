@@ -38,8 +38,7 @@ final class ThreadingSafetyUITests: XCTestCase {
         app.launchArguments = [
             "-com.apple.CoreData.ConcurrencyDebug", "1",
             "-com.apple.CoreData.ThreadingDebug", "1",
-            "UI_TESTING",
-            "--skip-onboarding"
+            "UI_TESTING"
         ]
         
         app.launch()

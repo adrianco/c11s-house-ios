@@ -88,12 +88,7 @@ class ConversationViewModel: ObservableObject {
         
         // Check if all questions are complete and start Phase 4 tutorial
         print("[ConversationViewModel] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-        if questionFlow.hasCompletedAllQuestions {
-            print("[ConversationViewModel] All questions complete, starting Phase 4 tutorial")
-            await startPhase4Tutorial()
-        } else {
-            print("[ConversationViewModel] Questions still pending, current: \(questionFlow.currentQuestion?.text ?? "none")")
-        }
+        print("[ConversationViewModel] Questions status - hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions), current: \(questionFlow.currentQuestion?.text ?? "none")")
     }
     
     func processUserInput(_ input: String, isMuted: Bool) async {
@@ -143,16 +138,8 @@ class ConversationViewModel: ObservableObject {
                 
                 // Check if all questions are complete
                 print("[ConversationViewModel] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-                if questionFlow.hasCompletedAllQuestions {
-                    print("[ConversationViewModel] All questions complete after answer, starting Phase 4")
-                    await startPhase4Tutorial()
-                }
             }
         } else {
-            // Check if we're in Phase 4 tutorial
-            if UserDefaults.standard.bool(forKey: "isInPhase4Tutorial") {
-                await handlePhase4TutorialInput(input, isMuted: isMuted)
-            } else {
                 // Check if we're in the middle of creating a note
                 let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
                 if noteCreationState == "creatingRoomNote" {
@@ -201,11 +188,6 @@ class ConversationViewModel: ObservableObject {
     }
     
     private func handleRoomNoteCreation(isMuted: Bool) async {
-        // Check if Phase 4 tutorial should have run but didn't
-        if questionFlow.hasCompletedAllQuestions && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-            // Start Phase 4 tutorial instead
-            await startPhase4Tutorial()
-        } else {
             let thought = HouseThought(
                 thought: "I'll help you create a room note. What room would you like to add a note about?",
                 emotion: .curious,
@@ -423,50 +405,24 @@ class ConversationViewModel: ObservableObject {
             UserDefaults.standard.removeObject(forKey: "currentRoomName")
             UserDefaults.standard.removeObject(forKey: "pendingRoomName")
             
-            // Mark Phase 4 as complete if this was the first room note
-            if !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
-                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-                
-                let successMessage = "Perfect! I've saved that information about the \(roomName). 🎉 Setup complete! You can now create more notes or ask me questions about your house."
-                
-                let thought = HouseThought(
-                    thought: successMessage,
-                    emotion: .happy,
-                    category: .celebration,
-                    confidence: 1.0
-                )
-                
-                let message = Message(
-                    content: successMessage,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
-            } else {
-                let successMessage = "Perfect! I've saved that about the \(roomName)."
-                
-                let thought = HouseThought(
-                    thought: successMessage,
-                    emotion: .happy,
-                    category: .celebration,
-                    confidence: 1.0
-                )
-                
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
+            let successMessage = "Perfect! I've saved that information about the \(roomName). You can create more notes or ask me questions about your house anytime."
+            
+            let thought = HouseThought(
+                thought: successMessage,
+                emotion: .happy,
+                category: .celebration,
+                confidence: 1.0
+            )
+            
+            let message = Message(
+                content: successMessage,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                await stateManager.speak(thought.thought, isMuted: isMuted)
             }
             
         } catch {

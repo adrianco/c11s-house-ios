@@ -34,7 +34,7 @@ class ConversationViewUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["UI_TESTING", "--skip-onboarding"]
+        app.launchArguments = ["UI_TESTING"]
         if Self.verboseLogging {
             print("🧪 ConversationViewUITests: Starting test setup")
             print("🧪 ConversationViewUITests: Launching app with arguments: \(app.launchArguments)")

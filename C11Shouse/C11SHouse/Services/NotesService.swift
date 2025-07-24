@@ -333,17 +333,6 @@ class NotesServiceImpl: NotesServiceProtocol {
                 return false
             }
             
-            // Only add Phase 4 question if basics are complete and user hasn't completed phase 4
-            if hasCompletedBasics && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-                let phase4Question = Question(
-                    text: phase4Text,
-                    category: .houseInfo,
-                    displayOrder: 3,
-                    isRequired: true,
-                    hint: "Tell me about a room in your house (e.g., 'living room', 'kitchen', 'bedroom')"
-                )
-                migratedQuestions.append(phase4Question)
-            }
         }
         
         return NotesStoreData(
