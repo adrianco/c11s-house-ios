@@ -208,7 +208,6 @@ class ConversationViewModel: ObservableObject {
             
             // Mark that we're creating a room note
             UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
-        }
     }
     
     private func handleDeviceNoteCreation(isMuted: Bool) async {
