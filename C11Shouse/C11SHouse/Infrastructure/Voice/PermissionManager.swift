@@ -81,19 +81,25 @@ public final class PermissionManager: NSObject, ObservableObject {
     // MARK: - Private Properties
     
     private var cancellables = Set<AnyCancellable>()
-    private let homeManager = HMHomeManager()
+    private var _homeManager: HMHomeManager?
+    
+    // Lazy initialization to prevent permission dialog at startup
+    private var homeManager: HMHomeManager {
+        if _homeManager == nil {
+            print("[PermissionManager] Initializing HMHomeManager for first time")
+            _homeManager = HMHomeManager()
+            _homeManager?.delegate = self
+        }
+        return _homeManager!
+    }
     
     // MARK: - Initialization
     
     private override init() {
         super.init()
         setupObservers()
-        checkCurrentPermissions()
-        // Set HomeKit delegate
-        homeManager.delegate = self
-        
-        // Log initial HomeKit status
-        print("[PermissionManager] Initial HomeKit status: \(homeManager.authorizationStatus.rawValue)")
+        // Don't check HomeKit permissions here - it will trigger the dialog
+        checkCurrentPermissionsExceptHomeKit()
     }
     
     // MARK: - Public Methods
@@ -183,13 +189,39 @@ public final class PermissionManager: NSObject, ObservableObject {
         // We just need to check the current status
         homeKitPermissionStatus = homeManager.authorizationStatus
         
-        // If it's determined (not asked yet), accessing homes will trigger the permission dialog
-        if homeManager.authorizationStatus == .determined {
+        // If permission dialog was already shown at startup, the status might be 5
+        // Try to refresh by accessing homes again
+        if homeManager.authorizationStatus.rawValue == 5 {
+            print("[PermissionManager] Status is 5, trying to refresh by accessing homes")
+            // Access homes to potentially refresh status
+            _ = homeManager.homes
+            
+            // Poll for status changes with longer timeout
+            for i in 0..<20 { // 10 seconds total
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                
+                let currentStatus = homeManager.authorizationStatus
+                print("[PermissionManager] HomeKit poll \(i+1): status=\(currentStatus.rawValue)")
+                
+                homeKitPermissionStatus = currentStatus
+                
+                // Force refresh UI
+                await MainActor.run {
+                    objectWillChange.send()
+                }
+                
+                // If status changed to authorized (2), we're done
+                if currentStatus.rawValue == 2 {
+                    print("[PermissionManager] HomeKit authorized!")
+                    break
+                }
+            }
+        } else if homeManager.authorizationStatus == .determined {
             print("[PermissionManager] Status is .determined, accessing homes to trigger permission dialog")
             // Access homes to trigger permission dialog
             _ = homeManager.homes
             
-            // Poll for status changes with longer timeout
+            // Poll for status changes
             for i in 0..<20 { // 10 seconds total
                 try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
                 
@@ -257,13 +289,24 @@ public final class PermissionManager: NSObject, ObservableObject {
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         locationPermissionStatus = CLLocationManager().authorizationStatus
         
-        let oldHomeKitStatus = homeKitPermissionStatus
-        homeKitPermissionStatus = homeManager.authorizationStatus
-        
-        if oldHomeKitStatus != homeKitPermissionStatus {
-            print("[PermissionManager] checkCurrentPermissions: HomeKit status changed from \(oldHomeKitStatus.rawValue) to \(homeKitPermissionStatus.rawValue)")
+        // Only check HomeKit if already initialized
+        if _homeManager != nil {
+            let oldHomeKitStatus = homeKitPermissionStatus
+            homeKitPermissionStatus = homeManager.authorizationStatus
+            
+            if oldHomeKitStatus != homeKitPermissionStatus {
+                print("[PermissionManager] checkCurrentPermissions: HomeKit status changed from \(oldHomeKitStatus.rawValue) to \(homeKitPermissionStatus.rawValue)")
+            }
         }
         
+        updateAllPermissionsStatus()
+    }
+    
+    private func checkCurrentPermissionsExceptHomeKit() {
+        microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
+        speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
+        locationPermissionStatus = CLLocationManager().authorizationStatus
+        // Don't check HomeKit here
         updateAllPermissionsStatus()
     }
     
@@ -306,14 +349,21 @@ extension PermissionManager {
     }
     
     public var isHomeKitGranted: Bool {
+        // Don't check if homeManager isn't initialized yet
+        guard _homeManager != nil else {
+            print("[PermissionManager] isHomeKitGranted check: HomeManager not initialized, returning false")
+            return false
+        }
+        
         // Check the raw value to understand what the actual status is
         let rawValue = homeKitPermissionStatus.rawValue
         
         // HMHomeManagerAuthorizationStatus raw values (from iOS logs):
-        // 0 = determined (not asked yet)
+        // 0 = determined (initial state, changes to 5 when delegate is set)
         // 1 = restricted 
         // 2 = authorized
-        // 5 = not determined (need to ask) - seen in logs
+        // 5 = not determined (need to ask for permission) - seen in logs
+        // The status changes from 0 to 5 when HMHomeManager delegate is set
         let granted = rawValue == 2 // authorized
         
         print("[PermissionManager] isHomeKitGranted check: rawValue=\(rawValue), granted=\(granted)")
