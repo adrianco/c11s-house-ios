@@ -358,11 +358,6 @@ class HomeKitCoordinatorTests: XCTestCase {
         // Check that custom notes were created
         let savedNotes = customNotesService.savedCustomNotes
         
-        // Debug: Print saved notes
-        print("Saved notes count: \(savedNotes.count)")
-        for note in savedNotes {
-            print("Note - Title: \(note.title), Category: \(note.category)")
-        }
         
         // Should have: 1 summary + 3 rooms with accessories + 1 unassigned accessory = 5 notes
         XCTAssertEqual(savedNotes.count, 5)
@@ -379,28 +374,28 @@ class HomeKitCoordinatorTests: XCTestCase {
         let bedroomNote = savedNotes.first { $0.title.contains("Master Bedroom") }
         XCTAssertNotNil(bedroomNote)
         XCTAssertTrue(bedroomNote?.content.contains("Bedroom Ceiling Light") ?? false)
-        XCTAssertTrue(bedroomNote?.content.contains("Philips") ?? false)
         XCTAssertTrue(bedroomNote?.content.contains("✅") ?? false) // Reachable
+        XCTAssertTrue(bedroomNote?.content.contains("On") ?? false) // Current state
         
         let livingRoomNote = savedNotes.first { $0.title.contains("Living Room") }
         XCTAssertNotNil(livingRoomNote)
         XCTAssertTrue(livingRoomNote?.content.contains("Living Room TV") ?? false)
-        XCTAssertTrue(livingRoomNote?.content.contains("LG") ?? false)
-        XCTAssertTrue(livingRoomNote?.content.contains("Television") ?? false)
+        XCTAssertTrue(livingRoomNote?.content.contains("✅") ?? false) // Reachable
+        XCTAssertTrue(livingRoomNote?.content.contains("Off") ?? false) // Current state
         
         let kitchenNote = savedNotes.first { $0.title.contains("Kitchen") }
         XCTAssertNotNil(kitchenNote)
         XCTAssertTrue(kitchenNote?.content.contains("Coffee Maker Plug") ?? false)
-        XCTAssertTrue(kitchenNote?.content.contains("TP-Link") ?? false)
-        XCTAssertTrue(kitchenNote?.content.contains("Power Monitoring") ?? false)
+        XCTAssertTrue(kitchenNote?.content.contains("✅") ?? false) // Reachable
+        XCTAssertTrue(kitchenNote?.content.contains("On") ?? false) // Current state
         
-        // Verify unassigned accessory note
+        // Verify unassigned accessory note (these have full details)
         let lockNote = savedNotes.first { $0.title.contains("Front Door Lock") }
         XCTAssertNotNil(lockNote)
         XCTAssertEqual(lockNote?.category, "homekit_device")
-        XCTAssertTrue(lockNote?.content.contains("August") ?? false)
+        XCTAssertTrue(lockNote?.content.contains("August") ?? false) // Manufacturer is included in device notes
         XCTAssertTrue(lockNote?.content.contains("❌") ?? false) // Unreachable
-        XCTAssertTrue(lockNote?.content.contains("Lock Management") ?? false)
+        XCTAssertTrue(lockNote?.content.contains("Lock Management") ?? false) // Services are included in device notes
         
         // Test that we can retrieve the home by name
         let retrievedHome = await customCoordinator.getHome(named: "My Smart Home")

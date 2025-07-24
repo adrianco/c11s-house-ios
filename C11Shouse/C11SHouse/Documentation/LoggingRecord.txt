@@ -11,76 +11,42 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[ContentViewModel] Weather update received: nil
 [HomeKitService] Initialized with delegate set, initial status: 5
 [C11SHouseApp] Services initialized
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 SWIFT TASK CONTINUATION MISUSE: discoverHomes() leaked its continuation without resuming it. This may cause tasks waiting on it to remain suspended forever.
+[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
 [WeatherCoordinator] Weather question already exists
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
-Test Suite 'Selected tests' started at 2025-07-24 11:27:05.097.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 11:27:05.097.
-Test Suite 'HomeKitCoordinatorTests' started at 2025-07-24 11:27:05.097.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testAuthorizationStatusUpdates]' started.
-[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
 [HomeKitService] Saving HomeKit configuration as notes...
 [HomeKitService] Found 1 homes
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testAuthorizationStatusUpdates]' passed (0.016 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryError]' started.
-[HomeKitService] Saved summary note
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryError]' passed (0.001 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithNoHomes]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithNoHomes]' passed (0.001 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithoutAuthorization]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithoutAuthorization]' passed (0.001 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testGetHomeByName]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testGetHomeByName]' passed (0.002 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testHasHomeKitConfiguration]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testHasHomeKitConfiguration]' passed (0.001 seconds).
+Test Suite 'Selected tests' started at 2025-07-24 11:31:43.492.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 11:31:43.493.
+Test Suite 'HomeKitCoordinatorTests' started at 2025-07-24 11:31:43.493.
 Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:358: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertEqual failed: ("0") is not equal to ("5")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:362: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:363: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:364: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:365: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:366: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:370: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:371: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:372: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:373: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:376: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:377: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:378: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:379: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:382: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:383: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:384: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:385: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:389: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:390: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("homekit_device")")
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:391: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:392: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:393: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' failed (0.145 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testRefreshConfiguration]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testRefreshConfiguration]' passed (0.001 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReset]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReset]' passed (0.001 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testStatusProgression]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testStatusProgression]' passed (0.001 seconds).
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testSuccessfulDiscoveryAndSave]' started.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testSuccessfulDiscoveryAndSave]' passed (0.001 seconds).
-Test Suite 'HomeKitCoordinatorTests' failed at 2025-07-24 11:27:05.268.
-	 Executed 11 tests, with 23 failures (0 unexpected) in 0.170 (0.171) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 11:27:05.268.
-	 Executed 11 tests, with 23 failures (0 unexpected) in 0.170 (0.171) seconds
-Test Suite 'Selected tests' failed at 2025-07-24 11:27:05.268.
-	 Executed 11 tests, with 23 failures (0 unexpected) in 0.170 (0.172) seconds
-[HomeKitService] Saved 12 room notes and 0 unassigned accessory notes
-[C11SHouseApp] HomeKit discovery completed
+[HomeKitService] Saved summary note
+Saved notes count: 5
+Note - Title: HomeKit Configuration Summary, Category: homekit_summary
+Note - Title: Room: Master Bedroom (My Smart Home), Category: homekit_room
+Note - Title: Room: Living Room (My Smart Home), Category: homekit_room
+Note - Title: Room: Kitchen (My Smart Home), Category: homekit_room
+Note - Title: Device: Front Door Lock (My Smart Home), Category: homekit_device
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:382: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:388: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:389: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:394: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:395: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' failed (0.153 seconds).
+Test Suite 'HomeKitCoordinatorTests' failed at 2025-07-24 11:31:43.646.
+	 Executed 1 test, with 5 failures (0 unexpected) in 0.153 (0.153) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 11:31:43.646.
+	 Executed 1 test, with 5 failures (0 unexpected) in 0.153 (0.154) seconds
+Test Suite 'Selected tests' failed at 2025-07-24 11:31:43.646.
+	 Executed 1 test, with 5 failures (0 unexpected) in 0.153 (0.154) seconds
