@@ -308,6 +308,17 @@ class SharedMockNotesService: NotesServiceProtocol {
     }
 }
 
+// MARK: - Mock HomeKit Notes Service
+
+class MockHomeKitNotesService: SharedMockNotesService {
+    var savedCustomNotes: [(title: String, content: String, category: String)] = []
+    
+    override func saveCustomNote(title: String, content: String, category: String) async {
+        savedCustomNotes.append((title: title, content: content, category: category))
+        await super.saveCustomNote(title: title, content: content, category: category)
+    }
+}
+
 // MARK: - Weather Service Mocks
 
 class MockWeatherKitService: WeatherServiceProtocol {

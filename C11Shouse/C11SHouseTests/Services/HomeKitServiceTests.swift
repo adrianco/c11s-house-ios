@@ -32,11 +32,11 @@ import Combine
 
 class HomeKitServiceTests: XCTestCase {
     
-    var mockNotesService: MockNotesService!
+    var mockNotesService: MockHomeKitNotesService!
     
     override func setUp() {
         super.setUp()
-        mockNotesService = MockNotesService()
+        mockNotesService = MockHomeKitNotesService()
     }
     
     override func tearDown() {
@@ -225,87 +225,179 @@ class HomeKitServiceTests: XCTestCase {
         XCTAssertTrue(fullSummary.contains("No HomeKit homes configured yet"))
         XCTAssertTrue(fullSummary.contains("Add homes and accessories in the Home app"))
     }
-}
-
-// MARK: - Mock NotesService
-
-class MockNotesService: NotesServiceProtocol {
-    var savedNotes: [(title: String, content: String, category: String)] = []
     
-    var notesStorePublisher: AnyPublisher<NotesStoreData, Never> {
-        Just(NotesStoreData(
-            questions: [],
-            notes: [:],
-            version: 1
-        )).eraseToAnyPublisher()
+    // MARK: - Integration Tests
+    
+    func testSaveHomeKitConfigurationAsNotes() async throws {
+        // Given: A mock HomeKit service with discovered homes
+        let mockHomeKitService = MockHomeKitService()
+        let mockNotesService = MockHomeKitNotesService()
+        
+        // Create test HomeKit data
+        let room1 = HomeKitRoom(id: UUID(), name: "Living Room")
+        let room2 = HomeKitRoom(id: UUID(), name: "Kitchen")
+        let room3 = HomeKitRoom(id: UUID(), name: "Bedroom")
+        
+        let accessory1 = HomeKitAccessory(
+            id: UUID(),
+            name: "Living Room Light",
+            roomId: room1.id,
+            category: "Lights",
+            manufacturer: "Philips",
+            model: "Hue",
+            isReachable: true,
+            isBridged: true,
+            currentState: "On",
+            services: ["Lightbulb"]
+        )
+        
+        let accessory2 = HomeKitAccessory(
+            id: UUID(),
+            name: "Kitchen Outlet",
+            roomId: room2.id,
+            category: "Outlets",
+            manufacturer: "Eve",
+            model: "Energy",
+            isReachable: true,
+            isBridged: false,
+            currentState: "Off",
+            services: ["Outlet"]
+        )
+        
+        let accessory3 = HomeKitAccessory(
+            id: UUID(),
+            name: "Front Door Lock",
+            roomId: nil, // Unassigned accessory
+            category: "Locks",
+            manufacturer: "August",
+            model: "Smart Lock",
+            isReachable: false,
+            isBridged: false,
+            currentState: "Locked",
+            services: ["Lock Management"]
+        )
+        
+        let home = HomeKitHome(
+            id: UUID(),
+            name: "Test Home",
+            isPrimary: true,
+            rooms: [room1, room2, room3],
+            accessories: [accessory1, accessory2, accessory3],
+            createdAt: Date()
+        )
+        
+        let discoverySummary = HomeKitDiscoverySummary(
+            homes: [home],
+            discoveredAt: Date()
+        )
+        
+        mockHomeKitService.mockDiscoverySummary = discoverySummary
+        
+        // Create the service
+        let homeKitService = HomeKitService(notesService: mockNotesService)
+        
+        // When: Save configuration as notes
+        try await homeKitService.saveConfigurationAsNotes(summary: discoverySummary)
+        
+        // Then: Verify notes were saved correctly
+        XCTAssertEqual(mockNotesService.savedCustomNotes.count, 4) // 1 summary + 2 rooms with accessories + 1 unassigned accessory
+        
+        // Check summary note
+        let summaryNote = mockNotesService.savedCustomNotes.first { $0.category == "homekit_summary" }
+        XCTAssertNotNil(summaryNote)
+        XCTAssertEqual(summaryNote?.title, "HomeKit Configuration Summary")
+        XCTAssertTrue(summaryNote?.content.contains("Test Home") ?? false)
+        XCTAssertTrue(summaryNote?.content.contains("Total Rooms: 3") ?? false)
+        XCTAssertTrue(summaryNote?.content.contains("Total Accessories: 3") ?? false)
+        
+        // Check room notes
+        let livingRoomNote = mockNotesService.savedCustomNotes.first { $0.title.contains("Living Room") }
+        XCTAssertNotNil(livingRoomNote)
+        XCTAssertEqual(livingRoomNote?.category, "homekit_room")
+        XCTAssertTrue(livingRoomNote?.content.contains("Living Room Light") ?? false)
+        XCTAssertTrue(livingRoomNote?.content.contains("Philips") ?? false)
+        
+        let kitchenNote = mockNotesService.savedCustomNotes.first { $0.title.contains("Kitchen") }
+        XCTAssertNotNil(kitchenNote)
+        XCTAssertEqual(kitchenNote?.category, "homekit_room")
+        XCTAssertTrue(kitchenNote?.content.contains("Kitchen Outlet") ?? false)
+        XCTAssertTrue(kitchenNote?.content.contains("Eve") ?? false)
+        
+        // Check unassigned accessory note
+        let lockNote = mockNotesService.savedCustomNotes.first { $0.title.contains("Front Door Lock") }
+        XCTAssertNotNil(lockNote)
+        XCTAssertEqual(lockNote?.category, "homekit_device")
+        XCTAssertTrue(lockNote?.content.contains("August") ?? false)
+        XCTAssertTrue(lockNote?.content.contains("Locked") ?? false)
+        
+        // Verify bedroom has no note (no accessories)
+        let bedroomNote = mockNotesService.savedCustomNotes.first { $0.title.contains("Bedroom") }
+        XCTAssertNil(bedroomNote)
     }
     
-    func loadNotesStore() async throws -> NotesStoreData {
-        return NotesStoreData()
-    }
-    
-    func saveNote(_ note: Note) async throws {
-        // Not used in these tests
-    }
-    
-    func updateNote(_ note: Note) async throws {
-        // Not used in these tests
-    }
-    
-    func deleteNote(for questionId: UUID) async throws {
-        // Not used in these tests
-    }
-    
-    func addQuestion(_ question: Question) async throws {
-        // Not used in these tests
-    }
-    
-    func deleteQuestion(_ questionId: UUID) async throws {
-        // Not used in these tests
-    }
-    
-    func resetToDefaults() async throws {
-        // Not used in these tests
-    }
-    
-    func clearAllData() async throws {
-        savedNotes.removeAll()
-    }
-    
-    func saveCustomNote(title: String, content: String, category: String) async {
-        savedNotes.append((title: title, content: content, category: category))
-    }
-    
-    // Additional protocol methods from extensions
-    func getCurrentQuestion() async -> Question? {
-        return nil
-    }
-    
-    func areAllRequiredQuestionsAnswered() async -> Bool {
-        return true
-    }
-    
-    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
-        // Not used in these tests
-    }
-    
-    func getNote(for questionId: UUID) async throws -> Note? {
-        return nil
-    }
-    
-    func getUnansweredQuestions() async throws -> [Question] {
-        return []
-    }
-    
-    func saveWeatherSummary(_ weather: Weather) async {
-        // Not used in these tests
-    }
-    
-    func saveHouseName(_ name: String) async {
-        // Not used in these tests
-    }
-    
-    func getHouseName() async -> String? {
-        return nil
+    func testHomeKitDiscoveryAndNoteSaving() async throws {
+        // Given: A complete HomeKit discovery flow
+        let mockHomeKitService = MockHomeKitService()
+        let mockNotesService = SharedMockNotesService()
+        
+        // Set up mock to authorize
+        mockHomeKitService.mockAuthorizationResult = true
+        
+        // Create test data
+        let testHome = HomeKitHome(
+            id: UUID(),
+            name: "My Smart Home",
+            isPrimary: true,
+            rooms: [
+                HomeKitRoom(id: UUID(), name: "Master Bedroom"),
+                HomeKitRoom(id: UUID(), name: "Living Room")
+            ],
+            accessories: [
+                HomeKitAccessory(
+                    id: UUID(),
+                    name: "Bedroom Light",
+                    roomId: nil,
+                    category: "Lights",
+                    manufacturer: "LIFX",
+                    model: "A19",
+                    isReachable: true,
+                    isBridged: false,
+                    currentState: "On",
+                    services: ["Lightbulb", "Color"]
+                )
+            ],
+            createdAt: Date()
+        )
+        
+        mockHomeKitService.mockDiscoverySummary = HomeKitDiscoverySummary(
+            homes: [testHome],
+            discoveredAt: Date()
+        )
+        
+        // When: Request authorization and discover homes
+        let authorized = await mockHomeKitService.requestAuthorization()
+        XCTAssertTrue(authorized)
+        XCTAssertTrue(mockHomeKitService.requestAuthorizationCalled)
+        
+        let summary = try await mockHomeKitService.discoverHomes()
+        XCTAssertTrue(mockHomeKitService.discoverHomesCalled)
+        XCTAssertEqual(summary.homes.count, 1)
+        XCTAssertEqual(summary.homes.first?.name, "My Smart Home")
+        
+        // Save configuration as notes
+        try await mockHomeKitService.saveConfigurationAsNotes(summary: summary)
+        XCTAssertTrue(mockHomeKitService.saveConfigurationAsNotesCalled)
+        
+        // Then: Verify the complete flow worked
+        XCTAssertEqual(summary.totalRooms, 2)
+        XCTAssertEqual(summary.totalAccessories, 1)
+        
+        // Verify we can retrieve the homes
+        let retrievedHome = await mockHomeKitService.getHome(named: "My Smart Home")
+        XCTAssertNotNil(retrievedHome)
+        XCTAssertEqual(retrievedHome?.name, "My Smart Home")
+        
+        let allHomes = await mockHomeKitService.getAllHomes()
+        XCTAssertEqual(allHomes.count, 1)
     }
 }
