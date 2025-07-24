@@ -54,6 +54,8 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 .hive-mind/
+.hive-mind/hive.db-shm
+.hive-mind/hive.db-wal
 .swarm/
 node_modules
 
