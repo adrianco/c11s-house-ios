@@ -59,8 +59,9 @@ class HomeKitCoordinator: ObservableObject {
         self.notesService = notesService
         
         // Monitor authorization status
+        // Note: Status 5 appears to be a special case in some environments
         homeKitService.authorizationStatusPublisher
-            .map { $0 == .authorized }
+            .map { $0 == .authorized || $0.rawValue == 5 }
             .assign(to: &$isAuthorized)
     }
     

@@ -36,7 +36,7 @@ struct ConversationView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var inputText = ""
-    @State private var isMuted = true // Start muted by default
+    @State private var isMuted = false // Start unmuted by default
     @State private var scrollToBottom = false
     @State private var pendingVoiceText = ""
     @State private var showVoiceConfirmation = false
@@ -422,6 +422,12 @@ struct ConversationView: View {
             return
         }
         
+        // Set up permission observers before requesting permissions
+        setupPermissionObservers()
+        
+        // Mark that we're waiting for permissions so the observer can unmute when granted
+        waitingForPermissions = true
+        
         // Initialize speech recognizer - this will trigger speech recognition permission if needed
         recognizer.initializeSpeechRecognizer()
         
@@ -433,6 +439,12 @@ struct ConversationView: View {
         } catch {
             // Expected if permissions are denied - this triggers the permission dialog
             // Don't log as error since this is normal flow
+        }
+        
+        // Check again after permission requests
+        if hasVoicePermissions {
+            isMuted = false
+            waitingForPermissions = false
         }
     }
 }

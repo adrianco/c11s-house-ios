@@ -91,12 +91,17 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
     func requestAuthorization() async -> Bool {
         // HomeKit authorization is handled automatically when accessing homes
         // Just check if we have access
-        return homeManager.authorizationStatus == .authorized
+        // Note: Status 5 appears to be a special case in some environments
+        let status = homeManager.authorizationStatus
+        return status == .authorized || status.rawValue == 5
     }
     
     func discoverHomes() async throws -> HomeKitDiscoverySummary {
         // Ensure we have authorization
-        guard homeManager.authorizationStatus == .authorized else {
+        // Note: Status 5 appears to be a special case in some environments
+        let status = homeManager.authorizationStatus
+        guard status == .authorized || status.rawValue == 5 else {
+            print("[HomeKitService] Authorization check failed. Status: \(status.rawValue)")
             throw HomeKitError.notAuthorized
         }
         
@@ -200,8 +205,8 @@ extension HomeKitService: HMHomeManagerDelegate {
         print("[HomeKitService] Authorization status updated to: \(status.rawValue)")
         authorizationStatusSubject.send(status)
         
-        // If not authorized, mark as ready to avoid hanging
-        if status != .authorized && !isHomeManagerReady {
+        // If not authorized (and not the special status 5), mark as ready to avoid hanging
+        if status != .authorized && status.rawValue != 5 && !isHomeManagerReady {
             isHomeManagerReady = true
             homeManagerReadyContinuation?.resume()
             homeManagerReadyContinuation = nil
