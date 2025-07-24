@@ -108,11 +108,11 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
         // Wait for HomeManager to be ready if needed
         if !isHomeManagerReady {
             await withCheckedContinuation { continuation in
-                self.homeManagerReadyContinuation = continuation
-                // Check if already ready
+                // Check if already ready before setting continuation
                 if self.isHomeManagerReady {
                     continuation.resume()
-                    self.homeManagerReadyContinuation = nil
+                } else {
+                    self.homeManagerReadyContinuation = continuation
                 }
             }
         }
@@ -197,7 +197,7 @@ extension HomeKitService: HMHomeManagerDelegate {
         
         // Update discovered homes when HomeKit configuration changes
         Task {
-            _ = try? await discoverHomes()
+            discoveredHomes = manager.homes.map { HomeKitHome(from: $0) }
         }
     }
     
