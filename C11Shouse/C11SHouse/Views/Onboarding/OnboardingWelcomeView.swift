@@ -112,11 +112,19 @@ struct OnboardingWelcomeView: View {
                     brainPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height + 100)
                     
                     // Calculate the final position of the brain in the icon
-                    // Brain is positioned at center of the icon (which is already centered)
-                    let brainFinalX = geometry.size.width / 2
-                    let brainFinalY = geometry.size.height / 2
+                    // Icon is 120x120, centered in the view
+                    let iconCenterX = geometry.size.width / 2
+                    let iconCenterY = geometry.size.height / 2
                     
-                    // Animate brain flying to its position in the icon with a curved path
+                    // Brain circle is at 27.5% from left, 37.5% from top of the icon
+                    // And the circle is 45% of icon size (54px), so center is at +27px
+                    let brainOffsetX = -60 + (120 * 0.275) + 27 // -60 to get to icon left edge, then offset
+                    let brainOffsetY = -60 + (120 * 0.375) + 27 // -60 to get to icon top edge, then offset
+                    
+                    let brainFinalX = iconCenterX + brainOffsetX
+                    let brainFinalY = iconCenterY + brainOffsetY
+                    
+                    // Animate brain flying to its exact position in the icon
                     withAnimation(.timingCurve(0.4, 0.0, 0.2, 1.0, duration: 1.5)) {
                         brainPosition = CGPoint(x: brainFinalX, y: brainFinalY)
                     }

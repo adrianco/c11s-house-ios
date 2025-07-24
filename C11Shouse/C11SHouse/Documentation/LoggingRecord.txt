@@ -15,48 +15,107 @@
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
 Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: 37CDAAE5-AB01-4C41-9B0C-5D8EF56B3B5B
+🚀 ONBOARDING SESSION STARTED - ID: 7ECD5870-7FEE-490B-97F6-1D244042BE00
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 PHASE TRANSITION: Start → welcome
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 👆 USER ACTION: view_appeared in welcome
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Created Weather question in notes store
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [PermissionManager] homeManager:didUpdate:status called: oldStatus=0, newStatus=5
 [PermissionManager] homeManagerDidUpdateHomes called: oldStatus=5, newStatus=5
 👆 USER ACTION: button_tap in welcome
    Details: button: begin_setup
-Completed onboarding phase: Welcome in 86 seconds
+Completed onboarding phase: Welcome in 20 seconds
 Started onboarding phase: Setup
 📍 PHASE TRANSITION: Welcome → Setup
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 TranscriptionServiceImpl: Using device locale en_US
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [OnboardingPermissionsView] Requesting HomeKit permission...
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [PermissionManager] requestHomeKitPermission started, current status: 5
 [PermissionManager] HomeKit status already set: 5
 [PermissionManager] requestHomeKitPermission completed, final status: 5
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [OnboardingPermissionsView] UI update poll 1: status=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [OnboardingPermissionsView] UI update poll 2: status=5, granted=false
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [OnboardingPermissionsView] UI update poll 3: status=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [OnboardingPermissionsView] UI update poll 4: status=5, granted=false
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
 [OnboardingPermissionsView] UI update poll 5: status=5, granted=false
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
+Completed onboarding phase: Setup in 19 seconds
+Started onboarding phase: Importing HomeKit
+⏱️ Phase 'Setup' completed in 19.7s
+📍 PHASE TRANSITION: Setup → Importing HomeKit
+👆 USER ACTION: view_homekit_import in homekit_import
 [PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
+Completed onboarding phase: Importing HomeKit in 0 seconds
+Started onboarding phase: Complete Setup
+⏱️ Phase 'Importing HomeKit' completed in 18.94ms
+📍 PHASE TRANSITION: Importing HomeKit → Complete Setup
+👆 USER ACTION: view_completion_screen in completion
+Completed onboarding phase: Complete Setup in 2 seconds
+Onboarding completed in 42 seconds
+👆 USER ACTION: onboarding_complete in Complete Setup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏁 ONBOARDING SESSION ENDED - ID: 7ECD5870-7FEE-490B-97F6-1D244042BE00
+Status: ✅ COMPLETED
+Total Duration: 42.6s
+
+╔════════════════════════════════════════════════════════════════╗
+║                    ONBOARDING SESSION SUMMARY                   ║
+╠════════════════════════════════════════════════════════════════╣
+║ Session ID: 7ECD5870-7FEE-490B-97F6-1D244042BE00
+║ Start Time: 7/23/25, 6:21:04 PM
+║ Total Duration: 42.6s
+║ Phases Completed: 2
+╠════════════════════════════════════════════════════════════════╣
+║                         PHASE TIMINGS                           ║
+╠════════════════════════════════════════════════════════════════╣
+║ Importing HomeKit    │ 18.94ms         ║
+║ Setup                │ 19.7s           ║
+╠════════════════════════════════════════════════════════════════╣
+║                         USER ACTIONS                            ║
+╠════════════════════════════════════════════════════════════════╣
+║ phase_started                  │ 4     ║
+║ view_appeared                  │ 1     ║
+║ view_completion_screen         │ 1     ║
+║ view_homekit_import            │ 1     ║
+║ button_tap                     │ 1     ║
+║ onboarding_complete            │ 1     ║
+╠════════════════════════════════════════════════════════════════╣
+║                        FEATURE USAGE                            ║
+╠════════════════════════════════════════════════════════════════╣
+
+╚════════════════════════════════════════════════════════════════╝
+
+=== COPYABLE ONBOARDING LOG ===
+
+ONBOARDING ACTION LOG - Session: 7ECD5870-7FEE-490B-97F6-1D244042BE00
+============================================================
+
+[7/23/25, 6:21:04 PM] welcome - phase_started - previous_phase: none
+[7/23/25, 6:21:04 PM] welcome - view_appeared
+[7/23/25, 6:21:24 PM] welcome - button_tap - button: begin_setup
+[7/23/25, 6:21:24 PM] Setup - phase_started - previous_phase: Welcome
+[7/23/25, 6:21:44 PM] Importing HomeKit - phase_started - previous_phase: Setup
+[7/23/25, 6:21:44 PM] homekit_import - view_homekit_import
+[7/23/25, 6:21:44 PM] Complete Setup - phase_started - previous_phase: Importing HomeKit
+[7/23/25, 6:21:44 PM] completion - view_completion_screen
+[7/23/25, 6:21:46 PM] Complete Setup - onboarding_complete
+
+
+=== END OF LOG ===
+
+[ContentViewModel] Weather update received: nil
+App is being debugged, do not track this hang
+Hang detected: 0.26s (debugger attached, not reporting)

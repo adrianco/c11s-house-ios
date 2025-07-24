@@ -26,6 +26,12 @@ struct OnboardingPermissionsView: View {
     @State private var showLocationExplanation = false
     @State private var hasRequestedPermissions = false
     
+    init(permissionManager: PermissionManager, onContinue: @escaping () -> Void) {
+        print("[OnboardingPermissionsView] init called")
+        self.permissionManager = permissionManager
+        self.onContinue = onContinue
+    }
+    
     // Local permission states to avoid triggering service initialization
     @State private var microphoneGranted = false
     @State private var speechGranted = false
@@ -39,7 +45,8 @@ struct OnboardingPermissionsView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        let _ = print("[OnboardingPermissionsView] body evaluated")
+        return VStack(spacing: 0) {
             // Only check permission states after permissions have been requested
             // This prevents service initialization on view load
             // Header
@@ -118,7 +125,7 @@ struct OnboardingPermissionsView: View {
             // Action Buttons
             VStack(spacing: 16) {
                 if !hasRequestedPermissions {
-                    Button(action: requestPermissions) {
+                    Button(action: { requestPermissions() }) {
                         HStack {
                             if isRequestingPermissions {
                                 ProgressView()
@@ -196,6 +203,7 @@ struct OnboardingPermissionsView: View {
     }
     
     private func requestPermissions() {
+        print("[OnboardingPermissionsView] requestPermissions() called - button was pressed")
         isRequestingPermissions = true
         
         Task {
@@ -218,7 +226,7 @@ struct OnboardingPermissionsView: View {
             
             // 4. HomeKit Service (optional)
             // Don't check permission status here - just request it
-            print("[OnboardingPermissionsView] Requesting HomeKit permission...")
+            print("[OnboardingPermissionsView] About to initialize HomeKit service and request permission")
             await MainActor.run {
                 _ = serviceContainer.homeKitService
             }
