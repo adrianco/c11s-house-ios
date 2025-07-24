@@ -78,6 +78,9 @@ class HomeKitCoordinator: ObservableObject {
             return
         }
         
+        // Check if we already have HomeKit notes saved
+        let hasExistingNotes = await checkForExistingHomeKitNotes()
+        
         discoveryStatus = .discovering
         
         do {
@@ -89,15 +92,37 @@ class HomeKitCoordinator: ObservableObject {
                 return
             }
             
-            discoveryStatus = .savingNotes
-            
-            // Save configuration as notes
-            try await homeKitService.saveConfigurationAsNotes(summary: summary)
+            // Only save notes if we don't have existing ones
+            if !hasExistingNotes {
+                discoveryStatus = .savingNotes
+                
+                // Save configuration as notes
+                try await homeKitService.saveConfigurationAsNotes(summary: summary)
+            }
             
             discoveryStatus = .completed(summary)
             
         } catch {
             discoveryStatus = .failed(error)
+        }
+    }
+    
+    /// Check if HomeKit notes already exist
+    private func checkForExistingHomeKitNotes() async -> Bool {
+        do {
+            let notesStore = try await notesService.loadNotesStore()
+            // Check if we have any HomeKit custom notes
+            return notesStore.questions.contains { question in
+                if let metadata = notesStore.notes[question.id]?.metadata,
+                   let category = metadata["category"] {
+                    return category == "homekit_summary" || 
+                           category == "homekit_room" || 
+                           category == "homekit_device"
+                }
+                return false
+            }
+        } catch {
+            return false
         }
     }
     

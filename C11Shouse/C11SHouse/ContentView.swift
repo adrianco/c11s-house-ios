@@ -67,6 +67,7 @@ struct ContentView: View {
     @State private var showVoiceSettings = false
     @State private var showVoiceTest = false
     @State private var currentError: UserFriendlyError?
+    @State private var hasHomeKitConfiguration = false
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -197,6 +198,31 @@ struct ContentView: View {
                     }
                     .accessibilityIdentifier("StartConversation")
                     
+                    // HomeKit button (only show if HomeKit is configured)
+                    if hasHomeKitConfiguration {
+                        Button(action: openHomeKitApp) {
+                            HStack {
+                                Image(systemName: "homekit")
+                                Text("Open HomeKit")
+                            }
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color(UIColor.secondarySystemBackground))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                    )
+                            )
+                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                        }
+                        .padding(.top, 16)
+                        .accessibilityIdentifier("OpenHomeKit")
+                    }
+                    
                     Spacer()
                         .frame(height: 100)
                 }
@@ -254,6 +280,7 @@ struct ContentView: View {
         .onAppear {
             checkLocationPermission()
             loadAddressAndWeather()
+            checkHomeKitConfiguration()
         }
         .errorOverlay($currentError) {
             Task { await viewModel.refreshWeather() }
@@ -273,6 +300,20 @@ struct ContentView: View {
         Task {
             // Trigger loading address and weather, which will set appropriate house emotion
             await viewModel.loadAddressAndWeather()
+        }
+    }
+    
+    private func checkHomeKitConfiguration() {
+        Task {
+            let homeKitCoordinator = serviceContainer.homeKitCoordinator
+            hasHomeKitConfiguration = await homeKitCoordinator.hasHomeKitConfiguration()
+        }
+    }
+    
+    private func openHomeKitApp() {
+        // Open the Home app using its URL scheme
+        if let url = URL(string: "com.apple.home://") {
+            UIApplication.shared.open(url)
         }
     }
 }

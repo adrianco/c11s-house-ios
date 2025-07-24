@@ -1,7 +1,7 @@
 [WeatherKitService] 🌦️ Initializing WeatherKit service
 [WeatherKitService] Bundle ID: com.c11s.house
 [WeatherKitService] ✅ Running on real device
-[WeatherKitService] Running in test environment - entitlements not bundled
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: WeatherKitServiceImpl
 [WeatherCoordinator] Notes service: NotesServiceImpl
@@ -17,36 +17,34 @@ Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [HomeKitService] Initialized with delegate set, initial status: 5
 [C11SHouseApp] Services initialized
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 SWIFT TASK CONTINUATION MISUSE: discoverHomes() leaked its continuation without resuming it. This may cause tasks waiting on it to remain suspended forever.
-[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
 [WeatherCoordinator] Weather question already exists
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
 [HomeKitService] Saving HomeKit configuration as notes...
 [HomeKitService] Found 1 homes
-Test Suite 'Selected tests' started at 2025-07-24 11:31:43.492.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 11:31:43.493.
-Test Suite 'HomeKitCoordinatorTests' started at 2025-07-24 11:31:43.493.
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' started.
 [HomeKitService] Saved summary note
-Saved notes count: 5
-Note - Title: HomeKit Configuration Summary, Category: homekit_summary
-Note - Title: Room: Master Bedroom (My Smart Home), Category: homekit_room
-Note - Title: Room: Living Room (My Smart Home), Category: homekit_room
-Note - Title: Room: Kitchen (My Smart Home), Category: homekit_room
-Note - Title: Device: Front Door Lock (My Smart Home), Category: homekit_device
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:382: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:388: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:389: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:394: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:395: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
-Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' failed (0.153 seconds).
-Test Suite 'HomeKitCoordinatorTests' failed at 2025-07-24 11:31:43.646.
-	 Executed 1 test, with 5 failures (0 unexpected) in 0.153 (0.153) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 11:31:43.646.
-	 Executed 1 test, with 5 failures (0 unexpected) in 0.153 (0.154) seconds
-Test Suite 'Selected tests' failed at 2025-07-24 11:31:43.646.
-	 Executed 1 test, with 5 failures (0 unexpected) in 0.153 (0.154) seconds
+[HomeKitService] Saved 12 room notes and 0 unassigned accessory notes
+[C11SHouseApp] HomeKit discovery completed
+[ContentViewModel] Weather update received: mostlyCloudy
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: mostlyCloudy
+[ContentViewModel] Temperature: 72°F
+[ContentViewModel] Current weather after fetch: exists
+[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+App is being debugged, do not track this hang
+Hang detected: 0.29s (debugger attached, not reporting)
+Message from debugger: killed

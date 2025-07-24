@@ -82,6 +82,9 @@ class ConversationViewModel: ObservableObject {
             await locationService.requestLocationPermission()
         }
         
+        // Check for HomeKit configuration and add summary message
+        await checkAndAnnounceHomeKitConfiguration()
+        
         // Load any pending questions
         print("[ConversationViewModel] Loading next question...")
         await questionFlow.loadNextQuestion()
@@ -376,5 +379,70 @@ extension HouseThought {
                 confidence: 0.7
             )
         }
+    }
+    
+    private func checkAndAnnounceHomeKitConfiguration() async {
+        // Check if we've already announced HomeKit
+        let homeKitAnnouncedKey = "homeKitConfigurationAnnounced"
+        guard !UserDefaults.standard.bool(forKey: homeKitAnnouncedKey) else {
+            return
+        }
+        
+        // Check if HomeKit is configured
+        let homeKitCoordinator = serviceContainer.homeKitCoordinator
+        let hasHomeKit = await homeKitCoordinator.hasHomeKitConfiguration()
+        
+        if hasHomeKit {
+            // Get HomeKit summary from notes
+            do {
+                let notesStore = try await serviceContainer.notesService.loadNotesStore()
+                
+                // Find the HomeKit summary note
+                if let summaryQuestion = notesStore.questions.first(where: { question in
+                    question.text == "HomeKit Configuration Summary"
+                }) {
+                    if let summaryNote = notesStore.notes[summaryQuestion.id],
+                       !summaryNote.answer.isEmpty {
+                        
+                        // Create a summary message for the conversation
+                        let homeKitMessage = Message(
+                            content: "I've discovered your HomeKit configuration! I can see \(extractHomeKitSummary(from: summaryNote.answer)). You can tap the HomeKit button on the main screen to open the Home app anytime.",
+                            isFromUser: false,
+                            isVoice: false
+                        )
+                        messageStore.addMessage(homeKitMessage)
+                        
+                        // Mark as announced
+                        UserDefaults.standard.set(true, forKey: homeKitAnnouncedKey)
+                    }
+                }
+            } catch {
+                print("[ConversationViewModel] Error loading HomeKit notes: \(error)")
+            }
+        }
+    }
+    
+    private func extractHomeKitSummary(from content: String) -> String {
+        // Extract key information from the HomeKit summary
+        var summary = ""
+        
+        // Look for home count
+        if let homeMatch = content.range(of: "Found (\\d+) home", options: .regularExpression) {
+            let homeCount = String(content[homeMatch])
+            summary += homeCount.replacingOccurrences(of: "Found ", with: "")
+        }
+        
+        // Look for room and accessory counts
+        if let roomMatch = content.range(of: "(\\d+) rooms", options: .regularExpression) {
+            let roomCount = String(content[roomMatch])
+            summary += " with \(roomCount)"
+        }
+        
+        if let accessoryMatch = content.range(of: "(\\d+) accessories", options: .regularExpression) {
+            let accessoryCount = String(content[accessoryMatch])
+            summary += " and \(accessoryCount)"
+        }
+        
+        return summary.isEmpty ? "your home setup" : summary
     }
 }
