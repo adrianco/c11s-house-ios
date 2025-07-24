@@ -140,25 +140,24 @@ class ConversationViewModel: ObservableObject {
                 print("[ConversationViewModel] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
             }
         } else {
-                // Check if we're in the middle of creating a note
-                let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
-                if noteCreationState == "creatingRoomNote" {
-                    // User provided room name, now ask for details
-                    await handleRoomNoteNameProvided(input, isMuted: isMuted)
-                } else if noteCreationState == "awaitingRoomDetails" {
-                    // User provided room details, save the note
-                    await handleRoomNoteDetailsProvided(input, isMuted: isMuted)
+            // Check if we're in the middle of creating a note
+            let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
+            if noteCreationState == "creatingRoomNote" {
+                // User provided room name, now ask for details
+                await handleRoomNoteNameProvided(input, isMuted: isMuted)
+            } else if noteCreationState == "awaitingRoomDetails" {
+                // User provided room details, save the note
+                await handleRoomNoteDetailsProvided(input, isMuted: isMuted)
+            } else {
+                // Check for note creation commands
+                let lowercased = input.lowercased()
+                if lowercased.contains("new room note") || lowercased.contains("add room note") {
+                    await handleRoomNoteCreation(isMuted: isMuted)
+                } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
+                    await handleDeviceNoteCreation(isMuted: isMuted)
                 } else {
-                    // Check for note creation commands
-                    let lowercased = input.lowercased()
-                    if lowercased.contains("new room note") || lowercased.contains("add room note") {
-                        await handleRoomNoteCreation(isMuted: isMuted)
-                    } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
-                        await handleDeviceNoteCreation(isMuted: isMuted)
-                    } else {
-                        // Generate house response
-                        await generateHouseResponse(for: input, isMuted: isMuted)
-                    }
+                    // Generate house response
+                    await generateHouseResponse(for: input, isMuted: isMuted)
                 }
             }
         }
