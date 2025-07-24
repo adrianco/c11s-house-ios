@@ -2731,3 +2731,6 @@ ed up" --claude
 July 21st
 "log of latest code running UI tests is in C11SHouse/Documentation/LoggingRecord.txt and ErrorRecord.txt, they are mostly failing"
 
+Going to do this soon:
+simplify the system, remove the entire onboarding flow and views, let the system handle the permissions popups when services are first used, over the ContentView, so that there is only the top level ContentView and ConversationView to switch between. Remove and update all the tests as well
+

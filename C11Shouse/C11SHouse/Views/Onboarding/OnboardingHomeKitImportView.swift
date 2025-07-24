@@ -168,7 +168,8 @@ struct OnboardingHomeKitImportView_Previews: PreviewProvider {
                 addressManager: AddressManager(
                     notesService: NotesServiceImpl(),
                     locationService: LocationServiceImpl()
-                )
+                ),
+                serviceContainer: ServiceContainer.shared
             ))
     }
 }
