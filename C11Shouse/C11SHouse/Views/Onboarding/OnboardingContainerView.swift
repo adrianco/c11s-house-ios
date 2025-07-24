@@ -158,7 +158,8 @@ struct OnboardingContainerView_Previews: PreviewProvider {
                 addressManager: AddressManager(
                     notesService: NotesServiceImpl(),
                     locationService: LocationServiceImpl()
-                )
+                ),
+                serviceContainer: ServiceContainer.shared
             ))
             .environmentObject(ServiceContainer.shared)
     }
