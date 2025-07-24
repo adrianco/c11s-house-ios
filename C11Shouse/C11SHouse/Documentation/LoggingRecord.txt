@@ -1,7 +1,7 @@
 [WeatherKitService] 🌦️ Initializing WeatherKit service
 [WeatherKitService] Bundle ID: com.c11s.house
 [WeatherKitService] ✅ Running on real device
-[WeatherKitService] Running in test environment - entitlements not bundled
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: WeatherKitServiceImpl
 [WeatherCoordinator] Notes service: NotesServiceImpl
@@ -12,129 +12,161 @@
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
 [ContentViewModel] Weather update received: nil
-[HomeKitService] Initialized with delegate set, initial status: 5
-[C11SHouseApp] Services initialized
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-#FactoryInstall Unable to query results, error: 5
-[C11SHouseApp] HomeKit discovery completed
-[WeatherCoordinator] Weather question already exists
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
-Test Suite 'Selected tests' started at 2025-07-24 10:53:14.467.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 10:53:14.467.
-Test Suite 'AddressManagerTests' started at 2025-07-24 10:53:14.467.
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:312: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission] : failed - Expected error to be thrown
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithoutPermission]' failed (0.142 seconds).
-Test Suite 'AddressManagerTests' failed at 2025-07-24 10:53:14.609.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.142 (0.142) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 10:53:14.609.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.142 (0.143) seconds
-Test Suite 'Selected tests' failed at 2025-07-24 10:53:14.610.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.142 (0.143) seconds
-
-     [WeatherKitService] 🌦️ Initializing WeatherKit service
-[WeatherKitService] Bundle ID: com.c11s.house
-[WeatherKitService] ✅ Running on real device
-[WeatherKitService] Running in test environment - entitlements not bundled
-[WeatherCoordinator] 🌤️ Initialized with services
-[WeatherCoordinator] Weather service: WeatherKitServiceImpl
-[WeatherCoordinator] Notes service: NotesServiceImpl
-[WeatherCoordinator] Location service: LocationServiceImpl
-[ContentViewModel] Init complete - currentWeather: nil
-[ContentViewModel] Init complete - houseName: Your House
-[ContentViewModel] Init complete - address: nil
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[ContentViewModel] Weather update received: nil
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-#FactoryInstall Unable to query results, error: 5
-[HomeKitService] Initialized with delegate set, initial status: 5
-[C11SHouseApp] Services initialized
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Test Suite 'Selected tests' started at 2025-07-24 10:53:34.142.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 10:53:34.142.
-Test Suite 'AddressManagerTests' started at 2025-07-24 10:53:34.142.
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' started.
-[C11SHouseApp] HomeKit discovery completed
-[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:338: error: -[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission] : failed - Expected error to be thrown
-Test Case '-[C11SHouseTests.AddressManagerTests testDetectCurrentAddressWithNotDeterminedPermission]' failed (0.135 seconds).
-Test Suite 'AddressManagerTests' failed at 2025-07-24 10:53:34.277.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.135 (0.135) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 10:53:34.278.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.135 (0.135) seconds
-Test Suite 'Selected tests' failed at 2025-07-24 10:53:34.278.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.135 (0.136) seconds
-[WeatherCoordinator] Weather question already exists
-
-[WeatherKitService] 🌦️ Initializing WeatherKit service
-[WeatherKitService] Bundle ID: com.c11s.house
-[WeatherKitService] ✅ Running on real device
-[WeatherKitService] Running in test environment - entitlements not bundled
-[WeatherCoordinator] 🌤️ Initialized with services
-[WeatherCoordinator] Weather service: WeatherKitServiceImpl
-[WeatherCoordinator] Notes service: NotesServiceImpl
-[WeatherCoordinator] Location service: LocationServiceImpl
-[ContentViewModel] Init complete - currentWeather: nil
-[ContentViewModel] Init complete - houseName: Your House
-[ContentViewModel] Init complete - address: nil
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[ContentViewModel] Weather update received: nil
+[WeatherCoordinator] Created Weather question in notes store
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[HomeKitService] Initialized with delegate set, initial status: 5
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[HomeKitService] Initialized with delegate set, initial status: 0
 [C11SHouseApp] Services initialized
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [C11SHouseApp] HomeKit discovery completed
+[HomeKitService] Authorization status updated to: 5
 [HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
-[WeatherCoordinator] Weather question already exists
-Test Suite 'Selected tests' started at 2025-07-24 10:53:56.734.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 10:53:56.735.
-Test Suite 'InitialSetupFlowTests' started at 2025-07-24 10:53:56.735.
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' started.
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:228: error: -[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied] : XCTAssertTrue failed
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Adding welcome message
+[ConversationViewModel] Loading next question...
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
 [QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[QuestionFlowCoordinator] saveAnswer called with answer: '123 Manual Entry St, Test City, CA 94000'
-[QuestionFlowCoordinator] Trimmed answer: '123 Manual Entry St, Test City, CA 94000'
-[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 7D69F8D3-75A4-4A67-A4DB-74BFF21E09D8
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Is this the right address?
+[AddressManager] Stored detected address in memory (not marked as answered): 14450 Roland Canyon Rd, Salinas, CA 93908
+[QuestionFlowCoordinator] Formatted address question with detected address
+App is being debugged, do not track this hang
+Hang detected: 1.22s (debugger attached, not reporting)
+[ConversationViewModel] processUserInput: '14450 Roland Canyon Rd, Salinas, CA 93908'
+[ConversationViewModel] Answering question: Is this the right address?
+[QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
+[QuestionFlowCoordinator] Answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
+[QuestionFlowCoordinator] saveAnswer called with answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
+[QuestionFlowCoordinator] Trimmed answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: E1D75020-4D0C-4361-B637-6118C8C5EC08
 [QuestionFlowCoordinator] saveOrUpdateNote completed successfully
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 4 questions
-[QuestionFlowCoordinator] Questions needing review: 3
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 4
 [QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[AddressManager] saveAddressToNotes called with address: 123 Manual Entry St, Test City, CA 94000
-[AddressManager] Loaded notes store with 4 questions
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Processing address answer: 14450 Roland Canyon Rd, Salinas, CA 93908
+[QuestionFlowCoordinator] User confirmed address, now saving as answered
+[AddressManager] saveAddressToNotes called with address: 14450 Roland Canyon Rd, Salinas, CA 93908
+[AddressManager] Loaded notes store with 5 questions
 [AddressManager] Found address question: Is this the right address?
 [AddressManager] Saved address note
 [AddressManager] Found house name question: What should I call this house?
-[AddressManager] Generated house name: Manual Entry House
+[AddressManager] Generated house name: Roland Canyon House
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
 [AddressManager] Saved house name note
-[AddressManager] User confirmed address, now saving as answered: 123 Manual Entry St, Test City, CA 94000
-[NotesService] Clearing all data...
-[NotesService] Resetting to 4 predefined questions
-Test Case '-[C11SHouseTests.InitialSetupFlowTests testSetupFlowWithLocationPermissionDenied]' failed (0.149 seconds).
-Test Suite 'InitialSetupFlowTests' failed at 2025-07-24 10:53:56.884.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.149 (0.149) seconds
-Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 10:53:56.884.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.149 (0.150) seconds
-Test Suite 'Selected tests' failed at 2025-07-24 10:53:56.884.
-	 Executed 1 test, with 1 failure (0 unexpected) in 0.149 (0.150) seconds
-
-     
+[AddressManager] User confirmed address, now saving as answered: 14450 Roland Canyon Rd, Salinas, CA 93908
+[QuestionFlowCoordinator] Address saved - ContentViewModel will fetch weather
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
+[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] ✅ New address, updating state and fetching weather
+[ContentViewModel] 🌤️ refreshWeather() called
+[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Current weather before fetch: nil
+[ContentViewModel] Weather update received: cloudy
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: cloudy
+[ContentViewModel] Temperature: 64°F
+[ContentViewModel] Current weather after fetch: exists
+[ConversationViewModel] processUserInput: 'Roland House'
+[ConversationViewModel] Answering question: What should I call this house?
+[QuestionFlowCoordinator] Saving answer for question: 'What should I call this house?'
+[QuestionFlowCoordinator] Answer: 'Roland House'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Roland House'
+[QuestionFlowCoordinator] Trimmed answer: 'Roland House'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: B6362A56-5B8F-472C-8C36-46F3D2A04649
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Saving house name
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 2
+[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+Result accumulator timeout: 3.000000, exceeded.
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+App is being debugged, do not track this hang
+Hang detected: 0.59s (debugger attached, not reporting)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationViewModel] processUserInput: 'Adrian'
+[ConversationViewModel] Answering question: What's your name?
+[QuestionFlowCoordinator] Saving answer for question: 'What's your name?'
+[QuestionFlowCoordinator] Answer: 'Adrian'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Adrian'
+[QuestionFlowCoordinator] Trimmed answer: 'Adrian'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 21FA4DE1-EC15-44A9-8746-B57C68391536
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[ConversationStateManager] speak called - text: 'Got it!...', isMuted: false
+[ConversationStateManager] Not speaking - saving answer
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Updating user name
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
+[ConversationStateManager] speak called - text: 'Let's start by creating your first room note! What...', isMuted: false
+[ConversationStateManager] Speaking text...
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
+Message from debugger: killed

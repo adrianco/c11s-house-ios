@@ -264,6 +264,9 @@ struct ConversationView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                             isTextFieldFocused = true
                         }
+                    } else {
+                        // Clear the text field for questions without pre-populated answers
+                        inputText = ""
                     }
                     
                     // Trigger scroll to bottom after a brief delay to ensure message is rendered
