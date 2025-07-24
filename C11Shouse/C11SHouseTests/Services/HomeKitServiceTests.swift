@@ -26,61 +26,9 @@ import XCTest
 import HomeKit
 import Combine
 
-// MARK: - Test Extensions for HomeKit Models
-
-extension HomeKitRoom {
-    // Test initializer
-    init(id: UUID, name: String) {
-        self.id = id
-        self.name = name
-    }
-}
-
-extension HomeKitAccessory {
-    // Test initializer
-    init(
-        id: UUID,
-        name: String,
-        roomId: UUID?,
-        category: String,
-        manufacturer: String?,
-        model: String?,
-        isReachable: Bool,
-        isBridged: Bool,
-        currentState: String?,
-        services: [String]
-    ) {
-        self.id = id
-        self.name = name
-        self.roomId = roomId
-        self.category = category
-        self.manufacturer = manufacturer
-        self.model = model
-        self.isReachable = isReachable
-        self.isBridged = isBridged
-        self.currentState = currentState
-        self.services = services
-    }
-}
-
-extension HomeKitHome {
-    // Test initializer
-    init(
-        id: UUID,
-        name: String,
-        isPrimary: Bool,
-        rooms: [HomeKitRoom],
-        accessories: [HomeKitAccessory],
-        createdAt: Date
-    ) {
-        self.id = id
-        self.name = name
-        self.isPrimary = isPrimary
-        self.rooms = rooms
-        self.accessories = accessories
-        self.createdAt = createdAt
-    }
-}
+// MARK: - Test Helpers for HomeKit Models
+// Note: HomeKit models are structs with all let properties, so they have automatic memberwise initializers.
+// We don't need to add custom initializers in extensions.
 
 class HomeKitServiceTests: XCTestCase {
     

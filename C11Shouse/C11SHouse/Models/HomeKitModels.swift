@@ -45,6 +45,23 @@ struct HomeKitHome: Codable {
         self.createdAt = Date()
     }
     
+    // Memberwise initializer for testing
+    init(
+        id: UUID,
+        name: String,
+        isPrimary: Bool,
+        rooms: [HomeKitRoom],
+        accessories: [HomeKitAccessory],
+        createdAt: Date
+    ) {
+        self.id = id
+        self.name = name
+        self.isPrimary = isPrimary
+        self.rooms = rooms
+        self.accessories = accessories
+        self.createdAt = createdAt
+    }
+    
     /// Generate a summary note for the entire home configuration
     func generateSummaryNote() -> String {
         var summary = "🏠 HomeKit Configuration for \(name)\n\n"
@@ -88,6 +105,12 @@ struct HomeKitRoom: Codable {
     init(from room: HMRoom) {
         self.id = room.uniqueIdentifier
         self.name = room.name
+    }
+    
+    // Memberwise initializer for testing
+    init(id: UUID, name: String) {
+        self.id = id
+        self.name = name
     }
     
     /// Generate a note for this room with its accessories
@@ -150,6 +173,31 @@ struct HomeKitAccessory: Codable {
             guard !service.isPrimaryService else { return nil }
             return service.name
         }
+    }
+    
+    // Memberwise initializer for testing
+    init(
+        id: UUID,
+        name: String,
+        roomId: UUID?,
+        category: String,
+        manufacturer: String?,
+        model: String?,
+        isReachable: Bool,
+        isBridged: Bool,
+        currentState: String?,
+        services: [String]
+    ) {
+        self.id = id
+        self.name = name
+        self.roomId = roomId
+        self.category = category
+        self.manufacturer = manufacturer
+        self.model = model
+        self.isReachable = isReachable
+        self.isBridged = isBridged
+        self.currentState = currentState
+        self.services = services
     }
     
     /// Generate a note for this accessory
