@@ -320,66 +320,6 @@ class ConversationViewModel: ObservableObject {
             await generateHouseResponse(for: "I had trouble saving that note. Let me try again.", isMuted: isMuted)
         }
     }
-}
-
-// MARK: - HouseThought Extension
-
-extension HouseThought {
-    static func generateResponse(for input: String) -> HouseThought {
-        let lowercased = input.lowercased()
-        
-        // Simple response generation - this could be made much more sophisticated
-        if lowercased.contains("hello") || lowercased.contains("hi") {
-            return HouseThought(
-                thought: "Hello! How are you doing today?",
-                emotion: .happy,
-                category: .greeting,
-                confidence: 1.0
-            )
-        } else if lowercased.contains("weather") {
-            return HouseThought(
-                thought: "Let me check the weather for you. One moment...",
-                emotion: .thoughtful,
-                category: .observation,
-                confidence: 0.9
-            )
-        } else if lowercased.contains("temperature") || lowercased.contains("cold") || lowercased.contains("hot") {
-            return HouseThought(
-                thought: "I'll check the current temperature and adjust if needed.",
-                emotion: .thoughtful,
-                category: .observation,
-                confidence: 0.9
-            )
-        } else if lowercased.contains("thank") {
-            return HouseThought(
-                thought: "You're welcome! I'm always here to help.",
-                emotion: .happy,
-                category: .greeting,
-                confidence: 1.0
-            )
-        } else if lowercased.contains("help") {
-            return HouseThought(
-                thought: "I can help you with managing your home, checking weather, taking notes, and having conversations. What would you like to know?",
-                emotion: .thoughtful,
-                category: .suggestion,
-                confidence: 1.0
-            )
-        } else if lowercased.contains("note") || lowercased.contains("notes") {
-            return HouseThought(
-                thought: "I can help you create notes about your home. Try saying 'new room note' to add a note about a room, or 'new device note' to add a note about a device or appliance.",
-                emotion: .thoughtful,
-                category: .suggestion,
-                confidence: 1.0
-            )
-        } else {
-            return HouseThought(
-                thought: "I understand. Let me think about that...",
-                emotion: .thoughtful,
-                category: .observation,
-                confidence: 0.7
-            )
-        }
-    }
     
     private func checkAndAnnounceHomeKitConfiguration() async {
         // Check if we've already announced HomeKit
@@ -444,5 +384,65 @@ extension HouseThought {
         }
         
         return summary.isEmpty ? "your home setup" : summary
+    }
+}
+
+// MARK: - HouseThought Extension
+
+extension HouseThought {
+    static func generateResponse(for input: String) -> HouseThought {
+        let lowercased = input.lowercased()
+        
+        // Simple response generation - this could be made much more sophisticated
+        if lowercased.contains("hello") || lowercased.contains("hi") {
+            return HouseThought(
+                thought: "Hello! How are you doing today?",
+                emotion: .happy,
+                category: .greeting,
+                confidence: 1.0
+            )
+        } else if lowercased.contains("weather") {
+            return HouseThought(
+                thought: "Let me check the weather for you. One moment...",
+                emotion: .thoughtful,
+                category: .observation,
+                confidence: 0.9
+            )
+        } else if lowercased.contains("temperature") || lowercased.contains("cold") || lowercased.contains("hot") {
+            return HouseThought(
+                thought: "I'll check the current temperature and adjust if needed.",
+                emotion: .thoughtful,
+                category: .observation,
+                confidence: 0.9
+            )
+        } else if lowercased.contains("thank") {
+            return HouseThought(
+                thought: "You're welcome! I'm always here to help.",
+                emotion: .happy,
+                category: .greeting,
+                confidence: 1.0
+            )
+        } else if lowercased.contains("help") {
+            return HouseThought(
+                thought: "I can help you with managing your home, checking weather, taking notes, and having conversations. What would you like to know?",
+                emotion: .thoughtful,
+                category: .suggestion,
+                confidence: 1.0
+            )
+        } else if lowercased.contains("note") || lowercased.contains("notes") {
+            return HouseThought(
+                thought: "I can help you create notes about your home. Try saying 'new room note' to add a note about a room, or 'new device note' to add a note about a device or appliance.",
+                emotion: .thoughtful,
+                category: .suggestion,
+                confidence: 1.0
+            )
+        } else {
+            return HouseThought(
+                thought: "I understand. Let me think about that...",
+                emotion: .thoughtful,
+                category: .observation,
+                confidence: 0.7
+            )
+        }
     }
 }
