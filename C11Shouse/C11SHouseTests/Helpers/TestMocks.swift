@@ -63,6 +63,13 @@ class MockLocationService: LocationServiceProtocol {
     
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCalled = true
+        
+        // Check authorization status first
+        let currentStatus = authorizationStatusSubject.value
+        guard currentStatus == .authorizedWhenInUse || currentStatus == .authorizedAlways else {
+            throw LocationError.notAuthorized
+        }
+        
         switch getCurrentLocationResult {
         case .success(let location):
             currentLocationSubject.send(location)
@@ -605,6 +612,9 @@ class MockHomeKitService: HomeKitServiceProtocol {
     var mockDiscoverySummary: HomeKitDiscoverySummary?
     var shouldThrowError = false
     
+    // Store the discovered homes for later retrieval
+    private var discoveredHomes: [HomeKitHome] = []
+    
     func requestAuthorization() async -> Bool {
         requestAuthorizationCalled = true
         if mockAuthorizationResult {
@@ -620,7 +630,7 @@ class MockHomeKitService: HomeKitServiceProtocol {
             throw HomeKitError.discoveryFailed("Mock error")
         }
         
-        return mockDiscoverySummary ?? HomeKitDiscoverySummary(
+        let summary = mockDiscoverySummary ?? HomeKitDiscoverySummary(
             homes: [
                 HomeKitHome(
                     id: UUID(),
@@ -649,6 +659,12 @@ class MockHomeKitService: HomeKitServiceProtocol {
             ],
             discoveredAt: Date()
         )
+        
+        // Store the discovered homes for later retrieval
+        discoveredHomes = summary.homes
+        mockDiscoverySummary = summary
+        
+        return summary
     }
     
     func saveConfigurationAsNotes(summary: HomeKitDiscoverySummary) async throws {
@@ -660,10 +676,10 @@ class MockHomeKitService: HomeKitServiceProtocol {
     }
     
     func getHome(named name: String) async -> HomeKitHome? {
-        return mockDiscoverySummary?.homes.first { $0.name.lowercased() == name.lowercased() }
+        return discoveredHomes.first { $0.name.lowercased() == name.lowercased() }
     }
     
     func getAllHomes() async -> [HomeKitHome] {
-        return mockDiscoverySummary?.homes ?? []
+        return discoveredHomes
     }
 }

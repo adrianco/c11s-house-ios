@@ -192,6 +192,12 @@ class MockLocationServiceForAddressManager: LocationServiceProtocol {
     
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCallCount += 1
+        
+        // Check authorization status first
+        guard authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways else {
+            throw LocationError.notAuthorized
+        }
+        
         if shouldThrowLocationError {
             throw LocationError.notAuthorized
         }
