@@ -81,13 +81,50 @@ class ContentViewModel: ObservableObject {
         self.notesService = notesService
         self.addressManager = addressManager
         
-        setupBindings()
-        loadSavedData()
+        // Only setup bindings if onboarding is complete
+        if UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
+            setupBindings()
+            loadSavedData()
+        } else {
+            // Minimal setup for onboarding - don't subscribe to services
+            setupMinimalBindings()
+        }
         
         // Log initial state
         print("[ContentViewModel] Init complete - currentWeather: \(currentWeather != nil ? "exists" : "nil")")
         print("[ContentViewModel] Init complete - houseName: \(houseName)")
         print("[ContentViewModel] Init complete - address: \(currentAddress?.fullAddress ?? "nil")")
+    }
+    
+    private func setupMinimalBindings() {
+        // Only sync with AppState, don't subscribe to service publishers
+        appState.$houseName
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$houseName)
+            
+        appState.$currentHouseThought
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$houseThought)
+            
+        appState.$homeAddress
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentAddress)
+            
+        appState.$hasLocationPermission
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$hasLocationPermission)
+            
+        appState.$currentWeather
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentWeather)
+            
+        appState.$isLoadingWeather
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoadingWeather)
+            
+        appState.$weatherError
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$weatherError)
     }
     
     private func setupBindings() {
@@ -206,6 +243,14 @@ class ContentViewModel: ObservableObject {
                 // Fetch weather for the loaded address
                 await refreshWeather()
             }
+        }
+    }
+    
+    func completeSetupAfterOnboarding() {
+        // If we haven't already setup full bindings, do it now
+        if cancellables.isEmpty {
+            setupBindings()
+            loadSavedData()
         }
     }
     

@@ -203,21 +203,24 @@ struct OnboardingPermissionsView: View {
             
             // 4. HomeKit Service (optional)
             if !permissionManager.isHomeKitGranted {
+                print("[OnboardingPermissionsView] Requesting HomeKit permission...")
                 await MainActor.run {
                     _ = serviceContainer.homeKitService
                 }
                 await permissionManager.requestHomeKitPermission()
                 
-                // Poll for HomeKit permission status update
-                for _ in 0..<5 {
-                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                // Additional polling to ensure UI updates
+                // The PermissionManager already does polling, but we'll do some extra here for UI responsiveness
+                for i in 0..<5 {
+                    try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
                     await MainActor.run {
-                        permissionManager.checkCurrentPermissions()
+                        // Just trigger UI update, don't recheck permissions as that might reset the status
+                        permissionManager.objectWillChange.send()
                     }
-                    if permissionManager.isHomeKitGranted {
-                        break
-                    }
+                    print("[OnboardingPermissionsView] UI update poll \(i+1): status=\(permissionManager.homeKitPermissionStatus.rawValue), granted=\(permissionManager.isHomeKitGranted)")
                 }
+            } else {
+                print("[OnboardingPermissionsView] HomeKit already granted, skipping request")
             }
             
             // Background address lookup if location permission granted

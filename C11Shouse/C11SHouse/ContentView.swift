@@ -252,6 +252,15 @@ struct ContentView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {
+            // Only check permissions if onboarding is complete
+            if UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
+                checkLocationPermission()
+                checkOnboardingStatus()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("OnboardingComplete"))) { _ in
+            // Complete setup after onboarding
+            viewModel.completeSetupAfterOnboarding()
             checkLocationPermission()
             checkOnboardingStatus()
         }
@@ -262,11 +271,8 @@ struct ContentView: View {
     
     private func checkLocationPermission() {
         Task {
-            if !viewModel.hasLocationPermission {
-                await viewModel.requestLocationPermission()
-            }
-            
-            // Load address and weather data if we have permission
+            // Don't request permission here - it's handled in onboarding
+            // Just load data if we already have permission
             if viewModel.hasLocationPermission {
                 await viewModel.loadAddressAndWeather()
             }

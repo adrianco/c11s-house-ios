@@ -1,0 +1,43 @@
+C11SHouseTests
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:46:21 No exact matches in call to initializer 
+
+Candidate has partially matching parameter list (from: any Decoder)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:47:21 No exact matches in call to initializer 
+
+Candidate has partially matching parameter list (from: any Decoder)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:49:26 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:62:26 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:75:20 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:100:20 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:102:13 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:114:13 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:123:31 'nil' requires a contextual type
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:142:25 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:145:21 'nil' requires a contextual type
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:171:20 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:176:17 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:177:17 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:180:17 No exact matches in call to initializer 
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:183:29 'nil' requires a contextual type
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:185:35 'nil' requires a contextual type
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:186:28 'nil' requires a contextual type
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:189:35 'nil' requires a contextual type
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/HomeKitServiceTests.swift:230:30 Cannot find type 'AnyPublisher' in scope

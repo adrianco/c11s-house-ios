@@ -74,6 +74,7 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
         super.init()
         
         homeManager.delegate = self
+        print("[HomeKitService] Initialized with delegate set, initial status: \(homeManager.authorizationStatus.rawValue)")
         
         // Update initial authorization status
         authorizationStatusSubject.send(homeManager.authorizationStatus)

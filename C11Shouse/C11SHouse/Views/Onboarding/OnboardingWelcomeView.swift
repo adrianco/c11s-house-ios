@@ -70,8 +70,8 @@ struct OnboardingWelcomeView: View {
                             )
                     }
                     
-                    // House icon (without brain initially)
-                    Image(uiImage: AppIconCreatorLegacy.createHouseOnly(size: CGSize(width: 120, height: 120)))
+                    // Main app icon (complete with brain)
+                    Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 120, height: 120)))
                         .resizable()
                         .frame(width: 120, height: 120)
                         .cornerRadius(24)
@@ -87,24 +87,14 @@ struct OnboardingWelcomeView: View {
                             .position(brainPosition)
                             .opacity(brainOpacity)
                     }
-                    
-                    // Final complete icon (after animation)
-                    if !showBrainFlying {
-                        Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 120, height: 120)))
-                            .resizable()
-                            .frame(width: 120, height: 120)
-                            .cornerRadius(24)
-                            .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
-                            .scaleEffect(houseScale)
-                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear {
-                    // Set initial brain position (top-left corner)
-                    brainPosition = CGPoint(x: 50, y: 50)
+                    // Set initial brain position (below the screen)
+                    brainPosition = CGPoint(x: geometry.size.width / 2 - 100, y: geometry.size.height + 100)
                     
-                    // Animate brain flying to center
-                    withAnimation(.easeInOut(duration: 1.5)) {
+                    // Animate brain flying to center with a curved path
+                    withAnimation(.timingCurve(0.4, 0.0, 0.2, 1.0, duration: 1.5)) {
                         brainPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
                     }
                     

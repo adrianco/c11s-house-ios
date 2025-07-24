@@ -11,15 +11,97 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[ContentViewModel] Weather update received: nil
 Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: 44EDFA57-F0ED-44DF-95B5-0D55EC73B836
+🚀 ONBOARDING SESSION STARTED - ID: F8BF26E5-C3EE-4620-BB0F-F5A6000CE6BE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 PHASE TRANSITION: Start → welcome
 👆 USER ACTION: view_appeared in welcome
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Created Weather question in notes store
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+👆 USER ACTION: button_tap in welcome
+   Details: button: begin_setup
+Completed onboarding phase: Welcome in 75 seconds
+Started onboarding phase: Setup
+📍 PHASE TRANSITION: Welcome → Setup
+TranscriptionServiceImpl: Using device locale en_US
+[AddressManager] Stored detected address in memory (not marked as answered): 14450 Roland Canyon Rd, Salinas, CA 93908
+🔄 SERVICE CALL: address_detection - ✅ SUCCESS
+✨ FEATURE USED: auto_address_detection in permissions
+   Details: address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55594538181557, longitude: -121.71800223493358))
+Completed onboarding phase: Setup in 48 seconds
+Started onboarding phase: Importing HomeKit
+⏱️ Phase 'Setup' completed in 49.0s
+📍 PHASE TRANSITION: Setup → Importing HomeKit
+👆 USER ACTION: view_homekit_import in homekit_import
+Completed onboarding phase: Importing HomeKit in 0 seconds
+Started onboarding phase: Complete Setup
+⏱️ Phase 'Importing HomeKit' completed in 20.47ms
+📍 PHASE TRANSITION: Importing HomeKit → Complete Setup
+👆 USER ACTION: view_completion_screen in completion
+Completed onboarding phase: Complete Setup in 5 seconds
+Onboarding completed in 129 seconds
+👆 USER ACTION: onboarding_complete in Complete Setup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏁 ONBOARDING SESSION ENDED - ID: F8BF26E5-C3EE-4620-BB0F-F5A6000CE6BE
+Status: ✅ COMPLETED
+Total Duration: 2m 9s
+
+╔════════════════════════════════════════════════════════════════╗
+║                    ONBOARDING SESSION SUMMARY                   ║
+╠════════════════════════════════════════════════════════════════╣
+║ Session ID: F8BF26E5-C3EE-4620-BB0F-F5A6000CE6BE
+║ Start Time: 7/23/25, 5:50:34 PM
+║ Total Duration: 2m 9s
+║ Phases Completed: 2
+╠════════════════════════════════════════════════════════════════╣
+║                         PHASE TIMINGS                           ║
+╠════════════════════════════════════════════════════════════════╣
+║ Importing HomeKit    │ 20.47ms         ║
+║ Setup                │ 49.0s           ║
+╠════════════════════════════════════════════════════════════════╣
+║                         USER ACTIONS                            ║
+╠════════════════════════════════════════════════════════════════╣
+║ phase_started                  │ 4     ║
+║ view_homekit_import            │ 1     ║
+║ button_tap                     │ 1     ║
+║ feature_auto_address_detection │ 1     ║
+║ view_completion_screen         │ 1     ║
+║ service_call                   │ 1     ║
+║ onboarding_complete            │ 1     ║
+║ view_appeared                  │ 1     ║
+╠════════════════════════════════════════════════════════════════╣
+║                        FEATURE USAGE                            ║
+╠════════════════════════════════════════════════════════════════╣
+║ auto_address_detection         │ 1     ║
+╚════════════════════════════════════════════════════════════════╝
+
+=== COPYABLE ONBOARDING LOG ===
+
+ONBOARDING ACTION LOG - Session: F8BF26E5-C3EE-4620-BB0F-F5A6000CE6BE
+============================================================
+
+[7/23/25, 5:50:34 PM] welcome - phase_started - previous_phase: none
+[7/23/25, 5:50:34 PM] welcome - view_appeared
+[7/23/25, 5:51:49 PM] welcome - button_tap - button: begin_setup
+[7/23/25, 5:51:49 PM] Setup - phase_started - previous_phase: Welcome
+[7/23/25, 5:52:37 PM] permissions - service_call - service: address_detection, success: true, duration: 228.31ms
+[7/23/25, 5:52:37 PM] permissions - feature_auto_address_detection - address: Address(street: "14450 Roland Canyon Rd", city: "Salinas", state: "CA", postalCode: "93908", country: "United States", coordinate: C11SHouse.Coordinate(latitude: 36.55594538181557, longitude: -121.71800223493358))
+[7/23/25, 5:52:38 PM] Importing HomeKit - phase_started - previous_phase: Setup
+[7/23/25, 5:52:38 PM] homekit_import - view_homekit_import
+[7/23/25, 5:52:38 PM] Complete Setup - phase_started - previous_phase: Importing HomeKit
+[7/23/25, 5:52:38 PM] completion - view_completion_screen
+[7/23/25, 5:52:43 PM] Complete Setup - onboarding_complete
+
+
+=== END OF LOG ===
+
+Message from debugger: killed
