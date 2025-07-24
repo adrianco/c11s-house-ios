@@ -79,23 +79,46 @@ struct OnboardingWelcomeView: View {
                         .scaleEffect(houseScale)
                         .opacity(showContent || showBrainFlying ? 1.0 : 0.0)
                     
-                    // Flying brain+circle
+                    // Flying brain+circle - match the exact gradient and size from the icon
                     if showBrainFlying {
-                        Image(uiImage: AppIconCreatorLegacy.createBrainCircle(size: CGSize(width: 60, height: 60)))
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .position(brainPosition)
-                            .opacity(brainOpacity)
+                        // Create a brain circle that matches the icon's brain
+                        ZStack {
+                            // Gradient circle background matching icon
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color(UIColor.systemBlue), Color(UIColor.systemPurple)]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: 54, height: 54) // 45% of 120 = 54
+                            
+                            // Brain symbol
+                            Image(systemName: "brain")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36) // Proportional to icon
+                                .fontWeight(.bold)
+                        }
+                        .position(brainPosition)
+                        .opacity(brainOpacity)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .onAppear {
                     // Set initial brain position (below the screen)
-                    brainPosition = CGPoint(x: geometry.size.width / 2 - 100, y: geometry.size.height + 100)
+                    brainPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height + 100)
                     
-                    // Animate brain flying to center with a curved path
+                    // Calculate the final position of the brain in the icon
+                    // Brain is positioned at center of the icon (which is already centered)
+                    let brainFinalX = geometry.size.width / 2
+                    let brainFinalY = geometry.size.height / 2
+                    
+                    // Animate brain flying to its position in the icon with a curved path
                     withAnimation(.timingCurve(0.4, 0.0, 0.2, 1.0, duration: 1.5)) {
-                        brainPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                        brainPosition = CGPoint(x: brainFinalX, y: brainFinalY)
                     }
                     
                     // After brain reaches center, complete the animation

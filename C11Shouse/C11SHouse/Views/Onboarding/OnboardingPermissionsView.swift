@@ -26,14 +26,22 @@ struct OnboardingPermissionsView: View {
     @State private var showLocationExplanation = false
     @State private var hasRequestedPermissions = false
     
+    // Local permission states to avoid triggering service initialization
+    @State private var microphoneGranted = false
+    @State private var speechGranted = false
+    @State private var locationGranted = false
+    @State private var homeKitGranted = false
+    
     private var canContinue: Bool {
         // Microphone and speech are required, location is optional
-        return permissionManager.isMicrophoneGranted &&
-               permissionManager.isSpeechRecognitionGranted
+        // Use local state to avoid triggering service initialization
+        return microphoneGranted && speechGranted
     }
     
     var body: some View {
         VStack(spacing: 0) {
+            // Only check permission states after permissions have been requested
+            // This prevents service initialization on view load
             // Header
             VStack(spacing: 16) {
                 Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 80, height: 80)))
@@ -61,8 +69,10 @@ struct OnboardingPermissionsView: View {
                     icon: "mic.fill",
                     title: "Microphone",
                     description: "To hear your voice commands",
-                    status: permissionManager.isMicrophoneGranted ? .granted : 
-                            (permissionManager.microphonePermissionStatus == .denied ? .denied : .notDetermined),
+                    status: hasRequestedPermissions ? 
+                            (microphoneGranted ? .granted : 
+                             (permissionManager.microphonePermissionStatus == .denied ? .denied : .notDetermined)) : 
+                            .notDetermined,
                     isRequired: true
                 )
                 
@@ -70,8 +80,10 @@ struct OnboardingPermissionsView: View {
                     icon: "waveform",
                     title: "Speech Recognition",
                     description: "To understand your requests",
-                    status: permissionManager.isSpeechRecognitionGranted ? .granted : 
-                            (permissionManager.speechRecognitionPermissionStatus == .denied ? .denied : .notDetermined),
+                    status: hasRequestedPermissions ? 
+                            (speechGranted ? .granted : 
+                             (permissionManager.speechRecognitionPermissionStatus == .denied ? .denied : .notDetermined)) : 
+                            .notDetermined,
                     isRequired: true
                 )
                 
@@ -79,8 +91,10 @@ struct OnboardingPermissionsView: View {
                     icon: "location.fill",
                     title: "Location",
                     description: "To provide local weather and context",
-                    status: permissionManager.hasLocationPermission ? .granted : 
-                            (permissionManager.locationPermissionStatus == .denied || permissionManager.locationPermissionStatus == .restricted ? .denied : .notDetermined),
+                    status: hasRequestedPermissions ? 
+                            (locationGranted ? .granted : 
+                             (permissionManager.locationPermissionStatus == .denied || permissionManager.locationPermissionStatus == .restricted ? .denied : .notDetermined)) : 
+                            .notDetermined,
                     isRequired: false
                 ) {
                     showLocationExplanation = true
@@ -90,8 +104,10 @@ struct OnboardingPermissionsView: View {
                     icon: "homekit",
                     title: "HomeKit",
                     description: "To find existing named rooms and devices",
-                    status: permissionManager.isHomeKitGranted ? .granted :
-                            (permissionManager.homeKitPermissionStatus == .restricted ? .denied : .notDetermined),
+                    status: hasRequestedPermissions ? 
+                            (homeKitGranted ? .granted :
+                             (permissionManager.homeKitPermissionStatus == .restricted ? .denied : .notDetermined)) :
+                            .notDetermined,
                     isRequired: false
                 )
             }
@@ -163,7 +179,7 @@ struct OnboardingPermissionsView: View {
                 }
                 
                 // Skip location permission if not granted
-                if !permissionManager.hasLocationPermission && canContinue {
+                if hasRequestedPermissions && !locationGranted && canContinue {
                     Button(action: onContinue) {
                         Text("Skip Location Setup")
                             .font(.caption)
@@ -196,35 +212,33 @@ struct OnboardingPermissionsView: View {
             await permissionManager.requestSpeechRecognitionPermission()
             
             // 3. Location Service (optional)
-            if !permissionManager.hasLocationPermission {
-                _ = serviceContainer.locationService
-                await permissionManager.requestLocationPermission()
-            }
+            // Don't check permission status here - just request it
+            _ = serviceContainer.locationService
+            await permissionManager.requestLocationPermission()
             
             // 4. HomeKit Service (optional)
-            if !permissionManager.isHomeKitGranted {
-                print("[OnboardingPermissionsView] Requesting HomeKit permission...")
+            // Don't check permission status here - just request it
+            print("[OnboardingPermissionsView] Requesting HomeKit permission...")
+            await MainActor.run {
+                _ = serviceContainer.homeKitService
+            }
+            await permissionManager.requestHomeKitPermission()
+            
+            // Additional polling to ensure UI updates
+            // The PermissionManager already does polling, but we'll do some extra here for UI responsiveness
+            for i in 0..<5 {
+                try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
                 await MainActor.run {
-                    _ = serviceContainer.homeKitService
+                    // Update local states
+                    homeKitGranted = permissionManager.isHomeKitGranted
+                    // Trigger UI update
+                    permissionManager.objectWillChange.send()
                 }
-                await permissionManager.requestHomeKitPermission()
-                
-                // Additional polling to ensure UI updates
-                // The PermissionManager already does polling, but we'll do some extra here for UI responsiveness
-                for i in 0..<5 {
-                    try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
-                    await MainActor.run {
-                        // Just trigger UI update, don't recheck permissions as that might reset the status
-                        permissionManager.objectWillChange.send()
-                    }
-                    print("[OnboardingPermissionsView] UI update poll \(i+1): status=\(permissionManager.homeKitPermissionStatus.rawValue), granted=\(permissionManager.isHomeKitGranted)")
-                }
-            } else {
-                print("[OnboardingPermissionsView] HomeKit already granted, skipping request")
+                print("[OnboardingPermissionsView] UI update poll \(i+1): status=\(permissionManager.homeKitPermissionStatus.rawValue), granted=\(homeKitGranted)")
             }
             
             // Background address lookup if location permission granted
-            if permissionManager.hasLocationPermission {
+            if locationGranted {
                 let addressManager = serviceContainer.addressManager
                 Task.detached(priority: .background) {
                     do {
@@ -251,6 +265,12 @@ struct OnboardingPermissionsView: View {
             await MainActor.run {
                 isRequestingPermissions = false
                 hasRequestedPermissions = true
+                
+                // Update local permission states
+                microphoneGranted = permissionManager.isMicrophoneGranted
+                speechGranted = permissionManager.isSpeechRecognitionGranted
+                locationGranted = permissionManager.hasLocationPermission
+                homeKitGranted = permissionManager.isHomeKitGranted
             }
         }
     }

@@ -309,10 +309,11 @@ extension PermissionManager {
         // Check the raw value to understand what the actual status is
         let rawValue = homeKitPermissionStatus.rawValue
         
-        // HMHomeManagerAuthorizationStatus raw values:
+        // HMHomeManagerAuthorizationStatus raw values (from iOS logs):
         // 0 = determined (not asked yet)
         // 1 = restricted 
         // 2 = authorized
+        // 5 = not determined (need to ask) - seen in logs
         let granted = rawValue == 2 // authorized
         
         print("[PermissionManager] isHomeKitGranted check: rawValue=\(rawValue), granted=\(granted)")
