@@ -188,26 +188,26 @@ class ConversationViewModel: ObservableObject {
     }
     
     private func handleRoomNoteCreation(isMuted: Bool) async {
-            let thought = HouseThought(
-                thought: "I'll help you create a room note. What room would you like to add a note about?",
-                emotion: .curious,
-                category: .question,
-                confidence: 1.0
-            )
-            
-            let message = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
-            )
-            messageStore.addMessage(message)
-            
-            if !isMuted {
-                await stateManager.speak(thought.thought, isMuted: isMuted)
-            }
-            
-            // Mark that we're creating a room note
-            UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
+        let thought = HouseThought(
+            thought: "I'll help you create a room note. What room would you like to add a note about?",
+            emotion: .curious,
+            category: .question,
+            confidence: 1.0
+        )
+        
+        let message = Message(
+            content: thought.thought,
+            isFromUser: false,
+            isVoice: !isMuted
+        )
+        messageStore.addMessage(message)
+        
+        if !isMuted {
+            await stateManager.speak(thought.thought, isMuted: isMuted)
+        }
+        
+        // Mark that we're creating a room note
+        UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
     }
     
     private func handleDeviceNoteCreation(isMuted: Bool) async {
