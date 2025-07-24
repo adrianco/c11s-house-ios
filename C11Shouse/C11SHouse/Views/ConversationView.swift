@@ -41,7 +41,7 @@ struct ConversationView: View {
     @State private var pendingVoiceText = ""
     @State private var showVoiceConfirmation = false
     @State private var waitingForPermissions = false
-    @State private var cancellables = Set<AnyCancellable>()
+    @State private var permissionObserver: AnyCancellable?
     @FocusState private var isTextFieldFocused: Bool
     
     private var hasVoicePermissions: Bool {
@@ -316,20 +316,18 @@ struct ConversationView: View {
     
     private func setupPermissionObservers() {
         // Monitor microphone permission changes
-        serviceContainer.permissionManager.$microphonePermissionStatus
+        permissionObserver = serviceContainer.permissionManager.$microphonePermissionStatus
             .combineLatest(serviceContainer.permissionManager.$speechRecognitionPermissionStatus)
-            .sink { [weak self] micStatus, speechStatus in
-                guard let self = self else { return }
-                
+            .receive(on: DispatchQueue.main)
+            .sink { micStatus, speechStatus in
                 // If we were waiting for permissions and they're now granted, unmute
-                if self.waitingForPermissions &&
+                if waitingForPermissions &&
                    micStatus == .granted &&
                    speechStatus == .authorized {
-                    self.isMuted = false
-                    self.waitingForPermissions = false
+                    isMuted = false
+                    waitingForPermissions = false
                 }
             }
-            .store(in: &cancellables)
         
         // Also monitor app becoming active in case user changed permissions in Settings
         NotificationCenter.default.addObserver(
