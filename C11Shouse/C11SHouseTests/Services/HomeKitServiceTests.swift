@@ -24,6 +24,63 @@
 import XCTest
 @testable import C11SHouse
 import HomeKit
+import Combine
+
+// MARK: - Test Extensions for HomeKit Models
+
+extension HomeKitRoom {
+    // Test initializer
+    init(id: UUID, name: String) {
+        self.id = id
+        self.name = name
+    }
+}
+
+extension HomeKitAccessory {
+    // Test initializer
+    init(
+        id: UUID,
+        name: String,
+        roomId: UUID?,
+        category: String,
+        manufacturer: String?,
+        model: String?,
+        isReachable: Bool,
+        isBridged: Bool,
+        currentState: String?,
+        services: [String]
+    ) {
+        self.id = id
+        self.name = name
+        self.roomId = roomId
+        self.category = category
+        self.manufacturer = manufacturer
+        self.model = model
+        self.isReachable = isReachable
+        self.isBridged = isBridged
+        self.currentState = currentState
+        self.services = services
+    }
+}
+
+extension HomeKitHome {
+    // Test initializer
+    init(
+        id: UUID,
+        name: String,
+        isPrimary: Bool,
+        rooms: [HomeKitRoom],
+        accessories: [HomeKitAccessory],
+        createdAt: Date
+    ) {
+        self.id = id
+        self.name = name
+        self.isPrimary = isPrimary
+        self.rooms = rooms
+        self.accessories = accessories
+        self.createdAt = createdAt
+    }
+}
 
 class HomeKitServiceTests: XCTestCase {
     
@@ -120,7 +177,7 @@ class HomeKitServiceTests: XCTestCase {
                 model: "Door and Window Sensor",
                 isReachable: false,
                 isBridged: true,
-                currentState: nil,
+                currentState: nil as String?,
                 services: ["Contact Sensor", "Battery"]
             )
         ]
@@ -142,7 +199,7 @@ class HomeKitServiceTests: XCTestCase {
         let accessory = HomeKitAccessory(
             id: UUID(),
             name: "Front Door Lock",
-            roomId: nil,
+            roomId: nil as UUID?,
             category: "Locks",
             manufacturer: "August",
             model: "Smart Lock Pro",
@@ -180,13 +237,13 @@ class HomeKitServiceTests: XCTestCase {
                 HomeKitAccessory(
                     id: UUID(),
                     name: "Device 1",
-                    roomId: nil,
+                    roomId: nil as UUID?,
                     category: "Other Accessories",
-                    manufacturer: nil,
-                    model: nil,
+                    manufacturer: nil as String?,
+                    model: nil as String?,
                     isReachable: true,
                     isBridged: false,
-                    currentState: nil,
+                    currentState: nil as String?,
                     services: []
                 )
             ],
@@ -228,7 +285,12 @@ class MockNotesService: NotesServiceProtocol {
     var savedNotes: [(title: String, content: String, category: String)] = []
     
     var notesStorePublisher: AnyPublisher<NotesStoreData, Never> {
-        Just(NotesStoreData()).eraseToAnyPublisher()
+        Just(NotesStoreData(
+            notes: [:],
+            questions: [],
+            lastUpdated: Date(),
+            version: "1.0"
+        )).eraseToAnyPublisher()
     }
     
     func loadNotesStore() async throws -> NotesStoreData {
@@ -265,5 +327,38 @@ class MockNotesService: NotesServiceProtocol {
     
     func saveCustomNote(title: String, content: String, category: String) async {
         savedNotes.append((title: title, content: content, category: category))
+    }
+    
+    // Additional protocol methods from extensions
+    func getCurrentQuestion() async -> Question? {
+        return nil
+    }
+    
+    func areAllRequiredQuestionsAnswered() async -> Bool {
+        return true
+    }
+    
+    func saveOrUpdateNote(for questionId: UUID, answer: String, metadata: [String: String]? = nil) async throws {
+        // Not used in these tests
+    }
+    
+    func getNote(for questionId: UUID) async throws -> Note? {
+        return nil
+    }
+    
+    func getUnansweredQuestions() async throws -> [Question] {
+        return []
+    }
+    
+    func saveWeatherSummary(_ weather: Weather) async {
+        // Not used in these tests
+    }
+    
+    func saveHouseName(_ name: String) async {
+        // Not used in these tests
+    }
+    
+    func getHouseName() async -> String? {
+        return nil
     }
 }
