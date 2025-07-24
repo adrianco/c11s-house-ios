@@ -228,9 +228,9 @@ class HomeKitServiceTests: XCTestCase {
     
     // MARK: - Integration Tests
     
+    @MainActor
     func testSaveHomeKitConfigurationAsNotes() async throws {
-        // Given: A mock HomeKit service with discovered homes
-        let mockHomeKitService = MockHomeKitService()
+        // Given: Test HomeKit data and a mock notes service
         let mockNotesService = MockHomeKitNotesService()
         
         // Create test HomeKit data
@@ -291,9 +291,7 @@ class HomeKitServiceTests: XCTestCase {
             discoveredAt: Date()
         )
         
-        mockHomeKitService.mockDiscoverySummary = discoverySummary
-        
-        // Create the service
+        // Create a real HomeKitService with the mock notes service
         let homeKitService = HomeKitService(notesService: mockNotesService)
         
         // When: Save configuration as notes
