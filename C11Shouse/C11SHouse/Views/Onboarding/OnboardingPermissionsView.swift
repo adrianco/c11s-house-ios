@@ -82,6 +82,15 @@ struct OnboardingPermissionsView: View {
                 ) {
                     showLocationExplanation = true
                 }
+                
+                PermissionCard(
+                    icon: "homekit",
+                    title: "HomeKit",
+                    description: "To find existing named rooms and devices",
+                    status: permissionManager.isHomeKitGranted ? .granted :
+                            (permissionManager.homeKitPermissionStatus == .restricted ? .denied : .notDetermined),
+                    isRequired: false
+                )
             }
             .padding(.horizontal, 30)
             
@@ -175,6 +184,11 @@ struct OnboardingPermissionsView: View {
             // Location is optional, so request it separately
             if !permissionManager.hasLocationPermission {
                 await permissionManager.requestLocationPermission()
+            }
+            
+            // HomeKit is optional, so request it separately
+            if !permissionManager.isHomeKitGranted {
+                await permissionManager.requestHomeKitPermission()
             }
             
             // Background address lookup if location permission granted

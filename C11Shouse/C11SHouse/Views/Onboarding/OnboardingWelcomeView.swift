@@ -20,6 +20,10 @@ import SwiftUI
 struct OnboardingWelcomeView: View {
     @State private var isAnimating = false
     @State private var showContent = false
+    @State private var showBrainFlying = true
+    @State private var brainPosition = CGPoint(x: -100, y: -100)
+    @State private var brainOpacity: Double = 1.0
+    @State private var houseScale: CGFloat = 0.8
     @EnvironmentObject private var serviceContainer: ServiceContainer
     
     // Completion handler
@@ -42,38 +46,85 @@ struct OnboardingWelcomeView: View {
             Spacer()
             
             // Animated House Icon
-            ZStack {
-                // Consciousness visualization rings
-                ForEach(0..<3) { index in
-                    Circle()
-                        .stroke(
-                            LinearGradient(
-                                gradient: Gradient(colors: [.blue.opacity(0.3), .purple.opacity(0.2)]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2
-                        )
-                        .frame(width: 120 + CGFloat(index * 40), height: 120 + CGFloat(index * 40))
-                        .scaleEffect(isAnimating ? 1.1 : 0.9)
-                        .opacity(isAnimating ? 0.3 : 0.7)
-                        .animation(
-                            Animation.easeInOut(duration: 2.0 + Double(index) * 0.5)
-                                .repeatForever(autoreverses: true)
-                                .delay(Double(index) * 0.2),
-                            value: isAnimating
-                        )
+            GeometryReader { geometry in
+                ZStack {
+                    // Consciousness visualization rings
+                    ForEach(0..<3) { index in
+                        Circle()
+                            .stroke(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.blue.opacity(0.3), .purple.opacity(0.2)]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 2
+                            )
+                            .frame(width: 120 + CGFloat(index * 40), height: 120 + CGFloat(index * 40))
+                            .scaleEffect(isAnimating ? 1.1 : 0.9)
+                            .opacity(isAnimating && !showBrainFlying ? 0.3 : 0.0)
+                            .animation(
+                                Animation.easeInOut(duration: 2.0 + Double(index) * 0.5)
+                                    .repeatForever(autoreverses: true)
+                                    .delay(Double(index) * 0.2),
+                                value: isAnimating
+                            )
+                    }
+                    
+                    // House icon (without brain initially)
+                    Image(uiImage: AppIconCreatorLegacy.createHouseOnly(size: CGSize(width: 120, height: 120)))
+                        .resizable()
+                        .frame(width: 120, height: 120)
+                        .cornerRadius(24)
+                        .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
+                        .scaleEffect(houseScale)
+                        .opacity(showContent || showBrainFlying ? 1.0 : 0.0)
+                    
+                    // Flying brain+circle
+                    if showBrainFlying {
+                        Image(uiImage: AppIconCreatorLegacy.createBrainCircle(size: CGSize(width: 60, height: 60)))
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .position(brainPosition)
+                            .opacity(brainOpacity)
+                    }
+                    
+                    // Final complete icon (after animation)
+                    if !showBrainFlying {
+                        Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 120, height: 120)))
+                            .resizable()
+                            .frame(width: 120, height: 120)
+                            .cornerRadius(24)
+                            .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
+                            .scaleEffect(houseScale)
+                    }
                 }
-                
-                // Central house icon
-                Image(uiImage: AppIconCreatorLegacy.createIcon(size: CGSize(width: 120, height: 120)))
-                    .resizable()
-                    .frame(width: 120, height: 120)
-                    .cornerRadius(24)
-                    .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
-                    .scaleEffect(showContent ? 1.0 : 0.8)
-                    .opacity(showContent ? 1.0 : 0.0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    // Set initial brain position (top-left corner)
+                    brainPosition = CGPoint(x: 50, y: 50)
+                    
+                    // Animate brain flying to center
+                    withAnimation(.easeInOut(duration: 1.5)) {
+                        brainPosition = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                    }
+                    
+                    // After brain reaches center, complete the animation
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            brainOpacity = 0
+                            houseScale = 1.0
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            showBrainFlying = false
+                            withAnimation {
+                                isAnimating = true
+                            }
+                        }
+                    }
+                }
             }
+            .frame(height: 200)
             .padding(.bottom, 40)
             
             // Welcome Text

@@ -12,11 +12,9 @@
  *   - Permissions requested on app launch using .task modifier for async operations
  *   - Conditional permission request only if not already granted to improve UX
  *   - ContentView used as root view with ServiceContainer injected via environment
- * - 2025-07-23: Added animated splash screen
- *   - SplashView shows on app launch with brain+circle flying into house animation
- *   - Smooth transition from splash to main content view
- *   - Animation represents the concept of house consciousness
- *   - Maintains consistent branding with app icon design
+ * - 2025-07-24: Removed separate splash screen
+ *   - Animation moved to OnboardingWelcomeView per UX plan requirements
+ *   - Splash screen animation was not part of original design spec
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -27,7 +25,6 @@ import SwiftUI
 @main
 struct C11SHouseApp: App {
     @StateObject private var serviceContainer = ServiceContainer.shared
-    @State private var showSplash = true
     
     init() {
         #if DEBUG
@@ -38,22 +35,13 @@ struct C11SHouseApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if showSplash {
-                SplashView {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        showSplash = false
-                    }
+            ContentView()
+                .environmentObject(serviceContainer)
+                .withOnboarding(serviceContainer: serviceContainer)
+                .task {
+                    // Request permissions through onboarding flow
+                    // The onboarding coordinator will handle permission requests
                 }
-            } else {
-                ContentView()
-                    .environmentObject(serviceContainer)
-                    .withOnboarding(serviceContainer: serviceContainer)
-                    .task {
-                        // Request permissions through onboarding flow
-                        // The onboarding coordinator will handle permission requests
-                    }
-                    .transition(.opacity)
-            }
         }
     }
     
