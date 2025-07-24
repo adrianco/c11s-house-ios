@@ -62,8 +62,8 @@ class LocationServiceImpl: NSObject, LocationServiceProtocol {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 100 // Update every 100 meters
         
-        // Don't check authorization status here - it triggers the permission popup
-        // Status will be sent when locationManagerDidChangeAuthorization is called
+        // Send initial authorization status
+        authorizationStatusSubject.send(locationManager.authorizationStatus)
     }
     
     func requestLocationPermission() async {

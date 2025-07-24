@@ -1,4 +1,3 @@
-[HomeKitService] Initialized with delegate set, initial status: 0
 [WeatherKitService] 🌦️ Initializing WeatherKit service
 [WeatherKitService] Bundle ID: com.c11s.house
 [WeatherKitService] ✅ Running on real device
@@ -12,123 +11,116 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
-Started onboarding phase: Welcome
-🚀 ONBOARDING SESSION STARTED - ID: A6A1ADA5-0C7F-4BE7-92F7-B53093BD44BF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 PHASE TRANSITION: Start → welcome
-👆 USER ACTION: view_appeared in welcome
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Created Weather question in notes store
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-👆 USER ACTION: button_tap in welcome
-   Details: button: begin_setup
-Completed onboarding phase: Welcome in 18 seconds
-Started onboarding phase: Setup
-📍 PHASE TRANSITION: Welcome → Setup
-[OnboardingPermissionsView] init called
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] requestPermissions() called - button was pressed
-[OnboardingPermissionsView] body evaluated
-TranscriptionServiceImpl: Using device locale en_US
-[OnboardingPermissionsView] About to initialize HomeKit service and request permission
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] Initializing HMHomeManager for first time
-[PermissionManager] requestHomeKitPermission started, current status: 5
-[PermissionManager] Status is 5, trying to refresh by accessing homes
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] homeManagerDidUpdateHomes called: oldStatus=5, newStatus=5
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 1: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 2: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 3: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 4: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 5: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 6: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 7: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 8: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 9: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 10: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 11: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 12: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 13: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 14: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 15: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 16: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 17: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 18: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 19: status=5
-[OnboardingPermissionsView] body evaluated
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] HomeKit poll 20: status=5
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] requestHomeKitPermission completed, final status: 5
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[OnboardingPermissionsView] UI update poll 1: status=5, granted=false
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[OnboardingPermissionsView] UI update poll 2: status=5, granted=false
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[OnboardingPermissionsView] UI update poll 3: status=5, granted=false
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[OnboardingPermissionsView] UI update poll 4: status=5, granted=false
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[OnboardingPermissionsView] UI update poll 5: status=5, granted=false
-[OnboardingPermissionsView] body evaluated
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-[OnboardingPermissionsView] body evaluated
-Completed onboarding phase: Setup in 23 seconds
-Started onboarding phase: Importing HomeKit
-⏱️ Phase 'Setup' completed in 23.9s
-📍 PHASE TRANSITION: Setup → Importing HomeKit
-👆 USER ACTION: view_homekit_import in homekit_import
-[PermissionManager] isHomeKitGranted check: rawValue=5, granted=false
-Completed onboarding phase: Importing HomeKit in 0 seconds
-Started onboarding phase: Complete Setup
-⏱️ Phase 'Importing HomeKit' completed in 21.21ms
-📍 PHASE TRANSITION: Importing HomeKit → Complete Setup
-👆 USER ACTION: view_completion_screen in completion
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[PermissionManager] isHomeKitGranted check: HomeManager not initialized, returning false
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Adding welcome message
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Is this the right address?
+[QuestionFlowCoordinator] Failed to detect address: locationPermissionDenied
+App is being debugged, do not track this hang
+Hang detected: 0.29s (debugger attached, not reporting)
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Found 2 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Is this the right address?
+<0x101db9680> Gesture: System gesture gate timed out.
+App is being debugged, do not track this hang
+Hang detected: 1.31s (debugger attached, not reporting)
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Found 2 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Is this the right address?
+[ConversationView] Permission check failed: notAuthorized
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] No saved house name found
+[ConversationViewModel] Found 2 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 5
+[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Is this the right address?
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+App is being debugged, do not track this hang
+Hang detected: 0.43s (debugger attached, not reporting)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationViewModel] processUserInput: 'What address'
+[ConversationViewModel] Answering question: Is this the right address?
+[QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
+[QuestionFlowCoordinator] Answer: 'What address'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'What address'
+[QuestionFlowCoordinator] Trimmed answer: 'What address'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 8D4F9A6D-679D-4F35-85EF-3294385E9773
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[ConversationStateManager] speak called - text: 'Got it!...', isMuted: false
+[ConversationStateManager] Not speaking - saving answer
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Processing address answer: What address
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 4
+[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
+[ConversationStateManager] speak called - text: 'What should I call this house?
+
+What House...', isMuted: false
+[ConversationStateManager] Speaking text...
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = dismissAutoFillPanel, customInfoType = UIUserInteractionRemoteInputOperations
+Snapshotting a view (0x10f170e00, UIKeyboardImpl) that is not in a visible window requires afterScreenUpdates:YES.
 Message from debugger: killed

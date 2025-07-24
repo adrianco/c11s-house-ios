@@ -38,12 +38,33 @@ struct C11SHouseApp: App {
             ContentView()
                 .environmentObject(serviceContainer)
                 .task {
+                    // Initialize services early to trigger permission dialogs when needed
+                    await initializeServices()
+                    
                     // For existing users who already have HomeKit permission
                     await checkForHomeKitDiscovery()
                 }
         }
     }
     
+    
+    @MainActor
+    private func initializeServices() async {
+        // Initialize location service early
+        let locationService = serviceContainer.locationService
+        await locationService.requestLocationPermission()
+        
+        // Check all permissions
+        serviceContainer.permissionManager.checkCurrentPermissions()
+        
+        // Initialize weather coordinator
+        _ = serviceContainer.weatherCoordinator
+        
+        // Initialize question flow coordinator
+        _ = serviceContainer.questionFlowCoordinator
+        
+        print("[C11SHouseApp] Services initialized")
+    }
     
     @MainActor
     private func checkForHomeKitDiscovery() async {

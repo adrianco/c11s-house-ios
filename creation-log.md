@@ -2779,3 +2779,7 @@ Key Changes Made:
 
 
 
+> compiled and ran ok. Functionality not working, see LoggingRecord.txt for what happened. App started Muted, when I unmuted, it requested mic and TTS correctly but button didn't update until I left and re-entered the view. The 
+  initial location question appeared but wasn't populated from the location service, which did get permission. At the start of the app, before entering ConversationView, the services should be initialized.
+
+  

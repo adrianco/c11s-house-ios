@@ -404,9 +404,16 @@ struct ConversationView: View {
         // Check permissions again after potential user response
         serviceContainer.permissionManager.checkCurrentPermissions()
         
-        // If permissions were granted, unmute
-        if hasVoicePermissions {
-            isMuted = false
+        // Wait a bit more for permission state to propagate
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        
+        // Force UI update by triggering a state change
+        await MainActor.run {
+            // If permissions were granted, unmute
+            if serviceContainer.permissionManager.isMicrophoneGranted &&
+               serviceContainer.permissionManager.isSpeechRecognitionGranted {
+                isMuted = false
+            }
         }
     }
 }
