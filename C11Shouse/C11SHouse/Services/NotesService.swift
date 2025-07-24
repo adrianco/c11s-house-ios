@@ -84,6 +84,9 @@ protocol NotesServiceProtocol {
     
     /// Clear all data
     func clearAllData() async throws
+    
+    /// Save a custom note (for room notes, device notes, etc.)
+    func saveCustomNote(title: String, content: String, category: String) async
 }
 
 /// Concrete implementation of NotesService using UserDefaults

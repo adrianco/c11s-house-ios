@@ -116,13 +116,19 @@ struct OnboardingWelcomeView: View {
                     let iconCenterX = geometry.size.width / 2
                     let iconCenterY = geometry.size.height / 2
                     
+                    // The icon starts at scale 0.8 and will animate to 1.0
+                    // We need to calculate where the brain should be when the icon is at scale 1.0
+                    let finalIconSize: CGFloat = 120.0
+                    let initialScale: CGFloat = 0.8
+                    
                     // Brain circle is at 27.5% from left, 37.5% from top of the icon
                     // And the circle is 45% of icon size (54px), so center is at +27px
-                    let brainOffsetX = -60 + (120 * 0.275) + 27 // -60 to get to icon left edge, then offset
-                    let brainOffsetY = -60 + (120 * 0.375) + 27 // -60 to get to icon top edge, then offset
+                    let brainOffsetX = -finalIconSize/2 + (finalIconSize * 0.275) + 27
+                    let brainOffsetY = -finalIconSize/2 + (finalIconSize * 0.375) + 27
                     
-                    let brainFinalX = iconCenterX + brainOffsetX
-                    let brainFinalY = iconCenterY + brainOffsetY
+                    // Account for the scale difference - position for scale 0.8
+                    let brainFinalX = iconCenterX + (brainOffsetX * initialScale)
+                    let brainFinalY = iconCenterY + (brainOffsetY * initialScale)
                     
                     // Animate brain flying to its exact position in the icon
                     withAnimation(.timingCurve(0.4, 0.0, 0.2, 1.0, duration: 1.5)) {

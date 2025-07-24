@@ -82,6 +82,7 @@ public final class PermissionManager: NSObject, ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     private var _homeManager: HMHomeManager?
+    private var homeKitAuthorizationContinuation: CheckedContinuation<Void, Never>?
     
     // Lazy initialization to prevent permission dialog at startup
     private var homeManager: HMHomeManager {
@@ -186,63 +187,42 @@ public final class PermissionManager: NSObject, ObservableObject {
         print("[PermissionManager] requestHomeKitPermission started, current status: \(homeManager.authorizationStatus.rawValue)")
         
         // HomeKit permission is requested automatically when accessing homes
-        // We just need to check the current status
         homeKitPermissionStatus = homeManager.authorizationStatus
         
-        // If permission dialog was already shown at startup, the status might be 5
-        // Try to refresh by accessing homes again
-        if homeManager.authorizationStatus.rawValue == 5 {
-            print("[PermissionManager] Status is 5, trying to refresh by accessing homes")
-            // Access homes to potentially refresh status
-            _ = homeManager.homes
+        // If we need to request permission (status is 5 or 0)
+        if homeManager.authorizationStatus.rawValue == 5 || homeManager.authorizationStatus.rawValue == 0 {
+            print("[PermissionManager] Status is \(homeManager.authorizationStatus.rawValue), triggering permission request")
             
-            // Poll for status changes with longer timeout
-            for i in 0..<20 { // 10 seconds total
-                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            // Set up continuation to wait for delegate callback
+            await withCheckedContinuation { continuation in
+                self.homeKitAuthorizationContinuation = continuation
                 
-                let currentStatus = homeManager.authorizationStatus
-                print("[PermissionManager] HomeKit poll \(i+1): status=\(currentStatus.rawValue)")
+                // Access homes to trigger permission dialog
+                _ = self.homeManager.homes
                 
-                homeKitPermissionStatus = currentStatus
-                
-                // Force refresh UI
-                await MainActor.run {
-                    objectWillChange.send()
-                }
-                
-                // If status changed to authorized (2), we're done
-                if currentStatus.rawValue == 2 {
-                    print("[PermissionManager] HomeKit authorized!")
-                    break
+                // Set a timeout in case the delegate is never called
+                Task {
+                    try? await Task.sleep(nanoseconds: 15_000_000_000) // 15 seconds timeout
+                    
+                    await MainActor.run {
+                        if self.homeKitAuthorizationContinuation != nil {
+                            print("[PermissionManager] HomeKit permission timeout - no delegate callback received")
+                            self.homeKitAuthorizationContinuation = nil
+                            continuation.resume()
+                        }
+                    }
                 }
             }
-        } else if homeManager.authorizationStatus == .determined {
-            print("[PermissionManager] Status is .determined, accessing homes to trigger permission dialog")
-            // Access homes to trigger permission dialog
-            _ = homeManager.homes
             
-            // Poll for status changes
-            for i in 0..<20 { // 10 seconds total
-                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-                
-                let currentStatus = homeManager.authorizationStatus
-                print("[PermissionManager] HomeKit poll \(i+1): status=\(currentStatus.rawValue)")
-                
-                homeKitPermissionStatus = currentStatus
-                
-                // Force refresh UI
-                await MainActor.run {
-                    objectWillChange.send()
-                }
-                
-                // If status changed from .determined, we're done
-                if currentStatus != .determined {
-                    print("[PermissionManager] HomeKit status changed to: \(currentStatus.rawValue)")
-                    break
-                }
-            }
-        } else {
-            print("[PermissionManager] HomeKit status already set: \(homeManager.authorizationStatus.rawValue)")
+            // After continuation resumes, check final status
+            let finalStatus = homeManager.authorizationStatus
+            print("[PermissionManager] HomeKit permission request completed, final status: \(finalStatus.rawValue)")
+            homeKitPermissionStatus = finalStatus
+            
+        } else if homeManager.authorizationStatus == .authorized {
+            print("[PermissionManager] HomeKit already authorized")
+        } else if homeManager.authorizationStatus == .restricted {
+            print("[PermissionManager] HomeKit restricted")
         }
         
         updateAllPermissionsStatus()
@@ -440,9 +420,16 @@ extension PermissionManager: HMHomeManagerDelegate {
         print("[PermissionManager] homeManager:didUpdate:status called: oldStatus=\(oldStatus.rawValue), newStatus=\(status.rawValue)")
         homeKitPermissionStatus = status
         
-        // Force UI update
+        // Force UI update and trigger any waiting continuations
         Task { @MainActor in
             objectWillChange.send()
+            updateAllPermissionsStatus()
+            
+            // Resume any waiting continuation
+            if let continuation = homeKitAuthorizationContinuation {
+                homeKitAuthorizationContinuation = nil
+                continuation.resume()
+            }
         }
     }
 }

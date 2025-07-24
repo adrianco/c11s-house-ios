@@ -234,10 +234,9 @@ class MockNotesService: NotesServiceProtocol {
     
     var notesStorePublisher: AnyPublisher<NotesStoreData, Never> {
         Just(NotesStoreData(
-            notes: [:],
             questions: [],
-            lastUpdated: Date(),
-            version: "1.0"
+            notes: [:],
+            version: 1
         )).eraseToAnyPublisher()
     }
     

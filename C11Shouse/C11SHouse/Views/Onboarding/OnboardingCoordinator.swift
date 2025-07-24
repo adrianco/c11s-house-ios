@@ -55,7 +55,7 @@ class OnboardingCoordinator: ObservableObject {
     private let notesService: NotesServiceProtocol
     private let permissionManager: PermissionManager
     private let addressManager: AddressManager
-    private let homeKitCoordinator: HomeKitCoordinator?
+    private let serviceContainer: ServiceContainer
     private var cancellables = Set<AnyCancellable>()
     private var isInitializingOnboarding = false
     
@@ -68,11 +68,11 @@ class OnboardingCoordinator: ObservableObject {
     init(notesService: NotesServiceProtocol,
          permissionManager: PermissionManager,
          addressManager: AddressManager,
-         homeKitCoordinator: HomeKitCoordinator? = nil) {
+         serviceContainer: ServiceContainer) {
         self.notesService = notesService
         self.permissionManager = permissionManager
         self.addressManager = addressManager
-        self.homeKitCoordinator = homeKitCoordinator
+        self.serviceContainer = serviceContainer
         
         checkOnboardingStatus()
     }
@@ -265,10 +265,15 @@ class OnboardingCoordinator: ObservableObject {
     // MARK: - HomeKit Import
     
     private func performHomeKitImport() async {
-        // Skip HomeKit import phase if permission not granted or no coordinator
-        guard permissionManager.isHomeKitGranted, let coordinator = homeKitCoordinator else {
+        // Skip HomeKit import phase if permission not granted
+        guard permissionManager.isHomeKitGranted else {
             nextPhase() // Skip to completion
             return
+        }
+        
+        // Access homeKitCoordinator only when needed
+        let coordinator = await MainActor.run {
+            serviceContainer.homeKitCoordinator
         }
         
         await MainActor.run {
@@ -353,7 +358,7 @@ struct OnboardingModifier: ViewModifier {
             notesService: serviceContainer.notesService,
             permissionManager: serviceContainer.permissionManager,
             addressManager: serviceContainer.addressManager,
-            homeKitCoordinator: serviceContainer.homeKitCoordinator
+            serviceContainer: serviceContainer
         ))
     }
     

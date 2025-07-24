@@ -207,25 +207,28 @@ struct OnboardingPermissionsView: View {
         isRequestingPermissions = true
         
         Task {
-            // Initialize services that require permissions - this triggers permission popups
+            // Request permissions one by one with delays to prevent all dialogs appearing at once
             
-            // 1. Audio Recorder Service (triggers microphone permission)
-            _ = serviceContainer.audioRecorder
+            // 1. Microphone permission first
             await permissionManager.requestMicrophonePermission()
             
-            // 2. Transcription Service (triggers speech recognition permission)
-            await MainActor.run {
-                _ = serviceContainer.transcriptionService
-            }
+            // Small delay between permission requests
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            
+            // 2. Speech Recognition permission
             await permissionManager.requestSpeechRecognitionPermission()
             
+            // Small delay between permission requests
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            
             // 3. Location Service (optional)
-            // Don't check permission status here - just request it
             _ = serviceContainer.locationService
             await permissionManager.requestLocationPermission()
             
+            // Small delay between permission requests
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            
             // 4. HomeKit Service (optional)
-            // Don't check permission status here - just request it
             print("[OnboardingPermissionsView] About to initialize HomeKit service and request permission")
             await MainActor.run {
                 _ = serviceContainer.homeKitService

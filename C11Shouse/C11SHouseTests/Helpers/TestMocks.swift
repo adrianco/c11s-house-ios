@@ -261,6 +261,26 @@ class SharedMockNotesService: NotesServiceProtocol {
         }
     }
     
+    func saveCustomNote(title: String, content: String, category: String) async {
+        // Create a custom question and note for testing
+        let customQuestion = Question(
+            text: title,
+            category: .other,
+            displayOrder: 1000,
+            isRequired: false,
+            hint: "Custom \(category) note"
+        )
+        mockNotesStore.questions.append(customQuestion)
+        
+        let note = Note(questionId: customQuestion.id, answer: content)
+        mockNotesStore.notes[customQuestion.id] = note
+        savedNotes.append(note)
+        
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
+    }
+    
     func getHouseName() async -> String? {
         return mockHouseName
     }
