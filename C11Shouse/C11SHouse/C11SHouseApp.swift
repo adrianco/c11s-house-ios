@@ -63,37 +63,27 @@ struct C11SHouseApp: App {
         // Initialize question flow coordinator
         _ = serviceContainer.questionFlowCoordinator
         
-        // Initialize HomeKit coordinator (this will trigger permission if needed)
-        _ = serviceContainer.homeKitCoordinator
+        // Initialize HomeKit coordinator and start discovery immediately
+        let homeKitCoordinator = serviceContainer.homeKitCoordinator
+        Task {
+            // Discover HomeKit configuration in background
+            await homeKitCoordinator.discoverAndSaveConfiguration()
+            print("[C11SHouseApp] HomeKit discovery completed")
+        }
         
         print("[C11SHouseApp] Services initialized")
     }
     
     @MainActor
     private func checkForHomeKitDiscovery() async {
-        // Wait a bit for app to fully initialize
-        try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+        // This method is now only used for re-checking after app becomes active
+        // Initial discovery happens in initializeServices
         
-        // Check if user has HomeKit permission but hasn't run discovery
-        let hasRunHomeKitDiscovery = UserDefaults.standard.bool(forKey: "hasRunHomeKitDiscovery")
-        
-        if !hasRunHomeKitDiscovery {
-            // Check if HomeKit permission is granted
-            let permissionManager = serviceContainer.permissionManager
-            permissionManager.checkCurrentPermissions()
-            
-            if permissionManager.isHomeKitGranted {
-                print("[C11SHouseApp] User has HomeKit permission but discovery hasn't run. Running now...")
-                
-                // Run HomeKit discovery
-                let homeKitCoordinator = serviceContainer.homeKitCoordinator
-                await homeKitCoordinator.discoverAndSaveConfiguration()
-                
-                // Mark as complete
-                UserDefaults.standard.set(true, forKey: "hasRunHomeKitDiscovery")
-                
-                print("[C11SHouseApp] HomeKit discovery completed for existing user")
-            }
+        // Check if we need to re-run discovery (e.g., user added new homes)
+        let homeKitCoordinator = serviceContainer.homeKitCoordinator
+        if homeKitCoordinator.isAuthorized {
+            // Refresh configuration if authorized
+            await homeKitCoordinator.refreshConfiguration()
         }
     }
     

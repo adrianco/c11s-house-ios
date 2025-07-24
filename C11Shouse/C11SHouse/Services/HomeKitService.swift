@@ -67,6 +67,9 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
     
+    private var homeManagerReadyContinuation: CheckedContinuation<Void, Never>?
+    private var isHomeManagerReady = false
+    
     // MARK: - Initialization
     
     init(notesService: NotesServiceProtocol) {
@@ -78,6 +81,9 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
         
         // Update initial authorization status
         authorizationStatusSubject.send(homeManager.authorizationStatus)
+        
+        // Trigger HomeManager to start loading homes
+        _ = homeManager.homes
     }
     
     // MARK: - Public Methods
@@ -94,10 +100,16 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
             throw HomeKitError.notAuthorized
         }
         
-        // Wait for HomeManager to be ready
-        if homeManager.homes.isEmpty && homeManager.authorizationStatus == .authorized {
-            // Give HomeManager a moment to load homes
-            try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+        // Wait for HomeManager to be ready if needed
+        if !isHomeManagerReady {
+            await withCheckedContinuation { continuation in
+                self.homeManagerReadyContinuation = continuation
+                // Check if already ready
+                if self.isHomeManagerReady {
+                    continuation.resume()
+                    self.homeManagerReadyContinuation = nil
+                }
+            }
         }
         
         // Convert HMHome objects to our models
@@ -169,6 +181,15 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
 
 extension HomeKitService: HMHomeManagerDelegate {
     func homeManagerDidUpdateHomes(_ manager: HMHomeManager) {
+        print("[HomeKitService] homeManagerDidUpdateHomes called, homes count: \(manager.homes.count)")
+        
+        // Mark home manager as ready
+        if !isHomeManagerReady {
+            isHomeManagerReady = true
+            homeManagerReadyContinuation?.resume()
+            homeManagerReadyContinuation = nil
+        }
+        
         // Update discovered homes when HomeKit configuration changes
         Task {
             _ = try? await discoverHomes()
@@ -176,7 +197,15 @@ extension HomeKitService: HMHomeManagerDelegate {
     }
     
     func homeManager(_ manager: HMHomeManager, didUpdate status: HMHomeManagerAuthorizationStatus) {
+        print("[HomeKitService] Authorization status updated to: \(status.rawValue)")
         authorizationStatusSubject.send(status)
+        
+        // If not authorized, mark as ready to avoid hanging
+        if status != .authorized && !isHomeManagerReady {
+            isHomeManagerReady = true
+            homeManagerReadyContinuation?.resume()
+            homeManagerReadyContinuation = nil
+        }
     }
 }
 
