@@ -24,6 +24,7 @@ struct OnboardingPermissionsView: View {
     
     @State private var isRequestingPermissions = false
     @State private var showLocationExplanation = false
+    @State private var hasRequestedPermissions = false
     
     private var canContinue: Bool {
         // Microphone and speech are required, location is optional
@@ -100,7 +101,7 @@ struct OnboardingPermissionsView: View {
             
             // Action Buttons
             VStack(spacing: 16) {
-                if !canContinue {
+                if !hasRequestedPermissions {
                     Button(action: requestPermissions) {
                         HStack {
                             if isRequestingPermissions {
@@ -138,9 +139,10 @@ struct OnboardingPermissionsView: View {
                         }
                     }
                 } else {
+                    // Show Next button after permissions have been requested
                     Button(action: onContinue) {
                         HStack {
-                            Text("Continue")
+                            Text("Next")
                             Image(systemName: "arrow.right")
                         }
                         .font(.headline)
@@ -157,6 +159,7 @@ struct OnboardingPermissionsView: View {
                         .cornerRadius(12)
                         .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
                     }
+                    .disabled(!canContinue) // Disable if required permissions not granted
                 }
                 
                 // Skip location permission if not granted
@@ -180,16 +183,29 @@ struct OnboardingPermissionsView: View {
         isRequestingPermissions = true
         
         Task {
+            // Initialize services that require permissions - this triggers permission popups
+            
+            // 1. Audio Recorder Service (triggers microphone permission)
+            _ = serviceContainer.audioRecorder
             await permissionManager.requestMicrophonePermission()
+            
+            // 2. Transcription Service (triggers speech recognition permission)
+            await MainActor.run {
+                _ = serviceContainer.transcriptionService
+            }
             await permissionManager.requestSpeechRecognitionPermission()
             
-            // Location is optional, so request it separately
+            // 3. Location Service (optional)
             if !permissionManager.hasLocationPermission {
+                _ = serviceContainer.locationService
                 await permissionManager.requestLocationPermission()
             }
             
-            // HomeKit is optional, so request it separately
+            // 4. HomeKit Service (optional)
             if !permissionManager.isHomeKitGranted {
+                await MainActor.run {
+                    _ = serviceContainer.homeKitService
+                }
                 await permissionManager.requestHomeKitPermission()
             }
             
@@ -220,6 +236,7 @@ struct OnboardingPermissionsView: View {
             
             await MainActor.run {
                 isRequestingPermissions = false
+                hasRequestedPermissions = true
             }
         }
     }
