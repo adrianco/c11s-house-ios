@@ -626,6 +626,9 @@ class MockHomeKitService: HomeKitServiceProtocol {
     // Store the discovered homes for later retrieval
     private var discoveredHomes: [HomeKitHome] = []
     
+    // Optional notes service for testing
+    var notesService: NotesServiceProtocol?
+    
     func requestAuthorization() async -> Bool {
         requestAuthorizationCalled = true
         if mockAuthorizationResult {
@@ -683,6 +686,45 @@ class MockHomeKitService: HomeKitServiceProtocol {
         
         if shouldThrowError {
             throw HomeKitError.discoveryFailed("Failed to save notes")
+        }
+        
+        // If we have a notes service, actually save the notes (mimicking real HomeKitService behavior)
+        if let notesService = notesService {
+            // Save the main summary note
+            let summaryNote = summary.generateFullSummary()
+            await notesService.saveCustomNote(
+                title: "HomeKit Configuration Summary",
+                content: summaryNote,
+                category: "homekit_summary"
+            )
+            
+            // Save individual room notes
+            for home in summary.homes {
+                for room in home.rooms {
+                    let roomAccessories = home.accessories.filter { $0.roomId == room.id }
+                    if !roomAccessories.isEmpty {
+                        let roomNote = room.generateNote(with: roomAccessories)
+                        
+                        await notesService.saveCustomNote(
+                            title: "Room: \(room.name) (\(home.name))",
+                            content: roomNote,
+                            category: "homekit_room"
+                        )
+                    }
+                }
+                
+                // Save individual accessory notes for accessories not in rooms
+                let unassignedAccessories = home.accessories.filter { $0.roomId == nil }
+                for accessory in unassignedAccessories {
+                    let accessoryNote = accessory.generateNote()
+                    
+                    await notesService.saveCustomNote(
+                        title: "Device: \(accessory.name) (\(home.name))",
+                        content: accessoryNote,
+                        category: "homekit_device"
+                    )
+                }
+            }
         }
     }
     

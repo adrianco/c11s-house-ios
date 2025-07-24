@@ -1,7 +1,7 @@
 [WeatherKitService] 🌦️ Initializing WeatherKit service
 [WeatherKitService] Bundle ID: com.c11s.house
 [WeatherKitService] ✅ Running on real device
-[WeatherKitService] ⚠️ Entitlements file not found in bundle
+[WeatherKitService] Running in test environment - entitlements not bundled
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: WeatherKitServiceImpl
 [WeatherCoordinator] Notes service: NotesServiceImpl
@@ -11,162 +11,76 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
-[ContentViewModel] Weather update received: nil
-[WeatherCoordinator] Created Weather question in notes store
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[HomeKitService] Initialized with delegate set, initial status: 0
+[ContentViewModel] Weather update received: nil
+[HomeKitService] Initialized with delegate set, initial status: 5
 [C11SHouseApp] Services initialized
-[C11SHouseApp] HomeKit discovery completed
-[HomeKitService] Authorization status updated to: 5
-[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
-[ConversationView] onAppear called
-[ConversationViewModel] setupView() called
-[ConversationViewModel] No saved house name found
-[ConversationViewModel] Adding welcome message
-[ConversationViewModel] Loading next question...
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 5
-[QuestionFlowCoordinator] Next question: 'Is this the right address?' (required: true)
-[ConversationViewModel] hasCompletedAllQuestions: false
-[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Is this the right address?
-[AddressManager] Stored detected address in memory (not marked as answered): 14450 Roland Canyon Rd, Salinas, CA 93908
-[QuestionFlowCoordinator] Formatted address question with detected address
-App is being debugged, do not track this hang
-Hang detected: 1.22s (debugger attached, not reporting)
-[ConversationViewModel] processUserInput: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[ConversationViewModel] Answering question: Is this the right address?
-[QuestionFlowCoordinator] Saving answer for question: 'Is this the right address?'
-[QuestionFlowCoordinator] Answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[QuestionFlowCoordinator] saveAnswer called with answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[QuestionFlowCoordinator] Trimmed answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: E1D75020-4D0C-4361-B637-6118C8C5EC08
-[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[QuestionFlowCoordinator] Answer saved successfully
-[QuestionFlowCoordinator] Processing address answer: 14450 Roland Canyon Rd, Salinas, CA 93908
-[QuestionFlowCoordinator] User confirmed address, now saving as answered
-[AddressManager] saveAddressToNotes called with address: 14450 Roland Canyon Rd, Salinas, CA 93908
-[AddressManager] Loaded notes store with 5 questions
-[AddressManager] Found address question: Is this the right address?
-[AddressManager] Saved address note
-[AddressManager] Found house name question: What should I call this house?
-[AddressManager] Generated house name: Roland Canyon House
--[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
-[AddressManager] Saved house name note
-[AddressManager] User confirmed address, now saving as answered: 14450 Roland Canyon Rd, Salinas, CA 93908
-[QuestionFlowCoordinator] Address saved - ContentViewModel will fetch weather
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 4
-[QuestionFlowCoordinator] Next question: 'What should I call this house?' (required: true)
-[ConversationViewModel] After loading, hasCompletedAllQuestions: false
-[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] ✅ New address, updating state and fetching weather
+SWIFT TASK CONTINUATION MISUSE: discoverHomes() leaked its continuation without resuming it. This may cause tasks waiting on it to remain suspended forever.
+[WeatherCoordinator] Weather question already exists
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
-[ContentViewModel] Weather update received: cloudy
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: cloudy
-[ContentViewModel] Temperature: 64°F
-[ContentViewModel] Current weather after fetch: exists
-[ConversationViewModel] processUserInput: 'Roland House'
-[ConversationViewModel] Answering question: What should I call this house?
-[QuestionFlowCoordinator] Saving answer for question: 'What should I call this house?'
-[QuestionFlowCoordinator] Answer: 'Roland House'
-[QuestionFlowCoordinator] saveAnswer called with answer: 'Roland House'
-[QuestionFlowCoordinator] Trimmed answer: 'Roland House'
-[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: B6362A56-5B8F-472C-8C36-46F3D2A04649
-[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 2
-[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[QuestionFlowCoordinator] Answer saved successfully
-[QuestionFlowCoordinator] Saving house name
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 2
-[QuestionFlowCoordinator] Next question: 'What's your name?' (required: true)
-[ConversationViewModel] After loading, hasCompletedAllQuestions: false
--[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
-Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
-If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
-Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
-If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
-Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
-If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
-Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
-If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
-Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
-If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
-Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
-If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-Result accumulator timeout: 3.000000, exceeded.
-fopen failed for data file: errno = 2 (No such file or directory)
-Errors found! Invalidating cache...
-Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
-fopen failed for data file: errno = 2 (No such file or directory)
-Errors found! Invalidating cache...
-App is being debugged, do not track this hang
-Hang detected: 0.59s (debugger attached, not reporting)
--[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
-Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
-[ConversationViewModel] processUserInput: 'Adrian'
-[ConversationViewModel] Answering question: What's your name?
-[QuestionFlowCoordinator] Saving answer for question: 'What's your name?'
-[QuestionFlowCoordinator] Answer: 'Adrian'
-[QuestionFlowCoordinator] saveAnswer called with answer: 'Adrian'
-[QuestionFlowCoordinator] Trimmed answer: 'Adrian'
-[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 21FA4DE1-EC15-44A9-8746-B57C68391536
-[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[ConversationStateManager] speak called - text: 'Got it!...', isMuted: false
-[ConversationStateManager] Not speaking - saving answer
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 1
-[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[QuestionFlowCoordinator] Answer saved successfully
-[QuestionFlowCoordinator] Updating user name
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 1
-[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
-[ConversationViewModel] After loading, hasCompletedAllQuestions: false
-[ConversationStateManager] speak called - text: 'Let's start by creating your first room note! What...', isMuted: false
-[ConversationStateManager] Speaking text...
-Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
-Message from debugger: killed
+Test Suite 'Selected tests' started at 2025-07-24 11:27:05.097.
+Test Suite 'C11SHouseTests.xctest' started at 2025-07-24 11:27:05.097.
+Test Suite 'HomeKitCoordinatorTests' started at 2025-07-24 11:27:05.097.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testAuthorizationStatusUpdates]' started.
+[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
+[HomeKitService] Saving HomeKit configuration as notes...
+[HomeKitService] Found 1 homes
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testAuthorizationStatusUpdates]' passed (0.016 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryError]' started.
+[HomeKitService] Saved summary note
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryError]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithNoHomes]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithNoHomes]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithoutAuthorization]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testDiscoveryWithoutAuthorization]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testGetHomeByName]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testGetHomeByName]' passed (0.002 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testHasHomeKitConfiguration]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testHasHomeKitConfiguration]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' started.
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:358: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertEqual failed: ("0") is not equal to ("5")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:362: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:363: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:364: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:365: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:366: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:370: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:371: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:372: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:373: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:376: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:377: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:378: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:379: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:382: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:383: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:384: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:385: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:389: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertNotNil failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:390: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertEqual failed: ("nil") is not equal to ("Optional("homekit_device")")
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:391: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:392: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Business/HomeKitCoordinatorTests.swift:393: error: -[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes] : XCTAssertTrue failed
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReadHomeKitDataIntoNotes]' failed (0.145 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testRefreshConfiguration]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testRefreshConfiguration]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReset]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testReset]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testStatusProgression]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testStatusProgression]' passed (0.001 seconds).
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testSuccessfulDiscoveryAndSave]' started.
+Test Case '-[C11SHouseTests.HomeKitCoordinatorTests testSuccessfulDiscoveryAndSave]' passed (0.001 seconds).
+Test Suite 'HomeKitCoordinatorTests' failed at 2025-07-24 11:27:05.268.
+	 Executed 11 tests, with 23 failures (0 unexpected) in 0.170 (0.171) seconds
+Test Suite 'C11SHouseTests.xctest' failed at 2025-07-24 11:27:05.268.
+	 Executed 11 tests, with 23 failures (0 unexpected) in 0.170 (0.171) seconds
+Test Suite 'Selected tests' failed at 2025-07-24 11:27:05.268.
+	 Executed 11 tests, with 23 failures (0 unexpected) in 0.170 (0.172) seconds
+[HomeKitService] Saved 12 room notes and 0 unassigned accessory notes
+[C11SHouseApp] HomeKit discovery completed

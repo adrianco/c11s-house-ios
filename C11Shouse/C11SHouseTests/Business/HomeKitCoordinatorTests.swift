@@ -331,6 +331,10 @@ class HomeKitCoordinatorTests: XCTestCase {
         
         // Create a custom mock notes service to track saved notes
         let customNotesService = MockHomeKitNotesService()
+        
+        // Set the notes service on the mock so it actually saves notes
+        mockHomeKitService.notesService = customNotesService
+        
         let customCoordinator = HomeKitCoordinator(
             homeKitService: mockHomeKitService,
             notesService: customNotesService
@@ -353,6 +357,12 @@ class HomeKitCoordinatorTests: XCTestCase {
         
         // Check that custom notes were created
         let savedNotes = customNotesService.savedCustomNotes
+        
+        // Debug: Print saved notes
+        print("Saved notes count: \(savedNotes.count)")
+        for note in savedNotes {
+            print("Note - Title: \(note.title), Category: \(note.category)")
+        }
         
         // Should have: 1 summary + 3 rooms with accessories + 1 unassigned accessory = 5 notes
         XCTAssertEqual(savedNotes.count, 5)
