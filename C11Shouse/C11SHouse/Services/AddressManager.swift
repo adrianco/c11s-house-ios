@@ -53,10 +53,7 @@ class AddressManager: ObservableObject {
         // Request location permission if needed
         await locationService.requestLocationPermission()
         
-        // Wait a moment for permission status to update
-        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-        
-        // Check location permission after requesting
+        // Check location permission status
         let status = locationService.authorizationStatusPublisher.value
         
         guard status == .authorizedWhenInUse || status == .authorizedAlways else {

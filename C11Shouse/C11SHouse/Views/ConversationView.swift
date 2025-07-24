@@ -24,6 +24,7 @@
 
 import SwiftUI
 @preconcurrency import Speech
+import Combine
 
 struct ConversationView: View {
     @StateObject private var messageStore = MessageStore()
@@ -39,6 +40,8 @@ struct ConversationView: View {
     @State private var scrollToBottom = false
     @State private var pendingVoiceText = ""
     @State private var showVoiceConfirmation = false
+    @State private var waitingForPermissions = false
+    @State private var cancellables = Set<AnyCancellable>()
     @FocusState private var isTextFieldFocused: Bool
     
     private var hasVoicePermissions: Bool {
@@ -311,6 +314,33 @@ struct ConversationView: View {
         }
     }
     
+    private func setupPermissionObservers() {
+        // Monitor microphone permission changes
+        serviceContainer.permissionManager.$microphonePermissionStatus
+            .combineLatest(serviceContainer.permissionManager.$speechRecognitionPermissionStatus)
+            .sink { [weak self] micStatus, speechStatus in
+                guard let self = self else { return }
+                
+                // If we were waiting for permissions and they're now granted, unmute
+                if self.waitingForPermissions &&
+                   micStatus == .granted &&
+                   speechStatus == .authorized {
+                    self.isMuted = false
+                    self.waitingForPermissions = false
+                }
+            }
+            .store(in: &cancellables)
+        
+        // Also monitor app becoming active in case user changed permissions in Settings
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            serviceContainer.permissionManager.checkCurrentPermissions()
+        }
+    }
+    
     private func toggleRecording() {
         if recognizer.isRecording {
             recognizer.stopRecording()
@@ -396,24 +426,6 @@ struct ConversationView: View {
         } catch {
             // Expected if permissions are denied
             print("[ConversationView] Permission check failed: \(error)")
-        }
-        
-        // Give iOS time to show permission dialogs
-        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
-        
-        // Check permissions again after potential user response
-        serviceContainer.permissionManager.checkCurrentPermissions()
-        
-        // Wait a bit more for permission state to propagate
-        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-        
-        // Force UI update by triggering a state change
-        await MainActor.run {
-            // If permissions were granted, unmute
-            if serviceContainer.permissionManager.isMicrophoneGranted &&
-               serviceContainer.permissionManager.isSpeechRecognitionGranted {
-                isMuted = false
-            }
         }
     }
 }
