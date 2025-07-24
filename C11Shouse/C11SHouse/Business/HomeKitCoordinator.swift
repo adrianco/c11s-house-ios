@@ -69,40 +69,59 @@ class HomeKitCoordinator: ObservableObject {
     
     /// Discover HomeKit configuration and save as notes
     func discoverAndSaveConfiguration() async {
+        print("[HomeKitCoordinator] Starting HomeKit discovery")
         discoveryStatus = .checkingAuthorization
         
         // Check authorization
         let authorized = await homeKitService.requestAuthorization()
+        print("[HomeKitCoordinator] Authorization result: \(authorized)")
         guard authorized else {
+            print("[HomeKitCoordinator] Not authorized, aborting discovery")
             discoveryStatus = .failed(HomeKitError.notAuthorized)
             return
         }
         
         // Check if we already have HomeKit notes saved
         let hasExistingNotes = await checkForExistingHomeKitNotes()
+        print("[HomeKitCoordinator] Has existing HomeKit notes: \(hasExistingNotes)")
         
         discoveryStatus = .discovering
         
         do {
             // Discover homes
+            print("[HomeKitCoordinator] Calling homeKitService.discoverHomes()")
             let summary = try await homeKitService.discoverHomes()
+            print("[HomeKitCoordinator] Discovery result - Homes found: \(summary.homes.count)")
             
             if summary.homes.isEmpty {
+                print("[HomeKitCoordinator] No homes found, failing")
                 discoveryStatus = .failed(HomeKitError.noHomesFound)
                 return
+            }
+            
+            // Log summary details
+            for home in summary.homes {
+                print("[HomeKitCoordinator] Home: \(home.name), Primary: \(home.isPrimary)")
+                print("[HomeKitCoordinator]   Rooms: \(home.rooms.count), Accessories: \(home.accessories.count)")
             }
             
             // Only save notes if we don't have existing ones
             if !hasExistingNotes {
                 discoveryStatus = .savingNotes
+                print("[HomeKitCoordinator] Saving HomeKit configuration as notes")
                 
                 // Save configuration as notes
                 try await homeKitService.saveConfigurationAsNotes(summary: summary)
+                print("[HomeKitCoordinator] Notes saved successfully")
+            } else {
+                print("[HomeKitCoordinator] Skipping note creation - notes already exist")
             }
             
             discoveryStatus = .completed(summary)
+            print("[HomeKitCoordinator] Discovery completed successfully")
             
         } catch {
+            print("[HomeKitCoordinator] Discovery failed with error: \(error)")
             discoveryStatus = .failed(error)
         }
     }

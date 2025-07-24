@@ -2798,3 +2798,5 @@ Key Changes Made:
 
   This is a much cleaner and more reliable approach than using delays to try to synchronize state changes.
   
+
+> review latest LoggingRecord.txt, tap to speak button inoperative after asking name. Had to toggle Mute on and off to enable microphone, no HomeKit data at all. Add basic search of notes titles in conversation and respond with notes content

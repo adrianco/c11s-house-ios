@@ -118,7 +118,18 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
         }
         
         // Convert HMHome objects to our models
-        discoveredHomes = homeManager.homes.map { HomeKitHome(from: $0) }
+        print("[HomeKitService] Converting \(homeManager.homes.count) HMHome objects to models")
+        discoveredHomes = homeManager.homes.map { hmHome in
+            let home = HomeKitHome(from: hmHome)
+            print("[HomeKitService] Home: \(home.name) - Rooms: \(home.rooms.count), Accessories: \(home.accessories.count)")
+            for room in home.rooms {
+                print("[HomeKitService]   Room: \(room.name)")
+            }
+            for accessory in home.accessories {
+                print("[HomeKitService]   Accessory: \(accessory.name) - Category: \(accessory.category), Room: \(accessory.roomId != nil ? "assigned" : "unassigned")")
+            }
+            return home
+        }
         
         return HomeKitDiscoverySummary(
             homes: discoveredHomes,
@@ -197,7 +208,12 @@ extension HomeKitService: HMHomeManagerDelegate {
         
         // Update discovered homes when HomeKit configuration changes
         Task {
-            discoveredHomes = manager.homes.map { HomeKitHome(from: $0) }
+            print("[HomeKitService] Updating discovered homes from delegate callback")
+            discoveredHomes = manager.homes.map { hmHome in
+                let home = HomeKitHome(from: hmHome)
+                print("[HomeKitService] Updated home: \(home.name) - Rooms: \(home.rooms.count), Accessories: \(home.accessories.count)")
+                return home
+            }
         }
     }
     

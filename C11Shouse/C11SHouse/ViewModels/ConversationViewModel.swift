@@ -158,6 +158,12 @@ class ConversationViewModel: ObservableObject {
                     await handleRoomNoteCreation(isMuted: isMuted)
                 } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
                     await handleDeviceNoteCreation(isMuted: isMuted)
+                } else if lowercased.contains("what") && (lowercased.contains("note") || lowercased.contains("remember")) {
+                    // Handle note search queries
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if lowercased.contains("search") && lowercased.contains("note") {
+                    // Handle explicit search requests
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
                 } else {
                     // Generate house response
                     await generateHouseResponse(for: input, isMuted: isMuted)
@@ -384,6 +390,97 @@ class ConversationViewModel: ObservableObject {
         }
         
         return summary.isEmpty ? "your home setup" : summary
+    }
+    
+    private func searchAndRespondWithNotes(query: String, isMuted: Bool) async {
+        print("[ConversationViewModel] Searching notes for query: \(query)")
+        
+        do {
+            // Load all notes
+            let notesStore = try await serviceContainer.notesService.loadNotesStore()
+            
+            // Extract search terms from the query
+            let lowercasedQuery = query.lowercased()
+            let searchTerms = lowercasedQuery
+                .replacingOccurrences(of: "what", with: "")
+                .replacingOccurrences(of: "notes", with: "")
+                .replacingOccurrences(of: "note", with: "")
+                .replacingOccurrences(of: "remember", with: "")
+                .replacingOccurrences(of: "about", with: "")
+                .replacingOccurrences(of: "search", with: "")
+                .replacingOccurrences(of: "for", with: "")
+                .replacingOccurrences(of: "the", with: "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .components(separatedBy: " ")
+                .filter { !$0.isEmpty }
+            
+            print("[ConversationViewModel] Search terms: \(searchTerms)")
+            
+            // Search for matching notes
+            var matchingNotes: [(question: Question, note: Note)] = []
+            
+            for (questionId, note) in notesStore.notes {
+                guard let question = notesStore.questions.first(where: { $0.id == questionId }) else { continue }
+                
+                // Skip empty answers
+                guard !note.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
+                
+                // Check if any search term matches the question text or note content
+                let questionLower = question.text.lowercased()
+                let answerLower = note.answer.lowercased()
+                
+                let matches = searchTerms.isEmpty || searchTerms.contains { term in
+                    questionLower.contains(term) || answerLower.contains(term)
+                }
+                
+                if matches {
+                    matchingNotes.append((question: question, note: note))
+                }
+            }
+            
+            print("[ConversationViewModel] Found \(matchingNotes.count) matching notes")
+            
+            // Generate response based on findings
+            let response: String
+            if matchingNotes.isEmpty {
+                response = "I don't have any notes that match your search. You can create new notes by saying 'add room note' or 'add device note'."
+            } else if matchingNotes.count == 1 {
+                let match = matchingNotes[0]
+                response = "Here's what I remember about \(match.question.text):\n\n\(match.note.answer)"
+            } else {
+                // Multiple matches - list them
+                var notesList = "I found \(matchingNotes.count) notes that might be what you're looking for:\n\n"
+                
+                for (index, match) in matchingNotes.enumerated() {
+                    notesList += "\(index + 1). \(match.question.text)\n"
+                    // Add first line of the answer as preview
+                    let preview = match.note.answer
+                        .components(separatedBy: .newlines)
+                        .first ?? match.note.answer
+                    let truncatedPreview = preview.count > 50 ? String(preview.prefix(50)) + "..." : preview
+                    notesList += "   \(truncatedPreview)\n\n"
+                }
+                
+                notesList += "Would you like me to read any of these in detail?"
+                response = notesList
+            }
+            
+            // Create and send the response
+            let message = Message(
+                content: response,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                await stateManager.speak(response, isMuted: isMuted)
+            }
+            
+        } catch {
+            print("[ConversationViewModel] Error searching notes: \(error)")
+            await generateHouseResponse(for: "I had trouble searching my notes. Please try again.", isMuted: isMuted)
+        }
     }
 }
 
