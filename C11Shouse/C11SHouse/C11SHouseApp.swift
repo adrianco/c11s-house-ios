@@ -41,6 +41,9 @@ struct C11SHouseApp: App {
                 .task {
                     // Request permissions through onboarding flow
                     // The onboarding coordinator will handle permission requests
+                    
+                    // For existing users who already completed onboarding but just granted HomeKit
+                    await checkForHomeKitDiscovery()
                 }
         }
     }
@@ -51,6 +54,33 @@ struct C11SHouseApp: App {
         // Request permissions if not all granted
         if !permissionManager.allPermissionsGranted {
             await permissionManager.requestAllPermissions()
+        }
+    }
+    
+    @MainActor
+    private func checkForHomeKitDiscovery() async {
+        // Wait a bit for app to fully initialize
+        try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+        
+        // Check if user has completed onboarding and has HomeKit permission
+        let hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+        let hasRunHomeKitDiscovery = UserDefaults.standard.bool(forKey: "hasRunHomeKitDiscovery")
+        
+        if hasCompletedOnboarding && !hasRunHomeKitDiscovery {
+            // Check if HomeKit permission is granted
+            let permissionManager = serviceContainer.permissionManager
+            if permissionManager.isHomeKitGranted {
+                print("[C11SHouseApp] User has HomeKit permission but discovery hasn't run. Running now...")
+                
+                // Run HomeKit discovery
+                let homeKitCoordinator = serviceContainer.homeKitCoordinator
+                await homeKitCoordinator.discoverAndSaveConfiguration()
+                
+                // Mark as complete
+                UserDefaults.standard.set(true, forKey: "hasRunHomeKitDiscovery")
+                
+                print("[C11SHouseApp] HomeKit discovery completed for existing user")
+            }
         }
     }
     

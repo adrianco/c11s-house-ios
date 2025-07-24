@@ -207,6 +207,17 @@ struct OnboardingPermissionsView: View {
                     _ = serviceContainer.homeKitService
                 }
                 await permissionManager.requestHomeKitPermission()
+                
+                // Poll for HomeKit permission status update
+                for _ in 0..<5 {
+                    try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+                    await MainActor.run {
+                        permissionManager.checkCurrentPermissions()
+                    }
+                    if permissionManager.isHomeKitGranted {
+                        break
+                    }
+                }
             }
             
             // Background address lookup if location permission granted

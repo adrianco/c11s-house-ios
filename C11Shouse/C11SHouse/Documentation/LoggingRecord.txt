@@ -15,59 +15,11 @@ Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[ContentViewModel] Weather update received: nil
-App is being debugged, do not track this hang
-Hang detected: 0.49s (debugger attached, not reporting)
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[WeatherCoordinator] Weather question already exists
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
-[ContentViewModel] Weather update received: mostlyCloudy
-[ContentViewModel] Weather update received: mostlyCloudy
-[ContentViewModel] Weather update received: mostlyCloudy
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: mostlyCloudy
-[ContentViewModel] Temperature: 73°F
-[ContentViewModel] Current weather after fetch: exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: mostlyCloudy
-[ContentViewModel] Temperature: 73°F
-[ContentViewModel] Current weather after fetch: exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: mostlyCloudy
-[ContentViewModel] Temperature: 73°F
-[ContentViewModel] Current weather after fetch: exists
-[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
-App is being debugged, do not track this hang
-Hang detected: 0.27s (debugger attached, not reporting)
-[ConversationView] onAppear called
-[ConversationView] hasCompletedPhase4Tutorial: true
-[ConversationView] isInPhase4Tutorial: false
-[ConversationViewModel] setupView() called
-[ConversationViewModel] Loaded house name: Roland House
-[ConversationViewModel] Found 75 existing messages
-[ConversationViewModel] Loading next question...
-[QuestionFlowCoordinator] loadNextQuestion() called
-[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
-[QuestionFlowCoordinator] Loaded notes store with 5 questions
-[QuestionFlowCoordinator] Questions needing review: 0
-[QuestionFlowCoordinator] No more questions to ask
-[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
-[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
-[ConversationViewModel] hasCompletedAllQuestions: true
-[ConversationViewModel] All questions complete, starting Phase 4 tutorial
-[ConversationViewModel] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question
-Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
-App is being debugged, do not track this hang
-Hang detected: 0.36s (debugger attached, not reporting)
-Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ContentViewModel] Weather update received: nil
+Started onboarding phase: Welcome
+🚀 ONBOARDING SESSION STARTED - ID: 44EDFA57-F0ED-44DF-95B5-0D55EC73B836
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 PHASE TRANSITION: Start → welcome
+👆 USER ACTION: view_appeared in welcome
+[WeatherCoordinator] Created Weather question in notes store

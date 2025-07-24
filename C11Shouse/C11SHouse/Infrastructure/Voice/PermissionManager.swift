@@ -88,6 +88,8 @@ public final class PermissionManager: ObservableObject {
     private init() {
         setupObservers()
         checkCurrentPermissions()
+        // Set HomeKit delegate
+        homeManager.delegate = self
     }
     
     // MARK: - Public Methods
@@ -180,8 +182,13 @@ public final class PermissionManager: ObservableObject {
             // Access homes to trigger permission dialog
             _ = homeManager.homes
             // Wait a moment for the permission dialog to be handled
-            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+            try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
             homeKitPermissionStatus = homeManager.authorizationStatus
+            
+            // Force refresh UI
+            await MainActor.run {
+                objectWillChange.send()
+            }
         }
         
         updateAllPermissionsStatus()
@@ -222,7 +229,7 @@ public final class PermissionManager: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func checkCurrentPermissions() {
+    public func checkCurrentPermissions() {
         microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         locationPermissionStatus = CLLocationManager().authorizationStatus
@@ -316,5 +323,19 @@ extension PermissionManager {
         @unknown default:
             return "Unknown"
         }
+    }
+}
+
+// MARK: - HMHomeManagerDelegate
+
+extension PermissionManager: HMHomeManagerDelegate {
+    public func homeManagerDidUpdateHomes(_ manager: HMHomeManager) {
+        // Update permission status when homes are updated
+        homeKitPermissionStatus = manager.authorizationStatus
+    }
+    
+    public func homeManager(_ manager: HMHomeManager, didUpdate status: HMHomeManagerAuthorizationStatus) {
+        // Update permission status when authorization changes
+        homeKitPermissionStatus = status
     }
 }

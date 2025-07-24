@@ -178,8 +178,10 @@ class ConversationViewModel: ObservableObject {
     }
     
     private func generateHouseResponse(for input: String, isMuted: Bool) async {
+        print("[ConversationViewModel] generateHouseResponse called - isMuted: \(isMuted)")
         // Generate a house thought based on input
         let thought = HouseThought.generateResponse(for: input)
+        print("[ConversationViewModel] Generated thought: '\(thought.thought.prefix(50))...'")
         
         // Add house message
         let houseMessage = Message(
@@ -190,8 +192,11 @@ class ConversationViewModel: ObservableObject {
         messageStore.addMessage(houseMessage)
         
         // Speak if not muted
+        print("[ConversationViewModel] About to speak - isMuted: \(isMuted)")
         if !isMuted {
             await stateManager.speak(thought.thought, isMuted: isMuted)
+        } else {
+            print("[ConversationViewModel] Not speaking - muted")
         }
     }
     

@@ -109,6 +109,9 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
     }
     
     func saveConfigurationAsNotes(summary: HomeKitDiscoverySummary) async throws {
+        print("[HomeKitService] Saving HomeKit configuration as notes...")
+        print("[HomeKitService] Found \(summary.homes.count) homes")
+        
         // Save the main summary note
         let summaryNote = summary.generateFullSummary()
         await notesService.saveCustomNote(
@@ -116,6 +119,10 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
             content: summaryNote,
             category: "homekit_summary"
         )
+        print("[HomeKitService] Saved summary note")
+        
+        var roomCount = 0
+        var accessoryCount = 0
         
         // Save individual room notes
         for home in summary.homes {
@@ -128,6 +135,7 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
                     content: roomNote,
                     category: "homekit_room"
                 )
+                roomCount += 1
             }
             
             // Save individual accessory notes for accessories not in rooms
@@ -140,8 +148,11 @@ class HomeKitService: NSObject, HomeKitServiceProtocol {
                     content: accessoryNote,
                     category: "homekit_device"
                 )
+                accessoryCount += 1
             }
         }
+        
+        print("[HomeKitService] Saved \(roomCount) room notes and \(accessoryCount) unassigned accessory notes")
     }
     
     func getHome(named name: String) async -> HomeKitHome? {
