@@ -319,7 +319,7 @@ struct ConversationView: View {
         permissionObserver = serviceContainer.permissionManager.$microphonePermissionStatus
             .combineLatest(serviceContainer.permissionManager.$speechRecognitionPermissionStatus)
             .receive(on: DispatchQueue.main)
-            .sink { micStatus, speechStatus in
+            .sink { [self] micStatus, speechStatus in
                 // If we were waiting for permissions and they're now granted, unmute
                 if waitingForPermissions &&
                    micStatus == .granted &&
@@ -334,8 +334,14 @@ struct ConversationView: View {
             forName: UIApplication.didBecomeActiveNotification,
             object: nil,
             queue: .main
-        ) { _ in
+        ) { [self] _ in
             serviceContainer.permissionManager.checkCurrentPermissions()
+            
+            // Check if we were waiting for permissions and they're now granted
+            if waitingForPermissions && hasVoicePermissions {
+                isMuted = false
+                waitingForPermissions = false
+            }
         }
     }
     
@@ -422,8 +428,8 @@ struct ConversationView: View {
             // Immediately stop since we're just triggering permissions
             recognizer.stopRecording()
         } catch {
-            // Expected if permissions are denied
-            print("[ConversationView] Permission check failed: \(error)")
+            // Expected if permissions are denied - this triggers the permission dialog
+            // Don't log as error since this is normal flow
         }
     }
 }

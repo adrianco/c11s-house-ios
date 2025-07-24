@@ -63,6 +63,9 @@ struct C11SHouseApp: App {
         // Initialize question flow coordinator
         _ = serviceContainer.questionFlowCoordinator
         
+        // Initialize HomeKit coordinator (this will trigger permission if needed)
+        _ = serviceContainer.homeKitCoordinator
+        
         print("[C11SHouseApp] Services initialized")
     }
     
