@@ -2783,4 +2783,18 @@ Key Changes Made:
   initial location question appeared but wasn't populated from the location service, which did get permission. At the start of the app, before entering ConversationView, the services should be initialized.
 
   > don't use delays to try and synchronize behavior, use state management or events
+
+
+  1. Removed all Task.sleep() calls - No more arbitrary delays for synchronization
+  2. Added Combine publishers - ConversationView now subscribes to $microphonePermissionStatus and $speechRecognitionPermissionStatus changes from PermissionManager
+  3. Made UI reactive - When permissions change, the UI updates immediately through the Combine sink
+  4. Event-driven updates - The unmute button now responds instantly to permission changes without any delays
+
+  The app now uses proper reactive patterns:
+  - Permission state changes are published by PermissionManager
+  - ConversationView subscribes to these changes
+  - When permissions are granted, the UI updates immediately
+  - No race conditions or timing issues
+
+  This is a much cleaner and more reliable approach than using delays to try to synchronize state changes.
   

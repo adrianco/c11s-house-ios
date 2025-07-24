@@ -53,15 +53,18 @@ class AddressManager: ObservableObject {
         // Request location permission if needed
         await locationService.requestLocationPermission()
         
-        // Check location permission status
-        let status = locationService.authorizationStatusPublisher.value
-        
-        guard status == .authorizedWhenInUse || status == .authorizedAlways else {
-            throw AddressError.locationPermissionDenied
+        // Get current location - this will throw LocationError.notAuthorized if permission denied
+        let location: CLLocation
+        do {
+            location = try await locationService.getCurrentLocation()
+        } catch {
+            // If location failed due to authorization, throw our specific error
+            if let locationError = error as? LocationError,
+               case .notAuthorized = locationError {
+                throw AddressError.locationPermissionDenied
+            }
+            throw error
         }
-        
-        // Get current location
-        let location = try await locationService.getCurrentLocation()
         
         // Look up address
         let address = try await locationService.lookupAddress(for: location)
