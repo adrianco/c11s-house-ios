@@ -161,7 +161,7 @@ public final class PermissionManager: NSObject, ObservableObject {
         updateAllPermissionsStatus()
     }
     
-    private func checkCurrentPermissionsExceptHomeKit() {
+    func checkCurrentPermissionsExceptHomeKit() {
         microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         locationPermissionStatus = CLLocationManager().authorizationStatus

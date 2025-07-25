@@ -862,24 +862,39 @@ class ConversationViewUITests: XCTestCase {
         
         // Look for send button - try multiple methods
         let sendButtonById = app.buttons["arrow.up.circle.fill"]
-        let sendButtonByLabel = app.buttons["Arrow Up Circle"]
-        let sendButtonByPredicate = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Arrow'")).firstMatch
+        let sendButtonByLabel = app.buttons["Send"]
+        let sendButtonByPredicate = app.buttons.matching(NSPredicate(format: "label == 'Send'")).firstMatch
         
-        let sendButton = sendButtonById.exists ? sendButtonById : 
-                        (sendButtonByLabel.exists ? sendButtonByLabel : sendButtonByPredicate)
+        var sendButton = sendButtonByLabel.exists ? sendButtonByLabel : 
+                        (sendButtonById.exists ? sendButtonById : sendButtonByPredicate)
         
-        guard sendButton.waitForExistence(timeout: 1) else {
-            // Debug output only when verbose or on failure
-            if Self.verboseLogging {
-                print("🧪 sendTextMessage: Send button not found. Available buttons:")
-                let allButtons = app.buttons.allElementsBoundByAccessibilityElement
-                for i in 0..<min(allButtons.count, 20) {
-                    let button = allButtons[i]
-                    print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
+        if !sendButton.waitForExistence(timeout: 1) {
+            // Try one more fallback - look for any button with Send label
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
+            var foundSendButton: XCUIElement? = nil
+            
+            for button in allButtons {
+                if button.label == "Send" {
+                    foundSendButton = button
+                    break
                 }
             }
-            XCTFail("Send button did not appear")
-            return
+            
+            if let fallbackButton = foundSendButton {
+                // Use the fallback button
+                sendButton = fallbackButton
+            } else {
+                // Debug output only when verbose or on failure
+                if Self.verboseLogging {
+                    print("🧪 sendTextMessage: Send button not found. Available buttons:")
+                    for i in 0..<min(allButtons.count, 20) {
+                        let button = allButtons[i]
+                        print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
+                    }
+                }
+                XCTFail("Send button did not appear")
+                return
+            }
         }
         
         // Remove wait for button enabled check
