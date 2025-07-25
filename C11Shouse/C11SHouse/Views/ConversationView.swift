@@ -237,9 +237,6 @@ struct ConversationView: View {
             // Only process if view has appeared and this is an actual change
             if let question = newValue, oldValue != newValue, hasAppeared {
                 Task { @MainActor in
-                    // First, let handleQuestionChange process the question
-                    _ = await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: false)
-                    
                     var messageContent = question.text
                     var spokenContent = question.text
                     
@@ -255,20 +252,6 @@ struct ConversationView: View {
                         } else {
                             spokenContent = houseThought.thought
                         }
-                    } else {
-                        // Special handling for address questions
-                        if question.text == "Is this the right address?" || question.text == "What's your home address?" {
-                            // Try to detect current address
-                            if let addressManager = questionFlow.addressManager {
-                                do {
-                                    let detectedAddress = try await addressManager.detectCurrentAddress()
-                                    messageContent = "Is this the right address?\n\(detectedAddress.fullAddress)"
-                                } catch {
-                                    // If detection fails, just show the question
-                                    messageContent = "What's your home address?"
-                                }
-                            }
-                        }
                     }
                     
                     // Add question message immediately on main actor
@@ -279,7 +262,7 @@ struct ConversationView: View {
                     )
                     messageStore.addMessage(questionMessage)
                     
-                    // Check for pre-populated transcript after handleQuestionChange
+                    // Check for pre-populated transcript
                     if !stateManager.persistentTranscript.isEmpty {
                         inputText = stateManager.persistentTranscript
                         // Use onChange to focus after text updates

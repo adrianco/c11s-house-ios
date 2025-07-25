@@ -128,40 +128,14 @@ class ConversationViewModel: ObservableObject {
         }
         
         // Check if this answers a current question
-        if let currentQuestion = questionFlow.currentQuestion {
-            print("[ConversationViewModel] Answering question: \(currentQuestion.text)")
+        if questionFlow.currentQuestion != nil {
+            print("[ConversationViewModel] Processing input as answer to current question")
             
-            // Special handling for address question - ignore simple acknowledgments
-            if (currentQuestion.text == "Is this the right address?" || currentQuestion.text == "What's your home address?") {
-                let lowercased = input.lowercased()
-                if lowercased == "continue" || lowercased == "ok" || lowercased == "yes" || 
-                   lowercased == "got it" || lowercased == "thanks" {
-                    // These are likely responses to HomeKit announcement, not address answers
-                    print("[ConversationViewModel] Ignoring acknowledgment during address question")
-                    // Generate a response asking for the address
-                    let response = "Thanks! Now, please tell me your address so I can provide location-based services."
-                    let message = Message(
-                        content: response,
-                        isFromUser: false,
-                        isVoice: !isMuted
-                    )
-                    messageStore.addMessage(message)
-                    
-                    if !isMuted {
-                        await stateManager.speak(response, isMuted: isMuted)
-                    }
-                    return
-                }
-            }
-            
-            // Normal question handling
-            await questionFlow.saveAnswer()
-            
-            // Don't call loadNextQuestion here - saveAnswer already does it
-            // This prevents duplicate question loading
+            // Use the new simplified API
+            await questionFlow.processUserInput(input)
             
             // Check if all questions are complete
-            print("[ConversationViewModel] After saving, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
+            print("[ConversationViewModel] After processing, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
         } else {
             // Check if we're in the middle of creating a note
             let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
