@@ -251,15 +251,6 @@ extension Question {
             displayOrder: 2,
             isRequired: true,
             hint: "Enter your name or what you'd like the house to call you"
-        ),
-        
-        // Tutorial - introduce Phase 4 and create first room note
-        Question(
-            text: "Let's start by creating your first room note! What room would you like to add a note about?",
-            category: .houseInfo,
-            displayOrder: 3,
-            isRequired: true,
-            hint: "Tell me about a room in your house (e.g., 'living room', 'kitchen', 'bedroom')"
         )
     ]
 }

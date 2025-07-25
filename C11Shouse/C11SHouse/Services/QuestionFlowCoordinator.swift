@@ -71,31 +71,7 @@ class QuestionFlowCoordinator: ObservableObject {
             let notesStore = try await notesService.loadNotesStore()
             print("[QuestionFlowCoordinator] Loaded notes store with \(notesStore.questions.count) questions")
             
-            // Check if we should skip the room creation question due to HomeKit
-            var questionsNeedingReview = notesStore.questionsNeedingReview()
-            
-            // If HomeKit has rooms and the next question is about creating a room note, skip it
-            if let nextQuestion = questionsNeedingReview.first,
-               nextQuestion.text.contains("Let's start by creating your first room note") {
-                // Check if we have HomeKit rooms
-                if let serviceContainer = serviceContainer {
-                    let homes = await serviceContainer.homeKitService.getAllHomes()
-                    let hasRooms = homes.contains { !$0.rooms.isEmpty }
-                    if hasRooms {
-                        print("[QuestionFlowCoordinator] Skipping room creation question - HomeKit already has rooms")
-                        // Mark this question as answered
-                        try await notesService.saveOrUpdateNote(
-                            for: nextQuestion.id,
-                            answer: "Skipped - HomeKit rooms detected",
-                            metadata: ["skipped_reason": "homekit_rooms_found"]
-                        )
-                        // Reload questions to get the updated list
-                        let updatedStore = try await notesService.loadNotesStore()
-                        questionsNeedingReview = updatedStore.questionsNeedingReview()
-                    }
-                }
-            }
-            
+            let questionsNeedingReview = notesStore.questionsNeedingReview()
             print("[QuestionFlowCoordinator] Questions needing review: \(questionsNeedingReview.count)")
             
             if let nextQuestion = questionsNeedingReview.first {

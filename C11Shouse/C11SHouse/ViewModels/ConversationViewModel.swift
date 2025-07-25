@@ -116,37 +116,14 @@ class ConversationViewModel: ObservableObject {
         if let currentQuestion = questionFlow.currentQuestion {
             print("[ConversationViewModel] Answering question: \(currentQuestion.text)")
             
-            // Check if this is the Phase 4 introduction question
-            if currentQuestion.text.contains("Let's start by creating your first room note") {
-                print("[ConversationViewModel] This is the Phase 4 intro question, handling specially")
-                
-                // Save the room name as the answer
-                await questionFlow.saveAnswer()
-                
-                // Transition directly to room note details
-                UserDefaults.standard.set(input, forKey: "pendingRoomName")
-                UserDefaults.standard.set("awaitingRoomDetails", forKey: "noteCreationState")
-                
-                let detailsMessage = Message(
-                    content: "Great! Now tell me about your \(input). What would you like me to remember about this room?",
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(detailsMessage)
-                
-                if !isMuted {
-                    await stateManager.speak(detailsMessage.content, isMuted: isMuted)
-                }
-            } else {
-                // Normal question handling
-                await questionFlow.saveAnswer()
-                
-                // Don't call loadNextQuestion here - saveAnswer already does it
-                // This prevents duplicate question loading
-                
-                // Check if all questions are complete
-                print("[ConversationViewModel] After saving, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-            }
+            // Normal question handling
+            await questionFlow.saveAnswer()
+            
+            // Don't call loadNextQuestion here - saveAnswer already does it
+            // This prevents duplicate question loading
+            
+            // Check if all questions are complete
+            print("[ConversationViewModel] After saving, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
         } else {
             // Check if we're in the middle of creating a note
             let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
@@ -175,14 +152,15 @@ class ConversationViewModel: ObservableObject {
                 } else if lowercased.contains("show") && (lowercased.contains("note") || lowercased.contains("room")) {
                     // Handle "show me" queries
                     await searchAndRespondWithNotes(query: input, isMuted: isMuted)
-                } else if (lowercased.contains("bedroom") || lowercased.contains("kitchen") || lowercased.contains("living") || 
-                          lowercased.contains("bathroom") || lowercased.contains("office") || lowercased.contains("room")) &&
-                          (lowercased.contains("what") || lowercased.contains("tell") || lowercased.contains("show") || lowercased.contains("about")) {
-                    // Handle queries about specific rooms
-                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
                 } else {
-                    // Generate house response
-                    await generateHouseResponse(for: input, isMuted: isMuted)
+                    // For any other input, check if it might be asking about a note
+                    // by searching if any note title contains words from the input
+                    if await mightBeAskingAboutNote(input) {
+                        await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                    } else {
+                        // Generate house response
+                        await generateHouseResponse(for: input, isMuted: isMuted)
+                    }
                 }
             }
         }
@@ -414,6 +392,31 @@ class ConversationViewModel: ObservableObject {
         return summary.isEmpty ? "your home setup" : summary
     }
     
+    private func mightBeAskingAboutNote(_ input: String) async -> Bool {
+        // Check if the input contains any words that match note titles
+        do {
+            let notesStore = try await serviceContainer.notesService.loadNotesStore()
+            let inputWords = input.lowercased()
+                .components(separatedBy: .whitespacesAndNewlines)
+                .filter { !$0.isEmpty && $0.count > 2 } // Skip very short words
+            
+            // Check if any note title contains any of the input words
+            for (questionId, _) in notesStore.notes {
+                if let question = notesStore.questions.first(where: { $0.id == questionId }) {
+                    let titleLower = question.text.lowercased()
+                    for word in inputWords {
+                        if titleLower.contains(word) {
+                            return true
+                        }
+                    }
+                }
+            }
+        } catch {
+            print("[ConversationViewModel] Error checking notes: \(error)")
+        }
+        return false
+    }
+    
     private func extractDetailedHomeKitSummary(from content: String) -> String {
         var homeCount = 0
         var roomCount = 0
@@ -511,8 +514,16 @@ class ConversationViewModel: ObservableObject {
             
             print("[ConversationViewModel] Search terms: \(searchTerms)")
             
-            // Search for matching notes
-            var matchingNotes: [(question: Question, note: Note)] = []
+            // Debug: Log all available notes
+            print("[ConversationViewModel] Available notes:")
+            for (questionId, note) in notesStore.notes {
+                if let question = notesStore.questions.first(where: { $0.id == questionId }) {
+                    print("  - \(question.text)")
+                }
+            }
+            
+            // Search for matching notes with scores
+            var matchingNotes: [(question: Question, note: Note, score: Int)] = []
             
             for (questionId, note) in notesStore.notes {
                 guard let question = notesStore.questions.first(where: { $0.id == questionId }) else { continue }
@@ -524,19 +535,25 @@ class ConversationViewModel: ObservableObject {
                 let questionLower = question.text.lowercased()
                 let answerLower = note.answer.lowercased()
                 
-                // Special handling for HomeKit searches
-                if searchTerms.contains("homekit") && question.text.contains("HomeKit") {
-                    matchingNotes.append((question: question, note: note))
-                } else {
-                    let matches = searchTerms.isEmpty || searchTerms.contains { term in
-                        questionLower.contains(term) || answerLower.contains(term)
+                // Count how many search terms match
+                var matchScore = 0
+                for term in searchTerms {
+                    if questionLower.contains(term) {
+                        matchScore += 2 // Title matches are worth more
                     }
-                    
-                    if matches {
-                        matchingNotes.append((question: question, note: note))
+                    if answerLower.contains(term) {
+                        matchScore += 1
                     }
                 }
+                
+                // If we have a match, add it with the score
+                if matchScore > 0 || searchTerms.isEmpty {
+                    matchingNotes.append((question: question, note: note, score: matchScore))
+                }
             }
+            
+            // Sort by score (highest first)
+            matchingNotes.sort { $0.score > $1.score }
             
             print("[ConversationViewModel] Found \(matchingNotes.count) matching notes")
             
@@ -544,14 +561,16 @@ class ConversationViewModel: ObservableObject {
             let response: String
             if matchingNotes.isEmpty {
                 response = "I don't have any notes that match your search. You can create new notes by saying 'add room note' or 'add device note'."
-            } else if matchingNotes.count == 1 {
+            } else if matchingNotes.count == 1 || (matchingNotes.count > 1 && matchingNotes[0].score > matchingNotes[1].score) {
+                // Single match or clear best match - show it directly
                 let match = matchingNotes[0]
                 response = "Here's what I remember about \(match.question.text):\n\n\(match.note.answer)"
             } else {
-                // Multiple matches - list them
+                // Multiple similar matches - list them
                 var notesList = "I found \(matchingNotes.count) notes that might be what you're looking for:\n\n"
                 
-                for (index, match) in matchingNotes.enumerated() {
+                // Show top 5 matches
+                for (index, match) in matchingNotes.prefix(5).enumerated() {
                     notesList += "\(index + 1). \(match.question.text)\n"
                     // Add first line of the answer as preview
                     let preview = match.note.answer
@@ -559,6 +578,10 @@ class ConversationViewModel: ObservableObject {
                         .first ?? match.note.answer
                     let truncatedPreview = preview.count > 50 ? String(preview.prefix(50)) + "..." : preview
                     notesList += "   \(truncatedPreview)\n\n"
+                }
+                
+                if matchingNotes.count > 5 {
+                    notesList += "... and \(matchingNotes.count - 5) more.\n\n"
                 }
                 
                 notesList += "Would you like me to read any of these in detail?"
