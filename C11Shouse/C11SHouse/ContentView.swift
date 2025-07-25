@@ -58,6 +58,7 @@
  */
 
 import SwiftUI
+import Combine
 
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
@@ -68,7 +69,7 @@ struct ContentView: View {
     @State private var showVoiceTest = false
     @State private var currentError: UserFriendlyError?
     @State private var hasHomeKitConfiguration = false
-    @State private var homeKitCheckTimer: Timer?
+    @State private var homesSubscription: AnyCancellable?
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -281,23 +282,22 @@ struct ContentView: View {
         .onAppear {
             checkLocationPermission()
             loadAddressAndWeather()
-            // Check HomeKit configuration immediately and periodically
             checkHomeKitConfiguration()
             
-            // Set up a timer to check HomeKit periodically for the first 10 seconds
-            homeKitCheckTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
-                checkHomeKitConfiguration()
-            }
-            
-            // Stop checking after 10 seconds
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-                homeKitCheckTimer?.invalidate()
-                homeKitCheckTimer = nil
-            }
+            // Subscribe to HomeKit homes changes
+            homesSubscription = serviceContainer.homeKitService.homesPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { homes in
+                    hasHomeKitConfiguration = !homes.isEmpty
+                    print("[ContentView] HomeKit homes updated via publisher: \(homes.count) homes")
+                }
         }
         .onDisappear {
-            homeKitCheckTimer?.invalidate()
-            homeKitCheckTimer = nil
+            homesSubscription?.cancel()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("HomeKitConfigurationChanged"))) { _ in
+            // React to HomeKit configuration changes
+            checkHomeKitConfiguration()
         }
         .errorOverlay($currentError) {
             Task { await viewModel.refreshWeather() }

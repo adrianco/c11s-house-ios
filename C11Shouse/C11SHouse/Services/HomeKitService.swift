@@ -36,6 +36,9 @@ protocol HomeKitServiceProtocol {
     /// Publisher for HomeKit authorization status
     var authorizationStatusPublisher: AnyPublisher<HMHomeManagerAuthorizationStatus, Never> { get }
     
+    /// Publisher for discovered homes
+    var homesPublisher: AnyPublisher<[HomeKitHome], Never> { get }
+    
     /// Request HomeKit authorization if needed
     func requestAuthorization() async -> Bool
     
@@ -54,17 +57,21 @@ protocol HomeKitServiceProtocol {
 
 /// Concrete implementation of HomeKit service
 @MainActor
-class HomeKitService: NSObject, HomeKitServiceProtocol {
+class HomeKitService: NSObject, HomeKitServiceProtocol, ObservableObject {
     
     // MARK: - Properties
     
     private let homeManager = HMHomeManager()
     private let notesService: NotesServiceProtocol
-    private var discoveredHomes: [HomeKitHome] = []
+    @Published private var discoveredHomes: [HomeKitHome] = []
     
     private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.determined)
     var authorizationStatusPublisher: AnyPublisher<HMHomeManagerAuthorizationStatus, Never> {
         authorizationStatusSubject.eraseToAnyPublisher()
+    }
+    
+    var homesPublisher: AnyPublisher<[HomeKitHome], Never> {
+        $discoveredHomes.eraseToAnyPublisher()
     }
     
     private var homeManagerReadyContinuation: CheckedContinuation<Void, Never>?
@@ -214,6 +221,9 @@ extension HomeKitService: HMHomeManagerDelegate {
                 print("[HomeKitService] Updated home: \(home.name) - Rooms: \(home.rooms.count), Accessories: \(home.accessories.count)")
                 return home
             }
+            
+            // Post notification when homes are discovered or updated
+            NotificationCenter.default.post(name: NSNotification.Name("HomeKitConfigurationChanged"), object: nil)
         }
     }
     
