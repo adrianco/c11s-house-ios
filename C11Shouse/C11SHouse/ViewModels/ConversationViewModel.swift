@@ -14,6 +14,10 @@
  *   - Added handleNoteSelectionResponse for "Would you like me to read any of these?"
  *   - Stores pending note options when showing multiple search results
  *   - Recognizes "yes", numbers, and "first" as selection responses
+ * - 2025-07-25: Fixed address question visibility and response handling
+ *   - Reordered setupView to show HomeKit announcement before address question
+ *   - Added special handling to ignore simple acknowledgments during address question
+ *   - Prevents "Continue" from being treated as an address answer
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -92,12 +96,12 @@ class ConversationViewModel: ObservableObject {
             await locationService.requestLocationPermission()
         }
         
-        // Always load the first question (address) immediately
+        // First check for HomeKit configuration and add summary message
+        await checkAndAnnounceHomeKitConfiguration()
+        
+        // Then load the first question (address) after a small delay to ensure proper ordering
         print("[ConversationViewModel] Loading first question...")
         await questionFlow.loadNextQuestion()
-        
-        // Then check for HomeKit configuration and add summary message
-        await checkAndAnnounceHomeKitConfiguration()
         
         // Check if all questions are complete and start Phase 4 tutorial
         print("[ConversationViewModel] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
@@ -126,6 +130,29 @@ class ConversationViewModel: ObservableObject {
         // Check if this answers a current question
         if let currentQuestion = questionFlow.currentQuestion {
             print("[ConversationViewModel] Answering question: \(currentQuestion.text)")
+            
+            // Special handling for address question - ignore simple acknowledgments
+            if (currentQuestion.text == "Is this the right address?" || currentQuestion.text == "What's your home address?") {
+                let lowercased = input.lowercased()
+                if lowercased == "continue" || lowercased == "ok" || lowercased == "yes" || 
+                   lowercased == "got it" || lowercased == "thanks" {
+                    // These are likely responses to HomeKit announcement, not address answers
+                    print("[ConversationViewModel] Ignoring acknowledgment during address question")
+                    // Generate a response asking for the address
+                    let response = "Thanks! Now, please tell me your address so I can provide location-based services."
+                    let message = Message(
+                        content: response,
+                        isFromUser: false,
+                        isVoice: !isMuted
+                    )
+                    messageStore.addMessage(message)
+                    
+                    if !isMuted {
+                        await stateManager.speak(response, isMuted: isMuted)
+                    }
+                    return
+                }
+            }
             
             // Normal question handling
             await questionFlow.saveAnswer()
