@@ -17,6 +17,10 @@
  *   - Extracted ChatInputView for input handling
  *   - Extracted MessageBubbleView for individual messages
  *   - Created ConversationViewModel for business logic
+ * - 2025-07-25: Fixed permission-based mute state initialization
+ *   - Added explicit permission check before determining mute state
+ *   - Ensures unmuted start when permissions are already granted
+ *   - Added logging to track mute state decisions
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]

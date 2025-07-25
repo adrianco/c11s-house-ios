@@ -9,6 +9,11 @@
  *   - Handles question flow coordination
  *   - Manages note creation workflows
  *   - Controls Phase 4 tutorial state
+ * - 2025-07-25: Fixed conversation flow issues
+ *   - Address question now appears immediately, not delayed after HomeKit
+ *   - Added handleNoteSelectionResponse for "Would you like me to read any of these?"
+ *   - Stores pending note options when showing multiple search results
+ *   - Recognizes "yes", numbers, and "first" as selection responses
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]

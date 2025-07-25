@@ -27,6 +27,9 @@
  *   - Fixed recordPermission property access to use AVAudioSession.sharedInstance()
  *   - Use fully qualified enum cases (AVAudioSession.RecordPermission.*) to avoid deprecation warnings
  *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ * - 2025-07-25: Fixed method accessibility
+ *   - Changed checkCurrentPermissionsExceptHomeKit from private to internal
+ *   - Allows ConversationView to call it when checking initial mute state
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]

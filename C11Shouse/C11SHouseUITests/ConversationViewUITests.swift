@@ -10,6 +10,10 @@
  *   - Test text and voice input modes
  *   - Test error display scenarios
  *   - Test address suggestion interactions
+ * - 2025-07-25: Fixed send button detection
+ *   - Updated to look for button by "Send" label first
+ *   - Added fallback logic to find button even with incorrect identifier
+ *   - Fixed tests failing due to button identifier being "ConversationView"
  *
  * FUTURE UPDATES:
  * - Add performance tests for large message lists

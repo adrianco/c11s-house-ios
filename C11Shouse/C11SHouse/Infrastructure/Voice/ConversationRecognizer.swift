@@ -26,6 +26,10 @@
  *
  * - 2025-01-09: Swift 6 concurrency fixes
  *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ * - 2025-07-25: Improved speech recognition error handling
+ *   - Added logging for non-1101 errors for debugging
+ *   - Added documentation about expected kAFAssistantErrorDomain Code=1101
+ *   - These errors are normal during speech recognition and safely ignored
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]

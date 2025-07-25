@@ -9,6 +9,9 @@
  *   - MockConversationRecognizer for voice input simulation
  *   - MockQuestionFlowCoordinator for question flow testing
  *   - MockHouseThought generator for response testing
+ * - 2025-07-25: Fixed compilation errors
+ *   - Added override keywords to setQuestionThought, setThankYouThought, clearHouseThought
+ *   - Fixed shouldFailWithError type to use 'any UserFriendlyError'
  *
  * FUTURE UPDATES:
  * - Add more sophisticated response generation
