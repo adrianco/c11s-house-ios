@@ -294,8 +294,6 @@ struct HomeKitAccessory: Codable {
             return "Shower Heads"
         case HMAccessoryCategoryTypeSprinkler:
             return "Sprinklers"
-        case HMAccessoryCategoryTypeValve:
-            return "Valves"
         default:
             // For any truly unknown categories, use the localized description
             // This ensures we always provide a specific name rather than generic "Other"
