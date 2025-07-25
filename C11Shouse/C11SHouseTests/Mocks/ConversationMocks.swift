@@ -60,7 +60,7 @@ class MockConversationRecognizer: ConversationRecognizer {
     var clearHouseThoughtCalled = false
     
     var mockTranscript: String?
-    var shouldFailWithError: UserFriendlyError?
+    var shouldFailWithError: (any UserFriendlyError)?
     
     override func toggleRecording() {
         toggleRecordingCalled = true
@@ -85,7 +85,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         super.stopRecording()
     }
     
-    override func setQuestionThought(_ question: String) {
+    func setQuestionThought(_ question: String) {
         setQuestionThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: question,
@@ -95,7 +95,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    override func setThankYouThought() {
+    func setThankYouThought() {
         setThankYouThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: "Thank you!",
@@ -105,7 +105,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    override func clearHouseThought() {
+    func clearHouseThought() {
         clearHouseThoughtCalled = true
         currentHouseThought = nil
     }
@@ -128,27 +128,6 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
         
         // Create minimal dependencies for parent init
         let notesService = SharedMockNotesService()
-        let locationService = MockLocationService()
-        let stateManager = ConversationStateManager(
-            notesService: notesService,
-            ttsService: MockTTSService()
-        )
-        let recognizer = MockConversationRecognizerService()
-        let addressManager = SharedMockAddressManager(
-            notesService: notesService,
-            locationService: locationService
-        )
-        let weatherCoordinator = WeatherCoordinator(
-            weatherService: MockWeatherKitService(),
-            notesService: notesService,
-            locationService: locationService
-        )
-        let addressSuggestionService = AddressSuggestionService(
-            addressManager: addressManager,
-            locationService: locationService,
-            weatherCoordinator: weatherCoordinator
-        )
-        let serviceContainer = MockServiceContainer(forTesting: true)
         
         super.init(
             notesService: notesService
@@ -183,6 +162,13 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
         if let question = currentQuestion,
            let transcript = await conversationStateManager?.persistentTranscript {
             savedAnswers[question.id] = transcript
+        }
+    }
+    
+    override func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
+        saveAnswerCalled = true
+        if let question = currentQuestion {
+            savedAnswers[question.id] = answer
         }
     }
     
