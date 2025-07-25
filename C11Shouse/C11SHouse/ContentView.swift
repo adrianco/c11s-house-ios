@@ -59,6 +59,8 @@
 
 import SwiftUI
 import Combine
+import AVFoundation
+import Speech
 
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
@@ -346,15 +348,48 @@ struct ContentView: View {
     }
     
     private func initializeSpeechServices() {
-        // Check current permissions
-        serviceContainer.permissionManager.checkCurrentPermissions()
-        
-        // Initialize TTS service
-        let ttsService = serviceContainer.ttsService
-        // Just accessing the service initializes it
-        _ = ttsService.isSpeaking
-        
-        print("[ContentView] Speech services initialized")
+        Task {
+            // Initialize speech recognition
+            await requestSpeechRecognitionPermission()
+            
+            // Initialize microphone
+            await requestMicrophonePermission()
+            
+            // Initialize TTS service by speaking empty text
+            let ttsService = serviceContainer.ttsService
+            do {
+                // Speak empty string to initialize the audio session
+                try await ttsService.speak("", language: nil)
+            } catch {
+                print("[ContentView] TTS initialization error: \(error)")
+            }
+            
+            // Initialize audio session for recording
+            do {
+                let audioSession = AVAudioSession.sharedInstance()
+                try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [.defaultToSpeaker])
+                try audioSession.setActive(true, options: [])
+                print("[ContentView] Audio session initialized for recording and playback")
+            } catch {
+                print("[ContentView] Audio session initialization error: \(error)")
+            }
+            
+            print("[ContentView] Speech services initialized")
+        }
+    }
+    
+    private func requestSpeechRecognitionPermission() async {
+        await withCheckedContinuation { continuation in
+            SFSpeechRecognizer.requestAuthorization { status in
+                print("[ContentView] Speech recognition authorization status: \(status.rawValue)")
+                continuation.resume()
+            }
+        }
+    }
+    
+    private func requestMicrophonePermission() async {
+        let granted = await AVAudioApplication.requestRecordPermission()
+        print("[ContentView] Microphone permission granted: \(granted)")
     }
 }
 
