@@ -350,11 +350,18 @@ struct ConversationView: View {
         if recognizer.isRecording {
             recognizer.stopRecording()
         } else {
+            // Stop any ongoing speech first
             stateManager.stopSpeaking()
-            recognizer.transcript = ""
-            pendingVoiceText = ""  // Clear any previous pending text
-            showVoiceConfirmation = false  // Ensure confirmation is hidden
-            recognizer.toggleRecording()
+            
+            // Small delay to ensure TTS has stopped before starting recording
+            Task {
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                
+                recognizer.transcript = ""
+                pendingVoiceText = ""  // Clear any previous pending text
+                showVoiceConfirmation = false  // Ensure confirmation is hidden
+                recognizer.toggleRecording()
+            }
         }
     }
     
