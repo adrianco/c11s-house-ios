@@ -68,6 +68,7 @@ struct ContentView: View {
     @State private var showVoiceTest = false
     @State private var currentError: UserFriendlyError?
     @State private var hasHomeKitConfiguration = false
+    @State private var homeKitCheckTimer: Timer?
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -206,20 +207,20 @@ struct ContentView: View {
                                 Text("Open HomeKit")
                             }
                             .font(.headline)
-                            .foregroundColor(.primary)
+                            .foregroundColor(.white)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 12)
                             .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color(UIColor.secondarySystemBackground))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                    )
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.orange, .pink]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
                             )
-                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                            .cornerRadius(20)
+                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                         }
-                        .padding(.top, 16)
+                        .padding(.top, 8)
                         .accessibilityIdentifier("OpenHomeKit")
                     }
                     
@@ -280,7 +281,23 @@ struct ContentView: View {
         .onAppear {
             checkLocationPermission()
             loadAddressAndWeather()
+            // Check HomeKit configuration immediately and periodically
             checkHomeKitConfiguration()
+            
+            // Set up a timer to check HomeKit periodically for the first 10 seconds
+            homeKitCheckTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+                checkHomeKitConfiguration()
+            }
+            
+            // Stop checking after 10 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                homeKitCheckTimer?.invalidate()
+                homeKitCheckTimer = nil
+            }
+        }
+        .onDisappear {
+            homeKitCheckTimer?.invalidate()
+            homeKitCheckTimer = nil
         }
         .errorOverlay($currentError) {
             Task { await viewModel.refreshWeather() }
@@ -307,6 +324,14 @@ struct ContentView: View {
         Task {
             let homeKitCoordinator = serviceContainer.homeKitCoordinator
             hasHomeKitConfiguration = await homeKitCoordinator.hasHomeKitConfiguration()
+            print("[ContentView] HomeKit configuration check: \(hasHomeKitConfiguration)")
+            
+            // Also log the homes count for debugging
+            let homes = await serviceContainer.homeKitService.getAllHomes()
+            print("[ContentView] HomeKit homes count: \(homes.count)")
+            if !homes.isEmpty {
+                print("[ContentView] HomeKit homes: \(homes.map { $0.name })")
+            }
         }
     }
     
