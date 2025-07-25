@@ -165,10 +165,28 @@ struct ConversationView: View {
             print("[ConversationView] onAppear called")
             Task {
                 await viewModel.setupView()
-                // Check if we have voice permissions to enable voice
+                
+                // Initialize speech recognizer and TTS at launch
+                recognizer.initializeSpeechRecognizer()
+                
+                // Set up permission observers
+                setupPermissionObservers()
+                
+                // Try to initialize microphone permissions
                 if hasVoicePermissions {
                     isMuted = false
+                    // Try to prepare the audio session without actually recording
+                    do {
+                        try recognizer.startRecording()
+                        recognizer.stopRecording()
+                    } catch {
+                        print("[ConversationView] Initial microphone setup failed: \(error)")
+                    }
+                } else {
+                    // Still try to trigger permissions on first launch
+                    isMuted = true
                 }
+                
                 // Scroll to bottom after initial setup
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     scrollToBottom = true

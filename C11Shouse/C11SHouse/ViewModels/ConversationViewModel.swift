@@ -161,8 +161,19 @@ class ConversationViewModel: ObservableObject {
                 } else if lowercased.contains("what") && (lowercased.contains("note") || lowercased.contains("remember")) {
                     // Handle note search queries
                     await searchAndRespondWithNotes(query: input, isMuted: isMuted)
-                } else if lowercased.contains("search") && lowercased.contains("note") {
+                } else if lowercased.contains("search") && (lowercased.contains("note") || lowercased.contains("room") || lowercased.contains("homekit")) {
                     // Handle explicit search requests
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if lowercased.contains("tell") && lowercased.contains("about") {
+                    // Handle "tell me about" queries
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if lowercased.contains("show") && (lowercased.contains("note") || lowercased.contains("room")) {
+                    // Handle "show me" queries
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if (lowercased.contains("bedroom") || lowercased.contains("kitchen") || lowercased.contains("living") || 
+                          lowercased.contains("bathroom") || lowercased.contains("office") || lowercased.contains("room")) &&
+                          (lowercased.contains("what") || lowercased.contains("tell") || lowercased.contains("show") || lowercased.contains("about")) {
+                    // Handle queries about specific rooms
                     await searchAndRespondWithNotes(query: input, isMuted: isMuted)
                 } else {
                     // Generate house response
@@ -410,6 +421,10 @@ class ConversationViewModel: ObservableObject {
                 .replacingOccurrences(of: "search", with: "")
                 .replacingOccurrences(of: "for", with: "")
                 .replacingOccurrences(of: "the", with: "")
+                .replacingOccurrences(of: "tell", with: "")
+                .replacingOccurrences(of: "me", with: "")
+                .replacingOccurrences(of: "show", with: "")
+                .replacingOccurrences(of: "rooms", with: "room")
                 .trimmingCharacters(in: .whitespacesAndNewlines)
                 .components(separatedBy: " ")
                 .filter { !$0.isEmpty }
@@ -429,12 +444,17 @@ class ConversationViewModel: ObservableObject {
                 let questionLower = question.text.lowercased()
                 let answerLower = note.answer.lowercased()
                 
-                let matches = searchTerms.isEmpty || searchTerms.contains { term in
-                    questionLower.contains(term) || answerLower.contains(term)
-                }
-                
-                if matches {
+                // Special handling for HomeKit searches
+                if searchTerms.contains("homekit") && question.text.contains("HomeKit") {
                     matchingNotes.append((question: question, note: note))
+                } else {
+                    let matches = searchTerms.isEmpty || searchTerms.contains { term in
+                        questionLower.contains(term) || answerLower.contains(term)
+                    }
+                    
+                    if matches {
+                        matchingNotes.append((question: question, note: note))
+                    }
                 }
             }
             

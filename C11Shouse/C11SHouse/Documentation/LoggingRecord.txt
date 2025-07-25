@@ -11,26 +11,27 @@
 [ContentViewModel] Init complete - address: nil
 [QuestionFlowCoordinator] Initialized
 [QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[ContentViewModel] Weather update received: nil
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[ContentViewModel] Weather update received: nil
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [HomeKitService] Initialized with delegate set, initial status: 0
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [WeatherCoordinator] Created Weather question in notes store
-[C11SHouseApp] Services initialized
-[C11SHouseApp] HomeKit discovery completed
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[C11SHouseApp] Services initialized
+[HomeKitCoordinator] Starting HomeKit discovery
+[HomeKitCoordinator] Authorization result: false
+[HomeKitCoordinator] Not authorized, aborting discovery
+[C11SHouseApp] HomeKit discovery completed
 [HomeKitService] Authorization status updated to: 5
 [HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
-App is being debugged, do not track this hang
-Hang detected: 0.37s (debugger attached, not reporting)
-App is being debugged, do not track this hang
-Hang detected: 0.49s (debugger attached, not reporting)
+[HomeKitService] Updating discovered homes from delegate callback
+[HomeKitService] Updated home: Roland Canyon - Rooms: 12, Accessories: 17
 [ConversationView] onAppear called
 [ConversationViewModel] setupView() called
 [ConversationViewModel] No saved house name found
@@ -58,7 +59,7 @@ Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 [QuestionFlowCoordinator] Answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
 [QuestionFlowCoordinator] saveAnswer called with answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
 [QuestionFlowCoordinator] Trimmed answer: '14450 Roland Canyon Rd, Salinas, CA 93908'
-[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 6D962EC7-8602-4A32-A2AE-4C855F8576B4
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: A8689AB5-E0EC-4D13-9F6C-4B9A89567146
 [QuestionFlowCoordinator] saveOrUpdateNote completed successfully
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
@@ -94,10 +95,10 @@ Roland House...', isMuted: false
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
-[ContentViewModel] Weather update received: partlyCloudy
+[ContentViewModel] Weather update received: clear
 [WeatherCoordinator] Weather question already exists
 [WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
+[ContentViewModel] ✅ Weather fetch successful: clear
 [ContentViewModel] Temperature: 66°F
 [ContentViewModel] Current weather after fetch: exists
 [ConversationViewModel] processUserInput: 'Roland House'
@@ -106,7 +107,7 @@ Roland House...', isMuted: false
 [QuestionFlowCoordinator] Answer: 'Roland House'
 [QuestionFlowCoordinator] saveAnswer called with answer: 'Roland House'
 [QuestionFlowCoordinator] Trimmed answer: 'Roland House'
-[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: B05E22F6-A73A-406E-B3B1-B73655E5E32F
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: D97AF48F-C71E-4288-AF72-F6349E6F6DD2
 [QuestionFlowCoordinator] saveOrUpdateNote completed successfully
 [QuestionFlowCoordinator] loadNextQuestion() called
 [QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
@@ -125,4 +126,119 @@ Roland House...', isMuted: false
 [ConversationViewModel] After loading, hasCompletedAllQuestions: false
 [ConversationStateManager] speak called - text: 'What's your name?...', isMuted: false
 [ConversationStateManager] Speaking text...
-tcp_input [C1.1.1.1:3] flags=[R.] seq=3037925979, ack=3510800246, win=524 state=CLOSED rcv_nxt=3037925955, snd_una=3510800246
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
+fopen failed for data file: errno = 2 (No such file or directory)
+Errors found! Invalidating cache...
+App is being debugged, do not track this hang
+Hang detected: 0.76s (debugger attached, not reporting)
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+[ConversationViewModel] processUserInput: 'Adrian'
+[ConversationViewModel] Answering question: What's your name?
+[QuestionFlowCoordinator] Saving answer for question: 'What's your name?'
+[QuestionFlowCoordinator] Answer: 'Adrian'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Adrian'
+[QuestionFlowCoordinator] Trimmed answer: 'Adrian'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 88F38120-5B71-4293-A70F-39199D4F8515
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[QuestionFlowCoordinator] Answer saved successfully
+[QuestionFlowCoordinator] Updating user name
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[ConversationViewModel] After loading, hasCompletedAllQuestions: false
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] Loaded house name: Roland House
+[ConversationViewModel] Found 5 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Let's start by creating your first room note! What room would you like to add a note about?
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] Loaded house name: Roland House
+[ConversationViewModel] Found 5 existing messages
+[ConversationViewModel] Loading next question...
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 1
+[QuestionFlowCoordinator] Next question: 'Let's start by creating your first room note! What room would you like to add a note about?' (required: true)
+[ConversationViewModel] hasCompletedAllQuestions: false
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: false, current: Let's start by creating your first room note! What room would you like to add a note about?
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+Error: this application, or a library it uses, has passed an invalid numeric value (NaN, or not-a-number) to CoreGraphics API and this value is being ignored. Please fix this problem.
+If you want to see the backtrace, please set CG_NUMERICS_SHOW_BACKTRACE environmental variable.
+[ConversationViewModel] processUserInput: 'Family room'
+[ConversationViewModel] Answering question: Let's start by creating your first room note! What room would you like to add a note about?
+[ConversationViewModel] This is the Phase 4 intro question, handling specially
+[QuestionFlowCoordinator] Saving answer for question: 'Let's start by creating your first room note! What room would you like to add a note about?'
+[QuestionFlowCoordinator] Answer: 'Family room'
+[QuestionFlowCoordinator] saveAnswer called with answer: 'Family room'
+[QuestionFlowCoordinator] Trimmed answer: 'Family room'
+[QuestionFlowCoordinator] Calling notesService.saveOrUpdateNote for question: 6031D382-03A7-4AB8-A8E7-86AE131598C3
+[QuestionFlowCoordinator] saveOrUpdateNote completed successfully
+[QuestionFlowCoordinator] loadNextQuestion() called
+[QuestionFlowCoordinator] Current state - isLoadingQuestion: false, hasCompletedAllQuestions: false
+[QuestionFlowCoordinator] Loaded notes store with 5 questions
+[QuestionFlowCoordinator] Questions needing review: 0
+[QuestionFlowCoordinator] No more questions to ask
+[QuestionFlowCoordinator] Posting AllQuestionsComplete notification
+[QuestionFlowCoordinator] All questions completed, NOT reloading (infinite loop prevention)
+[QuestionFlowCoordinator] Answer saved successfully
+[ConversationViewModel] processUserInput: 'Tv'
+App is being debugged, do not track this hang
+Hang detected: 0.28s (debugger attached, not reporting)
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationViewModel] processUserInput: 'Tell me about the bedroom'
+[ConversationViewModel] generateHouseResponse called - isMuted: false
+[ConversationViewModel] Generated thought: 'I understand. Let me think about that......'
+[ConversationViewModel] About to speak - isMuted: false
+[ConversationStateManager] speak called - text: 'I understand. Let me think about that......', isMuted: false
+[ConversationStateManager] Speaking text...
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+-[RTIInputSystemClient remoteTextInputSessionWithID:performInputOperation:]  perform input operation requires a valid sessionID. inputModality = Keyboard, inputOperation = <null selector>, customInfoType = UIEmojiSearchOperations
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+[ConversationViewModel] processUserInput: 'Search the HomeKit rooms'
+[ConversationViewModel] generateHouseResponse called - isMuted: false
+[ConversationViewModel] Generated thought: 'I understand. Let me think about that......'
+[ConversationViewModel] About to speak - isMuted: false
+[ConversationStateManager] speak called - text: 'I understand. Let me think about that......', isMuted: false
+[ConversationStateManager] Speaking text...
