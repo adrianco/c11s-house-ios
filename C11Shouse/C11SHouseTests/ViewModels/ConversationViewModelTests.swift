@@ -35,9 +35,9 @@ class ConversationViewModelTests: XCTestCase {
     var mockStateManager: ConversationStateManager!
     var mockQuestionFlow: MockQuestionFlowCoordinator!
     var mockRecognizer: MockConversationRecognizer!
-    var mockServiceContainer: TestServiceContainer!
+    fileprivate var mockServiceContainer: TestServiceContainer!
     var mockNotesService: SharedMockNotesService!
-    var mockHomeKitCoordinator: MockHomeKitCoordinator!
+    fileprivate var mockHomeKitCoordinator: MockHomeKitCoordinator!
     var cancellables: Set<AnyCancellable>!
     
     // MARK: - Setup & Teardown
@@ -137,7 +137,7 @@ class ConversationViewModelTests: XCTestCase {
         // Create HomeKit summary note
         let summaryQuestion = Question(
             text: "HomeKit Configuration Summary",
-            category: .home,
+            category: .houseInfo,
             displayOrder: 100
         )
         let summaryNote = Note(
@@ -275,6 +275,32 @@ class ConversationViewModelTests: XCTestCase {
         let response = mockMessageStore.messages.first?.content ?? ""
         XCTAssertTrue(response.contains("don't have any notes"))
         XCTAssertTrue(response.contains("add room note"))
+    }
+    
+    func testSearchAndRespondWithNotes_EmptySearchTerms_DoesNotReturnAll() async {
+        // Given
+        let livingRoomQuestion = Question(text: "Living Room", category: .other, displayOrder: 1000)
+        let livingRoomNote = Note(questionId: livingRoomQuestion.id, answer: "Has a TV")
+        
+        let bedroomQuestion = Question(text: "Bedroom", category: .other, displayOrder: 1001)
+        let bedroomNote = Note(questionId: bedroomQuestion.id, answer: "Has a bed")
+        
+        mockNotesService.mockNotesStore = NotesStoreData(
+            questions: [livingRoomQuestion, bedroomQuestion],
+            notes: [
+                livingRoomQuestion.id: livingRoomNote,
+                bedroomQuestion.id: bedroomNote
+            ],
+            version: 1
+        )
+        
+        // When - search with only stop words that get filtered out
+        await sut.processUserInput("what about the", isMuted: true)
+        
+        // Then - should not return any notes since search terms are empty after filtering
+        XCTAssertEqual(mockMessageStore.messages.count, 1)
+        let response = mockMessageStore.messages.first?.content ?? ""
+        XCTAssertTrue(response.contains("don't have any notes") || !response.contains("Living Room"))
     }
     
     func testMightBeAskingAboutNote_DetectsNoteReference() async {
@@ -502,7 +528,7 @@ private class TestServiceContainer: ServiceContainer {
     init(notesService: SharedMockNotesService, homeKitCoordinator: MockHomeKitCoordinator) {
         self.mockNotesService = notesService
         self.mockHomeKitCoordinator = homeKitCoordinator
-        super.init()
+        super.init(forTesting: true)
     }
     
     override var notesService: NotesServiceProtocol {
@@ -514,7 +540,11 @@ private class TestServiceContainer: ServiceContainer {
     }
     
     override var addressSuggestionService: AddressSuggestionService {
-        return AddressSuggestionService(locationService: MockLocationService())
+        return AddressSuggestionService(
+            addressManager: MockAddressManager(notesService: mockNotesService, locationService: MockLocationService()),
+            locationService: MockLocationService(),
+            weatherCoordinator: MockWeatherCoordinator()
+        )
     }
     
     override var permissionManager: PermissionManager {
@@ -542,5 +572,21 @@ private class MockHomeKitCoordinator: HomeKitCoordinator {
     override func hasHomeKitConfiguration() async -> Bool {
         hasHomeKitConfigurationCalled = true
         return hasHomeKitConfigurationResult
+    }
+}
+
+private class MockAddressManager: AddressManager {
+    init(notesService: NotesServiceProtocol, locationService: LocationServiceProtocol) {
+        super.init(notesService: notesService, locationService: locationService)
+    }
+}
+
+private class MockWeatherCoordinator: WeatherCoordinator {
+    init() {
+        super.init(
+            weatherService: MockWeatherKitService(),
+            notesService: SharedMockNotesService(),
+            locationService: MockLocationService()
+        )
     }
 }

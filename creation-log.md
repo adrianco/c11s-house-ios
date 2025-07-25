@@ -2800,3 +2800,17 @@ Key Changes Made:
   
 
 > review latest LoggingRecord.txt, tap to speak button inoperative after asking name. Had to toggle Mute on and off to enable microphone, no HomeKit data at all. Add basic search of notes titles in conversation and respond with notes content
+
+Additional functional problems
+Tap to Speak button not working. This used to work fine, perhaps revert to earlier code base in main branch?
+Search not working - it accepts the search but returns a random unrelated result - make sure there is a test for this
+When entering conversation view it posts and reads a random note.
+In muted mode, the text field should not be pre-filled with every house response, this is only needed when a question is being confirmed
+The voice settings choice is not preserved, should be saved in CoreData.
+The comment below the weather in ContentView needs to wrap text to show longer output.
+When summarizing homekit, don't use "other accessories" name each type explicitly.
+In the tap-to-speak view when the stop speaking button moves to the right, it should change to a confirm button. The existing edit functionality should be added as a new button on the left side of the view.
+In the text edit view for input, there needs to be a clear button as well as a confirm up arrow button.
+
+Look for opportunities to simplify the code, don't add time delays, use events and notfications, refactor complex logic to clean it up.
+

@@ -280,8 +280,44 @@ struct HomeKitAccessory: Codable {
             return "Humidifiers"
         case HMAccessoryCategoryTypeAirDehumidifier:
             return "Dehumidifiers"
+        case HMAccessoryCategoryTypeBridge:
+            return "Bridges"
+        case HMAccessoryCategoryTypeSecuritySystem:
+            return "Security Systems"
+        case HMAccessoryCategoryTypeProgrammableSwitch:
+            return "Programmable Switches"
+        case HMAccessoryCategoryTypeRangeExtender:
+            return "Range Extenders"
+        case HMAccessoryCategoryTypeFaucet:
+            return "Faucets"
+        case HMAccessoryCategoryTypeShowerHead:
+            return "Shower Heads"
+        case HMAccessoryCategoryTypeSprinkler:
+            return "Sprinklers"
+        case HMAccessoryCategoryTypeValve:
+            return "Valves"
         default:
-            return "Other Accessories"
+            // For any truly unknown categories, use the localized description
+            // This ensures we always provide a specific name rather than generic "Other"
+            let categoryDescription = category.localizedDescription
+            // If we have a meaningful description, use it
+            if !categoryDescription.isEmpty && categoryDescription != "Unknown" {
+                return categoryDescription
+            }
+            // As a last resort, extract from the category type string
+            let typeString = String(describing: category.categoryType)
+            if typeString.hasPrefix("HMAccessoryCategoryType") {
+                let name = typeString.dropFirst("HMAccessoryCategoryType".count)
+                // Convert from CamelCase to Title Case
+                let readable = name.unicodeScalars.reduce("") { result, scalar in
+                    if CharacterSet.uppercaseLetters.contains(scalar) && !result.isEmpty {
+                        return result + " " + String(scalar)
+                    }
+                    return result + String(scalar)
+                }
+                return readable.isEmpty ? "Accessories" : readable
+            }
+            return "Accessories"
         }
     }
     

@@ -89,6 +89,7 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
         super.init()
         synthesizer.delegate = self
         setupAudioSession()
+        loadSavedSettings()
     }
     
     // MARK: - Public Methods
@@ -232,6 +233,33 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
         
         // Default to English
         return "en-US"
+    }
+    
+    private func loadSavedSettings() {
+        // Load persisted settings from UserDefaults matching VoiceSettingsView @AppStorage keys
+        let userDefaults = UserDefaults.standard
+        
+        // Load speech parameters
+        configuration.rate = userDefaults.float(forKey: "tts_rate", default: 0.5)
+        configuration.pitch = userDefaults.float(forKey: "tts_pitch", default: 1.0)
+        configuration.volume = userDefaults.float(forKey: "tts_volume", default: 1.0)
+        
+        // Load voice identifier
+        let voiceIdentifier = userDefaults.string(forKey: "tts_voice_identifier")
+        if let identifier = voiceIdentifier, !identifier.isEmpty {
+            configuration.voiceIdentifier = identifier
+        }
+    }
+}
+
+// MARK: - UserDefaults Extension for Float with Default
+
+private extension UserDefaults {
+    func float(forKey key: String, default defaultValue: Float) -> Float {
+        if object(forKey: key) != nil {
+            return float(forKey: key)
+        }
+        return defaultValue
     }
 }
 

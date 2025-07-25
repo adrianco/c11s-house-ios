@@ -42,13 +42,28 @@ struct ChatInputView: View {
             
             HStack(spacing: 12) {
                 if isMuted {
-                    // Text input field
-                    TextField("Type a message...", text: $inputText)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .focused($isTextFieldFocused)
-                        .onSubmit {
-                            onSendText()
+                    // Text input field with clear button
+                    HStack {
+                        TextField("Type a message...", text: $inputText)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .focused($isTextFieldFocused)
+                            .onSubmit {
+                                onSendText()
+                            }
+                        
+                        // Clear button inside text field area
+                        if !inputText.isEmpty {
+                            Button(action: {
+                                inputText = ""
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.body)
+                                    .foregroundColor(.gray)
+                            }
+                            .accessibilityIdentifier("clear.text")
+                            .accessibilityLabel("Clear")
                         }
+                    }
                     
                     // Send button
                     Button(action: onSendText) {
@@ -58,6 +73,7 @@ struct ChatInputView: View {
                     }
                     .disabled(inputText.isEmpty || isProcessing)
                     .accessibilityIdentifier("arrow.up.circle.fill")
+                    .accessibilityLabel("Send")
                 } else {
                     // Voice input
                     if showVoiceConfirmation {
@@ -74,6 +90,20 @@ struct ChatInputView: View {
                         )
                     } else {
                         HStack {
+                            // Edit button on the left when recording with transcript
+                            if recognizer.isRecording && !recognizer.transcript.isEmpty {
+                                Button(action: {
+                                    // Stop recording and show confirmation view for editing
+                                    onToggleRecording()
+                                }) {
+                                    Image(systemName: "pencil.circle.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundColor(.orange)
+                                }
+                                .accessibilityIdentifier("pencil.circle.fill")
+                                .accessibilityLabel("Edit")
+                            }
+                            
                             // Show live transcript while recording
                             if recognizer.isRecording && !recognizer.transcript.isEmpty {
                                 Text(recognizer.transcript)
@@ -90,17 +120,36 @@ struct ChatInputView: View {
                             }
                             
                             VStack(spacing: 4) {
-                                Button(action: onToggleRecording) {
-                                    Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                        .font(.system(size: 50))
-                                        .foregroundColor(recognizer.isRecording ? .red : .blue)
+                                if recognizer.isRecording && !recognizer.transcript.isEmpty {
+                                    // When recording with transcript, show confirm button
+                                    Button(action: {
+                                        // Stop recording - this will trigger voice confirmation
+                                        onToggleRecording()
+                                    }) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(.green)
+                                    }
+                                    .accessibilityIdentifier("checkmark.circle.fill")
+                                    .accessibilityLabel("Confirm")
+                                    
+                                    Text("Confirm")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    // Normal recording button
+                                    Button(action: onToggleRecording) {
+                                        Image(systemName: recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                            .font(.system(size: 50))
+                                            .foregroundColor(recognizer.isRecording ? .red : .blue)
+                                    }
+                                    .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
+                                    .accessibilityIdentifier(recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                                    
+                                    Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
                                 }
-                                .disabled(recognizer.authorizationStatus != .authorized || isProcessing)
-                                .accessibilityIdentifier(recognizer.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                                
-                                Text(recognizer.isRecording ? "Recording..." : "Tap to speak")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
                             }
                             
                             if !recognizer.isRecording || recognizer.transcript.isEmpty {

@@ -34,27 +34,44 @@ struct VoiceConfirmationView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                TextField("Edit your message...", text: $pendingVoiceText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .focused($isTextFieldFocused)
-                    .onSubmit {
-                        onConfirm()
+                HStack {
+                    TextField("Edit your message...", text: $pendingVoiceText)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .focused($isTextFieldFocused)
+                        .onSubmit {
+                            onConfirm()
+                        }
+                    
+                    // Clear button inside text field area
+                    if !pendingVoiceText.isEmpty {
+                        Button(action: {
+                            pendingVoiceText = ""
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.body)
+                                .foregroundColor(.gray)
+                        }
+                        .accessibilityIdentifier("clear.text")
+                        .accessibilityLabel("Clear")
                     }
+                }
             }
             
             HStack(spacing: 12) {
                 Button(action: onCancel) {
                     Image(systemName: "xmark.circle.fill")
                         .font(.title2)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.red)
                 }
+                .accessibilityLabel("Cancel")
                 
                 Button(action: onConfirm) {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image(systemName: "arrow.up.circle.fill")
                         .font(.title2)
-                        .foregroundColor(pendingVoiceText.isEmpty ? .gray : .green)
+                        .foregroundColor(pendingVoiceText.isEmpty ? .gray : .blue)
                 }
                 .disabled(pendingVoiceText.isEmpty)
+                .accessibilityLabel("Send")
             }
         }
     }

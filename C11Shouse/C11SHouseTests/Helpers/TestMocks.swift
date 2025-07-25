@@ -614,7 +614,12 @@ class MockHomeKitService: HomeKitServiceProtocol {
         authorizationStatusSubject.eraseToAnyPublisher()
     }
     
+    var homesPublisher: AnyPublisher<[HomeKitHome], Never> {
+        homesSubject.eraseToAnyPublisher()
+    }
+    
     private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.determined)
+    private let homesSubject = CurrentValueSubject<[HomeKitHome], Never>([])
     
     var requestAuthorizationCalled = false
     var discoverHomesCalled = false
@@ -677,6 +682,9 @@ class MockHomeKitService: HomeKitServiceProtocol {
         // Store the discovered homes for later retrieval
         discoveredHomes = summary.homes
         mockDiscoverySummary = summary
+        
+        // Publish the discovered homes
+        homesSubject.send(discoveredHomes)
         
         return summary
     }

@@ -153,6 +153,14 @@ class ServiceContainer: ObservableObject {
     private init() {
         // Private initializer for singleton
     }
+    
+    #if DEBUG
+    /// Test-only initializer to support dependency injection in tests
+    /// This allows tests to create TestServiceContainer subclasses
+    internal init(forTesting: Bool) {
+        // Empty initializer for testing
+    }
+    #endif
 }
 
 // MARK: - Environment Key

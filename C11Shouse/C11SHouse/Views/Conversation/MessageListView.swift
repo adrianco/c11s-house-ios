@@ -41,11 +41,9 @@ struct MessageListView: View {
                 .padding(.bottom, 20) // Extra bottom padding
             }
             .onChange(of: messageStore.messages.count) { _, _ in
-                // Delay slightly to ensure message is rendered
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation {
-                        proxy.scrollTo("bottom", anchor: .bottom)
-                    }
+                // Scroll immediately when messages change
+                withAnimation {
+                    proxy.scrollTo("bottom", anchor: .bottom)
                 }
             }
             .onChange(of: scrollToBottom) { _, shouldScroll in

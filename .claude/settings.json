@@ -1,119 +1,57 @@
 {
-  "version": "2.0.0-alpha.27",
-  "claudeFlow": {
-    "enabled": true,
-    "autoInit": true,
-    "mcp": {
-      "enabled": true,
-      "servers": {
-        "claude-flow": {
-          "command": "npx",
-          "args": ["claude-flow@2.0.0-alpha.27", "mcp", "start"],
-          "protocol": "stdio"
-        }
-      }
-    }
-  },
-  "memory": {
-    "persistent": true,
-    "location": "./memory",
-    "maxSize": "100MB",
-    "compression": true,
-    "encryption": false,
-    "ttl": 86400000,
-    "namespaces": ["default", "agents", "tasks", "sessions", "swarms"]
-  },
-  "swarm": {
-    "defaultTopology": "hierarchical",
-    "maxAgents": 8,
-    "strategies": ["parallel", "sequential", "adaptive", "balanced"],
-    "autoSpawn": true,
-    "autoBalance": true,
-    "metrics": {
-      "enabled": true,
-      "interval": 5000
-    }
-  },
-  "neural": {
-    "enabled": true,
-    "wasmOptimized": true,
-    "modelPath": "./models",
-    "trainingEnabled": true,
-    "autoTrain": true,
-    "patterns": {
-      "coordination": true,
-      "optimization": true,
-      "prediction": true
-    }
-  },
   "hooks": {
-    "enabled": true,
-    "pre-task": {
-      "enabled": true,
-      "actions": [
-        "load-context",
-        "validate-resources",
-        "optimize-topology",
-        "auto-spawn-agents"
-      ]
-    },
-    "post-edit": {
-      "enabled": true,
-      "actions": [
-        "format-code",
-        "update-memory",
-        "train-patterns",
-        "sync-agents"
-      ]
-    },
-    "session-end": {
-      "enabled": true,
-      "actions": [
-        "save-state",
-        "generate-summary",
-        "export-metrics",
-        "backup-memory"
-      ]
-    },
-    "notification": {
-      "enabled": true,
-      "actions": [
-        "log-telemetry",
-        "update-metrics",
-        "broadcast-agents"
-      ]
-    }
-  },
-  "performance": {
-    "monitoring": true,
-    "bottleneckAnalysis": true,
-    "tokenOptimization": true,
-    "caching": {
-      "enabled": true,
-      "maxSize": "50MB",
-      "ttl": 3600000
-    }
-  },
-  "github": {
-    "enabled": false,
-    "token": null,
-    "webhooks": false,
-    "automation": {
-      "pullRequests": false,
-      "issues": false,
-      "releases": false
-    }
-  },
-  "telemetry": {
-    "enabled": true,
-    "anonymous": true,
-    "metrics": ["performance", "usage", "errors"]
-  },
-  "features": {
-    "smartAutoComplete": true,
-    "contextAwareSuggestions": true,
-    "codeGeneration": true,
-    "autoDocumentation": true,
-    "testGeneration": true
+    "PreToolUse": [
+      {
+        "matcher": "tools:Edit,MultiEdit,Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx claude-flow hooks pre-task --auto-spawn-agents true"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "tools:Edit,MultiEdit,Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx claude-flow hooks post-edit --file '${filePath}' --memory-key 'swarm/edit/${filePath}'"
+          }
+        ]
+      },
+      {
+        "matcher": "tools:Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx claude-flow hooks notification --message 'Command executed: ${command}'"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx claude-flow hooks notification --message '${message}' --telemetry true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx claude-flow hooks session-end --export-metrics true --generate-summary true"
+          }
+        ]
+      }
+    ]
   }
 }

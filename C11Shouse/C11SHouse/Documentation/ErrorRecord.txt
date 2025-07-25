@@ -1,17 +1,38 @@
-# Error Record
+C11SHouseTests
+Command SwiftCompile failed with a nonzero exit code
 
-This file tracks compilation errors that need to be fixed.
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Helpers/TestMocks.swift
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Helpers/TestMocks.swift:612:7 Type 'MockHomeKitService' does not conform to protocol 'HomeKitServiceProtocol'
 
-Last updated: 2025-07-24
+Add stubs for conformance
+Protocol requires property 'homesPublisher' with type 'AnyPublisher<[HomeKitHome], Never>'
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:38:9 Property must be declared fileprivate because its type uses a private type
 
-## Current Status
-- HomeKitServiceTests compilation errors have been fixed
-- Added test initializers for HomeKit models
-- Fixed nil contextual type errors
-- Added missing Combine import
-- Implemented all required NotesServiceProtocol methods in MockNotesService
+Type declared here
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:40:9 Property must be declared fileprivate because its type uses a private type
 
-## Previous Errors (Fixed)
-- HomeKitServiceTests.swift: No exact matches in call to initializer - Fixed by adding test initializers
-- HomeKitServiceTests.swift: 'nil' requires a contextual type - Fixed by adding explicit type annotations
-- HomeKitServiceTests.swift: Cannot find type 'AnyPublisher' in scope - Fixed by importing Combine
+Type declared here
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:69:27 Cannot convert value of type 'MockMessageStore' to expected argument type 'MessageStore'
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:71:27 Cannot convert value of type 'MockQuestionFlowCoordinator' to expected argument type 'QuestionFlowCoordinator'
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:72:25 Cannot convert value of type 'MockConversationRecognizer' to expected argument type 'ConversationRecognizer'
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:140:24 Type 'QuestionCategory' has no member 'home'
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:505:15 'ServiceContainer' initializer is inaccessible due to 'private' protection level
+
+'init()' declared here (C11SHouse.ServiceContainer.init)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:517:40 Missing arguments for parameters 'addressManager', 'weatherCoordinator' in call
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:521:23 'PermissionManager' initializer is inaccessible due to 'private' protection level
+
+'init()' declared here (C11SHouse.PermissionManager.init)
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:228 testSetupFlowWithLocationPermissionDenied(): XCTAssertTrue failed
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:322 testDetectCurrentAddressWithoutPermission(): failed - Wrong error type: notAuthorized
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/AddressManagerTests.swift:348 testDetectCurrentAddressWithNotDeterminedPermission(): failed - Wrong error type: notAuthorized

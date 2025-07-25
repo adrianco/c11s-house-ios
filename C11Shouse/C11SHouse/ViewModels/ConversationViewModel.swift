@@ -325,6 +325,7 @@ class ConversationViewModel: ObservableObject {
         // Check if we've already announced HomeKit
         let homeKitAnnouncedKey = "homeKitConfigurationAnnounced"
         guard !UserDefaults.standard.bool(forKey: homeKitAnnouncedKey) else {
+            print("[ConversationViewModel] HomeKit already announced, skipping")
             return
         }
         
@@ -346,20 +347,25 @@ class ConversationViewModel: ObservableObject {
                         
                         // Create a detailed summary message for the conversation
                         let summary = extractDetailedHomeKitSummary(from: summaryNote.answer)
-                        let homeKitMessage = Message(
-                            content: summary,
-                            isFromUser: false,
-                            isVoice: !stateManager.isSavingAnswer && hasVoicePermissions
-                        )
-                        messageStore.addMessage(homeKitMessage)
                         
-                        // Speak the summary if voice is enabled
-                        if !stateManager.isSavingAnswer && hasVoicePermissions {
-                            await stateManager.speak(summary, isMuted: false)
+                        // Only add the message if we have meaningful content
+                        if !summary.isEmpty && summary.count > 50 {
+                            print("[ConversationViewModel] Announcing HomeKit configuration with summary length: \(summary.count)")
+                            let homeKitMessage = Message(
+                                content: summary,
+                                isFromUser: false,
+                                isVoice: !stateManager.isSavingAnswer && hasVoicePermissions
+                            )
+                            messageStore.addMessage(homeKitMessage)
+                            
+                            // Speak the summary if voice is enabled
+                            if !stateManager.isSavingAnswer && hasVoicePermissions {
+                                await stateManager.speak(summary, isMuted: false)
+                            }
+                            
+                            // Mark as announced
+                            UserDefaults.standard.set(true, forKey: homeKitAnnouncedKey)
                         }
-                        
-                        // Mark as announced
-                        UserDefaults.standard.set(true, forKey: homeKitAnnouncedKey)
                     }
                 }
             } catch {
@@ -547,7 +553,7 @@ class ConversationViewModel: ObservableObject {
                 }
                 
                 // If we have a match, add it with the score
-                if matchScore > 0 || searchTerms.isEmpty {
+                if matchScore > 0 {
                     matchingNotes.append((question: question, note: note, score: matchScore))
                 }
             }

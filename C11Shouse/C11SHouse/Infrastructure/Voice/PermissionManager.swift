@@ -103,6 +103,15 @@ public final class PermissionManager: NSObject, ObservableObject {
         checkCurrentPermissionsExceptHomeKit()
     }
     
+    #if DEBUG
+    /// Test-only initializer to support creating mock instances in tests
+    /// This allows tests to create PermissionManager instances for testing
+    public override init() {
+        super.init()
+        // Don't set up observers or check permissions in test instances
+    }
+    #endif
+    
     // MARK: - Public Methods
     
     /// Check if a specific permission is granted

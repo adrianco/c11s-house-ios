@@ -43,6 +43,7 @@ struct ConversationView: View {
     @State private var waitingForPermissions = false
     @State private var permissionObserver: AnyCancellable?
     @FocusState private var isTextFieldFocused: Bool
+    @State private var hasAppeared = false
     
     private var hasVoicePermissions: Bool {
         serviceContainer.permissionManager.isMicrophoneGranted &&
@@ -166,8 +167,14 @@ struct ConversationView: View {
             Task {
                 await viewModel.setupView()
                 
+                // Initialize speech recognizer early to set authorization status
+                recognizer.initializeSpeechRecognizer()
+                
                 // Set up permission observers
                 setupPermissionObservers()
+                
+                // Mark view as appeared after setup
+                hasAppeared = true
                 
                 // Check voice permissions status
                 if hasVoicePermissions {
@@ -177,10 +184,8 @@ struct ConversationView: View {
                     isMuted = true
                 }
                 
-                // Scroll to bottom after initial setup
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    scrollToBottom = true
-                }
+                // Trigger scroll to bottom after setup
+                scrollToBottom = true
             }
         }
         .onChange(of: recognizer.transcript) { oldValue, newValue in
@@ -220,7 +225,8 @@ struct ConversationView: View {
         }
         .onChange(of: questionFlow.currentQuestion) { oldValue, newValue in
             // When a new question appears, add it to the chat
-            if let question = newValue, oldValue != newValue {
+            // Only process if view has appeared and this is an actual change
+            if let question = newValue, oldValue != newValue, hasAppeared {
                 Task { @MainActor in
                     // First, let handleQuestionChange process the question
                     _ = await questionFlow.handleQuestionChange(oldQuestion: oldValue, newQuestion: newValue, isInitializing: false)
@@ -267,32 +273,20 @@ struct ConversationView: View {
                     // Check for pre-populated transcript after handleQuestionChange
                     if !stateManager.persistentTranscript.isEmpty {
                         inputText = stateManager.persistentTranscript
-                        // Force text field update
-                        isTextFieldFocused = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                            isTextFieldFocused = true
-                        }
+                        // Use onChange to focus after text updates
+                        isTextFieldFocused = true
                     } else {
                         // Clear the text field for questions without pre-populated answers
                         inputText = ""
                     }
                     
-                    // Trigger scroll to bottom after a brief delay to ensure message is rendered
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        scrollToBottom = true
-                    }
+                    // Trigger scroll to bottom
+                    scrollToBottom = true
                     
                     // Speak the question if not muted
                     if !isMuted {
-                        // Wait a moment for any previous speech to complete
+                        // Queue speech properly without delays
                         Task {
-                            // If TTS is currently speaking, wait for it to finish
-                            while stateManager.isSpeaking {
-                                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
-                            }
-                            // Add a small pause for natural conversation flow
-                            try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
-                            // Now speak the question
                             await stateManager.speak(spokenContent, isMuted: isMuted)
                         }
                     }

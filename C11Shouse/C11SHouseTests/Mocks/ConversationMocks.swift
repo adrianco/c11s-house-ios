@@ -22,26 +22,25 @@ import Speech
 
 // MARK: - Message Store Mock
 
-class MockMessageStore: ObservableObject {
-    @Published var messages: [Message] = []
-    
+class MockMessageStore: MessageStore {
     var addMessageCalled = false
     var clearAllMessagesCalled = false
     var lastAddedMessage: Message?
     
     init(initialMessages: [Message] = []) {
+        super.init()
         self.messages = initialMessages
     }
     
-    func addMessage(_ message: Message) {
+    override func addMessage(_ message: Message) {
         addMessageCalled = true
         lastAddedMessage = message
-        messages.append(message)
+        super.addMessage(message)
     }
     
-    func clearAllMessages() {
+    override func clearAllMessages() {
         clearAllMessagesCalled = true
-        messages.removeAll()
+        super.clearAllMessages()
     }
     
     func getMessage(at index: Int) -> Message? {
@@ -52,13 +51,8 @@ class MockMessageStore: ObservableObject {
 
 // MARK: - Conversation Recognizer Mock
 
-class MockConversationRecognizer: NSObject, ObservableObject {
-    @Published var transcript = ""
-    @Published var isRecording = false
-    @Published var error: SpeechError?
-    @Published var authorizationStatus: SFSpeechRecognizerAuthorizationStatus = .authorized
-    @Published var currentHouseThought: HouseThought?
-    
+@MainActor
+class MockConversationRecognizer: ConversationRecognizer {
     var toggleRecordingCalled = false
     var stopRecordingCalled = false
     var setQuestionThoughtCalled = false
@@ -68,7 +62,7 @@ class MockConversationRecognizer: NSObject, ObservableObject {
     var mockTranscript: String?
     var shouldFailWithError: SpeechError?
     
-    func toggleRecording() {
+    override func toggleRecording() {
         toggleRecordingCalled = true
         
         if let error = shouldFailWithError {
@@ -86,12 +80,12 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         }
     }
     
-    func stopRecording() {
+    override func stopRecording() {
         stopRecordingCalled = true
-        isRecording = false
+        super.stopRecording()
     }
     
-    func setQuestionThought(_ question: String) async {
+    override func setQuestionThought(_ question: String) async {
         setQuestionThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: question,
@@ -101,7 +95,7 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         )
     }
     
-    func setThankYouThought() async {
+    override func setThankYouThought() async {
         setThankYouThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: "Thank you!",
@@ -111,7 +105,7 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         )
     }
     
-    func clearHouseThought() async {
+    override func clearHouseThought() async {
         clearHouseThoughtCalled = true
         currentHouseThought = nil
     }
@@ -119,17 +113,8 @@ class MockConversationRecognizer: NSObject, ObservableObject {
 
 // MARK: - Question Flow Coordinator Mock
 
-class MockQuestionFlowCoordinator: ObservableObject {
-    @Published var currentQuestion: Question?
-    @Published var hasCompletedAllQuestions = false
-    @Published var isLoadingQuestion = false
-    
-    var conversationRecognizer: ConversationRecognizer?
-    var conversationStateManager: ConversationStateManager?
-    var addressManager: AddressManager?
-    var addressSuggestionService: AddressSuggestionService?
-    var serviceContainer: ServiceContainer?
-    
+@MainActor
+class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
     var loadNextQuestionCalled = false
     var saveAnswerCalled = false
     var handleQuestionChangeCalled = false
@@ -140,12 +125,32 @@ class MockQuestionFlowCoordinator: ObservableObject {
     
     init(questions: [Question] = []) {
         self.mockQuestions = questions
+        
+        // Create minimal dependencies for parent init
+        let notesService = SharedMockNotesService()
+        let stateManager = ConversationStateManager(
+            notesService: notesService,
+            ttsService: MockTTSService()
+        )
+        let recognizer = MockConversationRecognizerService()
+        let addressManager = SharedMockAddressManager()
+        let addressSuggestionService = AddressSuggestionService(locationService: MockLocationService())
+        let serviceContainer = MockServiceContainer()
+        
+        super.init(
+            conversationRecognizer: recognizer as! ConversationRecognizer,
+            conversationStateManager: stateManager,
+            addressManager: addressManager,
+            addressSuggestionService: addressSuggestionService,
+            serviceContainer: serviceContainer
+        )
+        
         if !questions.isEmpty {
             self.currentQuestion = questions[0]
         }
     }
     
-    func loadNextQuestion() async {
+    override func loadNextQuestion() async {
         loadNextQuestionCalled = true
         isLoadingQuestion = true
         

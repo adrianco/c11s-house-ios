@@ -167,6 +167,8 @@ struct ContentView: View {
                                 .font(.body)
                                 .foregroundColor(.primary)
                                 .multilineTextAlignment(.center)
+                                .lineLimit(nil) // Allow unlimited lines
+                                .fixedSize(horizontal: false, vertical: true) // Allow vertical expansion
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 16)
                                 .frame(maxWidth: 340)
