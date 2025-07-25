@@ -321,19 +321,7 @@ class NotesServiceImpl: NotesServiceProtocol {
             migratedQuestions.remove(at: oldQuestionIndex)
         }
         
-        // Add Phase 4 question if it doesn't exist
-        let phase4Text = "Let's start by creating your first room note! What room would you like to add a note about?"
-        if !migratedQuestions.contains(where: { $0.text == phase4Text }) {
-            // Check if user has completed the first 3 questions
-            let requiredQuestions = ["Is this the right address?", "What should I call this house?", "What's your name?"]
-            let hasCompletedBasics = requiredQuestions.allSatisfy { questionText in
-                if let question = migratedQuestions.first(where: { $0.text == questionText }) {
-                    return migratedNotes[question.id]?.isAnswered ?? false
-                }
-                return false
-            }
-            
-        }
+        // Phase 4 question has been removed - users can create room notes manually
         
         return NotesStoreData(
             questions: migratedQuestions,
