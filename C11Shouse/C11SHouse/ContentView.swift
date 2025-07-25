@@ -346,21 +346,15 @@ struct ContentView: View {
     }
     
     private func initializeSpeechServices() {
-        // Initialize speech recognition permissions
-        Task {
-            // Request speech recognition permission
-            await serviceContainer.permissionManager.requestSpeechRecognitionPermission()
-            
-            // Request microphone permission if needed
-            await serviceContainer.permissionManager.requestMicrophonePermission()
-            
-            // Initialize TTS service
-            let ttsService = serviceContainer.ttsService
-            // Just accessing the service initializes it
-            _ = ttsService.isSpeaking
-            
-            print("[ContentView] Speech services initialized")
-        }
+        // Check current permissions
+        serviceContainer.permissionManager.checkCurrentPermissions()
+        
+        // Initialize TTS service
+        let ttsService = serviceContainer.ttsService
+        // Just accessing the service initializes it
+        _ = ttsService.isSpeaking
+        
+        print("[ContentView] Speech services initialized")
     }
 }
 
