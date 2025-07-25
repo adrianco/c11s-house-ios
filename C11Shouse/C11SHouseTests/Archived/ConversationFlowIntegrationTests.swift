@@ -139,7 +139,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
             conversationStateManager.persistentTranscript = detected.fullAddress
             
             // Save the answer
-            try await questionFlowCoordinator.saveAnswer(detected.fullAddress)
+            await questionFlowCoordinator.processUserInput(detected.fullAddress)
             
             // Verify answer was saved
             let savedAnswer = await questionFlowCoordinator.getAnswer(for: "Is this the right address?")
@@ -154,7 +154,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
         // Simulate user providing house name
         let houseName = "Casa Test"
         conversationStateManager.persistentTranscript = houseName
-        try await questionFlowCoordinator.saveAnswer(houseName)
+        await questionFlowCoordinator.processUserInput(houseName)
         
         // Verify house name was saved
         let savedHouseName = await questionFlowCoordinator.getAnswer(for: "What should I call this house?")
@@ -168,9 +168,9 @@ class ConversationFlowIntegrationTests: XCTestCase {
         // Simulate user providing name
         let userName = "Test User"
         conversationStateManager.persistentTranscript = userName
-        try await questionFlowCoordinator.saveAnswer(userName)
+        await questionFlowCoordinator.processUserInput(userName)
         
-        // Manually update userName since we're using the basic saveAnswer method
+        // processUserInput now handles updating userName automatically
         await conversationStateManager.updateUserName(userName)
         
         // Verify name was saved and updated in state manager
@@ -186,7 +186,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
             // Provide appropriate answers based on question type
             let answer = generateAnswer(for: question)
             conversationStateManager.persistentTranscript = answer
-            try await questionFlowCoordinator.saveAnswer(answer)
+            await questionFlowCoordinator.processUserInput(answer)
             
             questionCount += 1
             
@@ -271,7 +271,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
         
         // Save detected address
         conversationStateManager.persistentTranscript = detected.fullAddress
-        try await questionFlowCoordinator.saveAnswer(detected.fullAddress)
+        await questionFlowCoordinator.processUserInput(detected.fullAddress)
         
         // Verify address was saved properly
         let savedAddress = try await addressManager.loadSavedAddress()
@@ -306,7 +306,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
         conversationStateManager.beginSavingAnswer()
         XCTAssertTrue(conversationStateManager.isSavingAnswer)
         
-        try await questionFlowCoordinator.saveAnswer("This is my answer")
+        await questionFlowCoordinator.processUserInput("This is my answer")
         
         conversationStateManager.endSavingAnswer()
         XCTAssertFalse(conversationStateManager.isSavingAnswer)
@@ -332,7 +332,7 @@ class ConversationFlowIntegrationTests: XCTestCase {
             
             // Answer based on category
             let answer = generateAnswer(for: question)
-            try await questionFlowCoordinator.saveAnswer(answer)
+            await questionFlowCoordinator.processUserInput(answer)
             questionsAnswered += 1
         }
         
@@ -351,19 +351,14 @@ class ConversationFlowIntegrationTests: XCTestCase {
         
         await questionFlowCoordinator.loadNextQuestion()
         
-        // Try to save empty answer - should throw error
-        do {
-            try await questionFlowCoordinator.saveAnswer("")
-            XCTFail("Should have thrown error for empty answer")
-        } catch {
-            XCTAssertTrue(error is QuestionFlowError)
-        }
+        // Try to save empty answer - should be ignored in new implementation
+        await questionFlowCoordinator.processUserInput("")
         
-        // Question should still be active
+        // Question should still be active (empty input is ignored)
         XCTAssertNotNil(questionFlowCoordinator.currentQuestion)
         
         // Now save valid answer
-        try await questionFlowCoordinator.saveAnswer("Valid answer")
+        await questionFlowCoordinator.processUserInput("Valid answer")
         
         // Should have progressed to next question
         let nextQuestion = questionFlowCoordinator.currentQuestion

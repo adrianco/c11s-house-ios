@@ -159,23 +159,25 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
         isLoadingQuestion = false
     }
     
-    override func saveAnswer() async {
+    // Mock implementation of processUserInput (replaces saveAnswer)
+    override func processUserInput(_ input: String) async {
         saveAnswerCalled = true
         
-        if let question = currentQuestion,
-           let transcript = await conversationStateManager?.persistentTranscript {
-            savedAnswers[question.id] = transcript
+        if let question = currentQuestion {
+            savedAnswers[question.id] = input
         }
     }
     
-    override func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
+    // Legacy method for tests that still use it
+    func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
         saveAnswerCalled = true
         if let question = currentQuestion {
             savedAnswers[question.id] = answer
         }
     }
     
-    override func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
+    // Legacy method for tests that still use it
+    func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
         handleQuestionChangeCalled = true
         return true
     }
