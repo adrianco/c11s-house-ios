@@ -3234,3 +3234,5 @@ mic and TTS permission were granted, but voice is muted and would not unmute.
 notes shows that every note is maked as a question that needs answering, and this is wrong, only the first few notes are required answers.
 The conversation started with Homekit summary, which is good, but did not follow up by confirming address
 Language and Voice selection were not persisted across restarts of the app
+
+make the text view used when muted match the edit text view for transcripts, re-use the same view or make the buttons match so that the confirm button is the same color and add a cancel button on the Left

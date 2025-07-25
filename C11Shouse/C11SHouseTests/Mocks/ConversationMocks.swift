@@ -60,7 +60,7 @@ class MockConversationRecognizer: ConversationRecognizer {
     var clearHouseThoughtCalled = false
     
     var mockTranscript: String?
-    var shouldFailWithError: SpeechError?
+    var shouldFailWithError: UserFriendlyError?
     
     override func toggleRecording() {
         toggleRecordingCalled = true
@@ -85,7 +85,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         super.stopRecording()
     }
     
-    override func setQuestionThought(_ question: String) async {
+    override func setQuestionThought(_ question: String) {
         setQuestionThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: question,
@@ -95,7 +95,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    override func setThankYouThought() async {
+    override func setThankYouThought() {
         setThankYouThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: "Thank you!",
@@ -105,7 +105,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    override func clearHouseThought() async {
+    override func clearHouseThought() {
         clearHouseThoughtCalled = true
         currentHouseThought = nil
     }
@@ -128,21 +128,30 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
         
         // Create minimal dependencies for parent init
         let notesService = SharedMockNotesService()
+        let locationService = MockLocationService()
         let stateManager = ConversationStateManager(
             notesService: notesService,
             ttsService: MockTTSService()
         )
         let recognizer = MockConversationRecognizerService()
-        let addressManager = SharedMockAddressManager()
-        let addressSuggestionService = AddressSuggestionService(locationService: MockLocationService())
-        let serviceContainer = MockServiceContainer()
+        let addressManager = SharedMockAddressManager(
+            notesService: notesService,
+            locationService: locationService
+        )
+        let weatherCoordinator = WeatherCoordinator(
+            weatherService: MockWeatherKitService(),
+            notesService: notesService,
+            locationService: locationService
+        )
+        let addressSuggestionService = AddressSuggestionService(
+            addressManager: addressManager,
+            locationService: locationService,
+            weatherCoordinator: weatherCoordinator
+        )
+        let serviceContainer = MockServiceContainer(forTesting: true)
         
         super.init(
-            conversationRecognizer: recognizer as! ConversationRecognizer,
-            conversationStateManager: stateManager,
-            addressManager: addressManager,
-            addressSuggestionService: addressSuggestionService,
-            serviceContainer: serviceContainer
+            notesService: notesService
         )
         
         if !questions.isEmpty {
@@ -168,7 +177,7 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
         isLoadingQuestion = false
     }
     
-    func saveAnswer() async {
+    override func saveAnswer() async {
         saveAnswerCalled = true
         
         if let question = currentQuestion,
@@ -177,7 +186,7 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
         }
     }
     
-    func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
+    override func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
         handleQuestionChangeCalled = true
         return true
     }
@@ -192,6 +201,7 @@ class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
 
 // MARK: - Service Container Mock
 
+@MainActor
 class MockConversationServiceContainer: ObservableObject {
     let mockNotesService: SharedMockNotesService
     let mockTTSService: MockTTSService
@@ -204,7 +214,7 @@ class MockConversationServiceContainer: ObservableObject {
         self.mockTTSService = MockTTSService()
         self.mockLocationService = MockLocationService()
         self.mockAddressManager = SharedMockAddressManager(notesService: mockNotesService, locationService: mockLocationService)
-        self.mockQuestionFlow = MockQuestionFlowCoordinator()
+        self.mockQuestionFlow = MockQuestionFlowCoordinator(questions: [])
     }
     
     // Mock service access methods

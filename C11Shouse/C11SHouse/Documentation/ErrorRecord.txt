@@ -1,12 +1,30 @@
 C11SHouseTests
 Command SwiftCompile failed with a nonzero exit code
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:578:15 Invalid redeclaration of 'MockAddressManager'
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:69:26 Cannot assign value of type 'SpeechError' to type '(any UserFriendlyError)?'
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:579:5 Overriding declaration requires an 'override' keyword
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:88:19 Method does not override any method from its superclass
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:584:15 Invalid redeclaration of 'MockWeatherCoordinator'
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:98:19 Method does not override any method from its superclass
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:108:19 Method does not override any method from its superclass
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:136:54 Missing arguments for parameters 'notesService', 'locationService' in call
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:137:64 Missing arguments for parameters 'addressManager', 'weatherCoordinator' in call
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:138:53 Missing argument for parameter 'forTesting' in call
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:140:19 Extra arguments at positions #1, #2, #3, #4, #5 in call
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:141:13 Missing argument for parameter 'notesService' in call
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:171:10 Overriding declaration requires an 'override' keyword
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:180:10 Overriding declaration requires an 'override' keyword
+
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Mocks/ConversationMocks.swift:207:33 Call to main actor-isolated initializer 'init(questions:)' in a synchronous nonisolated context
 
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:228 testSetupFlowWithLocationPermissionDenied(): XCTAssertTrue failed
