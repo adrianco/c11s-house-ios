@@ -346,22 +346,21 @@ struct ConversationView: View {
         print("[ConversationView] toggleRecording called")
         print("[ConversationView] recognizer.isRecording: \(recognizer.isRecording)")
         print("[ConversationView] recognizer.authorizationStatus: \(recognizer.authorizationStatus.rawValue)")
+        print("[ConversationView] stateManager.isSpeaking: \(stateManager.isSpeaking)")
         
         if recognizer.isRecording {
             recognizer.stopRecording()
         } else {
-            // Stop any ongoing speech first
-            stateManager.stopSpeaking()
-            
-            // Small delay to ensure TTS has stopped before starting recording
-            Task {
-                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
-                
-                recognizer.transcript = ""
-                pendingVoiceText = ""  // Clear any previous pending text
-                showVoiceConfirmation = false  // Ensure confirmation is hidden
-                recognizer.toggleRecording()
+            // If TTS is still speaking, stop it first
+            if stateManager.isSpeaking {
+                print("[ConversationView] Stopping TTS before recording")
+                stateManager.stopSpeaking()
             }
+            
+            recognizer.transcript = ""
+            pendingVoiceText = ""  // Clear any previous pending text
+            showVoiceConfirmation = false  // Ensure confirmation is hidden
+            recognizer.toggleRecording()
         }
     }
     

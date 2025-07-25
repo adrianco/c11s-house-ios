@@ -265,12 +265,14 @@ class ConversationRecognizer: ObservableObject {
         // Configure audio session to match working implementation
         do {
             let audioSession = AVAudioSession.sharedInstance()
+            // First deactivate to ensure clean state after TTS
+            try audioSession.setActive(false, options: [])
             // Use SAME configuration as working SimpleSpeechRecognizer
             try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
             try audioSession.setActive(true, options: [])
-            // Audio session configured
+            print("[ConversationRecognizer] Audio session configured for recording")
         } catch {
-            // Audio session error: \(error)
+            print("[ConversationRecognizer] Audio session error: \(error)")
             throw SpeechRecognitionError.audioEngineError
         }
         
@@ -437,9 +439,12 @@ class ConversationRecognizer: ObservableObject {
                 print("[ConversationRecognizer] Attempting to start recording")
                 print("[ConversationRecognizer] Authorization status: \(authorizationStatus.rawValue)")
                 print("[ConversationRecognizer] Speech recognizer available: \(speechRecognizer?.isAvailable ?? false)")
+                print("[ConversationRecognizer] Audio engine running: \(audioEngine.isRunning)")
                 try startRecording()
+                print("[ConversationRecognizer] Recording started successfully")
             } catch {
                 print("[ConversationRecognizer] Failed to start recording: \(error)")
+                print("[ConversationRecognizer] Error type: \(type(of: error))")
                 self.error = (error as? SpeechRecognitionError) ?? SpeechRecognitionError.audioEngineError
             }
         }
