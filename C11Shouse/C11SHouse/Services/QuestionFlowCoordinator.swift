@@ -337,7 +337,12 @@ class QuestionFlowCoordinator: ObservableObject {
         } else {
             // Generate suggestions based on address
             let addressAnswer1 = await getAnswer(for: "Is this the right address?")
-            let addressAnswer = addressAnswer1 ?? await getAnswer(for: "What's your home address?")
+            let addressAnswer: String?
+            if let answer = addressAnswer1 {
+                addressAnswer = answer
+            } else {
+                addressAnswer = await getAnswer(for: "What's your home address?")
+            }
             
             if let addressAnswer = addressAnswer, !addressAnswer.isEmpty {
                 if let suggestionService = addressSuggestionService {
