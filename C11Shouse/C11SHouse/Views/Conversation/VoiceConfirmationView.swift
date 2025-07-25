@@ -24,6 +24,14 @@ struct VoiceConfirmationView: View {
     
     var body: some View {
         HStack {
+            // Cancel button on the left
+            Button(action: onCancel) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.red)
+            }
+            .accessibilityLabel("Cancel")
+            
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Image(systemName: "mic.fill")
@@ -57,22 +65,14 @@ struct VoiceConfirmationView: View {
                 }
             }
             
-            HStack(spacing: 12) {
-                Button(action: onCancel) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.red)
-                }
-                .accessibilityLabel("Cancel")
-                
-                Button(action: onConfirm) {
-                    Image(systemName: "arrow.up.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(pendingVoiceText.isEmpty ? .gray : .blue)
-                }
-                .disabled(pendingVoiceText.isEmpty)
-                .accessibilityLabel("Send")
+            // Confirm button on the right
+            Button(action: onConfirm) {
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(pendingVoiceText.isEmpty ? .gray : .blue)
             }
+            .disabled(pendingVoiceText.isEmpty)
+            .accessibilityLabel("Send")
         }
     }
 }

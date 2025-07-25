@@ -123,8 +123,10 @@ struct ChatInputView: View {
                                 if recognizer.isRecording && !recognizer.transcript.isEmpty {
                                     // When recording with transcript, show confirm button
                                     Button(action: {
-                                        // Stop recording - this will trigger voice confirmation
-                                        onToggleRecording()
+                                        // Stop recording and directly confirm without editing
+                                        recognizer.stopRecording()
+                                        pendingVoiceText = recognizer.transcript
+                                        onConfirmVoice()
                                     }) {
                                         Image(systemName: "checkmark.circle.fill")
                                             .font(.system(size: 50))
