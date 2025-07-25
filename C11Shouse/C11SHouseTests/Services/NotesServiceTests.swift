@@ -56,7 +56,8 @@ class NotesServiceTests: XCTestCase {
         // When: Loading notes store
         let store = try await sut.loadNotesStore()
         
-        // Then: Should have predefined questions
+        // Then: Should have predefined questions (3 questions now)
+        XCTAssertEqual(store.questions.count, 3)
         XCTAssertEqual(store.questions.count, Question.predefinedQuestions.count)
         XCTAssertTrue(store.notes.isEmpty)
         XCTAssertEqual(store.version, 1)
@@ -317,8 +318,9 @@ class NotesServiceTests: XCTestCase {
         // When: Resetting to defaults
         try await sut.resetToDefaults()
         
-        // Then: Only predefined questions remain, with their notes preserved
+        // Then: Only predefined questions remain (3), with their notes preserved
         let resetStore = try await sut.loadNotesStore()
+        XCTAssertEqual(resetStore.questions.count, 3)
         XCTAssertEqual(resetStore.questions.count, Question.predefinedQuestions.count)
         XCTAssertNotNil(resetStore.notes[predefinedQuestion.id])
         XCTAssertEqual(resetStore.notes[predefinedQuestion.id]?.answer, "Should be preserved")
@@ -334,8 +336,9 @@ class NotesServiceTests: XCTestCase {
         // When: Clearing all data
         try await sut.clearAllData()
         
-        // Then: Should have predefined questions but no notes
+        // Then: Should have predefined questions (3) but no notes
         let clearedStore = try await sut.loadNotesStore()
+        XCTAssertEqual(clearedStore.questions.count, 3)
         XCTAssertEqual(clearedStore.questions.count, Question.predefinedQuestions.count)
         XCTAssertTrue(clearedStore.notes.isEmpty)
     }
@@ -380,9 +383,9 @@ class NotesServiceTests: XCTestCase {
     // MARK: - Thread Safety Tests
     
     func testConcurrentSaveOperations() async throws {
-        // Given: Multiple questions
+        // Given: Multiple questions (all 3 predefined questions)
         let store = try await sut.loadNotesStore()
-        let questions = Array(store.questions.prefix(3))
+        let questions = store.questions // Use all 3 questions
         
         // Create a mapping of questionId to expected answer
         var expectedAnswers: [UUID: String] = [:]
@@ -490,8 +493,9 @@ class NotesServiceTests: XCTestCase {
         // When: Creating new service
         let service = NotesServiceImpl(userDefaults: mockUserDefaults)
         
-        // Then: Should handle gracefully and initialize with defaults
+        // Then: Should handle gracefully and initialize with defaults (3 questions)
         let store = try await service.loadNotesStore()
+        XCTAssertEqual(store.questions.count, 3)
         XCTAssertEqual(store.questions.count, Question.predefinedQuestions.count)
         XCTAssertTrue(store.notes.isEmpty)
     }
