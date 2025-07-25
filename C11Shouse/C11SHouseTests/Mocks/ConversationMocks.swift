@@ -85,7 +85,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         super.stopRecording()
     }
     
-    func setQuestionThought(_ question: String) {
+    override func setQuestionThought(_ question: String) {
         setQuestionThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: question,
@@ -95,7 +95,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    func setThankYouThought() {
+    override func setThankYouThought() {
         setThankYouThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: "Thank you!",
@@ -105,7 +105,7 @@ class MockConversationRecognizer: ConversationRecognizer {
         )
     }
     
-    func clearHouseThought() {
+    override func clearHouseThought() {
         clearHouseThoughtCalled = true
         currentHouseThought = nil
     }

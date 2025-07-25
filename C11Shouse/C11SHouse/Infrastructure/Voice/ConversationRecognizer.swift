@@ -280,6 +280,9 @@ class ConversationRecognizer: ObservableObject {
         recognitionRequest.shouldReportPartialResults = true
         recognitionRequest.requiresOnDeviceRecognition = false  // NEVER use on-device
         
+        // NOTE: kAFAssistantErrorDomain Code=1101 errors are expected and normal
+        // They occur during speech recognition and are safely ignored by our error handling
+        
         // addsPunctuation is automatically enabled in iOS 16+
         // No need to set it explicitly
         
@@ -329,7 +332,14 @@ class ConversationRecognizer: ObservableObject {
             }
             
             if let error = error {
-                let speechError = SpeechError(nsError: error as NSError)
+                let nsError = error as NSError
+                
+                // Log non-1101 errors for debugging
+                if nsError.code != 1101 {
+                    print("[ConversationRecognizer] Recognition error: \(nsError.code) - \(nsError.localizedDescription)")
+                }
+                
+                let speechError = SpeechError(nsError: nsError)
                 
                 if !speechError.isIgnorable {
                     DispatchQueue.main.async {
@@ -339,7 +349,7 @@ class ConversationRecognizer: ObservableObject {
                         }
                     }
                 }
-                // Ignorable errors are silently handled
+                // Ignorable errors (including 1101) are silently handled
             }
         }
         
