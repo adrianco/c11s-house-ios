@@ -131,7 +131,9 @@ class ConversationStateManager: ObservableObject {
         
         do {
             print("[ConversationStateManager] Speaking text...")
-            try await ttsService.speak(text, language: nil)
+            // Get the persisted language preference
+            let persistedLanguage = UserDefaults.standard.string(forKey: "tts_language") ?? "en-US"
+            try await ttsService.speak(text, language: persistedLanguage)
         } catch {
             // Only log non-interruption errors
             if case TTSError.speechInterrupted = error {

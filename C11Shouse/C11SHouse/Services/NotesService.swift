@@ -459,8 +459,10 @@ extension NotesServiceProtocol {
             for: weatherQuestionId,
             answer: fullSummary,
             metadata: [
-                "type": "weather_summary",
-                "timestamp": ISO8601DateFormatter().string(from: weather.lastUpdated)
+                "type": "informational",
+                "category": "weather",
+                "timestamp": ISO8601DateFormatter().string(from: weather.lastUpdated),
+                "updated_via_conversation": "false"
             ]
         )
     }
@@ -513,9 +515,10 @@ extension NotesServiceProtocol {
                 for: customQuestion.id,
                 answer: content,
                 metadata: [
-                    "type": "custom_\(category)",
+                    "type": "informational",
                     "category": category,
-                    "created_via": "tutorial"
+                    "created_via": "homekit_discovery",
+                    "updated_via_conversation": "false"
                 ]
             )
         } catch {
@@ -525,9 +528,10 @@ extension NotesServiceProtocol {
                     for: existingQuestion.id,
                     answer: content,
                     metadata: [
-                        "type": "custom_\(category)",
+                        "type": "informational",
                         "category": category,
-                        "updated_via": "tutorial"
+                        "created_via": "homekit_discovery",
+                        "updated_via_conversation": "false"
                     ]
                 )
             }

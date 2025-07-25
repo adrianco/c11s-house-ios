@@ -422,8 +422,14 @@ struct ConversationView: View {
     }
     
     private func tryToUnmute() async {
+        print("[ConversationView] tryToUnmute called")
+        print("[ConversationView] Mic permission: \(serviceContainer.permissionManager.isMicrophoneGranted)")
+        print("[ConversationView] Speech permission: \(serviceContainer.permissionManager.isSpeechRecognitionGranted)")
+        print("[ConversationView] hasVoicePermissions: \(hasVoicePermissions)")
+        
         // First check if we already have permissions
         if hasVoicePermissions {
+            print("[ConversationView] Voice permissions already granted, unmuting")
             isMuted = false
             return
         }
@@ -448,9 +454,19 @@ struct ConversationView: View {
         }
         
         // Check again after permission requests
+        // Force a refresh of permission status
+        serviceContainer.permissionManager.checkCurrentPermissionsExceptHomeKit()
+        
+        // Use a small delay to ensure the permission status has updated
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        
+        print("[ConversationView] After permission request - hasVoicePermissions: \(hasVoicePermissions)")
         if hasVoicePermissions {
+            print("[ConversationView] Permissions granted, unmuting")
             isMuted = false
             waitingForPermissions = false
+        } else {
+            print("[ConversationView] Permissions still not granted")
         }
     }
 }

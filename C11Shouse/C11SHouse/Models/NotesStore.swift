@@ -122,6 +122,12 @@ struct Note: Codable, Equatable, Hashable {
     
     /// Whether this note needs to be reviewed in conversation
     var needsConversationReview: Bool {
+        // Only questions need review, not informational notes
+        let isInformationalNote = metadata?["type"] == "informational"
+        if isInformationalNote {
+            return false
+        }
+        
         // Needs review if never updated via conversation or empty
         let wasUpdatedViaConversation = metadata?["updated_via_conversation"] == "true"
         return !wasUpdatedViaConversation || !isAnswered

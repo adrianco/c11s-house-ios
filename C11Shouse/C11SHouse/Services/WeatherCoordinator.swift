@@ -284,8 +284,9 @@ class WeatherCoordinator: ObservableObject {
                     for: existingQuestion.id,
                     answer: content,
                     metadata: [
-                        "type": "houseInfo",
-                        "updated_via_conversation": "true", // Mark as valid, no user confirmation needed
+                        "type": "informational",
+                        "category": "weather",
+                        "updated_via_conversation": "false",
                         "lastUpdated": Date().ISO8601Format(),
                         "automatic": "true"
                     ]

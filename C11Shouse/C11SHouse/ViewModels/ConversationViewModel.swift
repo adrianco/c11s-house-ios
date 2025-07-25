@@ -90,9 +90,20 @@ class ConversationViewModel: ObservableObject {
         // Check for HomeKit configuration and add summary message
         await checkAndAnnounceHomeKitConfiguration()
         
-        // Load any pending questions
-        print("[ConversationViewModel] Loading next question...")
-        await questionFlow.loadNextQuestion()
+        // Only load questions if HomeKit was not announced
+        // This prevents the address question from immediately following HomeKit announcement
+        let homeKitAnnouncedKey = "homeKitConfigurationAnnounced"
+        let justAnnouncedHomeKit = UserDefaults.standard.bool(forKey: homeKitAnnouncedKey) && 
+                                   messageStore.messages.contains { $0.content.contains("HomeKit configuration") }
+        
+        if !justAnnouncedHomeKit {
+            // Load any pending questions
+            print("[ConversationViewModel] Loading next question...")
+            await questionFlow.loadNextQuestion()
+        } else {
+            print("[ConversationViewModel] Delaying question flow after HomeKit announcement")
+            // The question will be loaded after user interaction
+        }
         
         // Check if all questions are complete and start Phase 4 tutorial
         print("[ConversationViewModel] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
@@ -111,6 +122,24 @@ class ConversationViewModel: ObservableObject {
         
         // Update state manager transcript
         stateManager.persistentTranscript = input
+        
+        // Check if we need to load the first question after HomeKit announcement
+        if questionFlow.currentQuestion == nil && !questionFlow.hasCompletedAllQuestions {
+            // Check if user is responding to HomeKit announcement
+            let lowercased = input.lowercased()
+            if lowercased.contains("ok") || lowercased.contains("yes") || 
+               lowercased.contains("great") || lowercased.contains("thanks") ||
+               lowercased.contains("got it") || lowercased.contains("cool") ||
+               lowercased.contains("address") || lowercased.contains("now") {
+                print("[ConversationViewModel] User responded to HomeKit announcement, loading first question")
+                await questionFlow.loadNextQuestion()
+                
+                // If we loaded a question, return to let the user answer it
+                if questionFlow.currentQuestion != nil {
+                    return
+                }
+            }
+        }
         
         // Check if this answers a current question
         if let currentQuestion = questionFlow.currentQuestion {
@@ -488,6 +517,9 @@ class ConversationViewModel: ObservableObject {
         } else {
             summary += "I can see your HomeKit setup. You can tap the HomeKit button on the main screen to open the Home app anytime."
         }
+        
+        // Add a prompt to continue with setup
+        summary += "\n\nLet me know when you're ready to continue setting up your house profile!"
         
         return summary
     }
