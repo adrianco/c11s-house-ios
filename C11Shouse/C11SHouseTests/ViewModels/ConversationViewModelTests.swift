@@ -540,10 +540,19 @@ private class TestServiceContainer: ServiceContainer {
     }
     
     override var addressSuggestionService: AddressSuggestionService {
+        let addressManager = SharedMockAddressManager(
+            notesService: mockNotesService,
+            locationService: MockLocationService()
+        )
+        let weatherCoordinator = WeatherCoordinator(
+            weatherService: MockWeatherKitService(),
+            notesService: mockNotesService,
+            locationService: MockLocationService()
+        )
         return AddressSuggestionService(
-            addressManager: MockAddressManager(notesService: mockNotesService, locationService: MockLocationService()),
+            addressManager: addressManager,
             locationService: MockLocationService(),
-            weatherCoordinator: MockWeatherCoordinator()
+            weatherCoordinator: weatherCoordinator
         )
     }
     
@@ -575,18 +584,5 @@ private class MockHomeKitCoordinator: HomeKitCoordinator {
     }
 }
 
-private class MockAddressManager: AddressManager {
-    init(notesService: NotesServiceProtocol, locationService: LocationServiceProtocol) {
-        super.init(notesService: notesService, locationService: locationService)
-    }
-}
-
-private class MockWeatherCoordinator: WeatherCoordinator {
-    init() {
-        super.init(
-            weatherService: MockWeatherKitService(),
-            notesService: SharedMockNotesService(),
-            locationService: MockLocationService()
-        )
-    }
-}
+// MockAddressManager and MockWeatherCoordinator are defined in other test files
+// Use the shared implementations from TestMocks.swift instead

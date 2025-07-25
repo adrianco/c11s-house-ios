@@ -1,34 +1,13 @@
 C11SHouseTests
 Command SwiftCompile failed with a nonzero exit code
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Helpers/TestMocks.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Helpers/TestMocks.swift:612:7 Type 'MockHomeKitService' does not conform to protocol 'HomeKitServiceProtocol'
-
-Add stubs for conformance
-Protocol requires property 'homesPublisher' with type 'AnyPublisher<[HomeKitHome], Never>'
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:38:9 Property must be declared fileprivate because its type uses a private type
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:578:15 Invalid redeclaration of 'MockAddressManager'
 
-Type declared here
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:40:9 Property must be declared fileprivate because its type uses a private type
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:579:5 Overriding declaration requires an 'override' keyword
 
-Type declared here
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:69:27 Cannot convert value of type 'MockMessageStore' to expected argument type 'MessageStore'
+/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:584:15 Invalid redeclaration of 'MockWeatherCoordinator'
 
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:71:27 Cannot convert value of type 'MockQuestionFlowCoordinator' to expected argument type 'QuestionFlowCoordinator'
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:72:25 Cannot convert value of type 'MockConversationRecognizer' to expected argument type 'ConversationRecognizer'
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:140:24 Type 'QuestionCategory' has no member 'home'
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:505:15 'ServiceContainer' initializer is inaccessible due to 'private' protection level
-
-'init()' declared here (C11SHouse.ServiceContainer.init)
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:517:40 Missing arguments for parameters 'addressManager', 'weatherCoordinator' in call
-
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ViewModels/ConversationViewModelTests.swift:521:23 'PermissionManager' initializer is inaccessible due to 'private' protection level
-
-'init()' declared here (C11SHouse.PermissionManager.init)
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift
 /Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Archived/InitialSetupFlowTests.swift:228 testSetupFlowWithLocationPermissionDenied(): XCTAssertTrue failed
 
