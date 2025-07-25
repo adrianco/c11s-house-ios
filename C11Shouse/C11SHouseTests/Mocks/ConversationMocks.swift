@@ -23,6 +23,44 @@ import Combine
 import Speech
 @testable import C11SHouse
 
+// MARK: - Conversation State Manager Mock
+
+@MainActor
+class MockConversationStateManager: ConversationStateManager {
+    var speakCalled = false
+    var stopSpeakingCalled = false
+    var loadUserNameCalled = false
+    var updateUserNameCalled = false
+    var lastSpokenText: String?
+    var lastMutedState: Bool?
+    
+    init() {
+        let mockNotes = SharedMockNotesService()
+        let mockTTS = MockTTSService()
+        super.init(notesService: mockNotes, ttsService: mockTTS)
+    }
+    
+    override func speak(_ text: String, isMuted: Bool) async {
+        speakCalled = true
+        lastSpokenText = text
+        lastMutedState = isMuted
+    }
+    
+    override func stopSpeaking() {
+        stopSpeakingCalled = true
+    }
+    
+    override func loadUserName() async {
+        loadUserNameCalled = true
+        userName = "Test User"
+    }
+    
+    override func updateUserName(_ name: String) async {
+        updateUserNameCalled = true
+        userName = name
+    }
+}
+
 // MARK: - Message Store Mock
 
 class MockMessageStore: MessageStore {

@@ -92,11 +92,33 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
         loadSavedSettings()
     }
     
+    // MARK: - Helper Methods
+    
+    private func removeEmojisAndIcons(from text: String) -> String {
+        // Remove emojis and special unicode characters that represent icons
+        let emojiPattern = "[\\u{1F600}-\\u{1F64F}]|[\\u{1F300}-\\u{1F5FF}]|[\\u{1F680}-\\u{1F6FF}]|[\\u{1F1E0}-\\u{1F1FF}]|[\\u{2600}-\\u{26FF}]|[\\u{2700}-\\u{27BF}]|[\\u{1F900}-\\u{1F9FF}]|[\\u{1F004}]|[\\u{1F0CF}]|[\\u{1F170}-\\u{1F251}]"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: emojiPattern, options: [])
+            let range = NSRange(location: 0, length: text.utf16.count)
+            let cleanedText = regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: "")
+            
+            // Also remove any extra whitespace that might result from emoji removal
+            let trimmedText = cleanedText.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            return trimmedText.trimmingCharacters(in: .whitespacesAndNewlines)
+        } catch {
+            // If regex fails, return original text
+            print("[TTSService] Failed to remove emojis: \(error)")
+            return text
+        }
+    }
+    
     // MARK: - Public Methods
     
     func speak(_ text: String, language: String? = nil) async throws {
-        // Clean up the text
-        let cleanedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Clean up the text and remove emojis/icons
+        let textWithoutEmojis = removeEmojisAndIcons(from: text)
+        let cleanedText = textWithoutEmojis.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanedText.isEmpty else { return }
         
         // Stop any current speech and wait for cleanup
