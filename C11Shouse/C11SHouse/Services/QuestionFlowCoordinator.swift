@@ -71,7 +71,31 @@ class QuestionFlowCoordinator: ObservableObject {
             let notesStore = try await notesService.loadNotesStore()
             print("[QuestionFlowCoordinator] Loaded notes store with \(notesStore.questions.count) questions")
             
-            let questionsNeedingReview = notesStore.questionsNeedingReview()
+            // Check if we should skip the room creation question due to HomeKit
+            var questionsNeedingReview = notesStore.questionsNeedingReview()
+            
+            // If HomeKit has rooms and the next question is about creating a room note, skip it
+            if let nextQuestion = questionsNeedingReview.first,
+               nextQuestion.text.contains("Let's start by creating your first room note") {
+                // Check if we have HomeKit rooms
+                if let serviceContainer = serviceContainer {
+                    let homes = await serviceContainer.homeKitService.getAllHomes()
+                    let hasRooms = homes.contains { !$0.rooms.isEmpty }
+                    if hasRooms {
+                        print("[QuestionFlowCoordinator] Skipping room creation question - HomeKit already has rooms")
+                        // Mark this question as answered
+                        try await notesService.saveOrUpdateNote(
+                            for: nextQuestion.id,
+                            answer: "Skipped - HomeKit rooms detected",
+                            metadata: ["skipped_reason": "homekit_rooms_found"]
+                        )
+                        // Reload questions to get the updated list
+                        let updatedStore = try await notesService.loadNotesStore()
+                        questionsNeedingReview = updatedStore.questionsNeedingReview()
+                    }
+                }
+            }
+            
             print("[QuestionFlowCoordinator] Questions needing review: \(questionsNeedingReview.count)")
             
             if let nextQuestion = questionsNeedingReview.first {
@@ -466,8 +490,12 @@ class QuestionFlowCoordinator: ObservableObject {
                     }
                     
                     // Create an acknowledgment thought
+                    let message = roomCount > 0 
+                        ? "I've imported your HomeKit configuration! I found \(homeCount) home\(homeCount == 1 ? "" : "s") with \(roomCount) room\(roomCount == 1 ? "" : "s") and \(deviceCount) device\(deviceCount == 1 ? "" : "s"). Since you already have rooms set up, I won't ask you to create room notes - you can ask me about any of your existing rooms or add more notes anytime."
+                        : "I've imported your HomeKit configuration! I found \(homeCount) home\(homeCount == 1 ? "" : "s") with \(deviceCount) device\(deviceCount == 1 ? "" : "s"). You can now ask me about any of your devices."
+                    
                     let thought = HouseThought(
-                        thought: "I've imported your HomeKit configuration! I found \(homeCount) home\(homeCount == 1 ? "" : "s") with \(roomCount) room\(roomCount == 1 ? "" : "s") and \(deviceCount) device\(deviceCount == 1 ? "" : "s"). You can now ask me about any of your rooms or devices.",
+                        thought: message,
                         emotion: .proud,
                         category: .celebration,
                         confidence: 1.0,
