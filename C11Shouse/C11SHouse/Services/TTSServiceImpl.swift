@@ -139,8 +139,11 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
+            #if DEBUG
             print("Failed to activate audio session for TTS: \(error)")
-            throw error
+            #endif
+            // Don't throw - try to continue with TTS anyway
+            // The system might still be able to play audio
         }
         
         // Create utterance
@@ -240,7 +243,9 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
+            #if DEBUG
             print("Failed to setup audio session for TTS: \(error)")
+            #endif
         }
     }
     

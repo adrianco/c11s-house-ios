@@ -576,32 +576,44 @@ class ConversationViewModel: ObservableObject {
             
             // Extract search terms from the query
             let lowercasedQuery = query.lowercased()
-            let searchTerms = lowercasedQuery
-                .replacingOccurrences(of: "what", with: "")
-                .replacingOccurrences(of: "notes", with: "")
-                .replacingOccurrences(of: "note", with: "")
-                .replacingOccurrences(of: "remember", with: "")
-                .replacingOccurrences(of: "about", with: "")
-                .replacingOccurrences(of: "search", with: "")
-                .replacingOccurrences(of: "for", with: "")
-                .replacingOccurrences(of: "the", with: "")
-                .replacingOccurrences(of: "tell", with: "")
-                .replacingOccurrences(of: "me", with: "")
-                .replacingOccurrences(of: "show", with: "")
-                .replacingOccurrences(of: "rooms", with: "room")
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .components(separatedBy: " ")
-                .filter { !$0.isEmpty }
             
-            print("[ConversationViewModel] Search terms: \(searchTerms)")
+            // Split into words first to avoid partial replacements
+            let words = lowercasedQuery.components(separatedBy: .whitespacesAndNewlines)
             
-            // Debug: Log all available notes
-            print("[ConversationViewModel] Available notes:")
-            for (questionId, note) in notesStore.notes {
-                if let question = notesStore.questions.first(where: { $0.id == questionId }) {
-                    print("  - \(question.text)")
+            // Filter out common words that aren't meaningful for search
+            let stopWords = Set(["what", "notes", "note", "remember", "about", "search", 
+                                "for", "the", "tell", "me", "show", "is", "are", "do", "does"])
+            
+            let searchTerms = words
+                .map { word in
+                    // Special case: "rooms" -> "room"
+                    word == "rooms" ? "room" : word
+                }
+                .filter { !stopWords.contains($0) && !$0.isEmpty }
+            
+            // Add phonetic variations for common misheard words
+            var expandedTerms = searchTerms
+            for term in searchTerms {
+                switch term {
+                case "wear":
+                    expandedTerms.append("weather")
+                case "whether":
+                    expandedTerms.append("weather")
+                case "bedroom":
+                    expandedTerms.append("bed")
+                    expandedTerms.append("room")
+                case "livingroom", "living":
+                    expandedTerms.append("living")
+                    expandedTerms.append("room")
+                default:
+                    break
                 }
             }
+            
+            // Only log in debug builds
+            #if DEBUG
+            print("[ConversationViewModel] Search terms: \(expandedTerms)")
+            #endif
             
             // Search for matching notes with scores
             var matchingNotes: [(question: Question, note: Note, score: Int)] = []
@@ -618,7 +630,7 @@ class ConversationViewModel: ObservableObject {
                 
                 // Count how many search terms match
                 var matchScore = 0
-                for term in searchTerms {
+                for term in expandedTerms {
                     if questionLower.contains(term) {
                         matchScore += 2 // Title matches are worth more
                     }

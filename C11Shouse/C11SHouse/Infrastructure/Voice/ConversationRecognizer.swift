@@ -270,10 +270,26 @@ class ConversationRecognizer: ObservableObject {
             // Use SAME configuration as working SimpleSpeechRecognizer
             try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
             try audioSession.setActive(true, options: [])
-            print("[ConversationRecognizer] Audio session configured for recording")
+            // Audio session configured for recording
         } catch {
-            print("[ConversationRecognizer] Audio session error: \(error)")
-            throw SpeechRecognitionError.audioEngineError
+            // Check if it's a deactivation error (560030580) which is expected when TTS is active
+            let nsError = error as NSError
+            if nsError.code == 560030580 {
+                // This is expected when TTS hasn't fully released the audio session
+                // Wait a bit and try again
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                do {
+                    try audioSession.setActive(false, options: [])
+                    try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
+                    try audioSession.setActive(true, options: [])
+                } catch {
+                    // If it still fails, throw the error
+                    throw SpeechRecognitionError.audioEngineError
+                }
+            } else {
+                print("[ConversationRecognizer] Audio session error: \(error)")
+                throw SpeechRecognitionError.audioEngineError
+            }
         }
         
         // Create recognition request - with EXPLICIT settings to avoid on-device
