@@ -156,15 +156,15 @@ class QuestionFlowCoordinator: ObservableObject {
             await prepareHouseNameQuestion(question, existingAnswer: existingAnswer)
         } else if let answer = existingAnswer, !answer.isEmpty {
             // Pre-populate with existing answer
-            conversationStateManager?.persistentTranscript = answer
-            
-            let thought = HouseThought(
-                thought: "\(question.text)\n\n\(answer)",
-                emotion: .curious,
-                category: .question,
-                confidence: 0.9
-            )
             await MainActor.run {
+                conversationStateManager?.persistentTranscript = answer
+                
+                let thought = HouseThought(
+                    thought: "\(question.text)\n\n\(answer)",
+                    emotion: .curious,
+                    category: .question,
+                    confidence: 0.9
+                )
                 recognizer.currentHouseThought = thought
             }
         } else {
@@ -233,7 +233,7 @@ class QuestionFlowCoordinator: ObservableObject {
             await handleSpecialQuestionTypes(question, answer: answer)
             
             // Clear transcript
-            conversationStateManager?.clearTranscript()
+            await conversationStateManager?.clearTranscript()
             
             // Send acknowledgment
             await sendAcknowledgment()
@@ -283,14 +283,14 @@ class QuestionFlowCoordinator: ObservableObject {
         
         if let answer = existingAnswer, !answer.isEmpty {
             // Use existing answer
-            conversationStateManager?.persistentTranscript = answer
-            let thought = HouseThought(
-                thought: "\(question.text)\n\n\(answer)",
-                emotion: .curious,
-                category: .question,
-                confidence: 0.9
-            )
             await MainActor.run {
+                conversationStateManager?.persistentTranscript = answer
+                let thought = HouseThought(
+                    thought: "\(question.text)\n\n\(answer)",
+                    emotion: .curious,
+                    category: .question,
+                    confidence: 0.9
+                )
                 recognizer.currentHouseThought = thought
             }
         } else {
@@ -298,15 +298,15 @@ class QuestionFlowCoordinator: ObservableObject {
             if let manager = addressManager,
                let detectedAddress = try? await manager.detectCurrentAddress() {
                 await manager.storeDetectedAddress(detectedAddress)
-                conversationStateManager?.persistentTranscript = detectedAddress.fullAddress
-                
-                let thought = HouseThought(
-                    thought: "\(question.text)\n\n\(detectedAddress.fullAddress)",
-                    emotion: .curious,
-                    category: .question,
-                    confidence: 0.9
-                )
                 await MainActor.run {
+                    conversationStateManager?.persistentTranscript = detectedAddress.fullAddress
+                    
+                    let thought = HouseThought(
+                        thought: "\(question.text)\n\n\(detectedAddress.fullAddress)",
+                        emotion: .curious,
+                        category: .question,
+                        confidence: 0.9
+                    )
                     recognizer.currentHouseThought = thought
                 }
             } else {
@@ -324,28 +324,28 @@ class QuestionFlowCoordinator: ObservableObject {
         
         if let answer = existingAnswer, !answer.isEmpty {
             // Use existing answer
-            conversationStateManager?.persistentTranscript = answer
-            let thought = HouseThought(
-                thought: "\(question.text)\n\n\(answer)",
-                emotion: .curious,
-                category: .question,
-                confidence: 0.9
-            )
             await MainActor.run {
+                conversationStateManager?.persistentTranscript = answer
+                let thought = HouseThought(
+                    thought: "\(question.text)\n\n\(answer)",
+                    emotion: .curious,
+                    category: .question,
+                    confidence: 0.9
+                )
                 recognizer.currentHouseThought = thought
             }
         } else {
             // Generate suggestions based on address
-            let addressAnswer = await getAnswer(for: "Is this the right address?") ??
-                               await getAnswer(for: "What's your home address?")
+            let addressAnswer1 = await getAnswer(for: "Is this the right address?")
+            let addressAnswer = addressAnswer1 ?? await getAnswer(for: "What's your home address?")
             
             if let addressAnswer = addressAnswer, !addressAnswer.isEmpty {
                 if let suggestionService = addressSuggestionService {
                     let suggestions = suggestionService.generateHouseNameSuggestions(from: addressAnswer)
                     if !suggestions.isEmpty {
-                        conversationStateManager?.persistentTranscript = suggestions.first!
-                        let thought = suggestionService.createHouseNameSuggestionResponse(suggestions)
                         await MainActor.run {
+                            conversationStateManager?.persistentTranscript = suggestions.first!
+                            let thought = suggestionService.createHouseNameSuggestionResponse(suggestions)
                             recognizer.currentHouseThought = thought
                         }
                     }
