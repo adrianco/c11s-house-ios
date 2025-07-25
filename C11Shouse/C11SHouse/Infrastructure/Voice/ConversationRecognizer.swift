@@ -276,10 +276,9 @@ class ConversationRecognizer: ObservableObject {
             let nsError = error as NSError
             if nsError.code == 560030580 {
                 // This is expected when TTS hasn't fully released the audio session
-                // Wait a bit and try again
-                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+                // Try once more without the deactivation step
                 do {
-                    try audioSession.setActive(false, options: [])
+                    let audioSession = AVAudioSession.sharedInstance()
                     try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
                     try audioSession.setActive(true, options: [])
                 } catch {
