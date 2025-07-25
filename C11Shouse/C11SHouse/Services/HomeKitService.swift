@@ -96,6 +96,18 @@ class HomeKitService: NSObject, HomeKitServiceProtocol, ObservableObject {
     // MARK: - Public Methods
     
     func requestAuthorization() async -> Bool {
+        // Wait for HomeManager to be ready first
+        if !isHomeManagerReady {
+            await withCheckedContinuation { continuation in
+                // Check if already ready before setting continuation
+                if self.isHomeManagerReady {
+                    continuation.resume()
+                } else {
+                    self.homeManagerReadyContinuation = continuation
+                }
+            }
+        }
+        
         // HomeKit authorization is handled automatically when accessing homes
         // Just check if we have access
         // Note: Status 5 appears to be a special case in some environments

@@ -182,6 +182,7 @@ class ConversationRecognizer: ObservableObject {
     
     /// Initialize speech recognizer and request permissions if needed
     func initializeSpeechRecognizer() {
+        print("[ConversationRecognizer] initializeSpeechRecognizer called")
         checkAuthorization()
     }
     
@@ -193,19 +194,31 @@ class ConversationRecognizer: ObservableObject {
     
     // MARK: - Authorization
     private func checkAuthorization() {
-        SFSpeechRecognizer.requestAuthorization { [weak self] status in
-            DispatchQueue.main.async {
-                self?.authorizationStatus = status
-                // Authorization status updated
-                
-                if status != .authorized {
-                    self?.error = SpeechRecognitionError.notAuthorized
+        print("[ConversationRecognizer] checkAuthorization called")
+        
+        // Check current authorization status first
+        let currentStatus = SFSpeechRecognizer.authorizationStatus()
+        print("[ConversationRecognizer] Current speech recognition status: \(currentStatus.rawValue)")
+        authorizationStatus = currentStatus
+        
+        // Only request if not determined
+        if currentStatus == .notDetermined {
+            SFSpeechRecognizer.requestAuthorization { [weak self] status in
+                DispatchQueue.main.async {
+                    print("[ConversationRecognizer] Speech recognition authorization callback - status: \(status.rawValue)")
+                    self?.authorizationStatus = status
+                    // Authorization status updated
+                    
+                    if status != .authorized {
+                        self?.error = SpeechRecognitionError.notAuthorized
+                    }
                 }
             }
         }
         
         AVAudioApplication.requestRecordPermission { [weak self] granted in
             DispatchQueue.main.async {
+                print("[ConversationRecognizer] Microphone permission callback - granted: \(granted)")
                 // Microphone permission updated
                 if !granted {
                     self?.error = SpeechRecognitionError.microphoneAccessDenied
@@ -402,12 +415,17 @@ class ConversationRecognizer: ObservableObject {
     }
     
     func toggleRecording() {
+        print("[ConversationRecognizer] toggleRecording called - isRecording: \(isRecording)")
         if isRecording {
             stopRecording()
         } else {
             do {
+                print("[ConversationRecognizer] Attempting to start recording")
+                print("[ConversationRecognizer] Authorization status: \(authorizationStatus.rawValue)")
+                print("[ConversationRecognizer] Speech recognizer available: \(speechRecognizer?.isAvailable ?? false)")
                 try startRecording()
             } catch {
+                print("[ConversationRecognizer] Failed to start recording: \(error)")
                 self.error = (error as? SpeechRecognitionError) ?? SpeechRecognitionError.audioEngineError
             }
         }

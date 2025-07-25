@@ -357,6 +357,10 @@ struct ConversationView: View {
     }
     
     private func toggleRecording() {
+        print("[ConversationView] toggleRecording called")
+        print("[ConversationView] recognizer.isRecording: \(recognizer.isRecording)")
+        print("[ConversationView] recognizer.authorizationStatus: \(recognizer.authorizationStatus.rawValue)")
+        
         if recognizer.isRecording {
             recognizer.stopRecording()
         } else {
