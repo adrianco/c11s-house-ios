@@ -28,6 +28,11 @@ class ConversationViewModel: ObservableObject {
     private let serviceContainer: ServiceContainer
     private let recognizer: ConversationRecognizer
     
+    private var hasVoicePermissions: Bool {
+        serviceContainer.permissionManager.isMicrophoneGranted &&
+        serviceContainer.permissionManager.isSpeechRecognitionGranted
+    }
+    
     init(messageStore: MessageStore,
          stateManager: ConversationStateManager,
          questionFlow: QuestionFlowCoordinator,
@@ -136,11 +141,11 @@ class ConversationViewModel: ObservableObject {
                 // Normal question handling
                 await questionFlow.saveAnswer()
                 
-                // Let the coordinator handle the entire flow
-                await questionFlow.loadNextQuestion()
+                // Don't call loadNextQuestion here - saveAnswer already does it
+                // This prevents duplicate question loading
                 
                 // Check if all questions are complete
-                print("[ConversationViewModel] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
+                print("[ConversationViewModel] After saving, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
             }
         } else {
             // Check if we're in the middle of creating a note
@@ -361,13 +366,19 @@ class ConversationViewModel: ObservableObject {
                     if let summaryNote = notesStore.notes[summaryQuestion.id],
                        !summaryNote.answer.isEmpty {
                         
-                        // Create a summary message for the conversation
+                        // Create a detailed summary message for the conversation
+                        let summary = extractDetailedHomeKitSummary(from: summaryNote.answer)
                         let homeKitMessage = Message(
-                            content: "I've discovered your HomeKit configuration! I can see \(extractHomeKitSummary(from: summaryNote.answer)). You can tap the HomeKit button on the main screen to open the Home app anytime.",
+                            content: summary,
                             isFromUser: false,
-                            isVoice: false
+                            isVoice: !stateManager.isSavingAnswer && hasVoicePermissions
                         )
                         messageStore.addMessage(homeKitMessage)
+                        
+                        // Speak the summary if voice is enabled
+                        if !stateManager.isSavingAnswer && hasVoicePermissions {
+                            await stateManager.speak(summary, isMuted: false)
+                        }
                         
                         // Mark as announced
                         UserDefaults.standard.set(true, forKey: homeKitAnnouncedKey)
@@ -401,6 +412,75 @@ class ConversationViewModel: ObservableObject {
         }
         
         return summary.isEmpty ? "your home setup" : summary
+    }
+    
+    private func extractDetailedHomeKitSummary(from content: String) -> String {
+        var homeCount = 0
+        var roomCount = 0
+        var accessoryCount = 0
+        var homeName = ""
+        
+        // Extract counts using regex
+        let homesRegex = try? NSRegularExpression(pattern: "Found (\\d+) home", options: [])
+        if let match = homesRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                homeCount = Int(content[range]) ?? 0
+            }
+        }
+        
+        let roomsRegex = try? NSRegularExpression(pattern: "Total Rooms: (\\d+)", options: [])
+        if let match = roomsRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                roomCount = Int(content[range]) ?? 0
+            }
+        }
+        
+        let accessoriesRegex = try? NSRegularExpression(pattern: "Total Accessories: (\\d+)", options: [])
+        if let match = accessoriesRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                accessoryCount = Int(content[range]) ?? 0
+            }
+        }
+        
+        // Extract home name
+        let homeNameRegex = try? NSRegularExpression(pattern: "Home: ([^\\n]+)", options: [])
+        if let match = homeNameRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                homeName = String(content[range])
+            }
+        }
+        
+        // Build detailed summary
+        var summary = "I've discovered your HomeKit configuration! "
+        
+        if homeCount > 0 {
+            summary += "I found \(homeCount) home\(homeCount == 1 ? "" : "s")"
+            if !homeName.isEmpty {
+                summary += " called '\(homeName)'"
+            }
+            summary += " with \(roomCount) room\(roomCount == 1 ? "" : "s") and \(accessoryCount) device\(accessoryCount == 1 ? "" : "s"). "
+            
+            // Add room examples if available
+            let roomsRegex = try? NSRegularExpression(pattern: "- ([^\\n]+) \\(\\d+ accessories\\)", options: [])
+            let matches = roomsRegex?.matches(in: content, options: [], range: NSRange(content.startIndex..., in: content)) ?? []
+            let roomNames = matches.compactMap { match -> String? in
+                if let range = Range(match.range(at: 1), in: content) {
+                    return String(content[range])
+                }
+                return nil
+            }
+            
+            if roomNames.count > 0 {
+                let exampleRooms = roomNames.prefix(3).joined(separator: ", ")
+                summary += "I can see rooms like \(exampleRooms)\(roomNames.count > 3 ? " and more" : ""). "
+            }
+            
+            summary += "You can tap the HomeKit button on the main screen to open the Home app, or ask me about any of your rooms or devices!"
+        } else {
+            summary += "I can see your HomeKit setup. You can tap the HomeKit button on the main screen to open the Home app anytime."
+        }
+        
+        return summary
     }
     
     private func searchAndRespondWithNotes(query: String, isMuted: Bool) async {

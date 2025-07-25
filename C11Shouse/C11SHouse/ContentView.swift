@@ -284,6 +284,9 @@ struct ContentView: View {
             loadAddressAndWeather()
             checkHomeKitConfiguration()
             
+            // Initialize speech and TTS services early
+            initializeSpeechServices()
+            
             // Subscribe to HomeKit homes changes
             homesSubscription = serviceContainer.homeKitService.homesPublisher
                 .receive(on: DispatchQueue.main)
@@ -339,6 +342,24 @@ struct ContentView: View {
         // Open the Home app using its URL scheme
         if let url = URL(string: "com.apple.home://") {
             UIApplication.shared.open(url)
+        }
+    }
+    
+    private func initializeSpeechServices() {
+        // Initialize speech recognition permissions
+        Task {
+            // Request speech recognition permission
+            await serviceContainer.permissionManager.requestSpeechRecognitionPermission()
+            
+            // Request microphone permission if needed
+            await serviceContainer.permissionManager.requestMicrophonePermission()
+            
+            // Initialize TTS service
+            let ttsService = serviceContainer.ttsService
+            // Just accessing the service initializes it
+            _ = ttsService.isSpeaking
+            
+            print("[ContentView] Speech services initialized")
         }
     }
 }

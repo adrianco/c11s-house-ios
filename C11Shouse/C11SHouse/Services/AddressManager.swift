@@ -147,27 +147,8 @@ class AddressManager: ObservableObject {
                 print("[AddressManager] Address question not found")
             }
             
-            // Also save the house name if we can generate it
-            if let houseNameQuestion = notesStore.questions.first(where: { 
-                $0.text == "What should I call this house?" 
-            }) {
-                print("[AddressManager] Found house name question: \(houseNameQuestion.text)")
-                // Only save if not already answered
-                if notesStore.notes[houseNameQuestion.id] == nil {
-                    let houseName = generateHouseNameFromStreet(address.street)
-                    print("[AddressManager] Generated house name: \(houseName)")
-                    try await notesService.saveOrUpdateNote(
-                        for: houseNameQuestion.id,
-                        answer: houseName,
-                        metadata: ["generated_from_address": "true"]
-                    )
-                    print("[AddressManager] Saved house name note")
-                } else {
-                    print("[AddressManager] House name question already answered")
-                }
-            } else {
-                print("[AddressManager] House name question not found")
-            }
+            // Don't auto-generate house name here - let the question flow handle it
+            // This prevents duplicate saves and allows the user to choose their own name
         } catch {
             print("Error saving address to notes: \(error)")
         }
