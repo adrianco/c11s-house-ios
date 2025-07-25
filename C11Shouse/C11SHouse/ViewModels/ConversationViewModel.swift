@@ -87,23 +87,12 @@ class ConversationViewModel: ObservableObject {
             await locationService.requestLocationPermission()
         }
         
-        // Check for HomeKit configuration and add summary message
+        // Always load the first question (address) immediately
+        print("[ConversationViewModel] Loading first question...")
+        await questionFlow.loadNextQuestion()
+        
+        // Then check for HomeKit configuration and add summary message
         await checkAndAnnounceHomeKitConfiguration()
-        
-        // Only load questions if HomeKit was not announced
-        // This prevents the address question from immediately following HomeKit announcement
-        let homeKitAnnouncedKey = "homeKitConfigurationAnnounced"
-        let justAnnouncedHomeKit = UserDefaults.standard.bool(forKey: homeKitAnnouncedKey) && 
-                                   messageStore.messages.contains { $0.content.contains("HomeKit configuration") }
-        
-        if !justAnnouncedHomeKit {
-            // Load any pending questions
-            print("[ConversationViewModel] Loading next question...")
-            await questionFlow.loadNextQuestion()
-        } else {
-            print("[ConversationViewModel] Delaying question flow after HomeKit announcement")
-            // The question will be loaded after user interaction
-        }
         
         // Check if all questions are complete and start Phase 4 tutorial
         print("[ConversationViewModel] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
@@ -123,22 +112,10 @@ class ConversationViewModel: ObservableObject {
         // Update state manager transcript
         stateManager.persistentTranscript = input
         
-        // Check if we need to load the first question after HomeKit announcement
+        // If no current question and not all complete, try loading next question
         if questionFlow.currentQuestion == nil && !questionFlow.hasCompletedAllQuestions {
-            // Check if user is responding to HomeKit announcement
-            let lowercased = input.lowercased()
-            if lowercased.contains("ok") || lowercased.contains("yes") || 
-               lowercased.contains("great") || lowercased.contains("thanks") ||
-               lowercased.contains("got it") || lowercased.contains("cool") ||
-               lowercased.contains("address") || lowercased.contains("now") {
-                print("[ConversationViewModel] User responded to HomeKit announcement, loading first question")
-                await questionFlow.loadNextQuestion()
-                
-                // If we loaded a question, return to let the user answer it
-                if questionFlow.currentQuestion != nil {
-                    return
-                }
-            }
+            print("[ConversationViewModel] No current question, loading next...")
+            await questionFlow.loadNextQuestion()
         }
         
         // Check if this answers a current question
@@ -175,6 +152,10 @@ class ConversationViewModel: ObservableObject {
                 } else if lowercased.contains("search") && (lowercased.contains("note") || lowercased.contains("room") || lowercased.contains("homekit")) {
                     // Handle explicit search requests
                     await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if (lowercased == "yes" || lowercased.contains("show") || lowercased.contains("read")) && 
+                         UserDefaults.standard.bool(forKey: "awaitingNoteSelection") {
+                    // Handle response to "Would you like me to read any of these in detail?"
+                    await handleNoteSelectionResponse(input, isMuted: isMuted)
                 } else if lowercased.contains("tell") && lowercased.contains("about") {
                     // Handle "tell me about" queries
                     await searchAndRespondWithNotes(query: input, isMuted: isMuted)
@@ -524,6 +505,62 @@ class ConversationViewModel: ObservableObject {
         return summary
     }
     
+    private func handleNoteSelectionResponse(_ input: String, isMuted: Bool) async {
+        // Clear the awaiting flag
+        UserDefaults.standard.set(false, forKey: "awaitingNoteSelection")
+        
+        // Get stored note options
+        guard let noteData = UserDefaults.standard.data(forKey: "pendingNoteOptions"),
+              let noteOptions = try? JSONDecoder().decode([[String: String]].self, from: noteData) else {
+            await generateHouseResponse(for: "I'm sorry, I don't have any notes to show. Please search again.", isMuted: isMuted)
+            return
+        }
+        
+        let lowercased = input.lowercased()
+        
+        // Check if user wants to see a specific number
+        if let number = Int(lowercased.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
+            if number > 0 && number <= noteOptions.count {
+                let selected = noteOptions[number - 1]
+                let response = "Here's what I remember about \(selected["questionText"] ?? "that"):\n\n\(selected["answer"] ?? "")"
+                
+                let message = Message(
+                    content: response,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    await stateManager.speak(response, isMuted: isMuted)
+                }
+                return
+            }
+        }
+        
+        // If yes without a number, show the first one
+        if lowercased == "yes" || lowercased.contains("first") || lowercased.contains("one") {
+            if let first = noteOptions.first {
+                let response = "Here's what I remember about \(first["questionText"] ?? "that"):\n\n\(first["answer"] ?? "")"
+                
+                let message = Message(
+                    content: response,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    await stateManager.speak(response, isMuted: isMuted)
+                }
+            }
+        } else {
+            // They said something else, treat it as a new query
+            UserDefaults.standard.removeObject(forKey: "pendingNoteOptions")
+            await processUserInput(input, isMuted: isMuted)
+        }
+    }
+    
     private func searchAndRespondWithNotes(query: String, isMuted: Bool) async {
         print("[ConversationViewModel] Searching notes for query: \(query)")
         
@@ -624,6 +661,16 @@ class ConversationViewModel: ObservableObject {
                 
                 notesList += "Would you like me to read any of these in detail?"
                 response = notesList
+                
+                // Store the matching notes for later reference
+                UserDefaults.standard.set(true, forKey: "awaitingNoteSelection")
+                // Store the note data for selection
+                let noteData = matchingNotes.prefix(5).map { match in
+                    ["questionText": match.question.text, "answer": match.note.answer]
+                }
+                if let encoded = try? JSONEncoder().encode(noteData) {
+                    UserDefaults.standard.set(encoded, forKey: "pendingNoteOptions")
+                }
             }
             
             // Create and send the response

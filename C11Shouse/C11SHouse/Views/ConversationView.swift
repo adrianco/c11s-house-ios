@@ -176,11 +176,16 @@ struct ConversationView: View {
                 // Mark view as appeared after setup
                 hasAppeared = true
                 
-                // Check voice permissions status
+                // Force permission check before determining mute state
+                serviceContainer.permissionManager.checkCurrentPermissions()
+                
+                // Check voice permissions status after ensuring they're updated
                 if hasVoicePermissions {
+                    print("[ConversationView] Permissions granted, starting unmuted")
                     isMuted = false
                 } else {
                     // Start muted if no permissions
+                    print("[ConversationView] No permissions, starting muted")
                     isMuted = true
                 }
                 
