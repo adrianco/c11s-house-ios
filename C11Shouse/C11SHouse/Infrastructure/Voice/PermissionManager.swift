@@ -27,6 +27,9 @@
  *   - Fixed recordPermission property access to use AVAudioSession.sharedInstance()
  *   - Use fully qualified enum cases (AVAudioSession.RecordPermission.*) to avoid deprecation warnings
  *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ * - 2025-07-25: Fixed method accessibility
+ *   - Changed checkCurrentPermissionsExceptHomeKit from private to internal
+ *   - Allows ConversationView to call it when checking initial mute state
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -47,10 +50,11 @@ import AVFAudio
 import Combine
 import UIKit
 import CoreLocation
+import HomeKit
 
 /// Manages permissions for microphone and speech recognition
 @MainActor
-public final class PermissionManager: ObservableObject {
+public final class PermissionManager: NSObject, ObservableObject {
     
     // MARK: - Published Properties
     
@@ -62,6 +66,9 @@ public final class PermissionManager: ObservableObject {
     
     /// Current location permission status
     @Published public private(set) var locationPermissionStatus: CLAuthorizationStatus = .notDetermined
+    
+    /// Current HomeKit permission status
+    @Published public private(set) var homeKitPermissionStatus: HMHomeManagerAuthorizationStatus = .determined
     
     /// Combined status indicating if all permissions are granted
     @Published public private(set) var allPermissionsGranted: Bool = false
@@ -77,92 +84,32 @@ public final class PermissionManager: ObservableObject {
     // MARK: - Private Properties
     
     private var cancellables = Set<AnyCancellable>()
+    private var _homeManager: HMHomeManager?
+    private var homeKitAuthorizationContinuation: CheckedContinuation<Void, Never>?
+    
+    // Lazy initialization to prevent permission dialog at startup
+    private var homeManager: HMHomeManager {
+        if _homeManager == nil {
+            print("[PermissionManager] Initializing HMHomeManager for first time")
+            _homeManager = HMHomeManager()
+            _homeManager?.delegate = self
+        }
+        return _homeManager!
+    }
     
     // MARK: - Initialization
     
-    private init() {
+    override init() {
+        super.init()
+        #if !DEBUG
         setupObservers()
-        checkCurrentPermissions()
+        // Don't check HomeKit permissions here - it will trigger the dialog
+        checkCurrentPermissionsExceptHomeKit()
+        #endif
+        // In DEBUG builds, don't set up observers or check permissions for test instances
     }
     
     // MARK: - Public Methods
-    
-    /// Request all required permissions (microphone and speech recognition)
-    public func requestAllPermissions() async {
-        await requestMicrophonePermission()
-        await requestSpeechRecognitionPermission()
-        await requestLocationPermission()
-    }
-    
-    /// Request microphone permission
-    public func requestMicrophonePermission() async {
-        let currentPermission = AVAudioSession.sharedInstance().recordPermission
-        
-        switch currentPermission {
-        case AVAudioSession.RecordPermission.undetermined:
-            let granted = await AVAudioApplication.requestRecordPermission()
-            microphonePermissionStatus = granted ? AVAudioSession.RecordPermission.granted : AVAudioSession.RecordPermission.denied
-            updateAllPermissionsStatus()
-        case AVAudioSession.RecordPermission.denied:
-            microphonePermissionStatus = AVAudioSession.RecordPermission.denied
-            permissionError = "Microphone access denied. Please enable it in Settings."
-        case AVAudioSession.RecordPermission.granted:
-            microphonePermissionStatus = AVAudioSession.RecordPermission.granted
-        @unknown default:
-            microphonePermissionStatus = AVAudioSession.RecordPermission.denied
-        }
-        updateAllPermissionsStatus()
-    }
-    
-    /// Request speech recognition permission
-    public func requestSpeechRecognitionPermission() async {
-        switch SFSpeechRecognizer.authorizationStatus() {
-        case .notDetermined:
-            await withCheckedContinuation { continuation in
-                SFSpeechRecognizer.requestAuthorization { [weak self] status in
-                    Task { @MainActor in
-                        self?.speechRecognitionPermissionStatus = status
-                        self?.updateAllPermissionsStatus()
-                        continuation.resume()
-                    }
-                }
-            }
-        case .denied:
-            speechRecognitionPermissionStatus = .denied
-            permissionError = "Speech recognition access denied. Please enable it in Settings."
-        case .restricted:
-            speechRecognitionPermissionStatus = .restricted
-            permissionError = "Speech recognition is restricted on this device."
-        case .authorized:
-            speechRecognitionPermissionStatus = .authorized
-        @unknown default:
-            speechRecognitionPermissionStatus = .denied
-        }
-        updateAllPermissionsStatus()
-    }
-    
-    /// Request location permission
-    public func requestLocationPermission() async {
-        let locationManager = CLLocationManager()
-        let currentStatus = locationManager.authorizationStatus
-        
-        switch currentStatus {
-        case .notDetermined:
-            // Request permission through location manager
-            locationManager.requestWhenInUseAuthorization()
-            // Note: The actual permission result will be received through the delegate
-            // For now, we just update the status
-            locationPermissionStatus = currentStatus
-        case .denied, .restricted:
-            locationPermissionStatus = currentStatus
-            permissionError = "Location access denied. Please enable it in Settings."
-        case .authorizedAlways, .authorizedWhenInUse:
-            locationPermissionStatus = currentStatus
-        @unknown default:
-            locationPermissionStatus = .denied
-        }
-        updateAllPermissionsStatus()
-    }
     
     /// Check if a specific permission is granted
     public func isPermissionGranted(_ permission: PermissionType) -> Bool {
@@ -173,6 +120,8 @@ public final class PermissionManager: ObservableObject {
             return speechRecognitionPermissionStatus == .authorized
         case .location:
             return locationPermissionStatus == .authorizedWhenInUse || locationPermissionStatus == .authorizedAlways
+        case .homeKit:
+            return homeKitPermissionStatus == .authorized
         }
     }
     
@@ -197,10 +146,29 @@ public final class PermissionManager: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func checkCurrentPermissions() {
+    public func checkCurrentPermissions() {
         microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
         speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
         locationPermissionStatus = CLLocationManager().authorizationStatus
+        
+        // Only check HomeKit if already initialized
+        if _homeManager != nil {
+            let oldHomeKitStatus = homeKitPermissionStatus
+            homeKitPermissionStatus = homeManager.authorizationStatus
+            
+            if oldHomeKitStatus != homeKitPermissionStatus {
+                print("[PermissionManager] checkCurrentPermissions: HomeKit status changed from \(oldHomeKitStatus.rawValue) to \(homeKitPermissionStatus.rawValue)")
+            }
+        }
+        
+        updateAllPermissionsStatus()
+    }
+    
+    func checkCurrentPermissionsExceptHomeKit() {
+        microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
+        speechRecognitionPermissionStatus = SFSpeechRecognizer.authorizationStatus()
+        locationPermissionStatus = CLLocationManager().authorizationStatus
+        // Don't check HomeKit here
         updateAllPermissionsStatus()
     }
     
@@ -223,6 +191,7 @@ public enum PermissionType {
     case microphone
     case speechRecognition
     case location
+    case homeKit
 }
 
 // MARK: - Extensions
@@ -239,6 +208,28 @@ extension PermissionManager {
     
     public var hasLocationPermission: Bool {
         locationPermissionStatus == .authorizedWhenInUse || locationPermissionStatus == .authorizedAlways
+    }
+    
+    public var isHomeKitGranted: Bool {
+        // Don't check if homeManager isn't initialized yet
+        guard _homeManager != nil else {
+            print("[PermissionManager] isHomeKitGranted check: HomeManager not initialized, returning false")
+            return false
+        }
+        
+        // Check the raw value to understand what the actual status is
+        let rawValue = homeKitPermissionStatus.rawValue
+        
+        // HMHomeManagerAuthorizationStatus raw values (from iOS logs):
+        // 0 = determined (initial state, changes to 5 when delegate is set)
+        // 1 = restricted 
+        // 2 = authorized
+        // 5 = not determined (need to ask for permission) - seen in logs
+        // The status changes from 0 to 5 when HMHomeManager delegate is set
+        let granted = rawValue == 2 // authorized
+        
+        print("[PermissionManager] isHomeKitGranted check: rawValue=\(rawValue), granted=\(granted)")
+        return granted
     }
     
     /// Human-readable permission status descriptions
@@ -284,6 +275,43 @@ extension PermissionManager {
             return "When in use"
         @unknown default:
             return "Unknown"
+        }
+    }
+}
+
+// MARK: - HMHomeManagerDelegate
+
+extension PermissionManager: HMHomeManagerDelegate {
+    public func homeManagerDidUpdateHomes(_ manager: HMHomeManager) {
+        // Update permission status when homes are updated
+        let oldStatus = homeKitPermissionStatus
+        homeKitPermissionStatus = manager.authorizationStatus
+        print("[PermissionManager] homeManagerDidUpdateHomes called: oldStatus=\(oldStatus.rawValue), newStatus=\(manager.authorizationStatus.rawValue)")
+        
+        // Force UI update if status changed
+        if oldStatus != manager.authorizationStatus {
+            Task { @MainActor in
+                objectWillChange.send()
+            }
+        }
+    }
+    
+    public func homeManager(_ manager: HMHomeManager, didUpdate status: HMHomeManagerAuthorizationStatus) {
+        // Update permission status when authorization changes
+        let oldStatus = homeKitPermissionStatus
+        print("[PermissionManager] homeManager:didUpdate:status called: oldStatus=\(oldStatus.rawValue), newStatus=\(status.rawValue)")
+        homeKitPermissionStatus = status
+        
+        // Force UI update and trigger any waiting continuations
+        Task { @MainActor in
+            objectWillChange.send()
+            updateAllPermissionsStatus()
+            
+            // Resume any waiting continuation
+            if let continuation = homeKitAuthorizationContinuation {
+                homeKitAuthorizationContinuation = nil
+                continuation.resume()
+            }
         }
     }
 }

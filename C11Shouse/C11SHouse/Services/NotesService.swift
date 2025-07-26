@@ -84,6 +84,9 @@ protocol NotesServiceProtocol {
     
     /// Clear all data
     func clearAllData() async throws
+    
+    /// Save a custom note (for room notes, device notes, etc.)
+    func saveCustomNote(title: String, content: String, category: String) async
 }
 
 /// Concrete implementation of NotesService using UserDefaults
@@ -318,30 +321,7 @@ class NotesServiceImpl: NotesServiceProtocol {
             migratedQuestions.remove(at: oldQuestionIndex)
         }
         
-        // Add Phase 4 question if it doesn't exist
-        let phase4Text = "Let's start by creating your first room note! What room would you like to add a note about?"
-        if !migratedQuestions.contains(where: { $0.text == phase4Text }) {
-            // Check if user has completed the first 3 questions
-            let requiredQuestions = ["Is this the right address?", "What should I call this house?", "What's your name?"]
-            let hasCompletedBasics = requiredQuestions.allSatisfy { questionText in
-                if let question = migratedQuestions.first(where: { $0.text == questionText }) {
-                    return migratedNotes[question.id]?.isAnswered ?? false
-                }
-                return false
-            }
-            
-            // Only add Phase 4 question if basics are complete and user hasn't completed phase 4
-            if hasCompletedBasics && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-                let phase4Question = Question(
-                    text: phase4Text,
-                    category: .houseInfo,
-                    displayOrder: 3,
-                    isRequired: true,
-                    hint: "Tell me about a room in your house (e.g., 'living room', 'kitchen', 'bedroom')"
-                )
-                migratedQuestions.append(phase4Question)
-            }
-        }
+        // Phase 4 question has been removed - users can create room notes manually
         
         return NotesStoreData(
             questions: migratedQuestions,
@@ -479,8 +459,10 @@ extension NotesServiceProtocol {
             for: weatherQuestionId,
             answer: fullSummary,
             metadata: [
-                "type": "weather_summary",
-                "timestamp": ISO8601DateFormatter().string(from: weather.lastUpdated)
+                "type": "informational",
+                "category": "weather",
+                "timestamp": ISO8601DateFormatter().string(from: weather.lastUpdated),
+                "updated_via_conversation": "false"
             ]
         )
     }
@@ -533,9 +515,10 @@ extension NotesServiceProtocol {
                 for: customQuestion.id,
                 answer: content,
                 metadata: [
-                    "type": "custom_\(category)",
+                    "type": "informational",
                     "category": category,
-                    "created_via": "tutorial"
+                    "created_via": "homekit_discovery",
+                    "updated_via_conversation": "false"
                 ]
             )
         } catch {
@@ -545,9 +528,10 @@ extension NotesServiceProtocol {
                     for: existingQuestion.id,
                     answer: content,
                     metadata: [
-                        "type": "custom_\(category)",
+                        "type": "informational",
                         "category": category,
-                        "updated_via": "tutorial"
+                        "created_via": "homekit_discovery",
+                        "updated_via_conversation": "false"
                     ]
                 )
             }

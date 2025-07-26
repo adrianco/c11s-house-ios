@@ -58,6 +58,9 @@
  */
 
 import SwiftUI
+import Combine
+import AVFoundation
+import Speech
 
 struct ContentView: View {
     @EnvironmentObject private var serviceContainer: ServiceContainer
@@ -67,6 +70,8 @@ struct ContentView: View {
     @State private var showVoiceSettings = false
     @State private var showVoiceTest = false
     @State private var currentError: UserFriendlyError?
+    @State private var hasHomeKitConfiguration = false
+    @State private var homesSubscription: AnyCancellable?
     
     init() {
         _viewModel = StateObject(wrappedValue: ViewModelFactory.shared.makeContentViewModel())
@@ -162,6 +167,8 @@ struct ContentView: View {
                                 .font(.body)
                                 .foregroundColor(.primary)
                                 .multilineTextAlignment(.center)
+                                .lineLimit(nil) // Allow unlimited lines
+                                .fixedSize(horizontal: false, vertical: true) // Allow vertical expansion
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 16)
                                 .frame(maxWidth: 340)
@@ -196,6 +203,31 @@ struct ContentView: View {
                         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                     }
                     .accessibilityIdentifier("StartConversation")
+                    
+                    // HomeKit button (only show if HomeKit is configured)
+                    if hasHomeKitConfiguration {
+                        Button(action: openHomeKitApp) {
+                            HStack {
+                                Image(systemName: "homekit")
+                                Text("Open HomeKit")
+                            }
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [.orange, .pink]),
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(20)
+                            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
+                        }
+                        .padding(.top, 8)
+                        .accessibilityIdentifier("OpenHomeKit")
+                    }
                     
                     Spacer()
                         .frame(height: 100)
@@ -253,7 +285,26 @@ struct ContentView: View {
         .navigationViewStyle(StackNavigationViewStyle()) // For iPad compatibility
         .onAppear {
             checkLocationPermission()
-            checkOnboardingStatus()
+            loadAddressAndWeather()
+            checkHomeKitConfiguration()
+            
+            // Initialize speech and TTS services early
+            initializeSpeechServices()
+            
+            // Subscribe to HomeKit homes changes
+            homesSubscription = serviceContainer.homeKitService.homesPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { homes in
+                    hasHomeKitConfiguration = !homes.isEmpty
+                    print("[ContentView] HomeKit homes updated via publisher: \(homes.count) homes")
+                }
+        }
+        .onDisappear {
+            homesSubscription?.cancel()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("HomeKitConfigurationChanged"))) { _ in
+            // React to HomeKit configuration changes
+            checkHomeKitConfiguration()
         }
         .errorOverlay($currentError) {
             Task { await viewModel.refreshWeather() }
@@ -262,22 +313,85 @@ struct ContentView: View {
     
     private func checkLocationPermission() {
         Task {
-            if !viewModel.hasLocationPermission {
-                await viewModel.requestLocationPermission()
-            }
-            
-            // Load address and weather data if we have permission
+            // Load data if we already have permission
             if viewModel.hasLocationPermission {
                 await viewModel.loadAddressAndWeather()
             }
         }
     }
     
-    private func checkOnboardingStatus() {
+    private func loadAddressAndWeather() {
         Task {
             // Trigger loading address and weather, which will set appropriate house emotion
             await viewModel.loadAddressAndWeather()
         }
+    }
+    
+    private func checkHomeKitConfiguration() {
+        Task {
+            let homeKitCoordinator = serviceContainer.homeKitCoordinator
+            hasHomeKitConfiguration = await homeKitCoordinator.hasHomeKitConfiguration()
+            print("[ContentView] HomeKit configuration check: \(hasHomeKitConfiguration)")
+            
+            // Also log the homes count for debugging
+            let homes = await serviceContainer.homeKitService.getAllHomes()
+            print("[ContentView] HomeKit homes count: \(homes.count)")
+            if !homes.isEmpty {
+                print("[ContentView] HomeKit homes: \(homes.map { $0.name })")
+            }
+        }
+    }
+    
+    private func openHomeKitApp() {
+        // Open the Home app using its URL scheme
+        if let url = URL(string: "com.apple.home://") {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    private func initializeSpeechServices() {
+        Task {
+            // Initialize speech recognition
+            await requestSpeechRecognitionPermission()
+            
+            // Initialize microphone
+            await requestMicrophonePermission()
+            
+            // Initialize TTS service by speaking empty text
+            let ttsService = serviceContainer.ttsService
+            do {
+                // Speak empty string to initialize the audio session
+                try await ttsService.speak("", language: nil)
+            } catch {
+                print("[ContentView] TTS initialization error: \(error)")
+            }
+            
+            // Initialize audio session for recording
+            do {
+                let audioSession = AVAudioSession.sharedInstance()
+                try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [.defaultToSpeaker])
+                try audioSession.setActive(true, options: [])
+                print("[ContentView] Audio session initialized for recording and playback")
+            } catch {
+                print("[ContentView] Audio session initialization error: \(error)")
+            }
+            
+            print("[ContentView] Speech services initialized")
+        }
+    }
+    
+    private func requestSpeechRecognitionPermission() async {
+        await withCheckedContinuation { continuation in
+            SFSpeechRecognizer.requestAuthorization { status in
+                print("[ContentView] Speech recognition authorization status: \(status.rawValue)")
+                continuation.resume()
+            }
+        }
+    }
+    
+    private func requestMicrophonePermission() async {
+        let granted = await AVAudioApplication.requestRecordPermission()
+        print("[ContentView] Microphone permission granted: \(granted)")
     }
 }
 

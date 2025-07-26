@@ -50,15 +50,21 @@ class AddressManager: ObservableObject {
             }
         }
         
-        // Check location permission
-        let status = await locationService.authorizationStatusPublisher.values.first { _ in true } ?? .notDetermined
+        // Request location permission if needed
+        await locationService.requestLocationPermission()
         
-        guard status == .authorizedWhenInUse || status == .authorizedAlways else {
-            throw AddressError.locationPermissionDenied
+        // Get current location - this will throw LocationError.notAuthorized if permission denied
+        let location: CLLocation
+        do {
+            location = try await locationService.getCurrentLocation()
+        } catch {
+            // If location failed due to authorization, throw our specific error
+            if let locationError = error as? LocationError,
+               case .notAuthorized = locationError {
+                throw AddressError.locationPermissionDenied
+            }
+            throw error
         }
-        
-        // Get current location
-        let location = try await locationService.getCurrentLocation()
         
         // Look up address
         let address = try await locationService.lookupAddress(for: location)
@@ -141,27 +147,8 @@ class AddressManager: ObservableObject {
                 print("[AddressManager] Address question not found")
             }
             
-            // Also save the house name if we can generate it
-            if let houseNameQuestion = notesStore.questions.first(where: { 
-                $0.text == "What should I call this house?" 
-            }) {
-                print("[AddressManager] Found house name question: \(houseNameQuestion.text)")
-                // Only save if not already answered
-                if notesStore.notes[houseNameQuestion.id] == nil {
-                    let houseName = generateHouseNameFromStreet(address.street)
-                    print("[AddressManager] Generated house name: \(houseName)")
-                    try await notesService.saveOrUpdateNote(
-                        for: houseNameQuestion.id,
-                        answer: houseName,
-                        metadata: ["generated_from_address": "true"]
-                    )
-                    print("[AddressManager] Saved house name note")
-                } else {
-                    print("[AddressManager] House name question already answered")
-                }
-            } else {
-                print("[AddressManager] House name question not found")
-            }
+            // Don't auto-generate house name here - let the question flow handle it
+            // This prevents duplicate saves and allows the user to choose their own name
         } catch {
             print("Error saving address to notes: \(error)")
         }

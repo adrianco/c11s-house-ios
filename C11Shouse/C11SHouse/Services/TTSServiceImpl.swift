@@ -89,13 +89,36 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
         super.init()
         synthesizer.delegate = self
         setupAudioSession()
+        loadSavedSettings()
+    }
+    
+    // MARK: - Helper Methods
+    
+    private func removeEmojisAndIcons(from text: String) -> String {
+        // Remove emojis and special unicode characters that represent icons
+        let emojiPattern = "[\\u{1F600}-\\u{1F64F}]|[\\u{1F300}-\\u{1F5FF}]|[\\u{1F680}-\\u{1F6FF}]|[\\u{1F1E0}-\\u{1F1FF}]|[\\u{2600}-\\u{26FF}]|[\\u{2700}-\\u{27BF}]|[\\u{1F900}-\\u{1F9FF}]|[\\u{1F004}]|[\\u{1F0CF}]|[\\u{1F170}-\\u{1F251}]"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: emojiPattern, options: [])
+            let range = NSRange(location: 0, length: text.utf16.count)
+            let cleanedText = regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: "")
+            
+            // Also remove any extra whitespace that might result from emoji removal
+            let trimmedText = cleanedText.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            return trimmedText.trimmingCharacters(in: .whitespacesAndNewlines)
+        } catch {
+            // If regex fails, return original text
+            print("[TTSService] Failed to remove emojis: \(error)")
+            return text
+        }
     }
     
     // MARK: - Public Methods
     
     func speak(_ text: String, language: String? = nil) async throws {
-        // Clean up the text
-        let cleanedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Clean up the text and remove emojis/icons
+        let textWithoutEmojis = removeEmojisAndIcons(from: text)
+        let cleanedText = textWithoutEmojis.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanedText.isEmpty else { return }
         
         // Stop any current speech and wait for cleanup
@@ -116,8 +139,11 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers, .interruptSpokenAudioAndMixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
+            #if DEBUG
             print("Failed to activate audio session for TTS: \(error)")
-            throw error
+            #endif
+            // Don't throw - try to continue with TTS anyway
+            // The system might still be able to play audio
         }
         
         // Create utterance
@@ -217,7 +243,9 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
+            #if DEBUG
             print("Failed to setup audio session for TTS: \(error)")
+            #endif
         }
     }
     
@@ -232,6 +260,33 @@ final class TTSServiceImpl: NSObject, TTSService, @unchecked Sendable {
         
         // Default to English
         return "en-US"
+    }
+    
+    private func loadSavedSettings() {
+        // Load persisted settings from UserDefaults matching VoiceSettingsView @AppStorage keys
+        let userDefaults = UserDefaults.standard
+        
+        // Load speech parameters
+        configuration.rate = userDefaults.float(forKey: "tts_rate", default: 0.5)
+        configuration.pitch = userDefaults.float(forKey: "tts_pitch", default: 1.0)
+        configuration.volume = userDefaults.float(forKey: "tts_volume", default: 1.0)
+        
+        // Load voice identifier
+        let voiceIdentifier = userDefaults.string(forKey: "tts_voice_identifier")
+        if let identifier = voiceIdentifier, !identifier.isEmpty {
+            configuration.voiceIdentifier = identifier
+        }
+    }
+}
+
+// MARK: - UserDefaults Extension for Float with Default
+
+private extension UserDefaults {
+    func float(forKey key: String, default defaultValue: Float) -> Float {
+        if object(forKey: key) != nil {
+            return float(forKey: key)
+        }
+        return defaultValue
     }
 }
 

@@ -15,6 +15,7 @@ import Combine
 import CoreLocation
 import AVFoundation
 import Speech
+import HomeKit
 @testable import C11SHouse
 
 // MARK: - Supporting Types
@@ -62,6 +63,13 @@ class MockLocationService: LocationServiceProtocol {
     
     func getCurrentLocation() async throws -> CLLocation {
         getCurrentLocationCalled = true
+        
+        // Check authorization status first
+        let currentStatus = authorizationStatusSubject.value
+        guard currentStatus == .authorizedWhenInUse || currentStatus == .authorizedAlways else {
+            throw LocationError.notAuthorized
+        }
+        
         switch getCurrentLocationResult {
         case .success(let location):
             currentLocationSubject.send(location)
@@ -260,6 +268,26 @@ class SharedMockNotesService: NotesServiceProtocol {
         }
     }
     
+    func saveCustomNote(title: String, content: String, category: String) async {
+        // Create a custom question and note for testing
+        let customQuestion = Question(
+            text: title,
+            category: .other,
+            displayOrder: 1000,
+            isRequired: false,
+            hint: "Custom \(category) note"
+        )
+        mockNotesStore.questions.append(customQuestion)
+        
+        let note = Note(questionId: customQuestion.id, answer: content)
+        mockNotesStore.notes[customQuestion.id] = note
+        savedNotes.append(note)
+        
+        await MainActor.run {
+            notesStoreSubject.send(mockNotesStore)
+        }
+    }
+    
     func getHouseName() async -> String? {
         return mockHouseName
     }
@@ -277,6 +305,17 @@ class SharedMockNotesService: NotesServiceProtocol {
             metadata: metadata
         )
         try await saveNote(note)
+    }
+}
+
+// MARK: - Mock HomeKit Notes Service
+
+class MockHomeKitNotesService: SharedMockNotesService {
+    var savedCustomNotes: [(title: String, content: String, category: String)] = []
+    
+    override func saveCustomNote(title: String, content: String, category: String) async {
+        savedCustomNotes.append((title: title, content: content, category: category))
+        await super.saveCustomNote(title: title, content: content, category: category)
     }
 }
 
@@ -565,5 +604,143 @@ enum WeatherError: LocalizedError {
         case .sandboxRestriction:
             return "Weather service not available in simulator"
         }
+    }
+}
+
+// MARK: - HomeKit Service Mock
+
+class MockHomeKitService: HomeKitServiceProtocol {
+    var authorizationStatusPublisher: AnyPublisher<HMHomeManagerAuthorizationStatus, Never> {
+        authorizationStatusSubject.eraseToAnyPublisher()
+    }
+    
+    var homesPublisher: AnyPublisher<[HomeKitHome], Never> {
+        homesSubject.eraseToAnyPublisher()
+    }
+    
+    private let authorizationStatusSubject = CurrentValueSubject<HMHomeManagerAuthorizationStatus, Never>(.determined)
+    private let homesSubject = CurrentValueSubject<[HomeKitHome], Never>([])
+    
+    var requestAuthorizationCalled = false
+    var discoverHomesCalled = false
+    var saveConfigurationAsNotesCalled = false
+    var mockAuthorizationResult = true
+    var mockDiscoverySummary: HomeKitDiscoverySummary?
+    var shouldThrowError = false
+    
+    // Store the discovered homes for later retrieval
+    private var discoveredHomes: [HomeKitHome] = []
+    
+    // Optional notes service for testing
+    var notesService: NotesServiceProtocol?
+    
+    func requestAuthorization() async -> Bool {
+        requestAuthorizationCalled = true
+        if mockAuthorizationResult {
+            authorizationStatusSubject.send(.authorized)
+        }
+        return mockAuthorizationResult
+    }
+    
+    func discoverHomes() async throws -> HomeKitDiscoverySummary {
+        discoverHomesCalled = true
+        
+        if shouldThrowError {
+            throw HomeKitError.discoveryFailed("Mock error")
+        }
+        
+        let summary = mockDiscoverySummary ?? HomeKitDiscoverySummary(
+            homes: [
+                HomeKitHome(
+                    id: UUID(),
+                    name: "Test Home",
+                    isPrimary: true,
+                    rooms: [
+                        HomeKitRoom(id: UUID(), name: "Living Room"),
+                        HomeKitRoom(id: UUID(), name: "Kitchen")
+                    ],
+                    accessories: [
+                        HomeKitAccessory(
+                            id: UUID(),
+                            name: "Test Light",
+                            roomId: nil,
+                            category: "Lights",
+                            manufacturer: "Test Manufacturer",
+                            model: "Test Model",
+                            isReachable: true,
+                            isBridged: false,
+                            currentState: "On",
+                            services: ["Lightbulb"]
+                        )
+                    ],
+                    createdAt: Date()
+                )
+            ],
+            discoveredAt: Date()
+        )
+        
+        // Store the discovered homes for later retrieval
+        discoveredHomes = summary.homes
+        mockDiscoverySummary = summary
+        
+        // Publish the discovered homes
+        homesSubject.send(discoveredHomes)
+        
+        return summary
+    }
+    
+    func saveConfigurationAsNotes(summary: HomeKitDiscoverySummary) async throws {
+        saveConfigurationAsNotesCalled = true
+        
+        if shouldThrowError {
+            throw HomeKitError.discoveryFailed("Failed to save notes")
+        }
+        
+        // If we have a notes service, actually save the notes (mimicking real HomeKitService behavior)
+        if let notesService = notesService {
+            // Save the main summary note
+            let summaryNote = summary.generateFullSummary()
+            await notesService.saveCustomNote(
+                title: "HomeKit Configuration Summary",
+                content: summaryNote,
+                category: "homekit_summary"
+            )
+            
+            // Save individual room notes
+            for home in summary.homes {
+                for room in home.rooms {
+                    let roomAccessories = home.accessories.filter { $0.roomId == room.id }
+                    if !roomAccessories.isEmpty {
+                        let roomNote = room.generateNote(with: roomAccessories)
+                        
+                        await notesService.saveCustomNote(
+                            title: "Room: \(room.name) (\(home.name))",
+                            content: roomNote,
+                            category: "homekit_room"
+                        )
+                    }
+                }
+                
+                // Save individual accessory notes for accessories not in rooms
+                let unassignedAccessories = home.accessories.filter { $0.roomId == nil }
+                for accessory in unassignedAccessories {
+                    let accessoryNote = accessory.generateNote()
+                    
+                    await notesService.saveCustomNote(
+                        title: "Device: \(accessory.name) (\(home.name))",
+                        content: accessoryNote,
+                        category: "homekit_device"
+                    )
+                }
+            }
+        }
+    }
+    
+    func getHome(named name: String) async -> HomeKitHome? {
+        return discoveredHomes.first { $0.name.lowercased() == name.lowercased() }
+    }
+    
+    func getAllHomes() async -> [HomeKitHome] {
+        return discoveredHomes
     }
 }

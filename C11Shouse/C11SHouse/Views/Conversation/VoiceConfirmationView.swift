@@ -24,6 +24,14 @@ struct VoiceConfirmationView: View {
     
     var body: some View {
         HStack {
+            // Cancel button on the left
+            Button(action: onCancel) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(.red)
+            }
+            .accessibilityLabel("Cancel")
+            
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Image(systemName: "mic.fill")
@@ -34,28 +42,37 @@ struct VoiceConfirmationView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                TextField("Edit your message...", text: $pendingVoiceText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .focused($isTextFieldFocused)
-                    .onSubmit {
-                        onConfirm()
+                HStack {
+                    TextField("Edit your message...", text: $pendingVoiceText)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .focused($isTextFieldFocused)
+                        .onSubmit {
+                            onConfirm()
+                        }
+                    
+                    // Clear button inside text field area
+                    if !pendingVoiceText.isEmpty {
+                        Button(action: {
+                            pendingVoiceText = ""
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.body)
+                                .foregroundColor(.gray)
+                        }
+                        .accessibilityIdentifier("clear.text")
+                        .accessibilityLabel("Clear")
                     }
+                }
             }
             
-            HStack(spacing: 12) {
-                Button(action: onCancel) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                }
-                
-                Button(action: onConfirm) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(pendingVoiceText.isEmpty ? .gray : .green)
-                }
-                .disabled(pendingVoiceText.isEmpty)
+            // Confirm button on the right
+            Button(action: onConfirm) {
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(pendingVoiceText.isEmpty ? .gray : .blue)
             }
+            .disabled(pendingVoiceText.isEmpty)
+            .accessibilityLabel("Send")
         }
     }
 }

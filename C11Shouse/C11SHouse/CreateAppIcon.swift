@@ -135,6 +135,113 @@ struct AppIconCreatorLegacy {
             }
         }
     }
+    
+    /// Create house icon without brain
+    static func createHouseOnly(size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let rect = CGRect(origin: .zero, size: size)
+            
+            // Background gradient
+            let gradientLayer = CAGradientLayer()
+            gradientLayer.frame = rect
+            gradientLayer.colors = [
+                UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0).cgColor,
+                UIColor(red: 0.1, green: 0.2, blue: 0.6, alpha: 1.0).cgColor
+            ]
+            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+            
+            UIGraphicsBeginImageContext(size)
+            if let currentContext = UIGraphicsGetCurrentContext() {
+                gradientLayer.render(in: currentContext)
+            }
+            let gradientImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            gradientImage?.draw(in: rect)
+            
+            // Draw house shape
+            let housePath = UIBezierPath()
+            let houseWidth = size.width * 0.6
+            let houseHeight = size.height * 0.5
+            let houseX = (size.width - houseWidth) / 2
+            let houseY = size.height * 0.35
+            
+            // House body
+            housePath.move(to: CGPoint(x: houseX, y: houseY + houseHeight * 0.4))
+            housePath.addLine(to: CGPoint(x: houseX, y: houseY + houseHeight))
+            housePath.addLine(to: CGPoint(x: houseX + houseWidth, y: houseY + houseHeight))
+            housePath.addLine(to: CGPoint(x: houseX + houseWidth, y: houseY + houseHeight * 0.4))
+            
+            // Roof
+            housePath.move(to: CGPoint(x: houseX - houseWidth * 0.1, y: houseY + houseHeight * 0.4))
+            housePath.addLine(to: CGPoint(x: houseX + houseWidth / 2, y: houseY))
+            housePath.addLine(to: CGPoint(x: houseX + houseWidth * 1.1, y: houseY + houseHeight * 0.4))
+            housePath.close()
+            
+            UIColor.white.setFill()
+            housePath.fill()
+            
+            // Add subtle inner shadow
+            context.cgContext.saveGState()
+            context.cgContext.addPath(housePath.cgPath)
+            context.cgContext.clip()
+            
+            context.cgContext.setShadow(
+                offset: CGSize(width: 0, height: 2),
+                blur: 10,
+                color: UIColor.black.withAlphaComponent(0.3).cgColor
+            )
+            
+            UIColor.clear.setFill()
+            housePath.fill()
+            
+            context.cgContext.restoreGState()
+        }
+    }
+    
+    /// Create brain with circle background
+    static func createBrainCircle(size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { context in
+            let rect = CGRect(origin: .zero, size: size)
+            
+            // Draw circle background
+            let circlePath = UIBezierPath(ovalIn: rect.insetBy(dx: 2, dy: 2))
+            
+            // Gradient for circle
+            let gradientLayer = CAGradientLayer()
+            gradientLayer.frame = rect
+            gradientLayer.colors = [
+                UIColor(red: 0.5, green: 0.3, blue: 0.8, alpha: 1.0).cgColor,
+                UIColor(red: 0.3, green: 0.1, blue: 0.6, alpha: 1.0).cgColor
+            ]
+            gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+            gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+            
+            UIGraphicsBeginImageContext(size)
+            if let currentContext = UIGraphicsGetCurrentContext() {
+                currentContext.addPath(circlePath.cgPath)
+                currentContext.clip()
+                gradientLayer.render(in: currentContext)
+            }
+            let gradientImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            gradientImage?.draw(in: rect)
+            
+            // Draw brain symbol
+            let brainConfig = UIImage.SymbolConfiguration(pointSize: size.width * 0.6, weight: .bold)
+            if let brainImage = UIImage(systemName: "brain", withConfiguration: brainConfig) {
+                let brainRect = CGRect(
+                    x: rect.width * 0.2,
+                    y: rect.height * 0.2,
+                    width: rect.width * 0.6,
+                    height: rect.width * 0.6
+                )
+                brainImage.withTintColor(.white).draw(in: brainRect)
+            }
+        }
+    }
 }
 
 // Preview in SwiftUI

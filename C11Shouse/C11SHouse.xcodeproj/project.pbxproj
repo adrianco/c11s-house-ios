@@ -420,6 +420,7 @@
 				INFOPLIST_FILE = C11SHouse/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Conscious House";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSHomeKitUsageDescription = "C11S House would like to access your HomeKit data to find existing named rooms and devices, making it easier to set up your conscious house.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "C11S House can monitor weather conditions continuously to keep your house informed about changing conditions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "C11S House needs access to your microphone to transcribe voice commands";
@@ -461,6 +462,7 @@
 				INFOPLIST_FILE = C11SHouse/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Conscious House";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSHomeKitUsageDescription = "C11S House would like to access your HomeKit data to find existing named rooms and devices, making it easier to set up your conscious house.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "C11S House can monitor weather conditions continuously to keep your house informed about changing conditions.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "C11S House needs your location to provide accurate weather information and personalize your home's name based on your address.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "C11S House needs access to your microphone to transcribe voice commands";

@@ -80,6 +80,11 @@ class ServiceContainer: ObservableObject {
         WeatherKitServiceImpl()
     }()
     
+    @MainActor
+    private(set) lazy var homeKitService: HomeKitServiceProtocol = {
+        HomeKitService(notesService: notesService)
+    }()
+    
     // MARK: - Configuration
     
     private(set) var configuration = TranscriptionConfiguration.default
@@ -113,6 +118,11 @@ class ServiceContainer: ObservableObject {
         )
     }()
     
+    @MainActor
+    private(set) lazy var homeKitCoordinator: HomeKitCoordinator = {
+        HomeKitCoordinator(homeKitService: homeKitService, notesService: notesService)
+    }()
+    
     // MARK: - ViewModel Factory
     
     /// Factory for creating ViewModels with proper dependency injection
@@ -143,6 +153,14 @@ class ServiceContainer: ObservableObject {
     private init() {
         // Private initializer for singleton
     }
+    
+    #if DEBUG
+    /// Test-only initializer to support dependency injection in tests
+    /// This allows tests to create TestServiceContainer subclasses
+    internal init(forTesting: Bool) {
+        // Empty initializer for testing
+    }
+    #endif
 }
 
 // MARK: - Environment Key

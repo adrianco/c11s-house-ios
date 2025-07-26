@@ -12,6 +12,9 @@
  *   - Permissions requested on app launch using .task modifier for async operations
  *   - Conditional permission request only if not already granted to improve UX
  *   - ContentView used as root view with ServiceContainer injected via environment
+ * - 2025-07-24: Removed separate splash screen
+ *   - Animation moved to OnboardingWelcomeView per UX plan requirements
+ *   - Splash screen animation was not part of original design spec
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -34,20 +37,53 @@ struct C11SHouseApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(serviceContainer)
-                .withOnboarding(serviceContainer: serviceContainer)
                 .task {
-                    // Request permissions through onboarding flow
-                    // The onboarding coordinator will handle permission requests
+                    // Initialize services early to trigger permission dialogs when needed
+                    await initializeServices()
+                    
+                    // For existing users who already have HomeKit permission
+                    await checkForHomeKitDiscovery()
                 }
         }
     }
     
-    private func requestPermissionsIfNeeded() async {
-        let permissionManager = serviceContainer.permissionManager
+    
+    @MainActor
+    private func initializeServices() async {
+        // Initialize location service early
+        let locationService = serviceContainer.locationService
+        await locationService.requestLocationPermission()
         
-        // Request permissions if not all granted
-        if !permissionManager.allPermissionsGranted {
-            await permissionManager.requestAllPermissions()
+        // Check all permissions
+        serviceContainer.permissionManager.checkCurrentPermissions()
+        
+        // Initialize weather coordinator
+        _ = serviceContainer.weatherCoordinator
+        
+        // Initialize question flow coordinator
+        _ = serviceContainer.questionFlowCoordinator
+        
+        // Initialize HomeKit coordinator and start discovery immediately
+        let homeKitCoordinator = serviceContainer.homeKitCoordinator
+        Task {
+            // Discover HomeKit configuration in background
+            await homeKitCoordinator.discoverAndSaveConfiguration()
+            print("[C11SHouseApp] HomeKit discovery completed")
+        }
+        
+        print("[C11SHouseApp] Services initialized")
+    }
+    
+    @MainActor
+    private func checkForHomeKitDiscovery() async {
+        // This method is now only used for re-checking after app becomes active
+        // Initial discovery happens in initializeServices
+        
+        // Check if we need to re-run discovery (e.g., user added new homes)
+        let homeKitCoordinator = serviceContainer.homeKitCoordinator
+        if homeKitCoordinator.isAuthorized {
+            // Refresh configuration if authorized
+            await homeKitCoordinator.refreshConfiguration()
         }
     }
     

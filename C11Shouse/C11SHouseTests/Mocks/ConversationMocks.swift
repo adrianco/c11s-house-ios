@@ -9,6 +9,9 @@
  *   - MockConversationRecognizer for voice input simulation
  *   - MockQuestionFlowCoordinator for question flow testing
  *   - MockHouseThought generator for response testing
+ * - 2025-07-25: Fixed compilation errors
+ *   - Added override keywords to setQuestionThought, setThankYouThought, clearHouseThought
+ *   - Fixed shouldFailWithError type to use 'any UserFriendlyError'
  *
  * FUTURE UPDATES:
  * - Add more sophisticated response generation
@@ -20,28 +23,65 @@ import Combine
 import Speech
 @testable import C11SHouse
 
+// MARK: - Conversation State Manager Mock
+
+@MainActor
+class MockConversationStateManager: ConversationStateManager {
+    var speakCalled = false
+    var stopSpeakingCalled = false
+    var loadUserNameCalled = false
+    var updateUserNameCalled = false
+    var lastSpokenText: String?
+    var lastMutedState: Bool?
+    
+    init() {
+        let mockNotes = SharedMockNotesService()
+        let mockTTS = MockTTSService()
+        super.init(notesService: mockNotes, ttsService: mockTTS)
+    }
+    
+    override func speak(_ text: String, isMuted: Bool) async {
+        speakCalled = true
+        lastSpokenText = text
+        lastMutedState = isMuted
+    }
+    
+    override func stopSpeaking() {
+        stopSpeakingCalled = true
+    }
+    
+    override func loadUserName() async {
+        loadUserNameCalled = true
+        userName = "Test User"
+    }
+    
+    override func updateUserName(_ name: String) async {
+        updateUserNameCalled = true
+        userName = name
+    }
+}
+
 // MARK: - Message Store Mock
 
-class MockMessageStore: ObservableObject {
-    @Published var messages: [Message] = []
-    
+class MockMessageStore: MessageStore {
     var addMessageCalled = false
     var clearAllMessagesCalled = false
     var lastAddedMessage: Message?
     
     init(initialMessages: [Message] = []) {
+        super.init()
         self.messages = initialMessages
     }
     
-    func addMessage(_ message: Message) {
+    override func addMessage(_ message: Message) {
         addMessageCalled = true
         lastAddedMessage = message
-        messages.append(message)
+        super.addMessage(message)
     }
     
-    func clearAllMessages() {
+    override func clearAllMessages() {
         clearAllMessagesCalled = true
-        messages.removeAll()
+        super.clearAllMessages()
     }
     
     func getMessage(at index: Int) -> Message? {
@@ -52,13 +92,8 @@ class MockMessageStore: ObservableObject {
 
 // MARK: - Conversation Recognizer Mock
 
-class MockConversationRecognizer: NSObject, ObservableObject {
-    @Published var transcript = ""
-    @Published var isRecording = false
-    @Published var error: SpeechError?
-    @Published var authorizationStatus: SFSpeechRecognizerAuthorizationStatus = .authorized
-    @Published var currentHouseThought: HouseThought?
-    
+@MainActor
+class MockConversationRecognizer: ConversationRecognizer {
     var toggleRecordingCalled = false
     var stopRecordingCalled = false
     var setQuestionThoughtCalled = false
@@ -66,9 +101,9 @@ class MockConversationRecognizer: NSObject, ObservableObject {
     var clearHouseThoughtCalled = false
     
     var mockTranscript: String?
-    var shouldFailWithError: SpeechError?
+    var shouldFailWithError: (any UserFriendlyError)?
     
-    func toggleRecording() {
+    override func toggleRecording() {
         toggleRecordingCalled = true
         
         if let error = shouldFailWithError {
@@ -86,12 +121,12 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         }
     }
     
-    func stopRecording() {
+    override func stopRecording() {
         stopRecordingCalled = true
-        isRecording = false
+        super.stopRecording()
     }
     
-    func setQuestionThought(_ question: String) async {
+    override func setQuestionThought(_ question: String) {
         setQuestionThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: question,
@@ -101,7 +136,7 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         )
     }
     
-    func setThankYouThought() async {
+    override func setThankYouThought() {
         setThankYouThoughtCalled = true
         currentHouseThought = HouseThought(
             thought: "Thank you!",
@@ -111,7 +146,7 @@ class MockConversationRecognizer: NSObject, ObservableObject {
         )
     }
     
-    func clearHouseThought() async {
+    override func clearHouseThought() {
         clearHouseThoughtCalled = true
         currentHouseThought = nil
     }
@@ -119,17 +154,8 @@ class MockConversationRecognizer: NSObject, ObservableObject {
 
 // MARK: - Question Flow Coordinator Mock
 
-class MockQuestionFlowCoordinator: ObservableObject {
-    @Published var currentQuestion: Question?
-    @Published var hasCompletedAllQuestions = false
-    @Published var isLoadingQuestion = false
-    
-    var conversationRecognizer: ConversationRecognizer?
-    var conversationStateManager: ConversationStateManager?
-    var addressManager: AddressManager?
-    var addressSuggestionService: AddressSuggestionService?
-    var serviceContainer: ServiceContainer?
-    
+@MainActor
+class MockQuestionFlowCoordinator: QuestionFlowCoordinator {
     var loadNextQuestionCalled = false
     var saveAnswerCalled = false
     var handleQuestionChangeCalled = false
@@ -140,12 +166,20 @@ class MockQuestionFlowCoordinator: ObservableObject {
     
     init(questions: [Question] = []) {
         self.mockQuestions = questions
+        
+        // Create minimal dependencies for parent init
+        let notesService = SharedMockNotesService()
+        
+        super.init(
+            notesService: notesService
+        )
+        
         if !questions.isEmpty {
             self.currentQuestion = questions[0]
         }
     }
     
-    func loadNextQuestion() async {
+    override func loadNextQuestion() async {
         loadNextQuestionCalled = true
         isLoadingQuestion = true
         
@@ -163,15 +197,24 @@ class MockQuestionFlowCoordinator: ObservableObject {
         isLoadingQuestion = false
     }
     
-    func saveAnswer() async {
+    // Mock implementation of processUserInput (replaces saveAnswer)
+    override func processUserInput(_ input: String) async {
         saveAnswerCalled = true
         
-        if let question = currentQuestion,
-           let transcript = await conversationStateManager?.persistentTranscript {
-            savedAnswers[question.id] = transcript
+        if let question = currentQuestion {
+            savedAnswers[question.id] = input
         }
     }
     
+    // Legacy method for tests that still use it
+    func saveAnswer(_ answer: String, metadata: [String: String]? = nil) async throws {
+        saveAnswerCalled = true
+        if let question = currentQuestion {
+            savedAnswers[question.id] = answer
+        }
+    }
+    
+    // Legacy method for tests that still use it
     func handleQuestionChange(oldQuestion: Question?, newQuestion: Question?, isInitializing: Bool) async -> Bool {
         handleQuestionChangeCalled = true
         return true
@@ -187,6 +230,7 @@ class MockQuestionFlowCoordinator: ObservableObject {
 
 // MARK: - Service Container Mock
 
+@MainActor
 class MockConversationServiceContainer: ObservableObject {
     let mockNotesService: SharedMockNotesService
     let mockTTSService: MockTTSService
@@ -199,7 +243,7 @@ class MockConversationServiceContainer: ObservableObject {
         self.mockTTSService = MockTTSService()
         self.mockLocationService = MockLocationService()
         self.mockAddressManager = SharedMockAddressManager(notesService: mockNotesService, locationService: mockLocationService)
-        self.mockQuestionFlow = MockQuestionFlowCoordinator()
+        self.mockQuestionFlow = MockQuestionFlowCoordinator(questions: [])
     }
     
     // Mock service access methods

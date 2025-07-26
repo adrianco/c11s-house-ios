@@ -1,7 +1,7 @@
 [WeatherKitService] 🌦️ Initializing WeatherKit service
 [WeatherKitService] Bundle ID: com.c11s.house
 [WeatherKitService] ✅ Running on real device
-[WeatherKitService] Running in test environment - entitlements not bundled
+[WeatherKitService] ⚠️ Entitlements file not found in bundle
 [WeatherCoordinator] 🌤️ Initialized with services
 [WeatherCoordinator] Weather service: WeatherKitServiceImpl
 [WeatherCoordinator] Notes service: NotesServiceImpl
@@ -9,97 +9,345 @@
 [ContentViewModel] Init complete - currentWeather: nil
 [ContentViewModel] Init complete - houseName: Your House
 [ContentViewModel] Init complete - address: nil
-[QuestionFlowCoordinator] Initialized
-[QuestionFlowCoordinator] Notifications setup complete (AllQuestionsComplete listener removed)
+[QuestionFlowCoordinator] Initialized with state machine
+[HomeKitService] Initialized with delegate set, initial status: 5
 [ContentViewModel] Weather update received: nil
+[ContentView] HomeKit configuration check: false
+[ContentView] HomeKit homes count: 0
+[ContentView] HomeKit homes updated via publisher: 0 homes
+[ContentView] Speech recognition authorization status: 3
 Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
 #FactoryInstall Unable to query results, error: 5
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[C11SHouseApp] Services initialized
+[HomeKitCoordinator] Starting HomeKit discovery
+[HomeKitService] homeManagerDidUpdateHomes called, homes count: 1
+[ContentView] Microphone permission granted: true
+[HomeKitCoordinator] Starting HomeKit discovery
+[HomeKitCoordinator] Authorization result: true
+[HomeKitService] Updating discovered homes from delegate callback
+[HomeKitService] Updated home: Roland Canyon - Rooms: 11, Accessories: 17
+[HomeKitCoordinator] Authorization result: true
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
 Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
-[ContentViewModel] 🌤️ refreshWeather() called
-[ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
-[ContentViewModel] Current weather before fetch: nil
+[ContentView] Audio session initialized for recording and playback
+[ContentView] Speech services initialized
 [WeatherCoordinator] Weather question already exists
-Test Suite 'Selected tests' started at 2025-07-22 17:27:10.658.
-Test Suite 'C11SHouseTests.xctest' started at 2025-07-22 17:27:10.658.
-Test Suite 'ThreadingVerificationTests' started at 2025-07-22 17:27:10.658.
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testAudioEnginePublishedPropertiesUpdateOnMainThread]' started.
+[ContentView] HomeKit homes updated via publisher: 1 homes
+[ContentView] HomeKit configuration check: true
+[ContentView] HomeKit homes count: 1
+[ContentView] HomeKit homes: ["Roland Canyon"]
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
+[HomeKitCoordinator] Has existing HomeKit notes: true
+[HomeKitCoordinator] Calling homeKitService.discoverHomes()
+[HomeKitService] Converting 1 HMHome objects to models
+[HomeKitService] Home: Roland Canyon - Rooms: 11, Accessories: 17
+[HomeKitService]   Room: Guest House
+[HomeKitService]   Room: Studio
+[HomeKitService]   Room: Living Room
+[HomeKitService]   Room: Bedroom
+[HomeKitService]   Room: Kitchen
+[HomeKitService]   Room: Workshop
+[HomeKitService]   Room: Dining Room
+[HomeKitService]   Room: Family Room
+[HomeKitService]   Room: Pool House
+[HomeKitService]   Room: Front Bedroom
+[HomeKitService]   Room: Garage Storage
+[HomeKitService]   Accessory: Wine Closet Door - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Front Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Workshop - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Laurel LIFX Mini W 3784C7 - Category: Lights, Room: assigned
+[HomeKitService]   Accessory: Left Wine Cabinet - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Wine  Closet - Category: Thermostats, Room: assigned
+[HomeKitService]   Accessory: Adrian LIFX Mini W 3750A1 - Category: Lights, Room: assigned
+[HomeKitService]   Accessory: Studio - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Rear Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Front Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Guest House Entrance - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Kitchen Garage - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Smart Bridge Pro 2 - Category: Bridges, Room: assigned
+[HomeKitService]   Accessory: Right Wine Cabinet - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Rear Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Pool House - Category: Locks, Room: assigned
+[HomeKitCoordinator] Discovery result - Homes found: 1
+[HomeKitCoordinator] Home: Roland Canyon, Primary: true
+[HomeKitCoordinator]   Rooms: 11, Accessories: 17
+[HomeKitCoordinator] Skipping note creation - notes already exist
+[HomeKitCoordinator] Discovery completed successfully
+[C11SHouseApp] HomeKit discovery completed
+[HomeKitCoordinator] Has existing HomeKit notes: true
+[HomeKitCoordinator] Calling homeKitService.discoverHomes()
+[HomeKitService] Converting 1 HMHome objects to models
+[HomeKitService] Home: Roland Canyon - Rooms: 11, Accessories: 17
+[HomeKitService]   Room: Guest House
+[HomeKitService]   Room: Studio
+[HomeKitService]   Room: Living Room
+[HomeKitService]   Room: Bedroom
+[HomeKitService]   Room: Kitchen
+[HomeKitService]   Room: Workshop
+[HomeKitService]   Room: Dining Room
+[HomeKitService]   Room: Family Room
+[HomeKitService]   Room: Pool House
+[HomeKitService]   Room: Front Bedroom
+[HomeKitService]   Room: Garage Storage
+[HomeKitService]   Accessory: Wine Closet Door - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Front Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Workshop - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Laurel LIFX Mini W 3784C7 - Category: Lights, Room: assigned
+[HomeKitService]   Accessory: Left Wine Cabinet - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Wine  Closet - Category: Thermostats, Room: assigned
+[HomeKitService]   Accessory: Adrian LIFX Mini W 3750A1 - Category: Lights, Room: assigned
+[HomeKitService]   Accessory: Studio - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Rear Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Front Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Guest House Entrance - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Kitchen Garage - Category: Locks, Room: assigned
+[HomeKitService]   Accessory: Smart Bridge Pro 2 - Category: Bridges, Room: assigned
+[HomeKitService]   Accessory: Right Wine Cabinet - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Rear Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Drape - Category: Other, Room: assigned
+[HomeKitService]   Accessory: Pool House - Category: Locks, Room: assigned
+[HomeKitCoordinator] Discovery result - Homes found: 1
+[HomeKitCoordinator] Home: Roland Canyon, Primary: true
+[HomeKitCoordinator]   Rooms: 11, Accessories: 17
+[HomeKitCoordinator] Skipping note creation - notes already exist
+[HomeKitCoordinator] Discovery completed successfully
+[ContentView] HomeKit homes updated via publisher: 1 homes
+[ContentView] HomeKit homes updated via publisher: 1 homes
 [ContentViewModel] 🌤️ refreshWeather() called
 [ContentViewModel] Fetching weather for: 14450 Roland Canyon Rd, Salinas, CA 93908
 [ContentViewModel] Current weather before fetch: nil
+[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
+[ContentViewModel] Weather update received: mostlyClear
+[ContentViewModel] Weather update received: mostlyClear
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Weather question already exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: mostlyClear
+[ContentViewModel] Temperature: 72°F
+[ContentViewModel] Current weather after fetch: exists
+[WeatherCoordinator] Updated weather note successfully
+[ContentViewModel] ✅ Weather fetch successful: mostlyClear
+[ContentViewModel] Temperature: 72°F
+[ContentViewModel] Current weather after fetch: exists
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] Loaded house name: Roland House
+[ConversationViewModel] Found 19 existing messages
+[ConversationViewModel] HomeKit already announced, skipping
+[ConversationViewModel] Loading first question...
+[QuestionFlowCoordinator] State transition: idle -> loadingQuestion
+[QuestionFlowCoordinator] Loaded 0 questions into queue
+[QuestionFlowCoordinator] No more questions in queue
+[QuestionFlowCoordinator] State transition: loadingQuestion -> completed
+[QuestionFlowCoordinator] Acknowledged HomeKit configuration import
+[ConversationViewModel] hasCompletedAllQuestions: true
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: true, current: none
+[ConversationRecognizer] initializeSpeechRecognizer called
+[ConversationRecognizer] checkAuthorization called
+[ConversationRecognizer] Current speech recognition status: 3
+[ConversationView] Permissions granted, starting unmuted
+[ConversationStateManager] speak called - text: 'I've imported your HomeKit configuration! I found ...', isMuted: false
+[ConversationStateManager] Speaking text...
+[ConversationRecognizer] Microphone permission callback - granted: true
+Query for com.apple.MobileAsset.VoiceServicesVocalizerVoice failed: 2
+          IPCAUClient.cpp:139   IPCAUClient: can't connect to server (-66748)
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+App is being debugged, do not track this hang
+Hang detected: 0.57s (debugger attached, not reporting)
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+Query for com.apple.MobileAsset.VoiceServices.GryphonVoice failed: 2
+[ConversationView] toggleRecording called
+[ConversationView] recognizer.isRecording: false
+[ConversationView] recognizer.authorizationStatus: 3
+[ConversationView] stateManager.isSpeaking: false
+[ConversationRecognizer] toggleRecording called - isRecording: false
+[ConversationRecognizer] Attempting to start recording
+[ConversationRecognizer] Authorization status: 3
+[ConversationRecognizer] Speech recognizer available: true
+[ConversationRecognizer] Audio engine running: false
+[ConversationRecognizer] Audio session error: Error Domain=NSOSStatusErrorDomain Code=560030580 "Session deactivation failed" UserInfo={NSLocalizedDescription=Session deactivation failed}
+[ConversationRecognizer] Failed to start recording: audioEngineError
+[ConversationRecognizer] Error type: SpeechRecognitionError
+App is being debugged, do not track this hang
+Hang detected: 0.60s (debugger attached, not reporting)
+[ConversationView] toggleRecording called
+[ConversationView] recognizer.isRecording: false
+[ConversationView] recognizer.authorizationStatus: 3
+[ConversationView] stateManager.isSpeaking: false
+[ConversationRecognizer] toggleRecording called - isRecording: false
+[ConversationRecognizer] Attempting to start recording
+[ConversationRecognizer] Authorization status: 3
+[ConversationRecognizer] Speech recognizer available: true
+[ConversationRecognizer] Audio engine running: false
+[ConversationRecognizer] Audio session configured for recording
+[ConversationRecognizer] Recording started successfully
+Unable to open mach-O at path: /Library/Caches/com.apple.xbs/Binaries/RenderBox/install/Root/System/Library/PrivateFrameworks/RenderBox.framework/default.metallib  Error:2
+App is being debugged, do not track this hang
+Hang detected: 0.38s (debugger attached, not reporting)
+[ConversationViewModel] processUserInput: 'Bedroom'
+[ConversationViewModel] Searching notes for query: Bedroom
+[ConversationViewModel] Search terms: ["bedroom"]
+[ConversationViewModel] Available notes:
+  - Room: Front Bedroom (Roland Canyon)
+  - Is this the right address?
+  - What's your name?
+  - Room: Dining Room (Roland Canyon)
+  - Room: Studio (Roland Canyon)
+  - What should I call this house?
+  - Room: Pool House (Roland Canyon)
+  - Room: Garage Storage (Roland Canyon)
+  - Room: Living Room (Roland Canyon)
+  - Weather
+  - HomeKit Configuration Summary
+  - Room: Bedroom (Roland Canyon)
+  - Room: Workshop (Roland Canyon)
+  - Room: Family Room (Roland Canyon)
+  - Room: Guest House (Roland Canyon)
+  - Room: Kitchen (Roland Canyon)
+[ConversationViewModel] Found 3 matching notes
+[ConversationStateManager] speak called - text: 'I found 3 notes that might be what you're looking ...', isMuted: false
+[ConversationStateManager] Speaking text...
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+App is being debugged, do not track this hang
+Hang detected: 1.16s (debugger attached, not reporting)
+[ConversationView] toggleRecording called
+[ConversationView] recognizer.isRecording: false
+[ConversationView] recognizer.authorizationStatus: 3
+[ConversationView] stateManager.isSpeaking: false
+[ConversationRecognizer] toggleRecording called - isRecording: false
+[ConversationRecognizer] Attempting to start recording
+[ConversationRecognizer] Authorization status: 3
+[ConversationRecognizer] Speech recognizer available: true
+[ConversationRecognizer] Audio engine running: false
+[ConversationRecognizer] Audio session configured for recording
+[ConversationRecognizer] Recording started successfully
+App is being debugged, do not track this hang
+Hang detected: 0.26s (debugger attached, not reporting)
+[ConversationViewModel] processUserInput: 'Front bedroom'
+[ConversationViewModel] Searching notes for query: Front bedroom
+[ConversationViewModel] Search terms: ["front", "bedroom"]
+[ConversationViewModel] Available notes:
+  - Room: Front Bedroom (Roland Canyon)
+  - Is this the right address?
+  - What's your name?
+  - Room: Dining Room (Roland Canyon)
+  - Room: Studio (Roland Canyon)
+  - What should I call this house?
+  - Room: Pool House (Roland Canyon)
+  - Room: Garage Storage (Roland Canyon)
+  - Room: Living Room (Roland Canyon)
+  - Weather
+  - Room: Bedroom (Roland Canyon)
+  - HomeKit Configuration Summary
+  - Room: Workshop (Roland Canyon)
+  - Room: Family Room (Roland Canyon)
+  - Room: Guest House (Roland Canyon)
+  - Room: Kitchen (Roland Canyon)
+[ConversationViewModel] Found 5 matching notes
+[ConversationStateManager] speak called - text: 'Here's what I remember about Room: Front Bedroom (...', isMuted: false
+[ConversationStateManager] Speaking text...
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+App is being debugged, do not track this hang
+Hang detected: 0.58s (debugger attached, not reporting)
+[ConversationView] onAppear called
+[ConversationViewModel] setupView() called
+[ConversationViewModel] Loaded house name: Roland House
+[ConversationViewModel] Found 19 existing messages
+[ConversationViewModel] HomeKit already announced, skipping
+[ConversationViewModel] Loading first question...
+[QuestionFlowCoordinator] No more questions in queue
+[QuestionFlowCoordinator] State transition: completed -> completed
+[QuestionFlowCoordinator] Acknowledged HomeKit configuration import
+[ConversationViewModel] hasCompletedAllQuestions: true
+[ConversationViewModel] Questions status - hasCompletedAllQuestions: true, current: none
+[ConversationRecognizer] initializeSpeechRecognizer called
+[ConversationRecognizer] checkAuthorization called
+[ConversationRecognizer] Current speech recognition status: 3
+[ConversationView] Permissions granted, starting unmuted
+[ConversationStateManager] speak called - text: 'I've imported your HomeKit configuration! I found ...', isMuted: false
+[ConversationStateManager] Speaking text...
+[ConversationRecognizer] Microphone permission callback - granted: true
+[ConversationView] toggleRecording called
+[ConversationView] recognizer.isRecording: false
+[ConversationView] recognizer.authorizationStatus: 3
+[ConversationView] stateManager.isSpeaking: true
+[ConversationView] Stopping TTS before recording
+[ConversationRecognizer] toggleRecording called - isRecording: false
+[ConversationRecognizer] Attempting to start recording
+[ConversationRecognizer] Authorization status: 3
+[ConversationRecognizer] Speech recognizer available: true
+[ConversationRecognizer] Audio engine running: false
+[ConversationRecognizer] Audio session error: Error Domain=NSOSStatusErrorDomain Code=560030580 "Session deactivation failed" UserInfo={NSLocalizedDescription=Session deactivation failed}
+[ConversationRecognizer] Failed to start recording: audioEngineError
+[ConversationRecognizer] Error type: SpeechRecognitionError
+[ConversationStateManager] Speech interrupted
+App is being debugged, do not track this hang
+Hang detected: 0.61s (debugger attached, not reporting)
+[ConversationView] toggleRecording called
+[ConversationView] recognizer.isRecording: false
+[ConversationView] recognizer.authorizationStatus: 3
+[ConversationView] stateManager.isSpeaking: false
+[ConversationRecognizer] toggleRecording called - isRecording: false
+[ConversationRecognizer] Attempting to start recording
+[ConversationRecognizer] Authorization status: 3
+[ConversationRecognizer] Speech recognizer available: true
+[ConversationRecognizer] Audio engine running: false
+[ConversationRecognizer] Audio session configured for recording
+[ConversationRecognizer] Recording started successfully
+[ConversationViewModel] processUserInput: 'Well it's something other'
+[ConversationViewModel] generateHouseResponse called - isMuted: false
+[ConversationViewModel] Generated thought: 'Hello! How are you doing today?...'
+[ConversationViewModel] About to speak - isMuted: false
+[ConversationStateManager] speak called - text: 'Hello! How are you doing today?...', isMuted: false
+[ConversationStateManager] Speaking text...
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+App is being debugged, do not track this hang
+Hang detected: 1.17s (debugger attached, not reporting)
+[ConversationView] toggleRecording called
+[ConversationView] recognizer.isRecording: false
+[ConversationView] recognizer.authorizationStatus: 3
+[ConversationView] stateManager.isSpeaking: false
+[ConversationRecognizer] toggleRecording called - isRecording: false
+[ConversationRecognizer] Attempting to start recording
+[ConversationRecognizer] Authorization status: 3
+[ConversationRecognizer] Speech recognizer available: true
+[ConversationRecognizer] Audio engine running: false
+[ConversationRecognizer] Audio session configured for recording
+[ConversationRecognizer] Recording started successfully
 App is being debugged, do not track this hang
 Hang detected: 0.25s (debugger attached, not reporting)
-[ContentViewModel] Weather update received: partlyCloudy
-[ContentViewModel] Weather update received: partlyCloudy
-[ContentViewModel] Weather update received: partlyCloudy
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Weather question already exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
-[ContentViewModel] Temperature: 73°F
-[ContentViewModel] Current weather after fetch: exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
-[ContentViewModel] Temperature: 73°F
-[ContentViewModel] Current weather after fetch: exists
-[WeatherCoordinator] Updated weather note successfully
-[ContentViewModel] ✅ Weather fetch successful: partlyCloudy
-[ContentViewModel] Temperature: 73°F
-[ContentViewModel] Current weather after fetch: exists
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testAudioEnginePublishedPropertiesUpdateOnMainThread]' passed (0.854 seconds).
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testConcurrentAudioBufferOperations]' started.
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testConcurrentAudioBufferOperations]' passed (0.005 seconds).
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety]' started.
-TranscriptionServiceImpl: Using device locale en_US
-[ContentViewModel] 📍 Address update detected: 14450 Roland Canyon Rd, Salinas, CA 93908
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:243: error: -[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety] : XCTAssertTrue failed
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:259: error: -[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety] : XCTAssertTrue failed
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testFullRecordingFlowThreadSafety]' failed (1.455 seconds).
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testMainThreadPerformance]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:274: Test Case '-[C11SHouseTests.ThreadingVerificationTests testMainThreadPerformance]' measured [Time, seconds] average: 0.104, relative standard deviation: 1.508%, values: [0.103346, 0.104244, 0.105290, 0.106098, 0.103683, 0.102272, 0.106329, 0.101641, 0.106260, 0.104787], performanceMetricID:com.apple.XCTPerformanceMetric_WallClockTime, baselineName: "", baselineAverage: , polarity: prefers smaller, maxPercentRegression: 10.000%, maxPercentRelativeStandardDeviation: 10.000%, maxRegression: 0.100, maxStandardDeviation: 0.100
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testMainThreadPerformance]' passed (1.050 seconds).
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testNoRetainCyclesInTimers]' started.
-Cannot start recording in current state: idle
-Not currently recording
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testNoRetainCyclesInTimers]' passed (0.206 seconds).
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testNotesServicePublisherUpdatesOnMainThread]' started.
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/ThreadingVerificationTests.swift:126: error: -[C11SHouseTests.ThreadingVerificationTests testNotesServicePublisherUpdatesOnMainThread] : Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: "Notes updates on main thread".
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testNotesServicePublisherUpdatesOnMainThread]' failed (2.024 seconds).
-Test Case '-[C11SHouseTests.ThreadingVerificationTests testRapidStateChangesThreadSafety]' started.
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-Cannot start recording in current state: idle
-           AVAEInternal.h:71    required condition is false: [AVAEGraphNode.mm:828:CreateRecordingTap: (nullptr == Tap())]
-<unknown>:0: error: -[C11SHouseTests.ThreadingVerificationTests testRapidStateChangesThreadSafety] : required condition is false: nullptr == Tap() (com.apple.coreaudio.avfaudio)
-*** Terminating app due to uncaught exception 'com.apple.coreaudio.avfaudio', reason: 'required condition is false: nullptr == Tap()'
-*** First throw call stack:
-(0x1a2bbb21c 0x1a0055abc 0x1a2c19ea0 0x1be505ec0 0x1be5b4e10 0x1be58a8dc 0x103eb8eb0 0x103ebcc71 0x103e77d9d 0x103e75d21 0x103e77325 0x103c7315d 0x103c73605 0x1ae685241)
-libc++abi: terminating due to uncaught exception of type NSException
-*** Terminating app due to uncaught exception 'com.apple.coreaudio.avfaudio', reason: 'required condition is false: nullptr == Tap()'
-*** First throw call stack:
-(0x1a2bbb21c 0x1a0055abc 0x1a2c19ea0 0x1be505ec0 0x1be5b4e10 0x1be58a8dc 0x103eb8eb0 0x103ebcc71 0x103e77d9d 0x103e75d21 0x103e77325 0x103c7315d 0x103c73605 0x1ae685241)
-terminating due to uncaught exception of type NSException
+[ConversationViewModel] processUserInput: 'Weather'
+[ConversationViewModel] Searching notes for query: Weather
+[ConversationViewModel] Search terms: ["wear"]
+[ConversationViewModel] Available notes:
+  - What should I call this house?
+  - Room: Guest House (Roland Canyon)
+  - HomeKit Configuration Summary
+  - Room: Family Room (Roland Canyon)
+  - Room: Dining Room (Roland Canyon)
+  - Room: Front Bedroom (Roland Canyon)
+  - Room: Living Room (Roland Canyon)
+  - Is this the right address?
+  - Room: Workshop (Roland Canyon)
+  - Room: Pool House (Roland Canyon)
+  - Room: Kitchen (Roland Canyon)
+  - Weather
+  - Room: Bedroom (Roland Canyon)
+  - Room: Garage Storage (Roland Canyon)
+  - What's your name?
+  - Room: Studio (Roland Canyon)
+[ConversationViewModel] Found 0 matching notes
+[ConversationStateManager] speak called - text: 'I don't have any notes that match your search. You...', isMuted: false
+[ConversationStateManager] Speaking text...
+Received an error while accessing com.apple.speech.localspeechrecognition service: Error Domain=kAFAssistantErrorDomain Code=1101 "(null)"
+App is being debugged, do not track this hang
+Hang detected: 1.14s (debugger attached, not reporting)
+Message from debugger: killed
+
+
+I saw error popups when trying to start TTS
+weather was not recognised as a the name of a note

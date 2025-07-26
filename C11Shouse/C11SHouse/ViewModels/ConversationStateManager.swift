@@ -115,18 +115,32 @@ class ConversationStateManager: ObservableObject {
     
     /// Speak text using TTS if not muted
     func speak(_ text: String, isMuted: Bool) async {
-        guard !isMuted else { return }
-        guard !ttsService.isSpeaking else { return }
-        guard !isSavingAnswer else { return } // Don't speak while saving
+        print("[ConversationStateManager] speak called - text: '\(text.prefix(50))...', isMuted: \(isMuted)")
+        guard !isMuted else { 
+            print("[ConversationStateManager] Not speaking - muted")
+            return 
+        }
+        guard !ttsService.isSpeaking else { 
+            print("[ConversationStateManager] Not speaking - TTS already speaking")
+            return 
+        }
+        guard !isSavingAnswer else { 
+            print("[ConversationStateManager] Not speaking - saving answer")
+            return 
+        } // Don't speak while saving
         
         do {
-            try await ttsService.speak(text, language: nil)
+            print("[ConversationStateManager] Speaking text...")
+            // Get the persisted language preference
+            let persistedLanguage = UserDefaults.standard.string(forKey: "tts_language") ?? "en-US"
+            try await ttsService.speak(text, language: persistedLanguage)
         } catch {
             // Only log non-interruption errors
             if case TTSError.speechInterrupted = error {
                 // Expected behavior - speech was interrupted
+                print("[ConversationStateManager] Speech interrupted")
             } else {
-                print("Error speaking: \(error)")
+                print("[ConversationStateManager] Error speaking: \(error)")
             }
         }
     }

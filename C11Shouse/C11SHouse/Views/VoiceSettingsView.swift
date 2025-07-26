@@ -30,11 +30,11 @@ struct VoiceSettingsView: View {
     @AppStorage("tts_pitch") private var speechPitch: Double = 1.0
     @AppStorage("tts_volume") private var speechVolume: Double = 1.0
     @AppStorage("tts_voice_identifier") private var selectedVoiceIdentifier: String = ""
+    @AppStorage("tts_language") private var selectedLanguage: String = "en-US"
     
     // Local state
     @State private var availableVoices: [AVSpeechSynthesisVoice] = []
     @State private var isTestingSpeech = false
-    @State private var selectedLanguage = "en-US"
     
     private var ttsService: TTSService {
         serviceContainer.ttsService
@@ -233,7 +233,9 @@ struct VoiceSettingsView: View {
         speechPitch = 1.0
         speechVolume = 1.0
         selectedVoiceIdentifier = ""
+        selectedLanguage = "en-US"
         
+        loadVoices(for: selectedLanguage)
         applyCurrentSettings()
     }
 }

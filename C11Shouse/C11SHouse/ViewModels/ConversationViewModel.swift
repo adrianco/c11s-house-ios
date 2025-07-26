@@ -9,6 +9,15 @@
  *   - Handles question flow coordination
  *   - Manages note creation workflows
  *   - Controls Phase 4 tutorial state
+ * - 2025-07-25: Fixed conversation flow issues
+ *   - Address question now appears immediately, not delayed after HomeKit
+ *   - Added handleNoteSelectionResponse for "Would you like me to read any of these?"
+ *   - Stores pending note options when showing multiple search results
+ *   - Recognizes "yes", numbers, and "first" as selection responses
+ * - 2025-07-25: Fixed address question visibility and response handling
+ *   - Reordered setupView to show HomeKit announcement before address question
+ *   - Added special handling to ignore simple acknowledgments during address question
+ *   - Prevents "Continue" from being treated as an address answer
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -27,6 +36,11 @@ class ConversationViewModel: ObservableObject {
     private let questionFlow: QuestionFlowCoordinator
     private let serviceContainer: ServiceContainer
     private let recognizer: ConversationRecognizer
+    
+    private var hasVoicePermissions: Bool {
+        serviceContainer.permissionManager.isMicrophoneGranted &&
+        serviceContainer.permissionManager.isSpeechRecognitionGranted
+    }
     
     init(messageStore: MessageStore,
          stateManager: ConversationStateManager,
@@ -82,18 +96,16 @@ class ConversationViewModel: ObservableObject {
             await locationService.requestLocationPermission()
         }
         
-        // Load any pending questions
-        print("[ConversationViewModel] Loading next question...")
+        // First check for HomeKit configuration and add summary message
+        await checkAndAnnounceHomeKitConfiguration()
+        
+        // Then load the first question (address) after a small delay to ensure proper ordering
+        print("[ConversationViewModel] Loading first question...")
         await questionFlow.loadNextQuestion()
         
         // Check if all questions are complete and start Phase 4 tutorial
         print("[ConversationViewModel] hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-        if questionFlow.hasCompletedAllQuestions {
-            print("[ConversationViewModel] All questions complete, starting Phase 4 tutorial")
-            await startPhase4Tutorial()
-        } else {
-            print("[ConversationViewModel] Questions still pending, current: \(questionFlow.currentQuestion?.text ?? "none")")
-        }
+        print("[ConversationViewModel] Questions status - hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions), current: \(questionFlow.currentQuestion?.text ?? "none")")
     }
     
     func processUserInput(_ input: String, isMuted: Bool) async {
@@ -109,65 +121,58 @@ class ConversationViewModel: ObservableObject {
         // Update state manager transcript
         stateManager.persistentTranscript = input
         
+        // If no current question and not all complete, try loading next question
+        if questionFlow.currentQuestion == nil && !questionFlow.hasCompletedAllQuestions {
+            print("[ConversationViewModel] No current question, loading next...")
+            await questionFlow.loadNextQuestion()
+        }
+        
         // Check if this answers a current question
-        if let currentQuestion = questionFlow.currentQuestion {
-            print("[ConversationViewModel] Answering question: \(currentQuestion.text)")
+        if questionFlow.currentQuestion != nil {
+            print("[ConversationViewModel] Processing input as answer to current question")
             
-            // Check if this is the Phase 4 introduction question
-            if currentQuestion.text.contains("Let's start by creating your first room note") {
-                print("[ConversationViewModel] This is the Phase 4 intro question, handling specially")
-                
-                // Save the room name as the answer
-                await questionFlow.saveAnswer()
-                
-                // Transition directly to room note details
-                UserDefaults.standard.set(input, forKey: "pendingRoomName")
-                UserDefaults.standard.set("awaitingRoomDetails", forKey: "noteCreationState")
-                
-                let detailsMessage = Message(
-                    content: "Great! Now tell me about your \(input). What would you like me to remember about this room?",
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(detailsMessage)
-                
-                if !isMuted {
-                    await stateManager.speak(detailsMessage.content, isMuted: isMuted)
-                }
-            } else {
-                // Normal question handling
-                await questionFlow.saveAnswer()
-                
-                // Let the coordinator handle the entire flow
-                await questionFlow.loadNextQuestion()
-                
-                // Check if all questions are complete
-                print("[ConversationViewModel] After loading, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
-                if questionFlow.hasCompletedAllQuestions {
-                    print("[ConversationViewModel] All questions complete after answer, starting Phase 4")
-                    await startPhase4Tutorial()
-                }
-            }
+            // Use the new simplified API
+            await questionFlow.processUserInput(input)
+            
+            // Check if all questions are complete
+            print("[ConversationViewModel] After processing, hasCompletedAllQuestions: \(questionFlow.hasCompletedAllQuestions)")
         } else {
-            // Check if we're in Phase 4 tutorial
-            if UserDefaults.standard.bool(forKey: "isInPhase4Tutorial") {
-                await handlePhase4TutorialInput(input, isMuted: isMuted)
+            // Check if we're in the middle of creating a note
+            let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
+            if noteCreationState == "creatingRoomNote" {
+                // User provided room name, now ask for details
+                await handleRoomNoteNameProvided(input, isMuted: isMuted)
+            } else if noteCreationState == "awaitingRoomDetails" {
+                // User provided room details, save the note
+                await handleRoomNoteDetailsProvided(input, isMuted: isMuted)
             } else {
-                // Check if we're in the middle of creating a note
-                let noteCreationState = UserDefaults.standard.string(forKey: "noteCreationState")
-                if noteCreationState == "creatingRoomNote" {
-                    // User provided room name, now ask for details
-                    await handleRoomNoteNameProvided(input, isMuted: isMuted)
-                } else if noteCreationState == "awaitingRoomDetails" {
-                    // User provided room details, save the note
-                    await handleRoomNoteDetailsProvided(input, isMuted: isMuted)
+                // Check for note creation commands
+                let lowercased = input.lowercased()
+                if lowercased.contains("new room note") || lowercased.contains("add room note") {
+                    await handleRoomNoteCreation(isMuted: isMuted)
+                } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
+                    await handleDeviceNoteCreation(isMuted: isMuted)
+                } else if lowercased.contains("what") && (lowercased.contains("note") || lowercased.contains("remember")) {
+                    // Handle note search queries
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if lowercased.contains("search") && (lowercased.contains("note") || lowercased.contains("room") || lowercased.contains("homekit")) {
+                    // Handle explicit search requests
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if (lowercased == "yes" || lowercased.contains("show") || lowercased.contains("read")) && 
+                         UserDefaults.standard.bool(forKey: "awaitingNoteSelection") {
+                    // Handle response to "Would you like me to read any of these in detail?"
+                    await handleNoteSelectionResponse(input, isMuted: isMuted)
+                } else if lowercased.contains("tell") && lowercased.contains("about") {
+                    // Handle "tell me about" queries
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
+                } else if lowercased.contains("show") && (lowercased.contains("note") || lowercased.contains("room")) {
+                    // Handle "show me" queries
+                    await searchAndRespondWithNotes(query: input, isMuted: isMuted)
                 } else {
-                    // Check for note creation commands
-                    let lowercased = input.lowercased()
-                    if lowercased.contains("new room note") || lowercased.contains("add room note") {
-                        await handleRoomNoteCreation(isMuted: isMuted)
-                    } else if lowercased.contains("new device note") || lowercased.contains("add device note") {
-                        await handleDeviceNoteCreation(isMuted: isMuted)
+                    // For any other input, check if it might be asking about a note
+                    // by searching if any note title contains words from the input
+                    if await mightBeAskingAboutNote(input) {
+                        await searchAndRespondWithNotes(query: input, isMuted: isMuted)
                     } else {
                         // Generate house response
                         await generateHouseResponse(for: input, isMuted: isMuted)
@@ -178,8 +183,10 @@ class ConversationViewModel: ObservableObject {
     }
     
     private func generateHouseResponse(for input: String, isMuted: Bool) async {
+        print("[ConversationViewModel] generateHouseResponse called - isMuted: \(isMuted)")
         // Generate a house thought based on input
         let thought = HouseThought.generateResponse(for: input)
+        print("[ConversationViewModel] Generated thought: '\(thought.thought.prefix(50))...'")
         
         // Add house message
         let houseMessage = Message(
@@ -190,38 +197,35 @@ class ConversationViewModel: ObservableObject {
         messageStore.addMessage(houseMessage)
         
         // Speak if not muted
+        print("[ConversationViewModel] About to speak - isMuted: \(isMuted)")
         if !isMuted {
             await stateManager.speak(thought.thought, isMuted: isMuted)
+        } else {
+            print("[ConversationViewModel] Not speaking - muted")
         }
     }
     
     private func handleRoomNoteCreation(isMuted: Bool) async {
-        // Check if Phase 4 tutorial should have run but didn't
-        if questionFlow.hasCompletedAllQuestions && !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-            // Start Phase 4 tutorial instead
-            await startPhase4Tutorial()
-        } else {
-            let thought = HouseThought(
-                thought: "I'll help you create a room note. What room would you like to add a note about?",
-                emotion: .curious,
-                category: .question,
-                confidence: 1.0
-            )
-            
-            let message = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
-            )
-            messageStore.addMessage(message)
-            
-            if !isMuted {
-                await stateManager.speak(thought.thought, isMuted: isMuted)
-            }
-            
-            // Mark that we're creating a room note
-            UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
+        let thought = HouseThought(
+            thought: "I'll help you create a room note. What room would you like to add a note about?",
+            emotion: .curious,
+            category: .question,
+            confidence: 1.0
+        )
+        
+        let message = Message(
+            content: thought.thought,
+            isFromUser: false,
+            isVoice: !isMuted
+        )
+        messageStore.addMessage(message)
+        
+        if !isMuted {
+            await stateManager.speak(thought.thought, isMuted: isMuted)
         }
+        
+        // Mark that we're creating a room note
+        UserDefaults.standard.set("creatingRoomNote", forKey: "noteCreationState")
     }
     
     private func handleDeviceNoteCreation(isMuted: Bool) async {
@@ -241,117 +245,6 @@ class ConversationViewModel: ObservableObject {
         
         if !isMuted {
             await stateManager.speak(thought.thought, isMuted: isMuted)
-        }
-    }
-    
-    // MARK: - Phase 4 Tutorial
-    
-    private func startPhase4Tutorial() async {
-        print("[ConversationViewModel] startPhase4Tutorial() called - no longer needed, Phase 4 is handled as a required question")
-        // This method is kept for backward compatibility but doesn't do anything
-        // Phase 4 is now handled as the 4th required question
-    }
-    
-    private func handlePhase4TutorialInput(_ input: String, isMuted: Bool) async {
-        let tutorialState = UserDefaults.standard.string(forKey: "phase4TutorialState") ?? ""
-        
-        switch tutorialState {
-        case "awaitingRoomName":
-            // User provided room name
-            let roomName = input.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            // Save this as the current room for context
-            UserDefaults.standard.set(roomName, forKey: "currentRoomForTutorial")
-            
-            // Ask about the room details
-            let response = """
-            Great! I'll remember that you're in the \(roomName).
-            
-            Tell me about this room, and things that are in it, that you might want to know about in the future. Are there any connected devices here, or things that you sometimes forget how to operate?
-            """
-            
-            let thought = HouseThought(
-                thought: response,
-                emotion: .curious,
-                category: .question,
-                confidence: 1.0
-            )
-            
-            let message = Message(
-                content: thought.thought,
-                isFromUser: false,
-                isVoice: !isMuted
-            )
-            messageStore.addMessage(message)
-            
-            if !isMuted {
-                await stateManager.speak(thought.thought, isMuted: isMuted)
-            }
-            
-            UserDefaults.standard.set("awaitingRoomDetails", forKey: "phase4TutorialState")
-            
-        case "awaitingRoomDetails":
-            // User provided room details
-            let roomName = UserDefaults.standard.string(forKey: "currentRoomForTutorial") ?? "Room"
-            
-            // Create a room note
-            do {
-                // Create a new question for this room
-                let roomQuestion = Question(
-                    id: UUID(),
-                    text: roomName,
-                    category: .other,
-                    displayOrder: 1000,
-                    isRequired: false
-                )
-                
-                // Save the note with room type metadata
-                try await serviceContainer.notesService.saveOrUpdateNote(
-                    for: roomQuestion.id,
-                    answer: input,
-                    metadata: [
-                        "type": "room",
-                        "updated_via_conversation": "true",
-                        "createdDate": Date().ISO8601Format()
-                    ]
-                )
-                
-                // Complete tutorial
-                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-                UserDefaults.standard.removeObject(forKey: "phase4TutorialState")
-                UserDefaults.standard.removeObject(forKey: "currentRoomForTutorial")
-                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
-                
-                let completionMessage = "Excellent! I've saved that information about the \(roomName). You can add more notes anytime by saying 'new room note' or 'new device note'."
-                
-                let thought = HouseThought(
-                    thought: completionMessage,
-                    emotion: .happy,
-                    category: .suggestion,
-                    confidence: 1.0
-                )
-                
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
-                
-            } catch {
-                print("Error saving room note: \(error)")
-                // Handle error gracefully
-                await generateHouseResponse(for: "I had trouble saving that note. Let me try again.", isMuted: isMuted)
-            }
-            
-        default:
-            // Shouldn't happen, but handle gracefully
-            UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-            await generateHouseResponse(for: input, isMuted: isMuted)
         }
     }
     
@@ -418,55 +311,401 @@ class ConversationViewModel: ObservableObject {
             UserDefaults.standard.removeObject(forKey: "currentRoomName")
             UserDefaults.standard.removeObject(forKey: "pendingRoomName")
             
-            // Mark Phase 4 as complete if this was the first room note
-            if !UserDefaults.standard.bool(forKey: "hasCompletedPhase4Tutorial") {
-                UserDefaults.standard.set(true, forKey: "hasCompletedPhase4Tutorial")
-                UserDefaults.standard.set(false, forKey: "isInPhase4Tutorial")
-                
-                let successMessage = "Perfect! I've saved that information about the \(roomName). 🎉 Setup complete! You can now create more notes or ask me questions about your house."
-                
-                let thought = HouseThought(
-                    thought: successMessage,
-                    emotion: .happy,
-                    category: .celebration,
-                    confidence: 1.0
-                )
-                
-                let message = Message(
-                    content: successMessage,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
-            } else {
-                let successMessage = "Perfect! I've saved that about the \(roomName)."
-                
-                let thought = HouseThought(
-                    thought: successMessage,
-                    emotion: .happy,
-                    category: .celebration,
-                    confidence: 1.0
-                )
-                
-                let message = Message(
-                    content: thought.thought,
-                    isFromUser: false,
-                    isVoice: !isMuted
-                )
-                messageStore.addMessage(message)
-                
-                if !isMuted {
-                    await stateManager.speak(thought.thought, isMuted: isMuted)
-                }
+            let successMessage = "Perfect! I've saved that information about the \(roomName). You can create more notes or ask me questions about your house anytime."
+            
+            let thought = HouseThought(
+                thought: successMessage,
+                emotion: .happy,
+                category: .celebration,
+                confidence: 1.0
+            )
+            
+            let message = Message(
+                content: successMessage,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                await stateManager.speak(thought.thought, isMuted: isMuted)
             }
             
         } catch {
             print("Error saving room note: \(error)")
             await generateHouseResponse(for: "I had trouble saving that note. Let me try again.", isMuted: isMuted)
+        }
+    }
+    
+    private func checkAndAnnounceHomeKitConfiguration() async {
+        // Check if we've already announced HomeKit
+        let homeKitAnnouncedKey = "homeKitConfigurationAnnounced"
+        guard !UserDefaults.standard.bool(forKey: homeKitAnnouncedKey) else {
+            print("[ConversationViewModel] HomeKit already announced, skipping")
+            return
+        }
+        
+        // Check if HomeKit is configured
+        let homeKitCoordinator = serviceContainer.homeKitCoordinator
+        let hasHomeKit = await homeKitCoordinator.hasHomeKitConfiguration()
+        
+        if hasHomeKit {
+            // Get HomeKit summary from notes
+            do {
+                let notesStore = try await serviceContainer.notesService.loadNotesStore()
+                
+                // Find the HomeKit summary note
+                if let summaryQuestion = notesStore.questions.first(where: { question in
+                    question.text == "HomeKit Configuration Summary"
+                }) {
+                    if let summaryNote = notesStore.notes[summaryQuestion.id],
+                       !summaryNote.answer.isEmpty {
+                        
+                        // Create a detailed summary message for the conversation
+                        let summary = extractDetailedHomeKitSummary(from: summaryNote.answer)
+                        
+                        // Only add the message if we have meaningful content
+                        if !summary.isEmpty && summary.count > 50 {
+                            print("[ConversationViewModel] Announcing HomeKit configuration with summary length: \(summary.count)")
+                            let homeKitMessage = Message(
+                                content: summary,
+                                isFromUser: false,
+                                isVoice: !stateManager.isSavingAnswer && hasVoicePermissions
+                            )
+                            messageStore.addMessage(homeKitMessage)
+                            
+                            // Speak the summary if voice is enabled
+                            if !stateManager.isSavingAnswer && hasVoicePermissions {
+                                await stateManager.speak(summary, isMuted: false)
+                            }
+                            
+                            // Mark as announced
+                            UserDefaults.standard.set(true, forKey: homeKitAnnouncedKey)
+                        }
+                    }
+                }
+            } catch {
+                print("[ConversationViewModel] Error loading HomeKit notes: \(error)")
+            }
+        }
+    }
+    
+    private func extractHomeKitSummary(from content: String) -> String {
+        // Extract key information from the HomeKit summary
+        var summary = ""
+        
+        // Look for home count
+        if let homeMatch = content.range(of: "Found (\\d+) home", options: .regularExpression) {
+            let homeCount = String(content[homeMatch])
+            summary += homeCount.replacingOccurrences(of: "Found ", with: "")
+        }
+        
+        // Look for room and accessory counts
+        if let roomMatch = content.range(of: "(\\d+) rooms", options: .regularExpression) {
+            let roomCount = String(content[roomMatch])
+            summary += " with \(roomCount)"
+        }
+        
+        if let accessoryMatch = content.range(of: "(\\d+) accessories", options: .regularExpression) {
+            let accessoryCount = String(content[accessoryMatch])
+            summary += " and \(accessoryCount)"
+        }
+        
+        return summary.isEmpty ? "your home setup" : summary
+    }
+    
+    private func mightBeAskingAboutNote(_ input: String) async -> Bool {
+        // Check if the input contains any words that match note titles
+        do {
+            let notesStore = try await serviceContainer.notesService.loadNotesStore()
+            let inputWords = input.lowercased()
+                .components(separatedBy: .whitespacesAndNewlines)
+                .filter { !$0.isEmpty && $0.count > 2 } // Skip very short words
+            
+            // Check if any note title contains any of the input words
+            for (questionId, _) in notesStore.notes {
+                if let question = notesStore.questions.first(where: { $0.id == questionId }) {
+                    let titleLower = question.text.lowercased()
+                    for word in inputWords {
+                        if titleLower.contains(word) {
+                            return true
+                        }
+                    }
+                }
+            }
+        } catch {
+            print("[ConversationViewModel] Error checking notes: \(error)")
+        }
+        return false
+    }
+    
+    private func extractDetailedHomeKitSummary(from content: String) -> String {
+        var homeCount = 0
+        var roomCount = 0
+        var accessoryCount = 0
+        var homeName = ""
+        
+        // Extract counts using regex
+        let homesRegex = try? NSRegularExpression(pattern: "Found (\\d+) home", options: [])
+        if let match = homesRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                homeCount = Int(content[range]) ?? 0
+            }
+        }
+        
+        let roomsRegex = try? NSRegularExpression(pattern: "Total Rooms: (\\d+)", options: [])
+        if let match = roomsRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                roomCount = Int(content[range]) ?? 0
+            }
+        }
+        
+        let accessoriesRegex = try? NSRegularExpression(pattern: "Total Accessories: (\\d+)", options: [])
+        if let match = accessoriesRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                accessoryCount = Int(content[range]) ?? 0
+            }
+        }
+        
+        // Extract home name
+        let homeNameRegex = try? NSRegularExpression(pattern: "Home: ([^\\n]+)", options: [])
+        if let match = homeNameRegex?.firstMatch(in: content, options: [], range: NSRange(content.startIndex..., in: content)) {
+            if let range = Range(match.range(at: 1), in: content) {
+                homeName = String(content[range])
+            }
+        }
+        
+        // Build detailed summary
+        var summary = "I've discovered your HomeKit configuration! "
+        
+        if homeCount > 0 {
+            summary += "I found \(homeCount) home\(homeCount == 1 ? "" : "s")"
+            if !homeName.isEmpty {
+                summary += " called '\(homeName)'"
+            }
+            summary += " with \(roomCount) room\(roomCount == 1 ? "" : "s") and \(accessoryCount) device\(accessoryCount == 1 ? "" : "s"). "
+            
+            // Add room examples if available
+            let roomsRegex = try? NSRegularExpression(pattern: "- ([^\\n]+) \\(\\d+ accessories\\)", options: [])
+            let matches = roomsRegex?.matches(in: content, options: [], range: NSRange(content.startIndex..., in: content)) ?? []
+            let roomNames = matches.compactMap { match -> String? in
+                if let range = Range(match.range(at: 1), in: content) {
+                    return String(content[range])
+                }
+                return nil
+            }
+            
+            if roomNames.count > 0 {
+                let exampleRooms = roomNames.prefix(3).joined(separator: ", ")
+                summary += "I can see rooms like \(exampleRooms)\(roomNames.count > 3 ? " and more" : ""). "
+            }
+            
+            summary += "You can tap the HomeKit button on the main screen to open the Home app, or ask me about any of your rooms or devices!"
+        } else {
+            summary += "I can see your HomeKit setup. You can tap the HomeKit button on the main screen to open the Home app anytime."
+        }
+        
+        // Add a prompt to continue with setup
+        summary += "\n\nLet me know when you're ready to continue setting up your house profile!"
+        
+        return summary
+    }
+    
+    private func handleNoteSelectionResponse(_ input: String, isMuted: Bool) async {
+        // Clear the awaiting flag
+        UserDefaults.standard.set(false, forKey: "awaitingNoteSelection")
+        
+        // Get stored note options
+        guard let noteData = UserDefaults.standard.data(forKey: "pendingNoteOptions"),
+              let noteOptions = try? JSONDecoder().decode([[String: String]].self, from: noteData) else {
+            await generateHouseResponse(for: "I'm sorry, I don't have any notes to show. Please search again.", isMuted: isMuted)
+            return
+        }
+        
+        let lowercased = input.lowercased()
+        
+        // Check if user wants to see a specific number
+        if let number = Int(lowercased.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
+            if number > 0 && number <= noteOptions.count {
+                let selected = noteOptions[number - 1]
+                let response = "Here's what I remember about \(selected["questionText"] ?? "that"):\n\n\(selected["answer"] ?? "")"
+                
+                let message = Message(
+                    content: response,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    await stateManager.speak(response, isMuted: isMuted)
+                }
+                return
+            }
+        }
+        
+        // If yes without a number, show the first one
+        if lowercased == "yes" || lowercased.contains("first") || lowercased.contains("one") {
+            if let first = noteOptions.first {
+                let response = "Here's what I remember about \(first["questionText"] ?? "that"):\n\n\(first["answer"] ?? "")"
+                
+                let message = Message(
+                    content: response,
+                    isFromUser: false,
+                    isVoice: !isMuted
+                )
+                messageStore.addMessage(message)
+                
+                if !isMuted {
+                    await stateManager.speak(response, isMuted: isMuted)
+                }
+            }
+        } else {
+            // They said something else, treat it as a new query
+            UserDefaults.standard.removeObject(forKey: "pendingNoteOptions")
+            await processUserInput(input, isMuted: isMuted)
+        }
+    }
+    
+    private func searchAndRespondWithNotes(query: String, isMuted: Bool) async {
+        print("[ConversationViewModel] Searching notes for query: \(query)")
+        
+        do {
+            // Load all notes
+            let notesStore = try await serviceContainer.notesService.loadNotesStore()
+            
+            // Extract search terms from the query
+            let lowercasedQuery = query.lowercased()
+            
+            // Split into words first to avoid partial replacements
+            let words = lowercasedQuery.components(separatedBy: .whitespacesAndNewlines)
+            
+            // Filter out common words that aren't meaningful for search
+            let stopWords = Set(["what", "notes", "note", "remember", "about", "search", 
+                                "for", "the", "tell", "me", "show", "is", "are", "do", "does"])
+            
+            let searchTerms = words
+                .map { word in
+                    // Special case: "rooms" -> "room"
+                    word == "rooms" ? "room" : word
+                }
+                .filter { !stopWords.contains($0) && !$0.isEmpty }
+            
+            // Add phonetic variations for common misheard words
+            var expandedTerms = searchTerms
+            for term in searchTerms {
+                switch term {
+                case "wear":
+                    expandedTerms.append("weather")
+                case "whether":
+                    expandedTerms.append("weather")
+                case "bedroom":
+                    expandedTerms.append("bed")
+                    expandedTerms.append("room")
+                case "livingroom", "living":
+                    expandedTerms.append("living")
+                    expandedTerms.append("room")
+                default:
+                    break
+                }
+            }
+            
+            // Only log in debug builds
+            #if DEBUG
+            print("[ConversationViewModel] Search terms: \(expandedTerms)")
+            #endif
+            
+            // Search for matching notes with scores
+            var matchingNotes: [(question: Question, note: Note, score: Int)] = []
+            
+            for (questionId, note) in notesStore.notes {
+                guard let question = notesStore.questions.first(where: { $0.id == questionId }) else { continue }
+                
+                // Skip empty answers
+                guard !note.answer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
+                
+                // Check if any search term matches the question text or note content
+                let questionLower = question.text.lowercased()
+                let answerLower = note.answer.lowercased()
+                
+                // Count how many search terms match
+                var matchScore = 0
+                for term in expandedTerms {
+                    if questionLower.contains(term) {
+                        matchScore += 2 // Title matches are worth more
+                    }
+                    if answerLower.contains(term) {
+                        matchScore += 1
+                    }
+                }
+                
+                // If we have a match, add it with the score
+                if matchScore > 0 {
+                    matchingNotes.append((question: question, note: note, score: matchScore))
+                }
+            }
+            
+            // Sort by score (highest first)
+            matchingNotes.sort { $0.score > $1.score }
+            
+            print("[ConversationViewModel] Found \(matchingNotes.count) matching notes")
+            
+            // Generate response based on findings
+            let response: String
+            if matchingNotes.isEmpty {
+                response = "I don't have any notes that match your search. You can create new notes by saying 'add room note' or 'add device note'."
+            } else if matchingNotes.count == 1 || (matchingNotes.count > 1 && matchingNotes[0].score > matchingNotes[1].score) {
+                // Single match or clear best match - show it directly
+                let match = matchingNotes[0]
+                response = "Here's what I remember about \(match.question.text):\n\n\(match.note.answer)"
+            } else {
+                // Multiple similar matches - list them
+                var notesList = "I found \(matchingNotes.count) notes that might be what you're looking for:\n\n"
+                
+                // Show top 5 matches
+                for (index, match) in matchingNotes.prefix(5).enumerated() {
+                    notesList += "\(index + 1). \(match.question.text)\n"
+                    // Add first line of the answer as preview
+                    let preview = match.note.answer
+                        .components(separatedBy: .newlines)
+                        .first ?? match.note.answer
+                    let truncatedPreview = preview.count > 50 ? String(preview.prefix(50)) + "..." : preview
+                    notesList += "   \(truncatedPreview)\n\n"
+                }
+                
+                if matchingNotes.count > 5 {
+                    notesList += "... and \(matchingNotes.count - 5) more.\n\n"
+                }
+                
+                notesList += "Would you like me to read any of these in detail?"
+                response = notesList
+                
+                // Store the matching notes for later reference
+                UserDefaults.standard.set(true, forKey: "awaitingNoteSelection")
+                // Store the note data for selection
+                let noteData = matchingNotes.prefix(5).map { match in
+                    ["questionText": match.question.text, "answer": match.note.answer]
+                }
+                if let encoded = try? JSONEncoder().encode(noteData) {
+                    UserDefaults.standard.set(encoded, forKey: "pendingNoteOptions")
+                }
+            }
+            
+            // Create and send the response
+            let message = Message(
+                content: response,
+                isFromUser: false,
+                isVoice: !isMuted
+            )
+            messageStore.addMessage(message)
+            
+            if !isMuted {
+                await stateManager.speak(response, isMuted: isMuted)
+            }
+            
+        } catch {
+            print("[ConversationViewModel] Error searching notes: \(error)")
+            await generateHouseResponse(for: "I had trouble searching my notes. Please try again.", isMuted: isMuted)
         }
     }
 }

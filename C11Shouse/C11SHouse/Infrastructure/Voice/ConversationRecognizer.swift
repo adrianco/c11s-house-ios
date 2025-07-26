@@ -26,6 +26,10 @@
  *
  * - 2025-01-09: Swift 6 concurrency fixes
  *   - Added @preconcurrency to Speech import to suppress Sendable warnings
+ * - 2025-07-25: Improved speech recognition error handling
+ *   - Added logging for non-1101 errors for debugging
+ *   - Added documentation about expected kAFAssistantErrorDomain Code=1101
+ *   - These errors are normal during speech recognition and safely ignored
  *
  * FUTURE UPDATES:
  * - [Add future changes and decisions here]
@@ -177,6 +181,12 @@ class ConversationRecognizer: ObservableObject {
     // MARK: - Initialization
     init() {
         setupSpeechRecognizer()
+        // Don't check authorization in init - wait for explicit request
+    }
+    
+    /// Initialize speech recognizer and request permissions if needed
+    func initializeSpeechRecognizer() {
+        print("[ConversationRecognizer] initializeSpeechRecognizer called")
         checkAuthorization()
     }
     
@@ -188,19 +198,31 @@ class ConversationRecognizer: ObservableObject {
     
     // MARK: - Authorization
     private func checkAuthorization() {
-        SFSpeechRecognizer.requestAuthorization { [weak self] status in
-            DispatchQueue.main.async {
-                self?.authorizationStatus = status
-                // Authorization status updated
-                
-                if status != .authorized {
-                    self?.error = SpeechRecognitionError.notAuthorized
+        print("[ConversationRecognizer] checkAuthorization called")
+        
+        // Check current authorization status first
+        let currentStatus = SFSpeechRecognizer.authorizationStatus()
+        print("[ConversationRecognizer] Current speech recognition status: \(currentStatus.rawValue)")
+        authorizationStatus = currentStatus
+        
+        // Only request if not determined
+        if currentStatus == .notDetermined {
+            SFSpeechRecognizer.requestAuthorization { [weak self] status in
+                DispatchQueue.main.async {
+                    print("[ConversationRecognizer] Speech recognition authorization callback - status: \(status.rawValue)")
+                    self?.authorizationStatus = status
+                    // Authorization status updated
+                    
+                    if status != .authorized {
+                        self?.error = SpeechRecognitionError.notAuthorized
+                    }
                 }
             }
         }
         
         AVAudioApplication.requestRecordPermission { [weak self] granted in
             DispatchQueue.main.async {
+                print("[ConversationRecognizer] Microphone permission callback - granted: \(granted)")
                 // Microphone permission updated
                 if !granted {
                     self?.error = SpeechRecognitionError.microphoneAccessDenied
@@ -243,13 +265,30 @@ class ConversationRecognizer: ObservableObject {
         // Configure audio session to match working implementation
         do {
             let audioSession = AVAudioSession.sharedInstance()
+            // First deactivate to ensure clean state after TTS
+            try audioSession.setActive(false, options: [])
             // Use SAME configuration as working SimpleSpeechRecognizer
             try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
             try audioSession.setActive(true, options: [])
-            // Audio session configured
+            // Audio session configured for recording
         } catch {
-            // Audio session error: \(error)
-            throw SpeechRecognitionError.audioEngineError
+            // Check if it's a deactivation error (560030580) which is expected when TTS is active
+            let nsError = error as NSError
+            if nsError.code == 560030580 {
+                // This is expected when TTS hasn't fully released the audio session
+                // Try once more without the deactivation step
+                do {
+                    let audioSession = AVAudioSession.sharedInstance()
+                    try audioSession.setCategory(.playAndRecord, mode: .measurement, options: [])
+                    try audioSession.setActive(true, options: [])
+                } catch {
+                    // If it still fails, throw the error
+                    throw SpeechRecognitionError.audioEngineError
+                }
+            } else {
+                print("[ConversationRecognizer] Audio session error: \(error)")
+                throw SpeechRecognitionError.audioEngineError
+            }
         }
         
         // Create recognition request - with EXPLICIT settings to avoid on-device
@@ -261,6 +300,9 @@ class ConversationRecognizer: ObservableObject {
         // CRITICAL: Configure request to match working approach
         recognitionRequest.shouldReportPartialResults = true
         recognitionRequest.requiresOnDeviceRecognition = false  // NEVER use on-device
+        
+        // NOTE: kAFAssistantErrorDomain Code=1101 errors are expected and normal
+        // They occur during speech recognition and are safely ignored by our error handling
         
         // addsPunctuation is automatically enabled in iOS 16+
         // No need to set it explicitly
@@ -311,7 +353,14 @@ class ConversationRecognizer: ObservableObject {
             }
             
             if let error = error {
-                let speechError = SpeechError(nsError: error as NSError)
+                let nsError = error as NSError
+                
+                // Log non-1101 errors for debugging
+                if nsError.code != 1101 {
+                    print("[ConversationRecognizer] Recognition error: \(nsError.code) - \(nsError.localizedDescription)")
+                }
+                
+                let speechError = SpeechError(nsError: nsError)
                 
                 if !speechError.isIgnorable {
                     DispatchQueue.main.async {
@@ -321,7 +370,7 @@ class ConversationRecognizer: ObservableObject {
                         }
                     }
                 }
-                // Ignorable errors are silently handled
+                // Ignorable errors (including 1101) are silently handled
             }
         }
         
@@ -397,12 +446,20 @@ class ConversationRecognizer: ObservableObject {
     }
     
     func toggleRecording() {
+        print("[ConversationRecognizer] toggleRecording called - isRecording: \(isRecording)")
         if isRecording {
             stopRecording()
         } else {
             do {
+                print("[ConversationRecognizer] Attempting to start recording")
+                print("[ConversationRecognizer] Authorization status: \(authorizationStatus.rawValue)")
+                print("[ConversationRecognizer] Speech recognizer available: \(speechRecognizer?.isAvailable ?? false)")
+                print("[ConversationRecognizer] Audio engine running: \(audioEngine.isRunning)")
                 try startRecording()
+                print("[ConversationRecognizer] Recording started successfully")
             } catch {
+                print("[ConversationRecognizer] Failed to start recording: \(error)")
+                print("[ConversationRecognizer] Error type: \(type(of: error))")
                 self.error = (error as? SpeechRecognitionError) ?? SpeechRecognitionError.audioEngineError
             }
         }
@@ -462,6 +519,14 @@ class ConversationRecognizer: ObservableObject {
             emotion = .curious
             category = .question
             thought = "I notice you mentioned lighting. Are you looking to adjust the ambiance?"
+        }
+        // HomeKit / Rooms / Devices
+        else if lowercasedTranscript.contains("room") || lowercasedTranscript.contains("device") ||
+                lowercasedTranscript.contains("homekit") || lowercasedTranscript.contains("accessory") {
+            emotion = .thoughtful
+            category = .observation
+            thought = "I have information about your HomeKit configuration. Would you like me to tell you about your rooms or devices?"
+            suggestion = "Ask me about specific rooms or device types"
         }
         // Questions
         else if lowercasedTranscript.contains("?") || lowercasedTranscript.contains("what") ||

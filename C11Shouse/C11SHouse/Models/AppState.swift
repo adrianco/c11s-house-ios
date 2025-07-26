@@ -81,11 +81,6 @@ class AppState: ObservableObject {
     /// Whether microphone permission has been granted
     @Published var hasMicrophonePermission: Bool = false
     
-    /// Whether all required onboarding questions have been answered
-    @Published var hasCompletedOnboarding: Bool = false
-    
-    /// Current onboarding phase
-    @Published var currentOnboardingPhase: OnboardingPhase = .welcome
     
     // MARK: - Feature Flags
     
@@ -142,13 +137,6 @@ class AppState: ObservableObject {
         showDebugInfo = UserDefaults.standard.bool(forKey: "showDebugInfo")
         enableExperimentalFeatures = UserDefaults.standard.bool(forKey: "enableExperimentalFeatures")
         
-        // Load onboarding state
-        hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
-        
-        let phaseRawValue = UserDefaults.standard.integer(forKey: "currentOnboardingPhase")
-        if let phase = OnboardingPhase(rawValue: phaseRawValue) {
-            currentOnboardingPhase = phase
-        }
     }
     
     // Address persistence removed - now handled only through NotesService
@@ -156,14 +144,6 @@ class AppState: ObservableObject {
     // MARK: - Notification Observers
     
     private func setupNotificationObservers() {
-        // Listen for onboarding completion
-        NotificationCenter.default.publisher(for: Notification.Name("AllQuestionsComplete"))
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.hasCompletedOnboarding = true
-                UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-            }
-            .store(in: &cancellables)
     }
     
     private var cancellables = Set<AnyCancellable>()
@@ -199,18 +179,6 @@ class AppState: ObservableObject {
         }
     }
     
-    /// Update onboarding phase
-    func updateOnboardingPhase(_ phase: OnboardingPhase) {
-        currentOnboardingPhase = phase
-        UserDefaults.standard.set(phase.rawValue, forKey: "currentOnboardingPhase")
-    }
-    
-    /// Mark onboarding as complete
-    func completeOnboarding() {
-        hasCompletedOnboarding = true
-        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-        currentOnboardingPhase = .completion
-    }
     
     // MARK: - Convenience Methods
     
@@ -221,7 +189,7 @@ class AppState: ObservableObject {
     
     /// Check if the app is ready for full functionality
     var isAppReady: Bool {
-        hasCompletedOnboarding && hasAllPermissions && homeAddress != nil
+        hasAllPermissions && homeAddress != nil
     }
 }
 

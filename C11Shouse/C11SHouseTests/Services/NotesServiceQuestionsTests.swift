@@ -9,6 +9,10 @@
  *   - Validates question filtering
  *   - Verifies progress tracking
  *   - Ensures error handling
+ * - 2025-07-25: Fixed test assertions for 3 predefined questions
+ *   - Updated from 4 to 3 questions (address, house name, user name)
+ *   - Fixed array index out of range crash
+ *   - Updated question counts in all affected tests
  *
  * FUTURE UPDATES:
  * - [Placeholder for future changes - update when modifying the file]
@@ -113,7 +117,7 @@ class NotesServiceQuestionsTests: XCTestCase {
         XCTAssertTrue(personal.allSatisfy { $0.category == .personal })
         
         let houseInfo = await notesService.getQuestions(in: .houseInfo)
-        XCTAssertEqual(houseInfo.count, 3) // Address, house name, and room note questions
+        XCTAssertEqual(houseInfo.count, 2) // Address and house name questions
         XCTAssertTrue(houseInfo.allSatisfy { $0.category == .houseInfo })
         
         // Add a custom question to test category filtering
@@ -184,10 +188,10 @@ class NotesServiceQuestionsTests: XCTestCase {
     }
     
     func testGetQuestionProgress() async throws {
-        // Test with predefined questions (4 total, all required)
+        // Test with predefined questions (3 total, all required)
         let progress1 = await notesService.getQuestionProgress()
         XCTAssertEqual(progress1.answered, 0)
-        XCTAssertEqual(progress1.total, 4) // 4 predefined questions
+        XCTAssertEqual(progress1.total, 3) // 3 predefined questions
         XCTAssertFalse(progress1.requiredComplete)
         
         // Get predefined questions and answer one
@@ -201,7 +205,7 @@ class NotesServiceQuestionsTests: XCTestCase {
         
         let progress2 = await notesService.getQuestionProgress()
         XCTAssertEqual(progress2.answered, 1)
-        XCTAssertEqual(progress2.total, 4)
+        XCTAssertEqual(progress2.total, 3)
         XCTAssertFalse(progress2.requiredComplete)
         
         // Answer all required questions
@@ -213,8 +217,8 @@ class NotesServiceQuestionsTests: XCTestCase {
         }
         
         let progress3 = await notesService.getQuestionProgress()
-        XCTAssertEqual(progress3.answered, 4) // All questions answered
-        XCTAssertEqual(progress3.total, 4)
+        XCTAssertEqual(progress3.answered, 3) // All questions answered
+        XCTAssertEqual(progress3.total, 3)
         XCTAssertTrue(progress3.requiredComplete) // All required answered
         
         // Add an optional question
@@ -228,21 +232,20 @@ class NotesServiceQuestionsTests: XCTestCase {
         try await notesService.addQuestion(optionalQuestion)
         
         let progress4 = await notesService.getQuestionProgress()
-        XCTAssertEqual(progress4.answered, 4) // Still 4 answered
-        XCTAssertEqual(progress4.total, 5) // Now 5 total
+        XCTAssertEqual(progress4.answered, 3) // Still 3 answered
+        XCTAssertEqual(progress4.total, 4) // Now 4 total
         XCTAssertTrue(progress4.requiredComplete) // Required still complete
     }
     
     func testGetUnansweredQuestions() async throws {
         // Test with predefined questions - all should be unanswered initially
         let unanswered1 = try await notesService.getUnansweredQuestions()
-        XCTAssertEqual(unanswered1.count, 4) // 4 predefined questions
+        XCTAssertEqual(unanswered1.count, 3) // 3 predefined questions
         
         // Should be sorted by displayOrder
         XCTAssertEqual(unanswered1[0].displayOrder, 0) // Address question
         XCTAssertEqual(unanswered1[1].displayOrder, 1) // House name question
         XCTAssertEqual(unanswered1[2].displayOrder, 2) // User name question
-        XCTAssertEqual(unanswered1[3].displayOrder, 3) // Room note question
         
         // Answer the first question
         try await notesService.saveOrUpdateNote(

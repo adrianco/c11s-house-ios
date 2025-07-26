@@ -262,6 +262,18 @@ class WeatherCoordinator: ObservableObject {
             )
             
             try await notesService.addQuestion(weatherKey)
+            
+            // Immediately create an informational note so it won't appear in conversation flow
+            try await notesService.saveOrUpdateNote(
+                for: weatherKey.id,
+                answer: "Weather information will be updated automatically",
+                metadata: [
+                    "type": "informational",
+                    "category": "weather",
+                    "updated_via_conversation": "false",
+                    "automatic": "true"
+                ]
+            )
             print("[WeatherCoordinator] Created Weather question in notes store")
             
         } catch {
@@ -284,8 +296,9 @@ class WeatherCoordinator: ObservableObject {
                     for: existingQuestion.id,
                     answer: content,
                     metadata: [
-                        "type": "houseInfo",
-                        "updated_via_conversation": "true", // Mark as valid, no user confirmation needed
+                        "type": "informational",
+                        "category": "weather",
+                        "updated_via_conversation": "false",
                         "lastUpdated": Date().ISO8601Format(),
                         "automatic": "true"
                     ]

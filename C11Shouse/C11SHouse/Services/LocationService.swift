@@ -62,7 +62,7 @@ class LocationServiceImpl: NSObject, LocationServiceProtocol {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = 100 // Update every 100 meters
         
-        // Update initial status
+        // Send initial authorization status
         authorizationStatusSubject.send(locationManager.authorizationStatus)
     }
     

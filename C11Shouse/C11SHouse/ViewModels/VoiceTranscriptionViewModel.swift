@@ -205,15 +205,10 @@ class VoiceTranscriptionViewModel: ObservableObject {
         updateState(.preparing)
         
         do {
-            // Request permission if needed
+            // Check permission
             if !isMicrophoneAuthorized {
-                await permissionManager.requestMicrophonePermission()
-                let granted = permissionManager.isMicrophoneGranted
-                if !granted {
-                    updateState(.error(.microphonePermissionDenied))
-                    return
-                }
-                isMicrophoneAuthorized = true
+                updateState(.error(.microphonePermissionDenied))
+                return
             }
             
             // Start recording

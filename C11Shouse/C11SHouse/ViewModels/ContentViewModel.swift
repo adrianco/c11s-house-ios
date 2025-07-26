@@ -81,6 +81,7 @@ class ContentViewModel: ObservableObject {
         self.notesService = notesService
         self.addressManager = addressManager
         
+        // Always setup bindings and load saved data
         setupBindings()
         loadSavedData()
         
@@ -88,6 +89,37 @@ class ContentViewModel: ObservableObject {
         print("[ContentViewModel] Init complete - currentWeather: \(currentWeather != nil ? "exists" : "nil")")
         print("[ContentViewModel] Init complete - houseName: \(houseName)")
         print("[ContentViewModel] Init complete - address: \(currentAddress?.fullAddress ?? "nil")")
+    }
+    
+    private func setupMinimalBindings() {
+        // Only sync with AppState, don't subscribe to service publishers
+        appState.$houseName
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$houseName)
+            
+        appState.$currentHouseThought
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$houseThought)
+            
+        appState.$homeAddress
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentAddress)
+            
+        appState.$hasLocationPermission
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$hasLocationPermission)
+            
+        appState.$currentWeather
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentWeather)
+            
+        appState.$isLoadingWeather
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoadingWeather)
+            
+        appState.$weatherError
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$weatherError)
     }
     
     private func setupBindings() {
@@ -209,9 +241,7 @@ class ContentViewModel: ObservableObject {
         }
     }
     
-    func requestLocationPermission() async {
-        await locationService.requestLocationPermission()
-    }
+    
     
     func loadAddressAndWeather() async {
         // Check if required questions are answered

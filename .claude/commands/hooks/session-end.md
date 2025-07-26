@@ -19,21 +19,25 @@ npx claude-flow hook session-end [options]
 ## Examples
 
 ### Basic session end
+
 ```bash
 npx claude-flow hook session-end --session-id "dev-session-2024"
 ```
 
 ### With full export
+
 ```bash
 npx claude-flow hook session-end -s "feature-auth" --export-metrics --generate-summary
 ```
 
 ### Quick close
+
 ```bash
 npx claude-flow hook session-end -s "quick-fix" --save-state false --cleanup-temp
 ```
 
 ### Complete persistence
+
 ```bash
 npx claude-flow hook session-end -s "major-refactor" --save-state --export-metrics --generate-summary
 ```
@@ -41,12 +45,14 @@ npx claude-flow hook session-end -s "major-refactor" --save-state --export-metri
 ## Features
 
 ### State Persistence
+
 - Saves current context
 - Stores open files
 - Preserves task progress
 - Maintains decisions
 
 ### Metric Export
+
 - Session duration
 - Commands executed
 - Files modified
@@ -54,12 +60,14 @@ npx claude-flow hook session-end -s "major-refactor" --save-state --export-metri
 - Performance data
 
 ### Summary Generation
+
 - Work accomplished
 - Key decisions made
 - Problems solved
 - Next steps identified
 
 ### Cleanup Operations
+
 - Removes temp files
 - Clears caches
 - Frees resources
@@ -68,12 +76,14 @@ npx claude-flow hook session-end -s "major-refactor" --save-state --export-metri
 ## Integration
 
 This hook is automatically called by Claude Code when:
+
 - Ending a conversation
 - Closing work session
 - Before shutdown
 - Switching contexts
 
 Manual usage in agents:
+
 ```bash
 # At session end
 npx claude-flow hook session-end --session-id "your-session" --generate-summary
@@ -82,6 +92,7 @@ npx claude-flow hook session-end --session-id "your-session" --generate-summary
 ## Output
 
 Returns JSON with:
+
 ```json
 {
   "sessionId": "dev-session-2024",

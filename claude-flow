@@ -10,7 +10,7 @@
   const { spawn } = await import('child_process');
   const { resolve } = await import('path');
   const { fileURLToPath } = await import('url');
-  
+
   // Detect if we're running in ES module context
   let __dirname;
   try {
@@ -39,7 +39,7 @@
         }
       } catch {}
     },
-    
+
     // 2. Parent node_modules (monorepo)
     async () => {
       try {
@@ -50,11 +50,13 @@
         }
       } catch {}
     },
-    
+
     // 3. NPX with latest alpha version (prioritized over global)
     async () => {
-      return spawn('npx', ['claude-flow@2.0.0-alpha.27', ...process.argv.slice(2)], { stdio: 'inherit' });
-    }
+      return spawn('npx', ['claude-flow@alpha', ...process.argv.slice(2)], {
+        stdio: 'inherit',
+      });
+    },
   ];
 
   // Try each strategy
@@ -73,7 +75,7 @@
       }
     } catch {}
   }
-  
+
   console.error('Could not find claude-flow. Please install it with: npm install claude-flow');
   process.exit(1);
 })();

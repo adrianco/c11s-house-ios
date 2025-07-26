@@ -10,6 +10,10 @@
  *   - Test text and voice input modes
  *   - Test error display scenarios
  *   - Test address suggestion interactions
+ * - 2025-07-25: Fixed send button detection
+ *   - Updated to look for button by "Send" label first
+ *   - Added fallback logic to find button even with incorrect identifier
+ *   - Fixed tests failing due to button identifier being "ConversationView"
  *
  * FUTURE UPDATES:
  * - Add performance tests for large message lists
@@ -34,7 +38,7 @@ class ConversationViewUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["UI_TESTING", "--skip-onboarding"]
+        app.launchArguments = ["UI_TESTING"]
         if Self.verboseLogging {
             print("🧪 ConversationViewUITests: Starting test setup")
             print("🧪 ConversationViewUITests: Launching app with arguments: \(app.launchArguments)")
@@ -82,7 +86,7 @@ class ConversationViewUITests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.5)
         
         // Check if there are any static texts in the conversation (messages)
-        let allTexts = app.staticTexts.allElementsBoundByIndex
+        let allTexts = app.staticTexts.allElementsBoundByAccessibilityElement
         
         // Look for any text that indicates a message is displayed
         var foundMessage = false
@@ -146,7 +150,7 @@ class ConversationViewUITests: XCTestCase {
         
         // If no specific response found, check if there are any new messages
         if !houseResponseFound {
-            let allTexts = app.staticTexts.allElementsBoundByIndex
+            let allTexts = app.staticTexts.allElementsBoundByAccessibilityElement
             // Check if there are more messages than before (indicating a response)
             if allTexts.count > 5 { // Assuming UI has at least some static texts
                 houseResponseFound = true
@@ -289,7 +293,7 @@ class ConversationViewUITests: XCTestCase {
         if !sendButton.exists {
             // Look for enabled buttons to the right of the text field
             // The dictation button is always present, but send button only appears with text
-            let allButtons = app.buttons.allElementsBoundByIndex
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
             for button in allButtons {
                 // Send button appears to the right of text field and is enabled when text exists
                 // Skip dictation, shift, return, and emoji buttons
@@ -402,7 +406,7 @@ class ConversationViewUITests: XCTestCase {
         // As a last resort, check for any button that might be the mic button
         if !micButton.exists {
             // Look for buttons in the bottom area of the screen
-            let allButtons = app.buttons.allElementsBoundByIndex
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
             for button in allButtons {
                 // Check if this button is in the input area (bottom of screen)
                 if button.frame.minY > app.frame.height * 0.7 {
@@ -526,7 +530,7 @@ class ConversationViewUITests: XCTestCase {
         
         // If no specific message found, check if there are any messages at all
         if !foundMessage {
-            let allTexts = app.staticTexts.allElementsBoundByIndex
+            let allTexts = app.staticTexts.allElementsBoundByAccessibilityElement
             if allTexts.count > 3 {  // Navigation elements + at least one message
                 foundMessage = true
             }
@@ -598,13 +602,13 @@ class ConversationViewUITests: XCTestCase {
         if Self.verboseLogging {
             print("🧪 Debug: Current view hierarchy")
             print("  Buttons:")
-            let buttons = app.buttons.allElementsBoundByIndex
+            let buttons = app.buttons.allElementsBoundByAccessibilityElement
             for i in 0..<min(buttons.count, 15) {
                 let button = buttons[i]
                 print("    Button \(i): id='\(button.identifier)' label='\(button.label)' enabled=\(button.isEnabled) hittable=\(button.isHittable)")
             }
             print("  TextFields:")
-            let textFields = app.textFields.allElementsBoundByIndex
+            let textFields = app.textFields.allElementsBoundByAccessibilityElement
             for i in 0..<min(textFields.count, 5) {
                 let field = textFields[i]
                 print("    TextField \(i): id='\(field.identifier)' placeholder='\(field.placeholderValue ?? "nil")' value='\(field.value ?? "nil")'")
@@ -673,9 +677,9 @@ class ConversationViewUITests: XCTestCase {
         // Debug: Print what elements we can see if we fail
         if Self.verboseLogging {
             print("Failed to find conversation elements. Visible elements:")
-            print("Buttons: \(app.buttons.allElementsBoundByIndex.map { $0.label })")
-            print("Static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(10).map { $0.label })")
-            print("Navigation bars: \(app.navigationBars.allElementsBoundByIndex.map { $0.identifier })")
+            print("Buttons: \(app.buttons.allElementsBoundByAccessibilityElement.map { $0.label })")
+            print("Static texts: \(app.staticTexts.allElementsBoundByAccessibilityElement.prefix(10).map { $0.label })")
+            print("Navigation bars: \(app.navigationBars.allElementsBoundByAccessibilityElement.map { $0.identifier })")
         }
         
         return false
@@ -726,7 +730,7 @@ class ConversationViewUITests: XCTestCase {
             // Debug output only when verbose or on failure
             if Self.verboseLogging {
                 print("🧪 muteConversation: No mute/unmute buttons found. Available buttons:")
-                let allButtons = app.buttons.allElementsBoundByIndex
+                let allButtons = app.buttons.allElementsBoundByAccessibilityElement
                 for i in 0..<min(allButtons.count, 10) {
                     let button = allButtons[i]
                     print("  Button \(i): id='\(button.identifier)' label='\(button.label)'")
@@ -819,7 +823,7 @@ class ConversationViewUITests: XCTestCase {
         
         if !unmuted {
             // Try one more time with any unmute-like button
-            let allButtons = app.buttons.allElementsBoundByIndex
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
             for button in allButtons {
                 if button.label.lowercased().contains("unmute") || 
                    button.identifier.contains("speaker") {
@@ -862,24 +866,39 @@ class ConversationViewUITests: XCTestCase {
         
         // Look for send button - try multiple methods
         let sendButtonById = app.buttons["arrow.up.circle.fill"]
-        let sendButtonByLabel = app.buttons["Arrow Up Circle"]
-        let sendButtonByPredicate = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Arrow'")).firstMatch
+        let sendButtonByLabel = app.buttons["Send"]
+        let sendButtonByPredicate = app.buttons.matching(NSPredicate(format: "label == 'Send'")).firstMatch
         
-        let sendButton = sendButtonById.exists ? sendButtonById : 
-                        (sendButtonByLabel.exists ? sendButtonByLabel : sendButtonByPredicate)
+        var sendButton = sendButtonByLabel.exists ? sendButtonByLabel : 
+                        (sendButtonById.exists ? sendButtonById : sendButtonByPredicate)
         
-        guard sendButton.waitForExistence(timeout: 1) else {
-            // Debug output only when verbose or on failure
-            if Self.verboseLogging {
-                print("🧪 sendTextMessage: Send button not found. Available buttons:")
-                let allButtons = app.buttons.allElementsBoundByIndex
-                for i in 0..<min(allButtons.count, 20) {
-                    let button = allButtons[i]
-                    print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
+        if !sendButton.waitForExistence(timeout: 1) {
+            // Try one more fallback - look for any button with Send label
+            let allButtons = app.buttons.allElementsBoundByAccessibilityElement
+            var foundSendButton: XCUIElement? = nil
+            
+            for button in allButtons {
+                if button.label == "Send" {
+                    foundSendButton = button
+                    break
                 }
             }
-            XCTFail("Send button did not appear")
-            return
+            
+            if let fallbackButton = foundSendButton {
+                // Use the fallback button
+                sendButton = fallbackButton
+            } else {
+                // Debug output only when verbose or on failure
+                if Self.verboseLogging {
+                    print("🧪 sendTextMessage: Send button not found. Available buttons:")
+                    for i in 0..<min(allButtons.count, 20) {
+                        let button = allButtons[i]
+                        print("🧪 sendTextMessage: Button \(i): label='\(button.label)' id='\(button.identifier)'")
+                    }
+                }
+                XCTFail("Send button did not appear")
+                return
+            }
         }
         
         // Remove wait for button enabled check
