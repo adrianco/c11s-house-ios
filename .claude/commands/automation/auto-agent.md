@@ -19,21 +19,25 @@ npx claude-flow auto agent [options]
 ## Examples
 
 ### Basic auto-spawning
+
 ```bash
 npx claude-flow auto agent --task "Build a REST API with authentication"
 ```
 
 ### Constrained spawning
+
 ```bash
 npx claude-flow auto agent -t "Debug performance issue" --max-agents 3
 ```
 
 ### Analysis only
+
 ```bash
 npx claude-flow auto agent -t "Refactor codebase" --no-spawn
 ```
 
 ### Minimal strategy
+
 ```bash
 npx claude-flow auto agent -t "Fix bug in login" -s minimal
 ```
@@ -41,18 +45,21 @@ npx claude-flow auto agent -t "Fix bug in login" -s minimal
 ## How It Works
 
 1. **Task Analysis**
+
    - Parses task description
    - Identifies required skills
    - Estimates complexity
    - Determines parallelization opportunities
 
 2. **Agent Selection**
+
    - Matches skills to agent types
    - Considers task dependencies
    - Optimizes for efficiency
    - Respects constraints
 
 3. **Topology Selection**
+
    - Chooses optimal swarm structure
    - Configures communication patterns
    - Sets up coordination rules
@@ -76,18 +83,21 @@ npx claude-flow auto agent -t "Fix bug in login" -s minimal
 ## Strategies
 
 ### Optimal
+
 - Maximum efficiency
 - May spawn more agents
 - Best for complex tasks
 - Highest resource usage
 
 ### Minimal
+
 - Minimum viable agents
 - Conservative approach
 - Good for simple tasks
 - Lowest resource usage
 
 ### Balanced
+
 - Middle ground
 - Adaptive to complexity
 - Default strategy
@@ -97,7 +107,7 @@ npx claude-flow auto agent -t "Fix bug in login" -s minimal
 
 ```javascript
 // In Claude Code after auto-spawning
-mcp__claude-flow__auto_agent { 
+mcp__claude-flow__auto_agent {
   task: "Build authentication system",
   strategy: "balanced",
   maxAgents: 6
