@@ -2814,3 +2814,7 @@ In the text edit view for input, there needs to be a clear button as well as a c
 
 Look for opportunities to simplify the code, don't add time delays, use events and notfications, refactor complex logic to clean it up.
 
+New feature branch starts here
+
+Objective: read plans/home_graph_mcp_plan.md and consider how to replace the current Notes implementation with a MCP server conforming to existing Swift MCP server APIs, and upgrade the QuestionFlowCoordinator and related functionality with CoreML, such that CoreML sees the info that used to be in Notes as MCP resources and tools, and can engage in a natural conversation with the user about their house. Create new documents in plans/mcp detailing a step by step implementation that can be tested incrementally, but don't change any code yet
+

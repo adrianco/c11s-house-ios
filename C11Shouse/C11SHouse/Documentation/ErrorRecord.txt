@@ -1,1 +1,0 @@
-/Users/adriancockcroft/Documents/GitHub/c11s-house-ios/C11Shouse/C11SHouseTests/Services/QuestionFlowCoordinatorTests.swift:78:35 Cannot find type 'MockConversationStateManager' in scope
